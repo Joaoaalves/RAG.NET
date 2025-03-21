@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: web/Dockerfile
+    ports:
+      - "5000:8080"
+    depends_on:
+      - postgres
+      - qdrant
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: rag_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+
+volumes:
+  postgres_data:
+  qdrant_data:
