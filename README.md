@@ -1,5 +1,3 @@
----
-
 # RAG.NET Documentation
 
 **Warning: This project is under construction.**
