@@ -300,9 +300,6 @@ Ensure that each workflow configured for API usage executes according to defined
 
 In this application, when a user creates a workflow, defines a Chunker and its configuration, enables two Query Enhancers, activates the Relevant Segment Extraction filter, and configures an API key for the Cohere Reranker, it is essential to store this configuration reliably.
 
-### Alternative to JSON Storage
-
-Instead of saving the entire workflow configuration as JSON, a **normalized relational database schema** can be used to improve data integrity, enforce referential constraints, and support complex queries. Below is a sample schema design:
 
 ### 7.1. Workflows Table
 
