@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
@@ -9,8 +8,6 @@ namespace RAGNET.Domain.Entities
     {
         public string Name { get; private set; } = string.Empty;
 
-        /* Relations
-            Workflows
-        */
+        public ICollection<Workflow> Workflows { get; set; } = [];
     }
 }

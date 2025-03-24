@@ -1,6 +1,6 @@
 namespace RAGNET.Domain.Enums
 {
-    public enum RankerTypeEnum
+    public enum RankerStrategy
     {
         COHERE
     }

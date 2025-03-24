@@ -1,6 +1,6 @@
 namespace RAGNET.Domain.Enums
 {
-    public enum FilterTypeEnum
+    public enum FilterStrategy
     {
         RELEVANT_SEGMENT_EXTRACTION,
         MULTIPLE_SCORE_FILTER

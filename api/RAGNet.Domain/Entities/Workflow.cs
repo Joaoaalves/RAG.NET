@@ -1,19 +1,24 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace RAGNET.Domain.Entities
 {
     public class Workflow
     {
-        private string Id { get; set; } = String.Empty;
-        private string Name { get; set; } = String.Empty;
-        private DateTime CreatedAt { get; set; }
+        [Key]
+        public Guid Id { get; set; }
 
-        private DateTime UpdatetAt { get; set; }
+        public string Name { get; set; } = String.Empty;
+        [ForeignKey("User")]
+        public string UserId { get; set; } = String.Empty;
+        public string ApiKey { get; set; } = String.Empty;
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
-        /* Relations
-            User
-            Chunkers
-            Query Enhancers
-            Filters
-            Rankers
-        */
+        // Related configurations
+        public ICollection<Chunker> Chunkers { get; set; } = null!;
+        public ICollection<QueryEnhancer> QueryEnhancers { get; set; } = null!;
+        public ICollection<Filter> Filters { get; set; } = null!;
+        public ICollection<Ranker> Rankers { get; set; } = null!;
     }
 }

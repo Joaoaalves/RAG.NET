@@ -23,6 +23,6 @@ COPY . .
 
 ## Run migrations
 FROM buildbase as migrations
-RUN dotnet tool install --version 6.0.9 --global dotnet-ef
+RUN dotnet tool install --global dotnet-ef
 ENV PATH="$PATH:/root/.dotnet/tools"
 ENTRYPOINT dotnet-ef database update --project ./RAGNet.Infrastructure --startup-project ./web

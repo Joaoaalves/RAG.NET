@@ -1,6 +1,6 @@
 namespace RAGNET.Domain.Enums
 {
-    public enum ChunkerTypeEnum
+    public enum ChunkerStrategy
     {
         PROPOSITION,
         SEMANTIC

@@ -1,12 +1,31 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using RAGNET.Domain.Enums;
 
 namespace RAGNET.Domain.Entities
 {
     public class Filter
     {
-        private string Id { get; set; } = String.Empty;
-        private FilterTypeEnum Type { get; set; }
-        private float Threshold { get; set; } = 0.9F;
-        private int MaxChunks { get; set; } = 6;
+        public Guid Id { get; set; }
+        public FilterStrategy Strategy { get; set; }
+
+        [ForeignKey("Workflow")]
+        public Guid WorkflowId { get; set; }
+        public Workflow Workflow { get; set; } = null!;
+        public ICollection<FilterMeta> Metas { get; set; } = [];
+    }
+
+    public class FilterMeta
+    {
+        [Key]
+        public Guid Id { get; set; }
+
+        [ForeignKey("Filter")]
+        public Guid FilterId { get; set; }
+        public Filter Filter { get; set; } = null!;
+
+        public string Key { get; set; } = String.Empty;
+
+        public string Value { get; set; } = String.Empty;
     }
 }
