@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   api:
     build:
@@ -34,6 +33,14 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:80"
+
+  migrations:
+    build:
+      context: ./api
+      dockerfile: RAGNet.Infrastructure/Persistence/Dockerfile
+      target: migrations
+    depends_on:
+      - postgres
 
 volumes:
   postgres_data:

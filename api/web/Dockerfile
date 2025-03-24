@@ -7,6 +7,7 @@ COPY ["RAGNet.Application/RAGNet.Application.csproj", "RAGNet.Application/"]
 
 COPY ["web/web.csproj", "web/"]
 
+RUN dotnet restore "RAGNet.Infrastructure/RAGNet.Infrastructure.csproj"
 RUN dotnet restore "web/web.csproj"
 
 COPY . .

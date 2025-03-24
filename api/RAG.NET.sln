@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api", "api\api.csproj", "{8A330823-C796-421F-AEEA-3D5C9B9F4813}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RAGNet.Domain", "RAGNet.Domain\RAGNet.Domain.csproj", "{4662BC28-8F4D-4F67-B843-37D56027F38F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RAGNet.Infrastructure", "RAGNet.Infrastructure\RAGNet.Infrastructure.csproj", "{2979B911-2BE7-4019-8B39-1CBE99072265}"

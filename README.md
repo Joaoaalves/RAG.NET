@@ -300,7 +300,6 @@ Ensure that each workflow configured for API usage executes according to defined
 
 In this application, when a user creates a workflow, defines a Chunker and its configuration, enables two Query Enhancers, activates the Relevant Segment Extraction filter, and configures an API key for the Cohere Reranker, it is essential to store this configuration reliably.
 
-
 ### 7.1. Workflows Table
 
 - **Workflows**  
