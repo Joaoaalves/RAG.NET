@@ -9,6 +9,10 @@ using RAGNET.Application.Interfaces;
 
 using web.Configurations;
 using RAGNET.Application.Services;
+using RAGNET.Domain.Repositories;
+using RAGNET.Infrastructure.Repositories;
+using RAGNET.Application.UseCases.EmbeddingUseCases;
+using RAGNET.Application.UseCases.WorkflowUseCases;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +28,14 @@ var signingKey = builder.Configuration["JWT:SignInKey"] ?? throw new Exception("
 // Register the ApplicationDbContext with PostgreSQL provider
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
+
+// Repositories
+builder.Services.AddScoped<IWorkflowRepository, WorkflowRepository>();
+builder.Services.AddScoped<IChunkerRepository, ChunkerRepository>();
+builder.Services.AddScoped<IQueryEnhancerRepository, QueryEnhancerRepository>();
+builder.Services.AddScoped<IFilterRepository, FilterRepository>();
+builder.Services.AddScoped<IRankerRepository, RankerRepository>();
+builder.Services.AddScoped<IChunkRepository, ChunkRepository>();
 
 // Configure Identity with the custom User entity
 builder.Services.AddIdentity<User, IdentityRole>(options =>
@@ -60,9 +72,15 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
-
+// Services
 builder.Services.AddScoped<ITokenService, TokenService>();
+
+// Use Cases
+builder.Services.AddScoped<IGetUserWorkflowsUseCase, GetUserWorkflowsUseCase>();
+builder.Services.AddScoped<IProcessEmbeddingUseCase, ProcessEmbeddingUseCase>();
+builder.Services.AddScoped<ICreateWorkflowUseCase, CreateWorkflowUseCase>();
+builder.Services.AddScoped<IGetWorkflowUseCase, GetWorkflowUseCase>();
+
 builder.Services.AddControllers();
 
 var app = builder.Build();

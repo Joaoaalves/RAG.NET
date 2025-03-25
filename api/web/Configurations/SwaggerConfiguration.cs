@@ -8,7 +8,7 @@ namespace web.Configurations
         {
             services.AddSwaggerGen(option =>
             {
-                option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+                option.SwaggerDoc("v1", new OpenApiInfo { Title = "RAG.NET API", Version = "v1" });
                 option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
@@ -18,6 +18,7 @@ namespace web.Configurations
                     BearerFormat = "JWT",
                     Scheme = "Bearer"
                 });
+
                 option.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
@@ -29,10 +30,26 @@ namespace web.Configurations
                                 Id = "Bearer"
                             }
                         },
-                        new string[]{}
+                        Array.Empty<string>()
                     }
                 });
+
+                option.OperationFilter<FileUploadOperation>();
+
+                // API KEY
+                option.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+                {
+                    Description = "Add you API Key on field. E.g: 123456abcdef",
+                    Type = SecuritySchemeType.ApiKey,
+                    Name = "x-api-key",
+                    In = ParameterLocation.Header,
+                    Scheme = "ApiKeyScheme"
+                });
+
+                // Register the OperationFilter that adds the API key only for endpoints with [ApiKeyCheck]
+                option.OperationFilter<ApiKeyOperationFilter>();
             });
+
         }
     }
 }
