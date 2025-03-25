@@ -23,6 +23,7 @@ namespace RAGNET.Application.Mappers
         {
             return new WorkflowDetailsDTO
             {
+                Id = workflow.Id,
                 Name = workflow.Name,
                 Strategy = strategy,
                 ApiKey = workflow.ApiKey,

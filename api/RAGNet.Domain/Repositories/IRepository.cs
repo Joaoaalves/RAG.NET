@@ -4,16 +4,17 @@ namespace RAGNET.Domain.Repositories
 {
     public interface IRepository<T>
     {
-        Task<T?> GetByIdAsync(Guid id);
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<T?> GetByIdAsync(Guid id, string? userId);
+        Task<IEnumerable<T>> GetAllAsync(string? userId);
         Task AddAsync(T entity);
-        Task UpdateAsync(T entity);
-        Task DeleteAsync(T entity);
+        Task UpdateAsync(T entity, string? userId);
+        Task DeleteAsync(T entity, string? userId);
     }
 
     public interface IWorkflowRepository : IRepository<Workflow>
     {
-        Task<Workflow?> GetWithRelationsAsync(Guid id);
+        Task<Workflow?> GetWithRelationsAsync(Guid id, string userId);
+        Task<Workflow?> GetWithRelationsByApiKey(Guid id, string apiKey);
         Task<IEnumerable<Workflow>> GetUserWorkflows(string id);
     }
 

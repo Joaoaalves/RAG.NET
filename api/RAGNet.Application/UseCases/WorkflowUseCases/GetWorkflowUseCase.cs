@@ -7,16 +7,16 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
 {
     public interface IGetWorkflowUseCase
     {
-        Task<WorkflowDetailsDTO> Execute(Guid workflowId);
+        Task<WorkflowDetailsDTO> Execute(Guid workflowId, string userId);
     }
 
     public class GetWorkflowUseCase(IWorkflowRepository workflowRepository) : IGetWorkflowUseCase
     {
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
 
-        public async Task<WorkflowDetailsDTO> Execute(Guid workflowId)
+        public async Task<WorkflowDetailsDTO> Execute(Guid workflowId, string userId)
         {
-            var workflow = await _workflowRepository.GetWithRelationsAsync(workflowId) ?? throw new Exception("Workflow não encontrado.");
+            var workflow = await _workflowRepository.GetWithRelationsAsync(workflowId, userId) ?? throw new Exception("Workflow não encontrado.");
 
             var chunker = workflow.Chunkers.FirstOrDefault() ?? throw new Exception("Chunker não encontrado.");
 

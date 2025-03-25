@@ -8,7 +8,7 @@ namespace RAGNET.Infrastructure.Repositories
 {
     public class WorkflowRepository(ApplicationDbContext context) : Repository<Workflow>(context), IWorkflowRepository
     {
-        public async Task<Workflow?> GetWithRelationsAsync(Guid id)
+        public async Task<Workflow?> GetWithRelationsAsync(Guid id, string userId)
         {
             return await _context.Workflows
                 .Include(w => w.Chunkers)
@@ -19,7 +19,21 @@ namespace RAGNET.Infrastructure.Repositories
                     .ThenInclude(f => f.Metas)
                 .Include(w => w.Rankers)
                     .ThenInclude(r => r.Metas)
-                .FirstOrDefaultAsync(w => w.Id == id);
+                .FirstOrDefaultAsync(w => w.Id == id && w.UserId == userId);
+        }
+
+        public async Task<Workflow?> GetWithRelationsByApiKey(Guid id, string apiKey)
+        {
+            return await _context.Workflows
+                .Include(w => w.Chunkers)
+                    .ThenInclude(c => c.Metas)
+                .Include(w => w.QueryEnhancers)
+                    .ThenInclude(q => q.Metas)
+                .Include(w => w.Filters)
+                    .ThenInclude(f => f.Metas)
+                .Include(w => w.Rankers)
+                    .ThenInclude(r => r.Metas)
+                .FirstOrDefaultAsync(w => w.Id == id && w.ApiKey == apiKey);
         }
 
         public async Task<IEnumerable<Workflow>> GetUserWorkflows(string userId)

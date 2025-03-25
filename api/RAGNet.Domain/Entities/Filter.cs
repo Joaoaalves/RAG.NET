@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using RAGNET.Domain.Enums;
+using RAGNET.Domain.Interfaces;
 
 namespace RAGNET.Domain.Entities
 {
-    public class Filter
+    public class Filter : IUserOwned
     {
         public Guid Id { get; set; }
         public FilterStrategy Strategy { get; set; }
@@ -12,6 +13,8 @@ namespace RAGNET.Domain.Entities
         [ForeignKey("Workflow")]
         public Guid WorkflowId { get; set; }
         public Workflow Workflow { get; set; } = null!;
+        [ForeignKey("User")]
+        public string UserId { get; set; } = String.Empty;
         public ICollection<FilterMeta> Metas { get; set; } = [];
     }
 

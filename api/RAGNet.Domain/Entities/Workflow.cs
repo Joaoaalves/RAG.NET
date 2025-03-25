@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using RAGNET.Domain.Interfaces;
 
 namespace RAGNET.Domain.Entities
 {
-    public class Workflow
+    public class Workflow : IUserOwned
     {
         [Key]
         public Guid Id { get; set; }

@@ -24,9 +24,6 @@ namespace web.Controllers
         private readonly IProcessEmbeddingUseCase _processEmbeddingUseCase = processEmbeddingUseCase;
         private readonly UserManager<User> _userManager = userManager;
 
-        /// <summary>
-        /// Create a Workflow
-        /// </summary>
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> CreateWorkflow([FromBody] WorkflowCreationDTO dto)
@@ -53,15 +50,17 @@ namespace web.Controllers
             return Ok(new { Workflows = workflows });
         }
 
-        /// <summary>
-        /// Returns a workflow with specified id
-        /// </summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetWorkflow(Guid id)
         {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return Unauthorized();
+
             try
             {
-                var workflowDetails = await _getWorkflowUseCase.Execute(id);
+                var workflowDetails = await _getWorkflowUseCase.Execute(id, user.Id);
                 return Ok(workflowDetails);
             }
             catch (Exception ex)
@@ -70,9 +69,6 @@ namespace web.Controllers
             }
         }
 
-        /// <summary>
-        /// Mocks an embedding process
-        /// </summary>
         [HttpPost("embedding/{workflow_id}")]
         [Consumes("multipart/form-data")]
         [ApiKeyCheck]
@@ -80,7 +76,8 @@ namespace web.Controllers
         {
             try
             {
-                int processedChunks = await _processEmbeddingUseCase.Execute(workflow_id, file);
+                var apiKey = Request.Headers["x-api-key"].ToString();
+                int processedChunks = await _processEmbeddingUseCase.Execute(workflow_id, file, apiKey);
                 return Ok(new { Message = "Embedding done successfully.", ProcessedChunks = processedChunks });
             }
             catch (Exception ex)

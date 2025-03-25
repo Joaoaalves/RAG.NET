@@ -182,6 +182,10 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Property<int>("StrategyType")
                         .HasColumnType("integer");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<Guid>("WorkflowId")
                         .HasColumnType("uuid");
 
@@ -248,6 +252,10 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Property<int>("Strategy")
                         .HasColumnType("integer");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<Guid>("WorkflowId")
                         .HasColumnType("uuid");
 
@@ -298,6 +306,10 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<Guid>("WorkflowId")
                         .HasColumnType("uuid");
 
@@ -340,6 +352,10 @@ namespace RAGNet.Infrastructure.Migrations
 
                     b.Property<int>("Strategy")
                         .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<Guid>("WorkflowId")
                         .HasColumnType("uuid");

@@ -199,6 +199,7 @@ namespace RAGNet.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     WorkflowId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false),
                     StrategyType = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -218,7 +219,8 @@ namespace RAGNet.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Strategy = table.Column<int>(type: "integer", nullable: false),
-                    WorkflowId = table.Column<Guid>(type: "uuid", nullable: false)
+                    WorkflowId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -238,6 +240,7 @@ namespace RAGNet.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Type = table.Column<int>(type: "integer", nullable: false),
                     WorkflowId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false),
                     Prompt = table.Column<string>(type: "text", nullable: false),
                     MaxQueries = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -258,7 +261,8 @@ namespace RAGNet.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Strategy = table.Column<int>(type: "integer", nullable: false),
-                    WorkflowId = table.Column<Guid>(type: "uuid", nullable: false)
+                    WorkflowId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

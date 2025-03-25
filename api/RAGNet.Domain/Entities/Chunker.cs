@@ -1,25 +1,25 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using RAGNET.Domain.Enums;
+using RAGNET.Domain.Interfaces;
 
 namespace RAGNET.Domain.Entities
 {
-    public class Chunker
+    public class Chunker : IUserOwned
     {
         [Key]
         public Guid Id { get; set; }
 
         [ForeignKey("Workflow")]
         public Guid WorkflowId { get; set; }
-
+        public Workflow Workflow { get; set; } = null!;
+        [ForeignKey("User")]
+        public string UserId { get; set; } = String.Empty;
         public ChunkerStrategy StrategyType { get; set; }
 
         public ICollection<EmbeddingProviderConfig> EmbeddingProvider { get; set; } = null!;
 
         public ICollection<ChunkerMeta> Metas { get; set; } = [];
-
-        public Workflow Workflow { get; set; } = null!;
-
     }
 
     public class ChunkerMeta
@@ -30,7 +30,6 @@ namespace RAGNET.Domain.Entities
         [ForeignKey("Chunker")]
         public Guid ChunkerId { get; set; }
         public Chunker Chunker { get; set; } = null!;
-
         public string Key { get; set; } = String.Empty;
 
         public string Value { get; set; } = String.Empty;

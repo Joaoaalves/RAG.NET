@@ -31,19 +31,6 @@ namespace RAGNET.Application.Attributes
                 return;
             }
 
-            var workflow = await workflowRepository.GetByIdAsync(workflowId);
-            if (workflow == null)
-            {
-                context.Result = new NotFoundObjectResult("Workflow não encontrado.");
-                return;
-            }
-
-            if (workflow.ApiKey != potentialApiKey)
-            {
-                context.Result = new UnauthorizedObjectResult("API key inválida.");
-                return;
-            }
-
             await next();
         }
     }
