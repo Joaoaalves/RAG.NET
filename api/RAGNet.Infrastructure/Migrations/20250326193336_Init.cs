@@ -180,7 +180,8 @@ namespace RAGNet.Infrastructure.Migrations
                     UserId = table.Column<string>(type: "text", nullable: false),
                     ApiKey = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CollectionId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -198,15 +199,56 @@ namespace RAGNet.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    StrategyType = table.Column<int>(type: "integer", nullable: false),
                     WorkflowId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false),
-                    StrategyType = table.Column<int>(type: "integer", nullable: false)
+                    UserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Chunkers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Chunkers_Workflows_WorkflowId",
+                        column: x => x.WorkflowId,
+                        principalTable: "Workflows",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConversationProviderConfig",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Provider = table.Column<int>(type: "integer", nullable: false),
+                    ApiKey = table.Column<string>(type: "text", nullable: false),
+                    WorkflowId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConversationProviderConfig", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConversationProviderConfig_Workflows_WorkflowId",
+                        column: x => x.WorkflowId,
+                        principalTable: "Workflows",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmbeddingProviderConfig",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Provider = table.Column<int>(type: "integer", nullable: false),
+                    ApiKey = table.Column<string>(type: "text", nullable: false),
+                    VectorSize = table.Column<int>(type: "integer", nullable: false),
+                    WorkflowId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmbeddingProviderConfig", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EmbeddingProviderConfig_Workflows_WorkflowId",
                         column: x => x.WorkflowId,
                         principalTable: "Workflows",
                         principalColumn: "Id",
@@ -279,36 +321,16 @@ namespace RAGNet.Infrastructure.Migrations
                 name: "ChunkerMetas",
                 columns: table => new
                 {
-                    Ìd = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ChunkerId = table.Column<Guid>(type: "uuid", nullable: false),
                     Key = table.Column<string>(type: "text", nullable: false),
                     Value = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ChunkerMetas", x => x.Ìd);
+                    table.PrimaryKey("PK_ChunkerMetas", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ChunkerMetas_Chunkers_ChunkerId",
-                        column: x => x.ChunkerId,
-                        principalTable: "Chunkers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EmbeddingProviderConfig",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Provider = table.Column<int>(type: "integer", nullable: false),
-                    ApiKey = table.Column<string>(type: "text", nullable: false),
-                    ChunkerId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EmbeddingProviderConfig", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EmbeddingProviderConfig_Chunkers_ChunkerId",
                         column: x => x.ChunkerId,
                         principalTable: "Chunkers",
                         principalColumn: "Id",
@@ -420,12 +442,20 @@ namespace RAGNet.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Chunkers_WorkflowId",
                 table: "Chunkers",
-                column: "WorkflowId");
+                column: "WorkflowId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_EmbeddingProviderConfig_ChunkerId",
+                name: "IX_ConversationProviderConfig_WorkflowId",
+                table: "ConversationProviderConfig",
+                column: "WorkflowId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmbeddingProviderConfig_WorkflowId",
                 table: "EmbeddingProviderConfig",
-                column: "ChunkerId");
+                column: "WorkflowId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_FilterMetas_FilterId",
@@ -486,6 +516,9 @@ namespace RAGNet.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Chunks");
+
+            migrationBuilder.DropTable(
+                name: "ConversationProviderConfig");
 
             migrationBuilder.DropTable(
                 name: "EmbeddingProviderConfig");

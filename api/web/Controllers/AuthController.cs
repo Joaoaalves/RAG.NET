@@ -91,7 +91,7 @@ namespace web.Controllers
         public async Task<IActionResult> ValidateToken()
         {
             var userId = User?.Identity?.Name;
-            Console.WriteLine(userId);
+
             if (string.IsNullOrEmpty(userId))
             {
                 return StatusCode(401, new { error = "Invalid or expired token." });

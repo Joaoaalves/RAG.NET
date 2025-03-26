@@ -2,6 +2,6 @@ namespace RAGNET.Domain.Services
 {
     public interface IEmbeddingService
     {
-        Task<float[]> GenerateEmbedding(string text);
+        Task<float[]> GetEmbeddingAsync(string text);
     }
 }

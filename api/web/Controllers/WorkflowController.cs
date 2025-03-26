@@ -77,7 +77,7 @@ namespace web.Controllers
             try
             {
                 var apiKey = Request.Headers["x-api-key"].ToString();
-                int processedChunks = await _processEmbeddingUseCase.Execute(workflow_id, file, apiKey);
+                int processedChunks = await _processEmbeddingUseCase.Execute(file, apiKey);
                 return Ok(new { Message = "Embedding done successfully.", ProcessedChunks = processedChunks });
             }
             catch (Exception ex)

@@ -15,7 +15,6 @@ namespace RAGNET.Application.Mappers
                 StrategyType = dto.Strategy,
                 Metas =
                 [
-                    new() { Key = "embeddingService", Value = dto.Settings.EmbeddingService.ToString() },
                     new() { Key = "threshold", Value = dto.Settings.Threshold.ToString() },
                     new() { Key = "evaluationPrompt", Value = dto.Settings.EvaluationPrompt },
                     new() { Key = "maxChunkSize", Value = dto.Settings.MaxChunkSize.ToString() }
@@ -27,7 +26,6 @@ namespace RAGNET.Application.Mappers
         {
             return new ChunkerSettingsDTO
             {
-                EmbeddingService = Enum.Parse<EmbeddingProviderEnum>(meta["embeddingService"]),
                 Threshold = double.Parse(meta["threshold"]),
                 EvaluationPrompt = meta["evaluationPrompt"],
                 MaxChunkSize = int.Parse(meta["maxChunkSize"])

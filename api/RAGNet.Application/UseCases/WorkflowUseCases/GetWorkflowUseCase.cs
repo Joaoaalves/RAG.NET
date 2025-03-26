@@ -18,11 +18,12 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
         {
             var workflow = await _workflowRepository.GetWithRelationsAsync(workflowId, userId) ?? throw new Exception("Workflow não encontrado.");
 
-            var chunker = workflow.Chunkers.FirstOrDefault() ?? throw new Exception("Chunker não encontrado.");
+            var chunker = workflow.Chunker ?? throw new Exception("Chunker não encontrado.");
 
             var settings = chunker.Metas.ToDictionary(m => m.Key, m => m.Value);
+            var embeddingProvider = workflow.EmbeddingProviderConfig ?? throw new Exception("Embedding Provider não setado");
 
-            return workflow.ToWorkflowDetailsDTOFromWorkflow(chunker.StrategyType, settings.ToChunkerSettingsDTOfromDictionary());
+            return workflow.ToWorkflowDetailsDTOFromWorkflow(chunker.StrategyType, settings.ToChunkerSettingsDTOfromDictionary(), embeddingProvider.ToDTOFromEmbeddingProviderConfig());
         }
     }
 }

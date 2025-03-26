@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using RAGNET.Domain.Entities;
 using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Interfaces;
 using RAGNET.Infrastructure.Data;
@@ -28,10 +27,11 @@ namespace RAGNET.Infrastructure.Repositories
             return await _dbSet.ToListAsync();
         }
 
-        public async Task AddAsync(T entity)
+        public async Task<T> AddAsync(T entity)
         {
-            await _dbSet.AddAsync(entity);
+            var res = await _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
+            return entity;
         }
 
         public async Task UpdateAsync(T entity)

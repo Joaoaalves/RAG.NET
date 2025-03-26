@@ -27,9 +27,9 @@ namespace RAGNET.Infrastructure.Data
 
             // Relationship: Workflow -> Chunkers
             builder.Entity<Workflow>()
-                        .HasMany(w => w.Chunkers)
+                        .HasOne(w => w.Chunker)
                         .WithOne(c => c.Workflow)
-                        .HasForeignKey(c => c.WorkflowId)
+                        .HasForeignKey<Chunker>(c => c.WorkflowId)
                         .OnDelete(DeleteBehavior.Cascade);
 
             // Relationship: Workflow -> QueryEnhancers
@@ -59,6 +59,20 @@ namespace RAGNET.Infrastructure.Data
                         .WithMany(c => c.Metas)
                         .HasForeignKey(cm => cm.ChunkerId)
                         .OnDelete(DeleteBehavior.Cascade);
+
+            // Relationship: Chunker -> EmbeddingProvider
+            builder.Entity<Workflow>()
+                .HasOne(w => w.EmbeddingProviderConfig)
+                .WithOne(e => e.Workflow)
+                .HasForeignKey<EmbeddingProviderConfig>(e => e.WorkflowId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Relationship: Chunker -> ConversationProvider
+            builder.Entity<Workflow>()
+                .HasOne(w => w.ConversationProviderConfig)
+                .WithOne(c => c.Workflow)
+                .HasForeignKey<ConversationProviderConfig>(c => c.WorkflowId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Relationship: QueryEnhancer -> QueryEnhancerMetas
             builder.Entity<QueryEnhancerMeta>()

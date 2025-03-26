@@ -12,7 +12,7 @@ using RAGNET.Infrastructure.Data;
 namespace RAGNet.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250325212325_Init")]
+    [Migration("20250326193336_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -194,14 +194,15 @@ namespace RAGNet.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WorkflowId");
+                    b.HasIndex("WorkflowId")
+                        .IsUnique();
 
                     b.ToTable("Chunkers");
                 });
 
             modelBuilder.Entity("RAGNET.Domain.Entities.ChunkerMeta", b =>
                 {
-                    b.Property<Guid>("Ìd")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -216,11 +217,35 @@ namespace RAGNet.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Ìd");
+                    b.HasKey("Id");
 
                     b.HasIndex("ChunkerId");
 
                     b.ToTable("ChunkerMetas");
+                });
+
+            modelBuilder.Entity("RAGNET.Domain.Entities.ConversationProviderConfig", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ApiKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Provider")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("WorkflowId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkflowId")
+                        .IsUnique();
+
+                    b.ToTable("ConversationProviderConfig");
                 });
 
             modelBuilder.Entity("RAGNET.Domain.Entities.EmbeddingProviderConfig", b =>
@@ -233,15 +258,19 @@ namespace RAGNet.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("ChunkerId")
-                        .HasColumnType("uuid");
-
                     b.Property<int>("Provider")
                         .HasColumnType("integer");
 
+                    b.Property<int>("VectorSize")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("WorkflowId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ChunkerId");
+                    b.HasIndex("WorkflowId")
+                        .IsUnique();
 
                     b.ToTable("EmbeddingProviderConfig");
                 });
@@ -472,6 +501,9 @@ namespace RAGNet.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("CollectionId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -547,8 +579,8 @@ namespace RAGNet.Infrastructure.Migrations
             modelBuilder.Entity("RAGNET.Domain.Entities.Chunker", b =>
                 {
                     b.HasOne("RAGNET.Domain.Entities.Workflow", "Workflow")
-                        .WithMany("Chunkers")
-                        .HasForeignKey("WorkflowId")
+                        .WithOne("Chunker")
+                        .HasForeignKey("RAGNET.Domain.Entities.Chunker", "WorkflowId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -566,15 +598,26 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Navigation("Chunker");
                 });
 
-            modelBuilder.Entity("RAGNET.Domain.Entities.EmbeddingProviderConfig", b =>
+            modelBuilder.Entity("RAGNET.Domain.Entities.ConversationProviderConfig", b =>
                 {
-                    b.HasOne("RAGNET.Domain.Entities.Chunker", "Chunker")
-                        .WithMany("EmbeddingProvider")
-                        .HasForeignKey("ChunkerId")
+                    b.HasOne("RAGNET.Domain.Entities.Workflow", "Workflow")
+                        .WithOne("ConversationProviderConfig")
+                        .HasForeignKey("RAGNET.Domain.Entities.ConversationProviderConfig", "WorkflowId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Chunker");
+                    b.Navigation("Workflow");
+                });
+
+            modelBuilder.Entity("RAGNET.Domain.Entities.EmbeddingProviderConfig", b =>
+                {
+                    b.HasOne("RAGNET.Domain.Entities.Workflow", "Workflow")
+                        .WithOne("EmbeddingProviderConfig")
+                        .HasForeignKey("RAGNET.Domain.Entities.EmbeddingProviderConfig", "WorkflowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Workflow");
                 });
 
             modelBuilder.Entity("RAGNET.Domain.Entities.Filter", b =>
@@ -654,8 +697,6 @@ namespace RAGNet.Infrastructure.Migrations
 
             modelBuilder.Entity("RAGNET.Domain.Entities.Chunker", b =>
                 {
-                    b.Navigation("EmbeddingProvider");
-
                     b.Navigation("Metas");
                 });
 
@@ -681,7 +722,11 @@ namespace RAGNet.Infrastructure.Migrations
 
             modelBuilder.Entity("RAGNET.Domain.Entities.Workflow", b =>
                 {
-                    b.Navigation("Chunkers");
+                    b.Navigation("Chunker");
+
+                    b.Navigation("ConversationProviderConfig");
+
+                    b.Navigation("EmbeddingProviderConfig");
 
                     b.Navigation("Filters");
 

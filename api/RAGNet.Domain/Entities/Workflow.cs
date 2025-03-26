@@ -15,11 +15,14 @@ namespace RAGNET.Domain.Entities
         public string ApiKey { get; set; } = String.Empty;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public Guid CollectionId { get; set; }
 
         // Related configurations
-        public ICollection<Chunker> Chunkers { get; set; } = null!;
-        public ICollection<QueryEnhancer> QueryEnhancers { get; set; } = null!;
-        public ICollection<Filter> Filters { get; set; } = null!;
-        public ICollection<Ranker> Rankers { get; set; } = null!;
+        public Chunker? Chunker { get; set; }
+        public ICollection<QueryEnhancer> QueryEnhancers { get; set; } = [];
+        public ICollection<Filter> Filters { get; set; } = [];
+        public ICollection<Ranker> Rankers { get; set; } = [];
+        public ConversationProviderConfig? ConversationProviderConfig { get; set; }
+        public EmbeddingProviderConfig? EmbeddingProviderConfig { get; set; }
     }
 }

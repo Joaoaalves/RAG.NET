@@ -30,7 +30,6 @@ namespace RAGNET.Application.Attributes
                 context.Result = new StatusCodeResult((int)HttpStatusCode.InternalServerError);
                 return;
             }
-
             await next();
         }
     }

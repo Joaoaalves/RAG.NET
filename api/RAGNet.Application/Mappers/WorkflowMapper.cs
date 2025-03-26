@@ -1,4 +1,5 @@
 using RAGNET.Application.DTOs.Chunker;
+using RAGNET.Application.DTOs.Embedder;
 using RAGNET.Application.DTOs.Workflow;
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Enums;
@@ -14,12 +15,13 @@ namespace RAGNET.Application.Mappers
                 Name = dto.Name,
                 ApiKey = Guid.NewGuid().ToString("N"),
                 UserId = user.Id,
+                CollectionId = Guid.NewGuid(),
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
         }
 
-        public static WorkflowDetailsDTO ToWorkflowDetailsDTOFromWorkflow(this Workflow workflow, ChunkerStrategy strategy, ChunkerSettingsDTO settings)
+        public static WorkflowDetailsDTO ToWorkflowDetailsDTOFromWorkflow(this Workflow workflow, ChunkerStrategy strategy, ChunkerSettingsDTO settings, EmbeddingProviderConfigDTO embedding)
         {
             return new WorkflowDetailsDTO
             {
@@ -28,6 +30,7 @@ namespace RAGNET.Application.Mappers
                 Strategy = strategy,
                 ApiKey = workflow.ApiKey,
                 Settings = settings,
+                EmbeddingProvider = embedding
             };
         }
     }

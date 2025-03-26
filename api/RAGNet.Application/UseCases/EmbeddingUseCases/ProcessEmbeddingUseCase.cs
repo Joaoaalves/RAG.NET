@@ -1,50 +1,71 @@
+using System.Collections.Concurrent;
 using Microsoft.AspNetCore.Http;
+using RAGNET.Domain.Factories;
 using RAGNET.Domain.Repositories;
-using System.Text;
+using RAGNET.Domain.Services;
 
 namespace RAGNET.Application.UseCases.EmbeddingUseCases
 {
     public interface IProcessEmbeddingUseCase
     {
-        Task<int> Execute(Guid workflowId, IFormFile file, string apiKey);
+        Task<int> Execute(IFormFile file, string apiKey);
     }
 
-    public class ProcessEmbeddingUseCase(IWorkflowRepository workflowRepository) : IProcessEmbeddingUseCase
+    public class ProcessEmbeddingUseCase(
+        IWorkflowRepository workflowRepository,
+        IPdfTextExtractorService pdfTextExtractor,
+        ITextChunkerFactory chunkerFactory,
+        IEmbedderFactory embedderFactory,
+        IVectorDatabaseService vectorDatabaseService) : IProcessEmbeddingUseCase
     {
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
+        private readonly IPdfTextExtractorService _pdfTextExtractor = pdfTextExtractor;
+        private readonly ITextChunkerFactory _chunkerFactory = chunkerFactory;
+        private readonly IEmbedderFactory _embedderFactory = embedderFactory;
+        private readonly IVectorDatabaseService _vectorDatabaseService = vectorDatabaseService;
 
-        // JUST A MOCK ATM
-        public async Task<int> Execute(Guid workflowId, IFormFile file, string apiKey)
+        public async Task<int> Execute(IFormFile file, string apiKey)
         {
-            var workflow = await _workflowRepository.GetWithRelationsByApiKey(workflowId, apiKey) ?? throw new Exception("Workflow não encontrado.");
-            var chunker = workflow.Chunkers.FirstOrDefault() ?? throw new Exception("Chunker não encontrado.");
 
-            var settings = chunker.Metas.ToDictionary(m => m.Key, m => m.Value);
-            var maxChunkSize = int.Parse(settings["maxChunkSize"]);
+            var workflow = await _workflowRepository.GetWithRelationsByApiKey(apiKey)
+                           ?? throw new Exception("Workflow not found.");
 
-            using var stream = new MemoryStream();
-            await file.CopyToAsync(stream);
-            var text = Encoding.UTF8.GetString(stream.ToArray());
+            var chunkerConfig = workflow.Chunker
+                                ?? throw new Exception("Chunker not found.");
 
-            var sentences = text.Split(new[] { ".", "!", "?" }, StringSplitOptions.RemoveEmptyEntries);
-            var chunks = new List<string>();
-            var chunk = new StringBuilder();
+            var embeddingProviderConfig = workflow.EmbeddingProviderConfig
+                                ?? throw new Exception("Embedding Provider not set");
 
-            foreach (var sentence in sentences)
+            // Creates the chunking Strategy for this workflow
+            var chunker = _chunkerFactory.CreateChunker(chunkerConfig);
+
+            // Creates the Embedder for this workflow
+            var embedder = _embedderFactory.CreateEmbeddingService(embeddingProviderConfig.ApiKey);
+
+            // Get text from PDF
+            var text = await _pdfTextExtractor.ExtractTextAsync(file);
+
+            // Chunk
+            var chunks = chunker.ChunkText(text);
+
+            var processedChunks = 0;
+            var collectionId = workflow.CollectionId.ToString();
+
+            // Embedd
+            await Parallel.ForEachAsync(chunks, async (chunk, _) =>
             {
-                if (chunk.Length + sentence.Length > maxChunkSize)
+                var embedding = await embedder.GetEmbeddingAsync(chunk);
+
+                var documentId = $"{workflow.Id}-{Interlocked.Increment(ref processedChunks)}";
+                var metadata = new Dictionary<string, string>
                 {
-                    chunks.Add(chunk.ToString());
-                    chunk.Clear();
-                }
-                chunk.Append(sentence).Append(".");
-            }
-            if (chunk.Length > 0)
-                chunks.Add(chunk.ToString());
+                    { "chunkPreview", chunk.Length > 100 ? chunk.Substring(0, 100) : chunk }
+                };
 
-            await Task.Delay(1000);
+                await _vectorDatabaseService.InsertAsync(documentId, embedding, collectionId, metadata);
+            });
 
-            return chunks.Count;
+            return processedChunks;
         }
     }
 }
