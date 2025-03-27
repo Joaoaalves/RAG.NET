@@ -96,6 +96,7 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
 
             var chunks = chunker.ChunkText(text);
             int totalChunks = chunks.Count();
+
             int processedChunks = 0;
             var collectionId = workflow.CollectionId.ToString();
 
@@ -109,11 +110,9 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
                 {
                     // Get the embedding for this chunk.
                     var embedding = await embedder.GetEmbeddingAsync(chunk);
-                    // Increment processed chunk count in a thread-safe manner.
-                    int currentCount = Interlocked.Increment(ref processedChunks);
 
                     // Create a document id and metadata.
-                    var documentId = $"{workflow.Id}-{currentCount}";
+                    var documentId = Guid.NewGuid().ToString();
                     var metadata = new Dictionary<string, string>
                     {
                 { "chunkPreview", chunk.Length > 100 ? chunk.Substring(0, 100) : chunk }
@@ -122,12 +121,17 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
                     // Insert the embedded chunk into the vector database.
                     await _vectorDatabaseService.InsertAsync(documentId, embedding, collectionId, metadata);
 
-                    // Report progress by writing to the channel.
-                    await channel.Writer.WriteAsync(new EmbeddingProgressDTO
+                    // Increment processed chunk count in a thread-safe manner.
+                    int currentCount = Interlocked.Increment(ref processedChunks);
+
+                    var progressUpdate = new EmbeddingProgressDTO
                     {
                         ProcessedChunks = currentCount,
                         TotalChunks = totalChunks
-                    }, cancellationToken);
+                    };
+
+                    // Report progress by writing to the channel.
+                    await channel.Writer.WriteAsync(progressUpdate, cancellationToken);
                 });
 
                 // Complete the channel when processing is done.

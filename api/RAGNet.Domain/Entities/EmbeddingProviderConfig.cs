@@ -16,5 +16,6 @@ namespace RAGNET.Domain.Entities
         [ForeignKey("Workflow")]
         public Guid WorkflowId { get; set; }
         public Workflow Workflow { get; set; } = null!;
+
     }
 }
