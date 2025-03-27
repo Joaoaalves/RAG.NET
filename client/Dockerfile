@@ -1,9 +1,9 @@
 FROM node:22 AS build
 WORKDIR /app
 
-COPY package*.json ./
 RUN npm install -g pnpm
 
+COPY package*.json ./
 RUN pnpm install
 
 COPY . .
