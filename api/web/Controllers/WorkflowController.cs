@@ -69,20 +69,44 @@ namespace web.Controllers
             }
         }
 
-        [HttpPost("embedding/{workflow_id}")]
+        [HttpPost("embedding")]
         [Consumes("multipart/form-data")]
         [ApiKeyCheck]
-        public async Task<IActionResult> ProcessEmbedding(Guid workflow_id, IFormFile file)
+        public async Task ProcessEmbedding(IFormFile file, [FromQuery] bool stream = false)
         {
+            var apiKey = Request.Headers["x-api-key"].ToString();
+
             try
             {
-                var apiKey = Request.Headers["x-api-key"].ToString();
-                int processedChunks = await _processEmbeddingUseCase.Execute(file, apiKey);
-                return Ok(new { Message = "Embedding done successfully.", ProcessedChunks = processedChunks });
+                if (stream)
+                {
+                    // Set the response type for SSE
+                    Response.ContentType = "text/event-stream";
+
+                    // Get the progress stream from the use case.
+                    await foreach (var progress in _processEmbeddingUseCase.ExecuteStreaming(file, apiKey))
+                    {
+                        // Write the current progress as JSON
+                        var json = System.Text.Json.JsonSerializer.Serialize(progress);
+                        await Response.WriteAsync($"data: {json}\n\n");
+                        await Response.Body.FlushAsync();
+                    }
+                }
+                else
+                {
+                    // Use the traditional synchronous method
+                    int processedChunks = await _processEmbeddingUseCase.Execute(file, apiKey);
+                    await Response.WriteAsJsonAsync(new
+                    {
+                        Message = "Embedding done successfully.",
+                        ProcessedChunks = processedChunks
+                    });
+                }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                Response.StatusCode = 400;
+                await Response.WriteAsync(ex.Message);
             }
         }
     }

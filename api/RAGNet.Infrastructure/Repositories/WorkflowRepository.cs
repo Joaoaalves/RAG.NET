@@ -12,7 +12,7 @@ namespace RAGNET.Infrastructure.Repositories
         {
             return await _context.Workflows
                 .Include(w => w.Chunker)
-                    .ThenInclude(c => c != null ? c.Metas : new List<ChunkerMeta>())
+                    .ThenInclude(c => c != null ? c.Metas : null)
                 .Include(w => w.QueryEnhancers)
                     .ThenInclude(q => q.Metas)
                 .Include(w => w.Filters)
@@ -28,7 +28,7 @@ namespace RAGNET.Infrastructure.Repositories
         {
             return await _context.Workflows
                 .Include(w => w.Chunker)
-                    .ThenInclude(c => c != null ? c.Metas : new List<ChunkerMeta>())
+                    .ThenInclude(c => c != null ? c.Metas : null)
                 .Include(w => w.QueryEnhancers)
                     .ThenInclude(q => q.Metas)
                 .Include(w => w.Filters)
@@ -43,7 +43,7 @@ namespace RAGNET.Infrastructure.Repositories
         public async Task<IEnumerable<Workflow>> GetUserWorkflows(string userId)
         {
             return await _context.Workflows.Include(w => w.Chunker)
-                    .ThenInclude(c => c != null ? c.Metas : new List<ChunkerMeta>())
+                    .ThenInclude(c => c != null ? c.Metas : null)
                 .Include(w => w.QueryEnhancers)
                     .ThenInclude(q => q.Metas)
                 .Include(w => w.Filters)
