@@ -18,13 +18,6 @@ namespace RAGNET.Application.Attributes
                 return;
             }
 
-            if (!context.ActionArguments.TryGetValue("workflow_id", out var workflowIdObj) ||
-                workflowIdObj is not Guid workflowId)
-            {
-                context.Result = new BadRequestObjectResult("Workflow id inválido.");
-                return;
-            }
-
             if (context.HttpContext.RequestServices.GetService(typeof(IWorkflowRepository)) is not IWorkflowRepository workflowRepository)
             {
                 context.Result = new StatusCodeResult((int)HttpStatusCode.InternalServerError);
