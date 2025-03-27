@@ -51,7 +51,6 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
         public async Task ShouldCreateWithEmbeddingProvider()
         {
             // Arrange
-
             var embeddingProvider = new EmbeddingProviderConfig
             {
                 Id = Guid.NewGuid(),
