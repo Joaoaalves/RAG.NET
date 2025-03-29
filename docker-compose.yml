@@ -8,6 +8,9 @@ services:
     depends_on:
       - postgres
       - qdrant
+    environment:
+      - CLIENT_URL=http://localhost
+      - PRODUCTION=true
 
   postgres:
     image: postgres:13

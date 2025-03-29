@@ -2,32 +2,17 @@ version: "3.8"
 
 services:
   api-dev:
-    container_name: api-dev
     build:
       context: ./api
-      dockerfile: /web/Dockerfile.dev
-    volumes:
-      - ./api:/src:delegated
-      - /src/bin
-      - /src/obj
+      dockerfile: web/Dockerfile
     ports:
       - "5000:8080"
-    environment:
-      - DOTNET_USE_POLLING_FILE_WATCHER=1
-    command:
-      [
-        "dotnet",
-        "watch",
-        "run",
-        "--project",
-        "web.csproj",
-        "--urls",
-        "http://0.0.0.0:8080",
-      ]
     depends_on:
       - postgres
       - qdrant
-
+    environment:
+      - CLIENT_URL=http://localhost:4200
+      - PRODUCTION=false
   client-dev:
     container_name: client-dev
     build:

@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Services;
@@ -20,22 +19,67 @@ using RAGNET.Infrastructure.Factories;
 using RAGNET.Infrastructure.Adapters.VectorDB;
 using RAGNET.Infrastructure.Adapters.OpenAIFactory;
 
-using web.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddSwaggerConfiguration();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("BearerAuth", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Enter proper JWT token",
+        Name = "Authorization",
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        Type = SecuritySchemeType.Http
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "BearerAuth"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddControllers();
+
+var isProductionEnv = Environment.GetEnvironmentVariable("PRODUCTION") ?? "false";
+var isDevelopment = isProductionEnv == "false";
 
 // Configure connection string in appsettings.json, for example:
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var signingKey = builder.Configuration["JWT:SignInKey"] ?? throw new Exception("You must set JWT SignInKey.");
+var clientURL = Environment.GetEnvironmentVariable("CLIENT_URL") ?? "http://localhost:4200";
+
 
 
 // Register the ApplicationDbContext with PostgreSQL provider
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
+
+builder.Services.AddIdentityApiEndpoints<User>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.ConfigureAll<BearerTokenOptions>(option =>
+{
+    option.BearerTokenExpiration = TimeSpan.FromMinutes(60);
+});
+
+builder.Services.AddAuthorization();
 
 // Repositories
 builder.Services.AddScoped<IWorkflowRepository, WorkflowRepository>();
@@ -46,40 +90,6 @@ builder.Services.AddScoped<IRankerRepository, RankerRepository>();
 builder.Services.AddScoped<IChunkRepository, ChunkRepository>();
 builder.Services.AddScoped<IEmbeddingProviderConfigRepository, EmbeddingProviderConfigRepository>();
 
-// Configure Identity with the custom User entity
-builder.Services.AddIdentity<User, IdentityRole>(options =>
-    {
-        // Configure Identity options as needed (e.g., password settings)
-        options.Password.RequireDigit = true;
-        options.Password.RequiredLength = 6;
-        options.Password.RequireNonAlphanumeric = false;
-        options.Password.RequireUppercase = true;
-        options.Password.RequireLowercase = true;
-    })
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme =
-    options.DefaultChallengeScheme =
-    options.DefaultForbidScheme =
-    options.DefaultScheme =
-    options.DefaultSignInScheme =
-    options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidIssuer = builder.Configuration["JWT:Issuer"],
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["JWT:Audience"],
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(signingKey)
-        )
-    };
-});
 
 // Services
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -101,21 +111,26 @@ builder.Services.AddScoped<IVectorDatabaseService, QDrantAdapter>();
 // Controllers
 builder.Services.AddControllers();
 
+// Cors
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("CorsPolicy", policyBuilder =>
+    {
+        policyBuilder.AllowAnyHeader().AllowAnyMethod().WithOrigins(clientURL);
+    });
+});
+
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+if (isDevelopment)
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "RAG.NET API V1");
-});
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
-app.UseCors(x => x
-     .AllowAnyMethod()
-     .AllowAnyHeader()
-     .AllowCredentials()
-      .SetIsOriginAllowed(origin => true));
-
+app.UseCors("CorsPolicy");
+app.MapIdentityApi<User>();
 app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
