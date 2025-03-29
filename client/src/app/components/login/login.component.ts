@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { LoginRequest } from '../../models/login-request';
 import { AuthService } from './../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
@@ -9,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './login.component.html',
 })
 export class LoginComponent implements OnInit {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   credentials: LoginRequest = {
     email: '',
@@ -17,7 +18,9 @@ export class LoginComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.isLoggedIn();
+    if (this.isLoggedIn()) {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   isLoggedIn() {
@@ -26,7 +29,7 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.authService.login(this.credentials).subscribe(() => {
-      console.log('Login successful');
+      this.router.navigate(['/dashboard']);
     });
   }
 }

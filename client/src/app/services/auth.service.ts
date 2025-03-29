@@ -2,14 +2,30 @@ import { LoginResponse } from './../models/login-response';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoginRequest } from '../models/login-request';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { RegisterRequest } from '../models/register-request';
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private apiUrl = environment.apiUrl;
   constructor(private httpClient: HttpClient) {}
+
+  register(credentials: RegisterRequest): Observable<boolean> {
+    return this.httpClient
+      .post<void>(`${this.apiUrl}/register`, credentials)
+      .pipe(
+        map(() => {
+          this.login(credentials);
+          return true;
+        }),
+        catchError(() => {
+          return of(false);
+        })
+      );
+  }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.httpClient
