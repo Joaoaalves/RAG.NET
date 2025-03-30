@@ -17,7 +17,6 @@ import {
   HlmAlertDialogDescriptionDirective,
   HlmAlertDialogFooterComponent,
   HlmAlertDialogHeaderComponent,
-  HlmAlertDialogOverlayDirective,
   HlmAlertDialogTitleDirective,
 } from '@spartan-ng/ui-alertdialog-helm';
 
@@ -33,7 +32,6 @@ import {
     HlmAlertDialogDescriptionDirective,
     HlmAlertDialogFooterComponent,
     HlmAlertDialogHeaderComponent,
-    HlmAlertDialogOverlayDirective,
     HlmAlertDialogTitleDirective,
   ],
   templateUrl: './alert.component.html',

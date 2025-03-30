@@ -3,10 +3,11 @@ import { WorkflowService } from '../../services/workflow.service';
 import { Workflow } from '../../models/workflow';
 import { WorkflowCardComponent } from 'src/app/shared/components/workflowCard/workflow-card.component';
 import { CommonModule } from '@angular/common';
+import { SidebarComponent } from 'src/app/shared/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [WorkflowCardComponent, CommonModule],
+  imports: [WorkflowCardComponent, SidebarComponent, CommonModule],
   templateUrl: './dashboard.component.html',
   standalone: true,
 })

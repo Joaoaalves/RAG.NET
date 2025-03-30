@@ -1,8 +1,13 @@
-<div class="flex flex-wrap items-start justify-start gap-8 p-8">
-  <app-workflow-card
-    *ngFor="let workflow of workflows"
-    [workflow]="workflow"
-    (workflowDeleted)="removeWorkflow($event)">
-    >
-  </app-workflow-card>
+<div class="w-screen h-screen grid grid-cols-[280px_1fr] gap-x-8">
+  <div>
+    <app-sidebar></app-sidebar>
+  </div>
+  <div class="flex flex-wrap items-start justify-start gap-8 p-8">
+    <app-workflow-card
+      *ngFor="let workflow of workflows"
+      [workflow]="workflow"
+      (workflowDeleted)="removeWorkflow($event)">
+      >
+    </app-workflow-card>
+  </div>
 </div>

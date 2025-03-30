@@ -3,6 +3,8 @@
     <h1 class="text-4xl font-bold">Login</h1>
     <form (ngSubmit)="login()" class="mt-10 space-y-8 w-full">
 
+      <span *ngIf="error" class="text-purple-500 inline-block w-full text-center">{{error}}</span>
+
       <app-input
         label="Email"
         type="email"
