@@ -1,17 +1,22 @@
-import { LoginResponse } from './../models/login-response';
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LoginRequest } from '../models/login-request';
-import { catchError, map, Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { LoginRequest } from '../models/login-request';
 import { RegisterRequest } from '../models/register-request';
+import { LoginResponse } from '../models/login-response';
+import { Observable, of, throwError } from 'rxjs';
+import { map, catchError, tap } from 'rxjs/operators';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private apiUrl = environment.apiUrl;
-  constructor(private httpClient: HttpClient) {}
+  constructor(
+    private httpClient: HttpClient,
+    private tokenService: TokenService
+  ) {}
 
   register(credentials: RegisterRequest): Observable<boolean> {
     return this.httpClient
@@ -21,9 +26,7 @@ export class AuthService {
           this.login(credentials);
           return true;
         }),
-        catchError(() => {
-          return of(false);
-        })
+        catchError(() => of(false))
       );
   }
 
@@ -32,47 +35,51 @@ export class AuthService {
       .post<LoginResponse>(`${this.apiUrl}/login`, credentials)
       .pipe(
         map((response) => {
-          localStorage.setItem('accessToken', response.accessToken);
-          document.cookie = `refreshToken=${response.refreshToken}`;
+          const expiresIn = new Date();
+          expiresIn.setSeconds(expiresIn.getSeconds() + response.expiresIn);
+          this.tokenService.setAccessToken(response.accessToken);
+          this.tokenService.setRefreshToken(response.refreshToken);
+          this.tokenService.setExpiresIn(expiresIn);
           return response;
         })
       );
   }
 
   refreshToken(): Observable<LoginResponse> {
-    const refreshToken = this.getRefreshTokenFromCookie();
+    const refreshToken = this.tokenService.getRefreshToken();
 
     return this.httpClient
       .post<LoginResponse>(`${this.apiUrl}/refresh`, { refreshToken })
       .pipe(
         map((response) => {
-          localStorage.setItem('accessToken', response.accessToken);
-          document.cookie = `refreshToken=${response.refreshToken}`;
+          const expiresIn = new Date();
+          expiresIn.setSeconds(expiresIn.getSeconds() + response.expiresIn);
+
+          this.tokenService.setAccessToken(response.accessToken);
+          this.tokenService.setRefreshToken(response.refreshToken);
+          this.tokenService.setExpiresIn(expiresIn);
           return response;
+        }),
+        catchError((error) => {
+          console.error('Error refreshing token', error);
+          return throwError(error);
         })
       );
   }
 
   logout(): void {
-    localStorage.removeItem('accessToken');
+    this.tokenService.removeAllTokens();
   }
 
   isLoggedIn(): boolean {
-    return localStorage.getItem('accessToken') !== null;
-  }
-
-  private getRefreshTokenFromCookie(): string | null {
-    const cookieString: string = document.cookie;
-    const cookieArray = cookieString.split('; ');
-
-    for (const cookie of cookieArray) {
-      const [name, value] = cookie.split('=');
-
-      if (name == 'refreshToken') {
-        return value;
-      }
-    }
-
-    return null;
+    const hasAccessToken = this.tokenService.getAccessToken() !== null;
+    const hasRefreshToken = this.tokenService.getRefreshToken() !== null;
+    const expiresIn = this.tokenService.getExpiresIn();
+    return (
+      hasAccessToken &&
+      hasRefreshToken &&
+      expiresIn !== null &&
+      expiresIn > new Date()
+    );
   }
 }
