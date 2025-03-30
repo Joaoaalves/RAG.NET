@@ -14,12 +14,14 @@ namespace web.Controllers
     public class WorkflowController(
         IGetUserWorkflowsUseCase getUserWorkflowsUseCase,
         ICreateWorkflowUseCase createWorkflowUseCase,
+        IDeleteWorkflowUseCase deleteWorkflowUseCase,
         IGetWorkflowUseCase getWorkflowUseCase,
         IProcessEmbeddingUseCase processEmbeddingUseCase,
         UserManager<User> userManager) : ControllerBase
     {
         private readonly IGetUserWorkflowsUseCase _getUserWorkflowsUseCase = getUserWorkflowsUseCase;
         private readonly ICreateWorkflowUseCase _createWorkflowUseCase = createWorkflowUseCase;
+        private readonly IDeleteWorkflowUseCase _deleteWorkflowUseCase = deleteWorkflowUseCase;
         private readonly IGetWorkflowUseCase _getWorkflowUseCase = getWorkflowUseCase;
         private readonly IProcessEmbeddingUseCase _processEmbeddingUseCase = processEmbeddingUseCase;
         private readonly UserManager<User> _userManager = userManager;
@@ -62,6 +64,25 @@ namespace web.Controllers
             {
                 var workflowDetails = await _getWorkflowUseCase.Execute(id, user.Id);
                 return Ok(workflowDetails);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteWorkflow(Guid id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return Unauthorized();
+
+            try
+            {
+                var workflow = await _deleteWorkflowUseCase.Execute(id, user.Id);
+                return Ok(workflow);
             }
             catch (Exception ex)
             {

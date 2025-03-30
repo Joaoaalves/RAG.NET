@@ -9,4 +9,4 @@ RUN pnpm install
 
 COPY . /app
 
-CMD ["pnpm", "run", "dev"]
+CMD ["pnpm", "run", "start"]

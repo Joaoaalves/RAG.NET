@@ -1,0 +1,17 @@
+<hlm-alert-dialog>
+  <button [id]='id' variant='outline' brnAlertDialogTrigger hlmBtn>
+    <ng-content></ng-content>
+  </button>
+  <hlm-alert-dialog-content *brnAlertDialogContent='let ctx' class="min-w-2xl bg-black text-white">
+    <hlm-alert-dialog-header>
+      <h3 hlmAlertDialogTitle class="!text-white">{{title}}</h3>
+      <p hlmAlertDialogDescription class="!text-neutral-200">
+        {{description}}
+      </p>
+    </hlm-alert-dialog-header>
+    <hlm-alert-dialog-footer>
+      <button hlmAlertDialogCancel (click)='ctx.close()'>Cancel</button>
+      <button hlmAlertDialogAction (click)='confirmAction();ctx.close()' class="bg-neutral-800 hover:bg-white hover:text-black transition-all duration-300 cursor-pointer">Confirm</button>
+    </hlm-alert-dialog-footer>
+  </hlm-alert-dialog-content>
+</hlm-alert-dialog>

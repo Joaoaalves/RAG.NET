@@ -1,0 +1,25 @@
+<div class="border border-neutral-600 text-neutral-200 p-4 min-w-72 flex flex-col items-start gap-y-4 rounded-xl cursor-pointer hover:shadow-2xl shadow-purple-600/20 transition-all duration-300">
+  <div class="w-full flex items-center justify-between">
+    <h2 class="text-xl uppercase">{{ workflow.name }}</h2>
+
+    <app-alert
+      [id]="'deleteWorkflow'"
+      [title]="'Delete Workflow'"
+      description="Are you sure you want to delete this workflow?"
+      (actionConfirmed)="deleteWorkflow()"
+    >
+      <div class="w-7 h-7 hover:bg-white hover:!text-black transition-all duration-300 cursor-pointer rounded-full flex items-center justify-center">
+        <ng-icon name="heroTrash" class="w-3"></ng-icon>
+      </div>
+    </app-alert>
+
+  </div>
+  <div class="flex items-center gap-2">
+    <span class="bg-neutral-900 px-4 py-2 rounded-2xl">
+      Embeddings: {{ workflow.embeddingProvider.provider }}
+    </span>
+    <span class="bg-neutral-900 px-4 py-2 rounded-2xl">
+      Vector Size: {{ workflow.embeddingProvider.vectorSize }}
+    </span>
+  </div>
+</div>

@@ -1,21 +1,25 @@
-<div class="w-screen h-screen bg-black grid items-center justify-center">
-  <div class="flex flex-col items-center justify-center p-8 min-w-[600px] bg-white rounded-lg">
+<div class="w-screen h-screen bg-gradient-to-br from-black from-45% via-purple-600 via-55% to-black to-95% grid items-center justify-center">
+  <div class="flex flex-col items-center justify-center p-8 min-w-[600px] border-2 border-neutral-800 rounded-lg text-white bg-black/70">
     <h1 class="text-4xl font-bold">Login</h1>
-    <form (ngSubmit)="login()" class="mt-10 space-y-4 w-full">
+    <form (ngSubmit)="login()" class="mt-10 space-y-8 w-full">
 
-      <div class="flex flex-col gap-y-4 w-full">
-        <label for="email">Email</label>
-        <input name="email" type="email" class="w-full bg-black text-white rounded-lg p-2" [(ngModel)]="credentials.email" required>
-      </div>
+      <app-input
+        label="Email"
+        type="email"
+        name="email"
+        [(model)]="credentials.email">
+      </app-input>
 
-      <div class="flex flex-col gap-y-4 w-full">
-        <label for="password">Password</label>
-        <input name="password" type="password" class="w-full bg-black text-white rounded-lg p-2" [(ngModel)]="credentials.password" required>
-      </div>
+      <app-input
+        label="Password"
+        type="password"
+        name="password"
+        [(model)]="credentials.password">
+      </app-input>
 
       <button class="w-full bg-purple-500 p-2 rounded-xl hover:scale-105 cursor-pointer transition-all duration-300 text-white" type="submit">Login</button>
 
-      <span class="text-center">Don`t have an account? <a class="text-purple-500" href="/register">Click here to signup.</a></span>
+      <span class="text-center inline-block w-full">Don't have an account? <a class="text-purple-500" href="/register">Click here to signup.</a></span>
     </form>
   </div>
 </div>

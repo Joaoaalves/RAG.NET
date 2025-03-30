@@ -100,6 +100,7 @@ builder.Services.AddScoped<IGetUserWorkflowsUseCase, GetUserWorkflowsUseCase>();
 builder.Services.AddScoped<IProcessEmbeddingUseCase, ProcessEmbeddingUseCase>();
 builder.Services.AddScoped<ICreateWorkflowUseCase, CreateWorkflowUseCase>();
 builder.Services.AddScoped<IGetWorkflowUseCase, GetWorkflowUseCase>();
+builder.Services.AddScoped<IDeleteWorkflowUseCase, DeleteWorkflowUseCase>();
 
 // Factories
 builder.Services.AddScoped<ITextChunkerFactory, TextChunkerFactory>();

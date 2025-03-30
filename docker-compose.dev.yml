@@ -45,6 +45,14 @@ services:
     volumes:
       - qdrant_data:/qdrant/storage
 
+  migrations:
+    build:
+      context: ./api
+      dockerfile: RAGNet.Infrastructure/Persistence/Dockerfile
+      target: migrations
+    depends_on:
+      - postgres
+
 volumes:
   postgres_data:
   qdrant_data:

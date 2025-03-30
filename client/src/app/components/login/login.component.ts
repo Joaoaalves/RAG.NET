@@ -3,10 +3,11 @@ import { LoginRequest } from '../../models/login-request';
 import { AuthService } from './../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { InputComponent } from 'src/app/shared/components/input/input.component';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [FormsModule, InputComponent],
   templateUrl: './login.component.html',
 })
 export class LoginComponent implements OnInit {
