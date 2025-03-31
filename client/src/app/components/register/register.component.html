@@ -1,26 +1,62 @@
-<div class="w-screen h-screen bg-black grid items-center justify-center">
-  <div class="flex flex-col items-center justify-center p-8 min-w-[600px] bg-white rounded-lg">
+<div
+  class="w-screen h-screen bg-gradient-to-br from-black from-45% via-rose-600 via-55% to-black to-95% grid items-center justify-center"
+>
+  <div
+    class="flex flex-col items-start justify-center p-8 min-w-[600px] border-2 border-neutral-800 rounded-lg text-white bg-black/70"
+  >
     <h1 class="text-4xl font-bold">Register</h1>
+    <p class="text-sm text-neutral-400 max-w-xl mt-4">Join <strong class="text-rose-600">RAG.NET</strong> and build custom Retrieval-Augmented Generation workflows effortlessly. Create, manage, and optimize AI-driven pipelines tailored to your needs.</p>
     <form (ngSubmit)="register()" class="mt-10 space-y-4 w-full">
-      <span class="text-center text-red-500">{{error}}</span>
-      <div class="flex flex-col gap-y-4 w-full">
-        <label for="email">Email</label>
-        <input name="email" type="email" class="w-full bg-black text-white rounded-lg p-2" [(ngModel)]="email" required>
+      <span class="text-center text-purple-500">{{ error }}</span>
+
+      <div class="grid grid-cols-2 gap-x-4">
+        <app-input
+          label="First Name"
+          type="text"
+          name="firstName"
+          [(model)]="firstName"
+        >
+        </app-input>
+
+        <app-input
+          label="Last Name"
+          type="text"
+          name="lastName"
+          [(model)]="lastName"
+        >
+        </app-input>
       </div>
 
-      <div class="flex flex-col gap-y-4 w-full">
-        <label for="password">Password</label>
-        <input name="password" type="password" class="w-full bg-black text-white rounded-lg p-2" [(ngModel)]="password" required>
-      </div>
+      <app-input label="Email" type="email" name="email" [(model)]="email">
+      </app-input>
 
-      <div class="flex flex-col gap-y-4 w-full">
-        <label for="password">Password Confirmation</label>
-        <input name="passwordConfirmation" type="password" class="w-full bg-black text-white rounded-lg p-2" [(ngModel)]="passwordConfirmation" required>
-      </div>
+      <app-input
+        label="Password"
+        type="password"
+        name="password"
+        [(model)]="password"
+      >
+      </app-input>
 
-      <button class="w-full bg-purple-500 p-2 rounded-xl hover:scale-105 cursor-pointer transition-all duration-300 text-white" type="submit">Register</button>
+      <app-input
+        label="Password Confirmation"
+        type="password"
+        name="passwordConfirmation"
+        [(model)]="passwordConfirmation"
+      >
+      </app-input>
+      <button
+        class="w-full bg-rose-500 p-2 rounded-xl hover:scale-105 cursor-pointer transition-all duration-300 text-white"
+        type="submit"
+      >
+        Register
+      </button>
+
+      <span class="w-full inline-block text-center"
+        >Already have an account?
+        <a class="text-rose-500" href="/login">Click here to login.</a></span
+      >
     </form>
 
-    <span class="text-center">Already have an account? <a class="text-purple-500" href="/login">Click here to login.</a></span>
   </div>
 </div>

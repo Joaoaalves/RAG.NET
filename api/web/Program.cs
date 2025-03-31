@@ -131,10 +131,12 @@ if (isDevelopment)
 }
 
 app.UseCors("CorsPolicy");
-app.MapIdentityApi<User>();
 app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
+
+var identityApi = app.MapIdentityApi<User>();
+
 
 app.MapControllers();
 

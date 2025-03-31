@@ -20,7 +20,7 @@ export class AuthService {
 
   register(credentials: RegisterRequest): Observable<boolean> {
     return this.httpClient
-      .post<void>(`${this.apiUrl}/register`, credentials)
+      .post<void>(`${this.apiUrl}/api/register`, credentials)
       .pipe(
         map(() => {
           this.login(credentials);

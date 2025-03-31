@@ -1,6 +1,7 @@
 <div class="w-screen h-screen bg-gradient-to-br from-black from-45% via-purple-600 via-55% to-black to-95% grid items-center justify-center">
-  <div class="flex flex-col items-center justify-center p-8 min-w-[600px] border-2 border-neutral-800 rounded-lg text-white bg-black/70">
+  <div class="flex flex-col items-start justify-center p-8 min-w-[600px] border-2 border-neutral-800 rounded-lg text-white bg-black/70">
     <h1 class="text-4xl font-bold">Login</h1>
+    <p class="text-sm text-neutral-400 max-w-xl mt-4">Welcome back to <strong class="text-purple-600">RAG.NET!</strong> Access your custom AI-powered workflows and continue optimizing your Retrieval-Augmented Generation pipelines.</p>
     <form (ngSubmit)="login()" class="mt-10 space-y-8 w-full">
 
       <span *ngIf="error" class="text-purple-500 inline-block w-full text-center">{{error}}</span>
@@ -21,7 +22,7 @@
 
       <button class="w-full bg-purple-500 p-2 rounded-xl hover:scale-105 cursor-pointer transition-all duration-300 text-white" type="submit">Login</button>
 
-      <span class="text-center inline-block w-full">Don't have an account? <a class="text-purple-500" href="/register">Click here to signup.</a></span>
+      <span class="text-center inline-block w-full">You're new here? <a class="text-purple-500" href="/register">Click here to signup.</a></span>
     </form>
   </div>
 </div>

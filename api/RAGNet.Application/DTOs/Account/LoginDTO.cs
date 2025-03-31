@@ -5,7 +5,8 @@ namespace RAGNET.Application.DTOs.Account
     public class LoginDTO
     {
         [Required]
-        public required string Username { get; set; }
+        [EmailAddress]
+        public required string Email { get; set; }
         [Required]
         public required string Password { get; set; }
     }

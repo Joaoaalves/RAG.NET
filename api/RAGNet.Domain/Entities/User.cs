@@ -6,8 +6,8 @@ namespace RAGNET.Domain.Entities
     [Table("user")]
     public class User : IdentityUser
     {
-        public string Name { get; private set; } = string.Empty;
-
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
         public ICollection<Workflow> Workflows { get; set; } = [];
     }
 }

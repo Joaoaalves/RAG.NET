@@ -11,7 +11,8 @@ import { CommonModule } from '@angular/common';
   standalone: true,
 })
 export class SidebarComponent implements OnInit {
-  private emailKey = 'userEmail';
+  private userInfoKey = 'userInfo';
+
   constructor(
     private userService: UserService,
     private authService: AuthService,
@@ -25,18 +26,16 @@ export class SidebarComponent implements OnInit {
   user!: User;
 
   loadUserInfo() {
-    const email = localStorage.getItem(this.emailKey);
+    const userInfo = localStorage.getItem(this.userInfoKey);
 
-    if (email) {
-      this.user = {
-        email,
-        isEmailConfirmed: true,
-      };
+    if (userInfo) {
+      this.user = JSON.parse(userInfo);
       return;
     }
 
     this.userService.getInfo().subscribe((user) => {
-      localStorage.setItem(this.emailKey, user.email);
+      localStorage.setItem(this.userInfoKey, JSON.stringify(user));
+      console.log(user);
       this.user = user;
     });
   }

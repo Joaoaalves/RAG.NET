@@ -15,13 +15,13 @@ export class UserService {
 
   getInfo(): Observable<User> {
     return this.httpClient
-      .get<User>(`${this.apiUrl}/manage/info`)
+      .get<User>(`${this.apiUrl}/api/info`)
       .pipe(map((user) => user));
   }
 
   updateInfo(info: UpdateUserRequest): Observable<User> {
     return this.httpClient
-      .post<User>(`${this.apiUrl}/manage/info`, info)
+      .post<User>(`${this.apiUrl}/api/info`, info)
       .pipe(map((user) => user));
   }
 }
