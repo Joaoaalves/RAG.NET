@@ -14,7 +14,7 @@ namespace RAGNET.Application.Attributes
         {
             if (!context.HttpContext.Request.Headers.TryGetValue(_headerName, out var potentialApiKey))
             {
-                context.Result = new UnauthorizedObjectResult("API key não fornecida.");
+                context.Result = new UnauthorizedObjectResult("API key not provided.");
                 return;
             }
 

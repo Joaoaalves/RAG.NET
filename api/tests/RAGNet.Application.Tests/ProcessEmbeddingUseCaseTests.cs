@@ -45,7 +45,7 @@ namespace tests.RAGNet.Application.Tests
             var memoryStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(fileContent));
             IFormFile file = new FormFile(memoryStream, 0, memoryStream.Length, It.IsAny<string>(), It.IsAny<string>());
 
-            // Cria um workflow dummy com as configurações necessárias.
+            // Dummy Workflow
             var workflow = new Workflow
             {
                 Id = Guid.NewGuid(),
@@ -62,13 +62,13 @@ namespace tests.RAGNet.Application.Tests
                 .Setup(extractor => extractor.ExtractTextAsync(file))
                 .ReturnsAsync(fileContent);
 
-            // Configura o factory para retornar o dummy do chunker.
+            // Set factory for returning chunker's dummy.
             var dummyChunker = new DummyTextChunker();
             _chunkerFactoryMock
                 .Setup(factory => factory.CreateChunker(workflow.Chunker))
                 .Returns(dummyChunker);
 
-            // Configura o factory para retornar o dummy do embedder.
+            // Set factory for returning embedder's dummy.
             var dummyEmbedder = new DummyEmbedder();
             _embedderFactoryMock
                 .Setup(factory => factory.CreateEmbeddingService(workflow.EmbeddingProviderConfig.ApiKey, It.IsAny<string>()))
