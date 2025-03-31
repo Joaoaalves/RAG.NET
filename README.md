@@ -14,12 +14,26 @@ RAG.NET is a modular system designed to execute Retrieval-Augmented Generation (
 
 Make sure you have Docker installed on your machine.
 
-### Run the project using:
+### Run project on Development using:
+
+```bash
+docker compose -f "./docker-compose.dev" up --build
+```
+
+or
+
+```bash
+docker-compose -f "./docker-compose.dev" up --build
+```
+
+### Build the project using:
 
 ```bash
 docker compose up --build
 ```
+
 or
+
 ```bash
 docker-compose up --build
 ```
@@ -31,6 +45,7 @@ docker-compose up --build
 ## ✅ Development Progress
 
 ### Features to Implement
+
 - Front-End
 - Embedding
 - Chunker Strategy Factory
@@ -56,6 +71,7 @@ docker-compose up --build
   - Other Embedding and Chat Completion Providers
 
 ### Features Completed
+
 - Authentication
 - Workflows
   - Create Workflow
