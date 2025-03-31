@@ -16,6 +16,7 @@ namespace RAGNET.Domain.Repositories
         Task<Workflow?> GetWithRelationsAsync(Guid id, string userId);
         Task<Workflow?> GetWithRelationsByApiKey(string apiKey);
         Task<IEnumerable<Workflow>> GetUserWorkflows(string id);
+        Task UpdateByApiKey(Workflow workflow, string apiKey);
     }
 
     public interface IChunkerRepository : IRepository<Chunker>, IConfigMeta<Chunker> { }

@@ -54,5 +54,18 @@ namespace RAGNET.Infrastructure.Repositories
                 .Include(w => w.EmbeddingProviderConfig)
                     .ToListAsync();
         }
+
+        public async Task UpdateByApiKey(Workflow workflow, string apiKey)
+        {
+            var w = await _context.Workflows.FindAsync(workflow.Id) ?? throw new UnauthorizedAccessException("Workflow not found");
+            if (w.ApiKey != apiKey)
+            {
+                throw new UnauthorizedAccessException("Wrong apikey");
+            }
+
+            _context.Update(workflow);
+            await _context.SaveChangesAsync();
+
+        }
     }
 }

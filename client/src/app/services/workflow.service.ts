@@ -1,8 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
-import { Workflow, WorkflowsResponse } from '../models/workflow';
+import { Workflow } from '../models/workflow';
 import { environment } from '../../environments/environment';
+import { WorkflowsInfoResponse } from '../models/workflow-info';
+import {
+  CreateWorkflowRequest,
+  CreateWorkflowResponse,
+} from '../models/create-workflow';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -10,9 +16,20 @@ export class WorkflowService {
   private apiUrl = environment.apiUrl;
   constructor(private httpClient: HttpClient) {}
 
+  createWorkflow(
+    workflowDetails: Partial<CreateWorkflowRequest>
+  ): Observable<string> {
+    return this.httpClient
+      .post<CreateWorkflowResponse>(
+        `${this.apiUrl}/api/workflows`,
+        workflowDetails
+      )
+      .pipe(map((response) => response.workflowId));
+  }
+
   getWorkflows(): Observable<Workflow[]> {
     return this.httpClient
-      .get<WorkflowsResponse>(`${this.apiUrl}/api/workflows`)
+      .get<WorkflowsInfoResponse>(`${this.apiUrl}/api/workflows`)
       .pipe(map((response) => response.workflows));
   }
 

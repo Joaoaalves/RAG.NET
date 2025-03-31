@@ -3,3 +3,8 @@ export interface ChunkerSettings {
   evaluationPrompt: string;
   maxChunkSize: number;
 }
+
+export enum ChunkerStrategy {
+  PROPOSITION = 0,
+  SEMANTIC = 1,
+}

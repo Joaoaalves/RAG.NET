@@ -10,6 +10,8 @@ namespace RAGNET.Domain.Entities
         public Guid Id { get; set; }
 
         public string Name { get; set; } = String.Empty;
+        public string Description { get; set; } = String.Empty;
+        public int Documents { get; set; } = 0;
         [ForeignKey("User")]
         public string UserId { get; set; } = String.Empty;
         public string ApiKey { get; set; } = String.Empty;

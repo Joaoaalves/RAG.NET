@@ -35,7 +35,7 @@ namespace web.Controllers
                 return Unauthorized();
 
             var workflowId = await _createWorkflowUseCase.Execute(dto, user);
-            return Ok(new { Message = "Workflow criado com sucesso!", WorkflowId = workflowId });
+            return Ok(new { Message = "Workflow created!", WorkflowId = workflowId });
         }
 
         [HttpGet]

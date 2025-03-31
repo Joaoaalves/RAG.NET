@@ -1,51 +1,53 @@
-import { Router } from '@angular/router';
-import { LoginRequest } from '../../models/login-request';
-import { AuthService } from './../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 import { InputComponent } from 'src/app/shared/components/input/input.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, InputComponent, CommonModule],
+  standalone: true,
+  imports: [ReactiveFormsModule, InputComponent, CommonModule],
   templateUrl: './login.component.html',
 })
 export class LoginComponent implements OnInit {
-  constructor(private authService: AuthService, private router: Router) {}
+  form!: FormGroup;
   error?: string;
-  credentials: LoginRequest = {
-    email: '',
-    password: '',
-  };
+
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    if (this.isLoggedIn()) {
+    if (this.authService.isLoggedIn()) {
       this.router.navigate(['/dashboard']);
     }
-  }
 
-  isLoggedIn() {
-    return this.authService.isLoggedIn();
+    this.form = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
+    });
   }
 
   login() {
-    if (!this.credentials.email) {
-      this.error = 'You sould provide email';
-      return;
-    }
-
-    if (!this.credentials.password) {
-      this.error = 'You should provide password';
+    if (this.form.invalid) {
+      this.error = 'Please fill in all required fields correctly.';
       return;
     }
 
     this.error = '';
-    this.authService.login(this.credentials).subscribe(
-      (result) => {
-        this.router.navigate(['/dashboard']);
-      },
-      (error) => {
+    const credentials = this.form.value;
+    this.authService.login(credentials).subscribe(
+      () => this.router.navigate(['/dashboard']),
+      () => {
         console.log('Error');
         this.error = 'Email and/or password invalid.';
       }

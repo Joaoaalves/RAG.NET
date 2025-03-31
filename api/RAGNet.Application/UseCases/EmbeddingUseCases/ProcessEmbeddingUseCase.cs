@@ -72,6 +72,10 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
                 await _vectorDatabaseService.InsertAsync(documentId, embedding, collectionId, metadata);
             });
 
+            workflow.Documents++;
+
+            await _workflowRepository.UpdateByApiKey(workflow, apiKey);
+
             return processedChunks;
         }
 

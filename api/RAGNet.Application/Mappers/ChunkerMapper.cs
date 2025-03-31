@@ -12,7 +12,6 @@ namespace RAGNET.Application.Mappers
             return new Chunker
             {
                 WorkflowId = workflowId,
-                StrategyType = dto.Strategy,
                 Metas =
                 [
                     new() { Key = "threshold", Value = dto.Settings.Threshold.ToString() },

@@ -1,0 +1,113 @@
+<div class="w-screen overflow-x-hidden h-screen grid grid-cols-[280px_1fr]">
+  <div>
+    <app-sidebar></app-sidebar>
+  </div>
+  <div class="p-8 bg-black">
+    <h1 class="text-neutral-200 text-4xl">Create Workflow</h1>
+    <p class="text-sm text-neutral-400 mt-2">
+      Here you can add a new workflow to your collection.
+    </p>
+    <form
+      class="mt-8 bg-neutral-900 pb-8 rounded-2xl grid grid-cols-1 xl:grid-cols-2"
+      [formGroup]="form"
+      (ngSubmit)="createWorkflow()"
+    >
+      <span
+        *ngIf="error"
+        class="text-purple-500 inline-block w-full text-lg text-center mt-8"
+      >{{ error }}</span>
+
+      <div class="p-8 grid grid-cols-1 gap-y-4 w-full">
+        <h2 class="text-neutral-300 text-2xl">Details</h2>
+        <app-input
+          label="Workflow Name *"
+          type="text"
+          name="name"
+          formControlName="name"
+        ></app-input>
+
+        <app-input
+          label="Description *"
+          type="text"
+          name="description"
+          formControlName="description"
+        ></app-input>
+      </div>
+
+      <div class="p-8 grid grid-cols-1 gap-y-4 w-full" >
+        <h2 class="text-2xl text-neutral-300">Chunker</h2>
+        <app-select
+          label="Chunking Strategy *"
+          name="strategy"
+          [options]="chunkerStrategies"
+          formControlName="strategy"
+        ></app-select>
+
+        <div class="grid grid-cols-2 w-full gap-x-4" formGroupName="settings">
+          <app-input
+            label="Threshold *"
+            type="number"
+            name="threshold"
+            [step]="0.01"
+            [min]="0"
+            [max]="1"
+            formControlName="threshold"
+          ></app-input>
+
+          <app-input
+            label="Maximum size of chunk *"
+            type="number"
+            name="maxChunkSize"
+            [min]="100"
+            [max]="2000"
+            formControlName="maxChunkSize"
+          ></app-input>
+        </div>
+
+        <div class="w-full" formGroupName="settings">
+          <app-text-area
+          label="Evaluation Prompt"
+          name="evaluationPrompt"
+          formControlName="evaluationPrompt"
+        ></app-text-area>
+        </div>
+      </div>
+
+      <div class="p-8 grid grid-cols-1 gap-y-4 w-full" formGroupName="embeddingProvider">
+        <h2 class="text-2xl text-neutral-300">Embedding Provider</h2>
+        <app-select
+          label="Embedding Provider *"
+          name="provider"
+          [options]="embeddingProviders"
+          formControlName="provider"
+        ></app-select>
+
+        <div class="grid grid-cols-2 w-full gap-x-4">
+          <app-input
+            label="API Key *"
+            type="text"
+            name="apiKey"
+            formControlName="apiKey"
+          ></app-input>
+
+          <app-input
+            label="Vector Size *"
+            type="number"
+            name="vectorSize"
+            [min]="1"
+            [step]="1"
+            [max]="128000"
+            formControlName="vectorSize"
+          ></app-input>
+        </div>
+      </div>
+
+      <button
+        class="w-3/4 place-self-center mx-8 col-start-1 bg-purple-500 p-2 rounded-xl hover:scale-105 hover:bg-white hover:text-black cursor-pointer transition-all duration-300 text-white mt-8"
+        type="submit"
+      >
+        Create
+      </button>
+    </form>
+  </div>
+</div>

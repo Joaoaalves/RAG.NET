@@ -1,22 +1,51 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, forwardRef } from '@angular/core';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'app-input',
+  templateUrl: './input.component.html',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => InputComponent),
+      multi: true,
+    },
+  ],
   host: {
     style: 'display: block',
   },
-  templateUrl: './input.component.html',
 })
-export class InputComponent {
+export class InputComponent implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() type: string = 'text';
   @Input() name: string = '';
-  @Input() model: any;
+  @Input() step?: number = 1;
+  @Input() min?: number = 0;
+  @Input() max?: number = 1;
 
-  @Output() modelChange = new EventEmitter<any>();
+  value: any;
+
+  onChange = (value: any) => {};
+  onTouched = () => {};
+
+  writeValue(value: any): void {
+    this.value = value;
+  }
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+  setDisabledState?(isDisabled: boolean): void {}
 
   onInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.modelChange.emit(target.value);
+    let newValue: any = target.value;
+    if (this.type === 'number') {
+      newValue = target.value === '' ? null : Number(target.value);
+    }
+    this.value = newValue;
+    this.onChange(newValue);
   }
 }

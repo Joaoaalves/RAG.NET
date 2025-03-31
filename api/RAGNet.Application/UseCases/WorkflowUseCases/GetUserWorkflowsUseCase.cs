@@ -21,10 +21,10 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
 
             foreach (var workflow in workflows)
             {
-                var chunker = workflow.Chunker ?? throw new Exception("Chunker não encontrado.");
+                var chunker = workflow.Chunker ?? throw new Exception("Chunker not set.");
 
                 var settings = chunker.Metas.ToDictionary(m => m.Key, m => m.Value);
-                var embeddingProvider = workflow.EmbeddingProviderConfig ?? throw new Exception("Embedding Provider não encontrado");
+                var embeddingProvider = workflow.EmbeddingProviderConfig ?? throw new Exception("Embedding Provider not set.");
 
                 workflowsDTO.Add(
                     workflow.ToWorkflowDetailsDTOFromWorkflow(

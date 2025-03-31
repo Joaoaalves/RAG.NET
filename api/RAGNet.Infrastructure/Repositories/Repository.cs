@@ -16,7 +16,7 @@ namespace RAGNET.Infrastructure.Repositories
             _dbSet = context.Set<T>();
         }
 
-        // Métodos sem verificação de userId (para quando não for aplicável)
+        // Not Owned entities methods
         public async Task<T?> GetByIdAsync(Guid id)
         {
             return await _dbSet.FindAsync(id);
@@ -46,7 +46,7 @@ namespace RAGNET.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        // Sobrecargas que fazem a verificação do UserId para entidades que implementam IUserOwned
+        // Overloads for owned entities
 
         public async Task<T?> GetByIdAsync(Guid id, string? userId)
         {
