@@ -17,11 +17,9 @@
   <p class="text-sm text-neutral-300 line-clamp-3 text-ellipsis">{{workflow.description}}</p>
 
   <div class="flex items-center justify-between gap-x-2 w-full mt-auto">
-    <div class="rounded-xl bg-neutral-900 text-white px-3 py-1">
-      Embeddings: {{workflow.embeddingProvider.provider}}
-    </div>
+    <a [href]="'/dashboard/workflows/' + workflow.id + '/embedd'" class="bg-white text-black px-3 py-1 rounded hover:bg-purple-500 hover:text-white transition-all duration-300">Embedd Document</a>
 
-    <div class="rounded-xl bg-neutral-900 text-white px-3 py-1">
+    <div class="rounded bg-neutral-900 text-white px-3 py-1">
       Documents: {{workflow.documents}}
     </div>
   </div>

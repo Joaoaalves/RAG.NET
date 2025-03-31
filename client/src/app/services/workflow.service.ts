@@ -33,6 +33,12 @@ export class WorkflowService {
       .pipe(map((response) => response.workflows));
   }
 
+  getWorkflow(workflowId: string): Observable<Workflow> {
+    return this.httpClient
+      .get<Workflow>(`${this.apiUrl}/api/workflows/${workflowId}`)
+      .pipe(map((response) => response));
+  }
+
   deleteWorkflow(workflowId: string): Observable<boolean> {
     return this.httpClient
       .delete<Workflow>(`${this.apiUrl}/api/workflows/${workflowId}`)

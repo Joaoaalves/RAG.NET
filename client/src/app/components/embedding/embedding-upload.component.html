@@ -1,0 +1,73 @@
+<div class="w-screen h-screen grid grid-cols-[280px_1fr]">
+  <div>
+    <app-sidebar></app-sidebar>
+  </div>
+  <div class="flex flex-col p-8 col-start-2 relative">
+    <h1 class="text-4xl text-neutral-200 font-bold">Upload a PDF document</h1>
+
+    <p class="text-neutral-300 text-sm text-left max-w-lg mt-4">
+      The embedding process in RAG (Retrieval-Augmented Generation) transforms
+      your document into a searchable vector format, enabling efficient
+      retrieval and contextual AI interactions.
+    </p>
+
+    <div class="max-w-2xl mt-8 space-y-4">
+      <span *ngIf="error" class="text-red-500 mb-4 block text-xl text-center">{{error}}</span>
+      <span *ngIf="success" class="text-green-500 mb-4 block text-xl text-center">{{success}}</span>
+
+      <div
+        class="border-2 border-dashed border-neutral-500 p-6 rounded-lg flex flex-col items-center justify-center cursor-pointer transition-all duration-300"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+        (click)="triggerFileInput()"
+        [ngClass]="{ 'bg-neutral-800': isDragging }"
+      >
+        <ng-icon
+          *ngIf="isDragging"
+          name="heroArrowUpOnSquare"
+          class="invert text-4xl mb-2"
+        ></ng-icon>
+        <p
+          *ngIf="!isDragging && !selectedFile"
+          class="text-neutral-300 text-sm"
+        >
+          Drag and drop a PDF file here
+        </p>
+        <p
+          *ngIf="!isDragging && !selectedFile"
+          class="text-neutral-500 text-xs"
+        >
+          or click to select a file
+        </p>
+        <p *ngIf="selectedFile" class="text-lg text-white">
+          {{ selectedFile.name }}
+        </p>
+        <input
+          id="pdfInput"
+          type="file"
+          (change)="onFileSelected($event)"
+          accept="application/pdf"
+          class="hidden"
+          #fileInput
+        />
+      </div>
+
+      <button
+        (click)="onUpload()"
+        class="w-full bg-white text-black py-2 px-4 rounded mt-4 hover:bg-gray-300 transition duration-300"
+      >
+        Upload PDF
+      </button>
+    </div>
+
+    <div *ngIf="loading" class="mt-4 absolute bottom-0 left-0 w-full">
+      <div class="w-full bg-neutral-800 h-2 mt-2">
+        <div
+          class="bg-purple-500 h-2 transition-all duration-300"
+          [style.width.%]="uploadProgress"
+        ></div>
+      </div>
+    </div>
+  </div>
+</div>

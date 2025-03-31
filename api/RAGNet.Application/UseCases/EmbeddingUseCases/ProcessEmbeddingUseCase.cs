@@ -150,6 +150,10 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
 
             // Ensure all processing is complete.
             await processingTask;
+
+            workflow.Documents++;
+
+            await _workflowRepository.UpdateByApiKey(workflow, apiKey);
         }
     }
 }
