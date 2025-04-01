@@ -2,16 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { WorkflowService } from '../../services/workflow.service';
 import { WorkflowCardComponent } from 'src/app/shared/components/workflowCard/workflow-card.component';
 import { CommonModule } from '@angular/common';
-import { SidebarComponent } from 'src/app/shared/components/sidebar/sidebar.component';
 import { Workflow } from 'src/app/models/workflow';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [WorkflowCardComponent, SidebarComponent, CommonModule],
-  templateUrl: './dashboard.component.html',
+  imports: [WorkflowCardComponent, CommonModule],
+  templateUrl: './workflows.component.html',
   standalone: true,
 })
-export class DashboardComponent implements OnInit {
+export class WorkflowsComponent implements OnInit {
   constructor(private workflowService: WorkflowService) {}
 
   ngOnInit(): void {

@@ -20,7 +20,6 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   imports: [
-    SidebarComponent,
     InputComponent,
     SelectComponent,
     TextAreaComponent,

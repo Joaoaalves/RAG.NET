@@ -4,13 +4,12 @@ import { EmbeddingService } from 'src/app/services/embedding.service';
 import { WorkflowService } from 'src/app/services/workflow.service';
 import { Workflow } from 'src/app/models/workflow';
 import { EmbeddingRequest, EmbeddingResponse } from 'src/app/models/embedding';
-import { SidebarComponent } from 'src/app/shared/components/sidebar/sidebar.component';
 import { CommonModule } from '@angular/common';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroArrowUpOnSquare } from '@ng-icons/heroicons/outline';
 
 @Component({
-  imports: [SidebarComponent, CommonModule, NgIcon],
+  imports: [CommonModule, NgIcon],
   providers: [provideIcons({ heroArrowUpOnSquare })],
   selector: 'app-embedding-upload',
   templateUrl: './embedding-upload.component.html',
