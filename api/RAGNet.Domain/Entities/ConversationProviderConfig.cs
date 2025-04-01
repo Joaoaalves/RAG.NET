@@ -11,6 +11,7 @@ namespace RAGNET.Domain.Entities
         public Guid Id { get; set; }
         public ConversationProviderEnum Provider { get; set; }
         public string ApiKey { get; set; } = String.Empty;
+        public string Model { get; set; } = String.Empty;
 
         [ForeignKey("Workflow")]
         public Guid WorkflowId { get; set; }

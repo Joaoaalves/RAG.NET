@@ -114,7 +114,6 @@ export class NewWorkflowComponent implements OnInit {
   }
 
   updateModelOptions(provider: number): void {
-    console.log(provider);
     if (provider === EmbeddingProviderEnum.OPENAI) {
       this.modelOptions = this.embeddingModelsResponse.openAI;
     } else if (provider === EmbeddingProviderEnum.VOYAGE) {
@@ -125,7 +124,6 @@ export class NewWorkflowComponent implements OnInit {
   }
 
   createWorkflow(): void {
-    console.log(this.embeddingModelsResponse);
     if (this.form.invalid) {
       this.error = 'Please fill in all required fields correctly.';
       return;

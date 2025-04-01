@@ -17,5 +17,7 @@ namespace RAGNET.Application.DTOs.Workflow
         public ChunkerSettingsDTO? Settings { get; set; } = null!;
         public string ApiKey { get; set; } = string.Empty;
         public EmbeddingProviderConfigDTO? EmbeddingProvider { get; set; } = null!;
+
+        public ConversationProviderConfigDTO? ConversationProvider { get; set; } = null!;
     }
 }

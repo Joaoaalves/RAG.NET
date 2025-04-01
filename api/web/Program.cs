@@ -18,6 +18,7 @@ using RAGNET.Infrastructure.Repositories;
 using RAGNET.Infrastructure.Factories;
 using RAGNET.Infrastructure.Adapters.VectorDB;
 using RAGNET.Infrastructure.Services;
+using UglyToad.PdfPig.Fonts.Encodings;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -65,6 +66,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 var signingKey = builder.Configuration["JWT:SignInKey"] ?? throw new Exception("You must set JWT SignInKey.");
 var clientURL = Environment.GetEnvironmentVariable("CLIENT_URL") ?? "http://localhost:4200";
 
+builder.Configuration.AddJsonFile("Configurations/prompts.json", optional: false, reloadOnChange: true);
 
 
 // Register the ApplicationDbContext with PostgreSQL provider
@@ -89,11 +91,14 @@ builder.Services.AddScoped<IFilterRepository, FilterRepository>();
 builder.Services.AddScoped<IRankerRepository, RankerRepository>();
 builder.Services.AddScoped<IChunkRepository, ChunkRepository>();
 builder.Services.AddScoped<IEmbeddingProviderConfigRepository, EmbeddingProviderConfigRepository>();
+builder.Services.AddScoped<IConversationProviderConfigRepository, ConversationProviderConfigRepository>();
 
 // Services
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPdfTextExtractorService, PdfTextExtractorAdapter>();
 builder.Services.AddScoped<IEmbeddingProviderValidator, EmbeddingProviderValidator>();
+builder.Services.AddScoped<IConversationProviderValidator, ConversationProviderValidator>();
+builder.Services.AddScoped<IPromptService, PromptService>();
 
 // Use Cases
 builder.Services.AddScoped<IGetUserWorkflowsUseCase, GetUserWorkflowsUseCase>();
@@ -104,6 +109,7 @@ builder.Services.AddScoped<IDeleteWorkflowUseCase, DeleteWorkflowUseCase>();
 
 // Factories
 builder.Services.AddScoped<ITextChunkerFactory, TextChunkerFactory>();
+builder.Services.AddScoped<IChatCompletionFactory, ChatCompletionFactory>();
 builder.Services.AddScoped<IEmbedderFactory, EmbedderFactory>();
 
 // Adapters

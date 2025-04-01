@@ -5,6 +5,6 @@ namespace RAGNET.Domain.Factories
 {
     public interface ITextChunkerFactory
     {
-        ITextChunkerService CreateChunker(Chunker chunkerConfig);
+        ITextChunkerService CreateChunker(Chunker chunkerConfig, IChatCompletionService completionService);
     }
 }

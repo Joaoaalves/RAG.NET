@@ -23,7 +23,10 @@ namespace RAGNET.Application.Mappers
             };
         }
 
-        public static WorkflowDetailsDTO ToWorkflowDetailsDTOFromWorkflow(this Workflow workflow, ChunkerStrategy strategy, ChunkerSettingsDTO settings, EmbeddingProviderConfigDTO embedding)
+        public static WorkflowDetailsDTO ToWorkflowDetailsDTOFromWorkflow(
+            this Workflow workflow,
+            ChunkerStrategy strategy, ChunkerSettingsDTO settings,
+            EmbeddingProviderConfigDTO embedding, ConversationProviderConfigDTO conversationProvider)
         {
             return new WorkflowDetailsDTO
             {
@@ -34,7 +37,8 @@ namespace RAGNET.Application.Mappers
                 Strategy = strategy,
                 ApiKey = workflow.ApiKey,
                 Settings = settings,
-                EmbeddingProvider = embedding
+                EmbeddingProvider = embedding,
+                ConversationProvider = conversationProvider
             };
         }
     }

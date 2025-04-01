@@ -231,6 +231,10 @@ namespace RAGNet.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("Provider")
                         .HasColumnType("integer");
 
@@ -242,7 +246,7 @@ namespace RAGNet.Infrastructure.Migrations
                     b.HasIndex("WorkflowId")
                         .IsUnique();
 
-                    b.ToTable("ConversationProviderConfig");
+                    b.ToTable("ConversationProviderConfigs");
                 });
 
             modelBuilder.Entity("RAGNET.Domain.Entities.EmbeddingProviderConfig", b =>
@@ -273,7 +277,7 @@ namespace RAGNet.Infrastructure.Migrations
                     b.HasIndex("WorkflowId")
                         .IsUnique();
 
-                    b.ToTable("EmbeddingProviderConfig");
+                    b.ToTable("EmbeddingProviderConfigs");
                 });
 
             modelBuilder.Entity("RAGNET.Domain.Entities.Filter", b =>

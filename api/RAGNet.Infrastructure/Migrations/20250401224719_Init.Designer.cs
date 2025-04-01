@@ -12,7 +12,7 @@ using RAGNET.Infrastructure.Data;
 namespace RAGNet.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250326193336_Init")]
+    [Migration("20250401224719_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -234,6 +234,10 @@ namespace RAGNet.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("Provider")
                         .HasColumnType("integer");
 
@@ -245,7 +249,7 @@ namespace RAGNet.Infrastructure.Migrations
                     b.HasIndex("WorkflowId")
                         .IsUnique();
 
-                    b.ToTable("ConversationProviderConfig");
+                    b.ToTable("ConversationProviderConfigs");
                 });
 
             modelBuilder.Entity("RAGNET.Domain.Entities.EmbeddingProviderConfig", b =>
@@ -255,6 +259,10 @@ namespace RAGNet.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("ApiKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Model")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -272,7 +280,7 @@ namespace RAGNet.Infrastructure.Migrations
                     b.HasIndex("WorkflowId")
                         .IsUnique();
 
-                    b.ToTable("EmbeddingProviderConfig");
+                    b.ToTable("EmbeddingProviderConfigs");
                 });
 
             modelBuilder.Entity("RAGNET.Domain.Entities.Filter", b =>
@@ -442,15 +450,19 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -506,6 +518,13 @@ namespace RAGNet.Infrastructure.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Documents")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()

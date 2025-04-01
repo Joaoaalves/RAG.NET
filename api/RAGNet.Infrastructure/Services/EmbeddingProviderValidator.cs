@@ -22,11 +22,15 @@ namespace RAGNET.Infrastructure.Services
                 validModels = VoyageEmbeddingAdapter.GetModels();
             }
 
-            bool isValid = validModels.Any(m => m.Value.Equals(config.Model, StringComparison.OrdinalIgnoreCase) && m.VectorSize == config.VectorSize);
+            bool isValid = validModels.Any(
+                m => m.Value.Equals(config.Model, StringComparison.OrdinalIgnoreCase)
+                && m.VectorSize == config.VectorSize);
 
             if (!isValid)
             {
-                throw new InvalidEmbeddingModelException($"This embedding model '{config.Model}' with vectorSize of {config.VectorSize} is not valid.");
+                throw new InvalidEmbeddingModelException(
+                    $"This embedding model '{config.Model}' with vectorSize of {config.VectorSize} is not valid."
+                );
             }
         }
     }

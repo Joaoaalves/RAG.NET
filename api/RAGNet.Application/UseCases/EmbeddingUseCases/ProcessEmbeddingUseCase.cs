@@ -23,13 +23,16 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
         IPdfTextExtractorService pdfTextExtractor,
         ITextChunkerFactory chunkerFactory,
         IEmbedderFactory embedderFactory,
-        IVectorDatabaseService vectorDatabaseService) : IProcessEmbeddingUseCase
+        IVectorDatabaseService vectorDatabaseService,
+        IChatCompletionFactory chatCompletionFactory
+        ) : IProcessEmbeddingUseCase
     {
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
         private readonly IPdfTextExtractorService _pdfTextExtractor = pdfTextExtractor;
         private readonly ITextChunkerFactory _chunkerFactory = chunkerFactory;
         private readonly IEmbedderFactory _embedderFactory = embedderFactory;
         private readonly IVectorDatabaseService _vectorDatabaseService = vectorDatabaseService;
+        private readonly IChatCompletionFactory _chatCompletionFactory = chatCompletionFactory;
 
         public async Task<int> Execute(IFormFile file, string apiKey)
         {
@@ -43,8 +46,14 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
             var embeddingProviderConfig = workflow.EmbeddingProviderConfig
                                 ?? throw new Exception("Embedding Provider not set");
 
+            var conversationProviderConfig = workflow.ConversationProviderConfig
+                                ?? throw new Exception("Conversation provider config not set");
+
+            // Creates the completion service for this workflow
+            var completionService = _chatCompletionFactory.CreateCompletionService(conversationProviderConfig);
+
             // Creates the chunking Strategy for this workflow
-            var chunker = _chunkerFactory.CreateChunker(chunkerConfig);
+            var chunker = _chunkerFactory.CreateChunker(chunkerConfig, completionService);
 
             // Creates the Embedder for this workflow
             var embedder = _embedderFactory.CreateEmbeddingService(embeddingProviderConfig.ApiKey, embeddingProviderConfig.Model, embeddingProviderConfig.Provider);
@@ -93,7 +102,12 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
             var embeddingProviderConfig = workflow.EmbeddingProviderConfig
                                 ?? throw new Exception("Embedding Provider not set");
 
-            var chunker = _chunkerFactory.CreateChunker(chunkerConfig);
+            var conversationProviderConfig = workflow.ConversationProviderConfig
+                                ?? throw new Exception("Conversation provider config not set");
+
+            var completionService = _chatCompletionFactory.CreateCompletionService(conversationProviderConfig);
+
+            var chunker = _chunkerFactory.CreateChunker(chunkerConfig, completionService);
             var embedder = _embedderFactory.CreateEmbeddingService(embeddingProviderConfig.ApiKey, embeddingProviderConfig.Model, embeddingProviderConfig.Provider);
 
             var text = await _pdfTextExtractor.ExtractTextAsync(file);

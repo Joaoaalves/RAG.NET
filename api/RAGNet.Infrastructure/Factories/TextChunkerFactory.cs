@@ -8,7 +8,13 @@ namespace RAGNET.Infrastructure.Factories
 {
     public class TextChunkerFactory : ITextChunkerFactory
     {
-        public ITextChunkerService CreateChunker(Chunker chunkerConfig)
+        private readonly IPromptService _promptService;
+        public TextChunkerFactory(IPromptService promptService)
+        {
+            _promptService = promptService;
+        }
+
+        public ITextChunkerService CreateChunker(Chunker chunkerConfig, IChatCompletionService completionService)
         {
             int chunkSize = 600;
             int overlap = 100;
@@ -24,7 +30,13 @@ namespace RAGNET.Infrastructure.Factories
 
             return chunkerConfig.StrategyType switch
             {
-                ChunkerStrategy.PROPOSITION => new PropositionChunkerAdapter(chunkSize, overlap),
+                ChunkerStrategy.PROPOSITION => new PropositionChunkerAdapter(
+                    chunkSize,
+                    overlap,
+                    _promptService.GetPrompt("PropositionChunker", "chunker"),
+                    _promptService.GetPrompt("PropositionChunker", "evaluation"),
+                    completionService
+                ),
                 ChunkerStrategy.SEMANTIC => new SemanticChunkerAdapter(chunkSize, overlap),
                 _ => throw new NotSupportedException("Estratégia de chunking não suportada."),
             };

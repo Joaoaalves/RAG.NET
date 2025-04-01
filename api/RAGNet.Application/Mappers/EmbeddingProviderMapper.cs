@@ -23,7 +23,8 @@ namespace RAGNET.Application.Mappers
             {
                 Provider = embeddingProvider.Provider,
                 ApiKey = embeddingProvider.ApiKey,
-                VectorSize = embeddingProvider.VectorSize
+                VectorSize = embeddingProvider.VectorSize,
+                Model = embeddingProvider.Model
             };
         }
     }

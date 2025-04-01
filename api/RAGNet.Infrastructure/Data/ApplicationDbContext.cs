@@ -5,15 +5,13 @@ using RAGNET.Domain.Entities;
 
 namespace RAGNET.Infrastructure.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User>
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User>(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
         public DbSet<Workflow> Workflows { get; set; }
         public DbSet<Chunker> Chunkers { get; set; }
         public DbSet<ChunkerMeta> ChunkerMetas { get; set; }
+        public DbSet<EmbeddingProviderConfig> EmbeddingProviderConfigs { get; set; }
+        public DbSet<ConversationProviderConfig> ConversationProviderConfigs { get; set; }
         public DbSet<QueryEnhancer> QueryEnhancers { get; set; }
         public DbSet<QueryEnhancerMeta> QueryEnhancerMetas { get; set; }
         public DbSet<Filter> Filters { get; set; }

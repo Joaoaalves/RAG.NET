@@ -37,9 +37,7 @@ export class EmbeddingService {
               try {
                 const data: EmbeddingResponse = JSON.parse(jsonStr);
                 observer.next(data);
-              } catch (e) {
-                console.error('Erro ao parsear JSON do SSE:', e);
-              }
+              } catch (e) {}
             }
           }
         });

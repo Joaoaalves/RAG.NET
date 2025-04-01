@@ -23,7 +23,14 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
             var settings = chunker.Metas.ToDictionary(m => m.Key, m => m.Value);
             var embeddingProvider = workflow.EmbeddingProviderConfig ?? throw new Exception("Embedding Provider não setado");
 
-            return workflow.ToWorkflowDetailsDTOFromWorkflow(chunker.StrategyType, settings.ToChunkerSettingsDTOfromDictionary(), embeddingProvider.ToDTOFromEmbeddingProviderConfig());
+            var conversationProvider = workflow.ConversationProviderConfig ?? throw new Exception("Conversation Provider not set.");
+
+            return workflow.ToWorkflowDetailsDTOFromWorkflow(
+                chunker.StrategyType,
+                settings.ToChunkerSettingsDTOfromDictionary(),
+                embeddingProvider.ToDTOFromEmbeddingProviderConfig(),
+                conversationProvider.ToDTOFromConversationProviderConfig());
+
         }
     }
 }

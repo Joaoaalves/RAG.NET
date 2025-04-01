@@ -2,10 +2,22 @@ using RAGNET.Domain.Services;
 
 namespace RAGNET.Infrastructure.Adapters.Chunking
 {
-    public class PropositionChunkerAdapter(int chunkSize, int overlap) : ITextChunkerService
+    public class PropositionChunkerAdapter : ITextChunkerService
     {
-        private readonly int _chunkSize = chunkSize;
-        private readonly int _overlap = overlap;
+        private readonly int _chunkSize;
+        private readonly int _overlap;
+        private readonly string _chunkPrompt;
+        private readonly string _evaluationPrompt;
+        private readonly IChatCompletionService _completionService;
+
+        public PropositionChunkerAdapter(int chunkSize, int overlap, string chunkPrompt, string evaluationPrompt, IChatCompletionService completionService)
+        {
+            _chunkSize = chunkSize;
+            _overlap = overlap;
+            _chunkPrompt = chunkPrompt;
+            _evaluationPrompt = evaluationPrompt;
+            _completionService = completionService;
+        }
 
         public IEnumerable<string> ChunkText(string text)
         {
@@ -19,7 +31,9 @@ namespace RAGNET.Infrastructure.Adapters.Chunking
                 if (i + _chunkSize >= tokens.Length)
                     break;
             }
+
             return chunks;
         }
+
     }
 }

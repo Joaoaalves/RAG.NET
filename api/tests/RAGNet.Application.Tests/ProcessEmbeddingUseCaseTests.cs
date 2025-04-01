@@ -19,21 +19,24 @@ namespace tests.RAGNet.Application.Tests
         private readonly Mock<IEmbedderFactory> _embedderFactoryMock;
         private readonly Mock<IVectorDatabaseService> _vectorDatabaseServiceMock;
         private readonly ProcessEmbeddingUseCase _useCase;
+        private readonly Mock<IChatCompletionFactory> _chatCompletionFactory;
 
         public ProcessEmbeddingUseCaseTests()
         {
             _workflowRepositoryMock = new Mock<IWorkflowRepository>();
             _pdfTextExtractorMock = new Mock<IPdfTextExtractorService>();
             _chunkerFactoryMock = new Mock<ITextChunkerFactory>();
-            _embedderFactoryMock = new Mock<IEmbedderFactory>();
             _vectorDatabaseServiceMock = new Mock<IVectorDatabaseService>();
+            _embedderFactoryMock = new Mock<IEmbedderFactory>();
+            _chatCompletionFactory = new Mock<IChatCompletionFactory>();
 
             _useCase = new ProcessEmbeddingUseCase(
                 _workflowRepositoryMock.Object,
                 _pdfTextExtractorMock.Object,
                 _chunkerFactoryMock.Object,
                 _embedderFactoryMock.Object,
-                _vectorDatabaseServiceMock.Object);
+                _vectorDatabaseServiceMock.Object,
+                _chatCompletionFactory.Object);
         }
 
         [Fact]
@@ -52,7 +55,8 @@ namespace tests.RAGNet.Application.Tests
                 Id = Guid.NewGuid(),
                 CollectionId = Guid.NewGuid(),
                 Chunker = new DummyChunkerConfig(),
-                EmbeddingProviderConfig = new EmbeddingProviderConfig { ApiKey = It.IsAny<string>() }
+                EmbeddingProviderConfig = new EmbeddingProviderConfig { ApiKey = It.IsAny<string>() },
+                ConversationProviderConfig = new ConversationProviderConfig { ApiKey = It.IsAny<string>() }
             };
 
             _workflowRepositoryMock
@@ -63,10 +67,16 @@ namespace tests.RAGNet.Application.Tests
                 .Setup(extractor => extractor.ExtractTextAsync(file))
                 .ReturnsAsync(fileContent);
 
+            var dummyCompletionService = new DummyCompletionService();
+            _chatCompletionFactory
+                .Setup(factory => factory.CreateCompletionService(workflow.ConversationProviderConfig))
+                .Returns(dummyCompletionService);
+
+
             // Set factory for returning chunker's dummy.
             var dummyChunker = new DummyTextChunker();
             _chunkerFactoryMock
-                .Setup(factory => factory.CreateChunker(workflow.Chunker))
+                .Setup(factory => factory.CreateChunker(workflow.Chunker, dummyCompletionService))
                 .Returns(dummyChunker);
 
             // Set factory for returning embedder's dummy.
@@ -105,7 +115,8 @@ namespace tests.RAGNet.Application.Tests
                 Id = Guid.NewGuid(),
                 CollectionId = Guid.NewGuid(),
                 Chunker = new DummyChunkerConfig(),
-                EmbeddingProviderConfig = new EmbeddingProviderConfig { ApiKey = It.IsAny<string>() }
+                EmbeddingProviderConfig = new EmbeddingProviderConfig { ApiKey = It.IsAny<string>() },
+                ConversationProviderConfig = new ConversationProviderConfig { ApiKey = It.IsAny<string>() }
             };
 
             _workflowRepositoryMock
@@ -116,9 +127,14 @@ namespace tests.RAGNet.Application.Tests
                 .Setup(extractor => extractor.ExtractTextAsync(file))
                 .ReturnsAsync(fileContent);
 
+            var dummyCompletionService = new DummyCompletionService();
+            _chatCompletionFactory
+                .Setup(factory => factory.CreateCompletionService(workflow.ConversationProviderConfig))
+                .Returns(dummyCompletionService);
+
             var dummyChunker = new DummyTextChunker();
             _chunkerFactoryMock
-                .Setup(factory => factory.CreateChunker(workflow.Chunker))
+                .Setup(factory => factory.CreateChunker(workflow.Chunker, dummyCompletionService))
                 .Returns(dummyChunker);
 
             var dummyEmbedder = new DummyEmbedder();

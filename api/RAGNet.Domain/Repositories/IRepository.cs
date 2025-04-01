@@ -24,6 +24,7 @@ namespace RAGNET.Domain.Repositories
     public interface IFilterRepository : IRepository<Filter>, IConfigMeta<Filter> { }
     public interface IRankerRepository : IRepository<Ranker>, IConfigMeta<Ranker> { }
     public interface IEmbeddingProviderConfigRepository : IRepository<EmbeddingProviderConfig> { }
+    public interface IConversationProviderConfigRepository : IRepository<ConversationProviderConfig> { }
     public interface IChunkRepository : IRepository<Chunk> { }
     public interface IChunkerMetaRepository : IRepository<ChunkerMeta> { }
     public interface IQueryEnhancerMetaRepository : IRepository<QueryEnhancerMeta> { }
