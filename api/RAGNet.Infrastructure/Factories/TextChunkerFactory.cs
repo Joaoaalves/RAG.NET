@@ -22,7 +22,6 @@ namespace RAGNET.Infrastructure.Factories
                     overlap = parsedOverlap;
             }
 
-            // Escolhe a estratégia de acordo com o enum
             return chunkerConfig.StrategyType switch
             {
                 ChunkerStrategy.PROPOSITION => new PropositionChunkerAdapter(chunkSize, overlap),

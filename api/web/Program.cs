@@ -18,6 +18,8 @@ using RAGNET.Infrastructure.Repositories;
 using RAGNET.Infrastructure.Factories;
 using RAGNET.Infrastructure.Adapters.VectorDB;
 using RAGNET.Infrastructure.Adapters.OpenAIFactory;
+using RAGNET.Infrastructure.Adapters.Embedding;
+using RAGNET.Infrastructure.Adapters.Chat;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -108,6 +110,8 @@ builder.Services.AddScoped<IEmbedderFactory, EmbedderFactory>();
 
 // Adapters
 builder.Services.AddScoped<IVectorDatabaseService, QDrantAdapter>();
+builder.Services.AddScoped<IChatCompletionService, OpenAIChatAdapter>();
+builder.Services.AddScoped<IChatCompletionService, AnthropicChatAdapter>();
 
 // Controllers
 builder.Services.AddControllers();

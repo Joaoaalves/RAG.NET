@@ -1,4 +1,5 @@
 using System.Text.Json;
+using RAGNET.Domain.Entities;
 
 namespace RAGNET.Domain.Services
 {
