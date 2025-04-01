@@ -47,7 +47,7 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
             var chunker = _chunkerFactory.CreateChunker(chunkerConfig);
 
             // Creates the Embedder for this workflow
-            var embedder = _embedderFactory.CreateEmbeddingService(embeddingProviderConfig.ApiKey);
+            var embedder = _embedderFactory.CreateEmbeddingService(embeddingProviderConfig.ApiKey, embeddingProviderConfig.Model, embeddingProviderConfig.Provider);
 
             // Get text from PDF
             var text = await _pdfTextExtractor.ExtractTextAsync(file);
@@ -66,7 +66,7 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
                 var documentId = $"{workflow.Id}-{Interlocked.Increment(ref processedChunks)}";
                 var metadata = new Dictionary<string, string>
                 {
-                    { "chunkPreview", chunk.Length > 100 ? chunk.Substring(0, 100) : chunk }
+                    { "chunkPreview", chunk.Length > 100 ? chunk[..100] : chunk }
                 };
 
                 await _vectorDatabaseService.InsertAsync(documentId, embedding, collectionId, metadata);
@@ -94,7 +94,7 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
                                 ?? throw new Exception("Embedding Provider not set");
 
             var chunker = _chunkerFactory.CreateChunker(chunkerConfig);
-            var embedder = _embedderFactory.CreateEmbeddingService(embeddingProviderConfig.ApiKey);
+            var embedder = _embedderFactory.CreateEmbeddingService(embeddingProviderConfig.ApiKey, embeddingProviderConfig.Model, embeddingProviderConfig.Provider);
 
             var text = await _pdfTextExtractor.ExtractTextAsync(file);
 
@@ -119,7 +119,7 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
                     var documentId = Guid.NewGuid().ToString();
                     var metadata = new Dictionary<string, string>
                     {
-                { "chunkPreview", chunk.Length > 100 ? chunk.Substring(0, 100) : chunk }
+                { "chunkPreview", chunk.Length > 100 ? chunk[..100] : chunk }
                     };
 
                     // Insert the embedded chunk into the vector database.

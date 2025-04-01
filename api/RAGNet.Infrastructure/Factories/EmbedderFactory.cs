@@ -1,15 +1,21 @@
+using RAGNET.Domain.Enums;
 using RAGNET.Domain.Factories;
 using RAGNET.Domain.Services;
 using RAGNET.Infrastructure.Adapters.Embedding;
 
-namespace RAGNET.Infrastructure.Adapters.OpenAIFactory
+namespace RAGNET.Infrastructure.Factories
 {
     public class EmbedderFactory : IEmbedderFactory
     {
-        public IEmbeddingService CreateEmbeddingService(string apiKey, string? model = null)
+        public IEmbeddingService CreateEmbeddingService(string apiKey, string model, EmbeddingProviderEnum provider)
         {
-            model ??= "text-embedding-ada-002";
-            return new OpenAIEmbeddingAdapter(apiKey, model);
+
+            return provider switch
+            {
+                EmbeddingProviderEnum.OPENAI => new OpenAIEmbeddingAdapter(apiKey, model),
+                EmbeddingProviderEnum.VOYAGE => new VoyageEmbeddingAdapter(apiKey, model),
+                _ => throw new NotSupportedException("Embedding provider not supported.")
+            };
         }
 
     }

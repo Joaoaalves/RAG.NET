@@ -3,6 +3,7 @@ using Moq;
 using RAGNET.Application.DTOs;
 using RAGNET.Application.UseCases.EmbeddingUseCases;
 using RAGNET.Domain.Entities;
+using RAGNET.Domain.Enums;
 using RAGNET.Domain.Factories;
 using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services;
@@ -71,7 +72,7 @@ namespace tests.RAGNet.Application.Tests
             // Set factory for returning embedder's dummy.
             var dummyEmbedder = new DummyEmbedder();
             _embedderFactoryMock
-                .Setup(factory => factory.CreateEmbeddingService(workflow.EmbeddingProviderConfig.ApiKey, It.IsAny<string>()))
+                .Setup(factory => factory.CreateEmbeddingService(workflow.EmbeddingProviderConfig.ApiKey, It.IsAny<string>(), EmbeddingProviderEnum.OPENAI))
                 .Returns(dummyEmbedder);
 
             // VectorServiceMock
@@ -122,7 +123,7 @@ namespace tests.RAGNet.Application.Tests
 
             var dummyEmbedder = new DummyEmbedder();
             _embedderFactoryMock
-                .Setup(factory => factory.CreateEmbeddingService(workflow.EmbeddingProviderConfig.ApiKey, It.IsAny<string>()))
+                .Setup(factory => factory.CreateEmbeddingService(workflow.EmbeddingProviderConfig.ApiKey, It.IsAny<string>(), EmbeddingProviderEnum.OPENAI))
                 .Returns(dummyEmbedder);
 
             _vectorDatabaseServiceMock

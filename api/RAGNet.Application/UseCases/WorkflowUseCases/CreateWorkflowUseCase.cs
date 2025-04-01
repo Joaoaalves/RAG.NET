@@ -10,14 +10,18 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
     {
         Task<Guid> Execute(WorkflowCreationDTO dto, User user);
     }
-    public class CreateWorkflowUseCase(IWorkflowRepository workflowRepository, IChunkerRepository chunkerRepository, IEmbeddingProviderConfigRepository embeddingProviderConfigRepository, IVectorDatabaseService vectorDatabaseService) : ICreateWorkflowUseCase
+    public class CreateWorkflowUseCase(IWorkflowRepository workflowRepository, IChunkerRepository chunkerRepository, IEmbeddingProviderConfigRepository embeddingProviderConfigRepository, IVectorDatabaseService vectorDatabaseService, IEmbeddingProviderValidator embeddingProviderValidator) : ICreateWorkflowUseCase
     {
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
         private readonly IChunkerRepository _chunkerRepository = chunkerRepository;
         private readonly IEmbeddingProviderConfigRepository _embeddingProviderConfigRepository = embeddingProviderConfigRepository;
         private readonly IVectorDatabaseService _vectorDatabaseService = vectorDatabaseService;
+        private readonly IEmbeddingProviderValidator _embeddingProviderValidator = embeddingProviderValidator;
+
         public async Task<Guid> Execute(WorkflowCreationDTO dto, User user)
         {
+            _embeddingProviderValidator.Validate(dto.EmbeddingProvider.ToEmbeddingProviderConfigFromEmbeddingProviderConfigDTO(Guid.NewGuid()));
+
             var workflow = dto.ToWorkflowFromCreationDTO(user);
             await _workflowRepository.AddAsync(workflow);
 

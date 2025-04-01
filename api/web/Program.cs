@@ -17,9 +17,7 @@ using RAGNET.Infrastructure.Adapters.Document;
 using RAGNET.Infrastructure.Repositories;
 using RAGNET.Infrastructure.Factories;
 using RAGNET.Infrastructure.Adapters.VectorDB;
-using RAGNET.Infrastructure.Adapters.OpenAIFactory;
-using RAGNET.Infrastructure.Adapters.Embedding;
-using RAGNET.Infrastructure.Adapters.Chat;
+using RAGNET.Infrastructure.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -92,10 +90,10 @@ builder.Services.AddScoped<IRankerRepository, RankerRepository>();
 builder.Services.AddScoped<IChunkRepository, ChunkRepository>();
 builder.Services.AddScoped<IEmbeddingProviderConfigRepository, EmbeddingProviderConfigRepository>();
 
-
 // Services
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IPdfTextExtractorService, PdfTextExtractorAdapter>();
+builder.Services.AddScoped<IEmbeddingProviderValidator, EmbeddingProviderValidator>();
 
 // Use Cases
 builder.Services.AddScoped<IGetUserWorkflowsUseCase, GetUserWorkflowsUseCase>();

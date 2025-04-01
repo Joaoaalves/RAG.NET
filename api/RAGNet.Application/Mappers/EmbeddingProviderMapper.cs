@@ -11,6 +11,7 @@ namespace RAGNET.Application.Mappers
             {
                 Provider = dto.Provider,
                 ApiKey = dto.ApiKey,
+                Model = dto.Model,
                 VectorSize = dto.VectorSize,
                 WorkflowId = workflowId
             };

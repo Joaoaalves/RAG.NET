@@ -6,6 +6,7 @@ using RAGNET.Domain.Entities;
 using RAGNET.Application.UseCases.WorkflowUseCases;
 using RAGNET.Application.UseCases.EmbeddingUseCases;
 using RAGNET.Application.Attributes;
+using RAGNET.Domain.Exceptions;
 
 namespace web.Controllers
 {
@@ -30,12 +31,24 @@ namespace web.Controllers
         [Authorize]
         public async Task<IActionResult> CreateWorkflow([FromBody] WorkflowCreationDTO dto)
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-                return Unauthorized();
+            try
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                    return Unauthorized();
 
-            var workflowId = await _createWorkflowUseCase.Execute(dto, user);
-            return Ok(new { Message = "Workflow created!", WorkflowId = workflowId });
+                var workflowId = await _createWorkflowUseCase.Execute(dto, user);
+                return Ok(new { Message = "Workflow created!", WorkflowId = workflowId });
+            }
+            catch (InvalidEmbeddingModelException exc)
+            {
+                return BadRequest(exc.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message);
+            }
+
         }
 
         [HttpGet]
