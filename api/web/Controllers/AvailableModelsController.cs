@@ -34,12 +34,12 @@ namespace web.Controllers
         public IActionResult GetEmbeddingModels()
         {
             var openAIModels = OpenAIEmbeddingAdapter.GetModels();
-            var anthropicModels = VoyageEmbeddingAdapter.GetModels();
+            var voyageModels = VoyageEmbeddingAdapter.GetModels();
 
             var models = new EmbeddingModelsDTO
             {
                 OpenAI = openAIModels,
-                Anthropic = anthropicModels
+                Voyage = voyageModels
             };
 
             return Ok(models);
