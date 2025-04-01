@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using RAGNET.Application.DTOs.Conversation;
-using RAGNET.Domain.Services;
+using RAGNET.Application.DTOs.Embedder;
+
 using RAGNET.Infrastructure.Adapters.Chat;
+using RAGNET.Infrastructure.Adapters.Embedding;
 
 namespace web.Controllers
 {
@@ -11,7 +13,6 @@ namespace web.Controllers
     [ApiController]
     public class AvailableModelsController() : ControllerBase
     {
-
         [HttpGet("conversation")]
         [Authorize]
         public IActionResult GetConversationModels()
@@ -20,6 +21,22 @@ namespace web.Controllers
             var anthropicModels = AnthropicChatAdapter.GetModels();
 
             var models = new ConversationModelsDTO
+            {
+                OpenAI = openAIModels,
+                Anthropic = anthropicModels
+            };
+
+            return Ok(models);
+        }
+
+        [HttpGet("embedding")]
+        [Authorize]
+        public IActionResult GetEmbeddingModels()
+        {
+            var openAIModels = OpenAIEmbeddingAdapter.GetModels();
+            var anthropicModels = AnthropicEmbeddingAdapter.GetModels();
+
+            var models = new EmbeddingModelsDTO
             {
                 OpenAI = openAIModels,
                 Anthropic = anthropicModels

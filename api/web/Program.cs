@@ -110,8 +110,6 @@ builder.Services.AddScoped<IEmbedderFactory, EmbedderFactory>();
 
 // Adapters
 builder.Services.AddScoped<IVectorDatabaseService, QDrantAdapter>();
-builder.Services.AddScoped<IChatCompletionService, OpenAIChatAdapter>();
-builder.Services.AddScoped<IChatCompletionService, AnthropicChatAdapter>();
 
 // Controllers
 builder.Services.AddControllers();

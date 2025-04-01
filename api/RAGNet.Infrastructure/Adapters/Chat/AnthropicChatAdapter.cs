@@ -8,9 +8,10 @@ using RAGNET.Infrastructure.Exceptions.Adapters;
 
 namespace RAGNET.Infrastructure.Adapters.Chat
 {
-    public class AnthropicChatAdapter(string apiKey) : IChatCompletionService
+    public class AnthropicChatAdapter(string apiKey, string model) : IChatCompletionService
     {
         private readonly AnthropicClient _chatClient = new(apiKey);
+        private readonly string _model = model ?? AnthropicModels.Claude3Haiku;
 
         public async Task<string> GetCompletionAsync(string systemPrompt, string message)
         {
@@ -49,13 +50,13 @@ namespace RAGNET.Infrastructure.Adapters.Chat
             ];
         }
 
-        private static MessageParameters BuildParameters(List<Message> messages, int? maxToken = 128000, string? model = AnthropicModels.Claude37Sonnet, bool? stream = false)
+        private MessageParameters BuildParameters(List<Message> messages, int? maxToken = 4096, bool? stream = false)
         {
             return new MessageParameters()
             {
                 Messages = messages,
-                MaxTokens = maxToken ?? 128000,
-                Model = model ?? AnthropicModels.Claude37Sonnet,
+                MaxTokens = maxToken ?? 4096,
+                Model = _model,
                 Stream = stream ?? false,
             };
         }
