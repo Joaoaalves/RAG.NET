@@ -47,8 +47,6 @@ docker-compose up --build
 ### Features to Implement
 
 - Front-End
-- Embedding
-- Chunker Strategy Factory
 - Context Enrichers
   - ParentChild
   - SERP
@@ -63,18 +61,22 @@ docker-compose up --build
   - Cohere Reranker
 - Retrieval Pipeline
 - Adapters
-  - OpenAI (Embedding, Chat Completion)
-  - QDrant
   - Pinecone
-  - Claude (Chat Completion)
   - Gemini (Chat Completion)
   - Other Embedding and Chat Completion Providers
 
 ### Features Completed
 
 - Authentication
+- Embedding
+- Chunker Strategy Factory
 - Workflows
   - Create Workflow
   - List Workflows
   - Get Workflow by ID
   - API Key Generation
+- Adapters
+  - QDrant
+  - OpenAI (Embedding and Chat Completion)
+  - Claude (Chat Completion)
+  - Voyage (Embedding)
