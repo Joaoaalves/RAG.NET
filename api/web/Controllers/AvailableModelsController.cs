@@ -34,7 +34,7 @@ namespace web.Controllers
         public IActionResult GetEmbeddingModels()
         {
             var openAIModels = OpenAIEmbeddingAdapter.GetModels();
-            var anthropicModels = AnthropicEmbeddingAdapter.GetModels();
+            var anthropicModels = VoyageEmbeddingAdapter.GetModels();
 
             var models = new EmbeddingModelsDTO
             {
