@@ -1,8 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { WorkflowService } from '../../services/workflow.service';
-import { WorkflowCardComponent } from 'src/app/shared/components/workflowCard/workflow-card.component';
 import { CommonModule } from '@angular/common';
+
+// Components
+import { WorkflowCardComponent } from 'src/app/shared/components/workflowCard/workflow-card.component';
+
+// Models
 import { Workflow } from 'src/app/models/workflow';
+
+// Services
+import { WorkflowService } from '../../services/workflow.service';
 
 @Component({
   selector: 'app-dashboard',

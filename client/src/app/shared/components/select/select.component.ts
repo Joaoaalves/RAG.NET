@@ -41,8 +41,8 @@ export class SelectComponent implements ControlValueAccessor {
   }
   setDisabledState?(isDisabled: boolean): void {}
 
-  onModelChange(value: any): void {
+  onModelChange(value: { label: string; value: number | string }): void {
     this.value = value;
-    this.onChange(value);
+    this.onChange(value.value);
   }
 }

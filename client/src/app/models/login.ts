@@ -4,3 +4,8 @@ export interface LoginResponse {
   expiresIn: number;
   refreshToken: string;
 }
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}

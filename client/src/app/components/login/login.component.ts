@@ -6,9 +6,13 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { InputComponent } from 'src/app/shared/components/input/input.component';
 import { CommonModule } from '@angular/common';
+
+// Components
+import { InputComponent } from 'src/app/shared/components/input/input.component';
+
+// Services
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',

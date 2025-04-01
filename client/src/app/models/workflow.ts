@@ -1,5 +1,5 @@
 import { ChunkerSettings, ChunkerStrategy } from './chunker';
-import { EmbeddingProviderEnum } from './embedding-provider';
+import { EmbeddingProvider } from './embedding';
 
 export interface Workflow {
   id: string;
@@ -12,8 +12,19 @@ export interface Workflow {
   embeddingProvider: EmbeddingProvider;
 }
 
-export interface EmbeddingProvider {
-  provider: EmbeddingProviderEnum;
-  apiKey: string;
-  vectorSize: number;
+export interface WorkflowsInfoResponse {
+  workflows: Workflow[];
+}
+
+export interface CreateWorkflowRequest {
+  name: string;
+  description: string;
+  strategy: ChunkerStrategy;
+  settings: ChunkerSettings;
+  embeddingProvider: EmbeddingProvider;
+}
+
+export interface CreateWorkflowResponse {
+  message: string;
+  workflowId: string;
 }

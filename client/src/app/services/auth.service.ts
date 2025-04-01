@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { LoginRequest } from '../models/login-request';
-import { RegisterRequest } from '../models/register-request';
-import { LoginResponse } from '../models/login-response';
+import { LoginRequest } from '../models/login';
+import { RegisterRequest } from '../models/register';
+import { LoginResponse } from '../models/login';
 import { Observable, of, throwError } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { TokenService } from './token.service';

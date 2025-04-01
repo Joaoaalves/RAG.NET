@@ -1,13 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
-import { Workflow } from '../models/workflow';
 import { environment } from '../../environments/environment';
-import { WorkflowsInfoResponse } from '../models/workflow-info';
+
 import {
+  Workflow,
+  WorkflowsInfoResponse,
   CreateWorkflowRequest,
   CreateWorkflowResponse,
-} from '../models/create-workflow';
+} from '../models/workflow';
+
+import { EmbeddingModelsResponse } from '../models/embedding';
 
 @Injectable({
   providedIn: 'root',
@@ -50,5 +53,11 @@ export class WorkflowService {
           return of(false);
         })
       );
+  }
+
+  getEmbeddingModels(): Observable<EmbeddingModelsResponse> {
+    return this.httpClient
+      .get<EmbeddingModelsResponse>(`${this.apiUrl}/api/models/embedding`)
+      .pipe(map((response) => response));
   }
 }

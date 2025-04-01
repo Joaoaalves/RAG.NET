@@ -1,12 +1,18 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EmbeddingService } from 'src/app/services/embedding.service';
-import { WorkflowService } from 'src/app/services/workflow.service';
-import { Workflow } from 'src/app/models/workflow';
-import { EmbeddingRequest, EmbeddingResponse } from 'src/app/models/embedding';
 import { CommonModule } from '@angular/common';
+
+// Icons
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroArrowUpOnSquare } from '@ng-icons/heroicons/outline';
+
+// Models
+import { EmbeddingRequest, EmbeddingResponse } from 'src/app/models/embedding';
+import { Workflow } from 'src/app/models/workflow';
+
+// Services
+import { EmbeddingService } from 'src/app/services/embedding.service';
+import { WorkflowService } from 'src/app/services/workflow.service';
 
 @Component({
   imports: [CommonModule, NgIcon],

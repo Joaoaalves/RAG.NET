@@ -9,8 +9,6 @@ import { environment } from '../../environments/environment';
 export class EmbeddingService {
   private apiUrl = environment.apiUrl;
 
-  constructor() {}
-
   embedd(
     requestData: EmbeddingRequest,
     apiKey: string

@@ -13,7 +13,7 @@ import { Workflow } from 'src/app/models/workflow';
 import { ElementRef } from '@angular/core';
 import { EmbeddingResponse } from 'src/app/models/embedding';
 import { ChunkerStrategy } from 'src/app/models/chunker';
-import { EmbeddingProviderEnum } from 'src/app/models/embedding-provider';
+import { EmbeddingProviderEnum } from 'src/app/models/embedding';
 import { HttpClientModule } from '@angular/common/http';
 
 const mockWorkflow: Workflow = {
@@ -32,6 +32,7 @@ const mockWorkflow: Workflow = {
     provider: EmbeddingProviderEnum.OPENAI,
     apiKey: '',
     vectorSize: 0,
+    model: '',
   },
 };
 
