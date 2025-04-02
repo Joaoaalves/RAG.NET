@@ -5,13 +5,9 @@ using RAGNET.Domain.Services;
 
 namespace RAGNET.Infrastructure.Adapters.Chat
 {
-    public class OpenAIChatAdapter : IChatCompletionService
+    public class OpenAIChatAdapter(string apiKey, string model) : IChatCompletionService
     {
-        private readonly ChatClient _chatClient;
-        public OpenAIChatAdapter(string apiKey, string model)
-        {
-            _chatClient = new(model, apiKey);
-        }
+        private readonly ChatClient _chatClient = new(model, apiKey);
 
         public async Task<string> GetCompletionAsync(string systemPrompt, string message)
         {
@@ -40,7 +36,6 @@ namespace RAGNET.Infrastructure.Adapters.Chat
             return structuredJson;
 
         }
-
 
         public static List<ConversationModel> GetModels()
         {

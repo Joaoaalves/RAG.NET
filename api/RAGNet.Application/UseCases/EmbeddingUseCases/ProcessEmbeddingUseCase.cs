@@ -62,7 +62,7 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
             var text = await _pdfTextExtractor.ExtractTextAsync(file);
 
             // Chunk
-            var chunks = chunker.ChunkText(text);
+            var chunks = await chunker.ChunkText(text);
 
             var processedChunks = 0;
             var collectionId = workflow.CollectionId.ToString();
@@ -112,7 +112,7 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
 
             var text = await _pdfTextExtractor.ExtractTextAsync(file);
 
-            var chunks = chunker.ChunkText(text);
+            var chunks = await chunker.ChunkText(text);
             int totalChunks = chunks.Count();
 
             int processedChunks = 0;

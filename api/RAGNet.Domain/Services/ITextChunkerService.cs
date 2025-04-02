@@ -7,6 +7,6 @@ namespace RAGNET.Domain.Services
         /// </summary>
         /// <param name="text">Text to be processed.</param>
         /// <returns>List of chunks.</returns>
-        IEnumerable<string> ChunkText(string text);
+        Task<IEnumerable<string>> ChunkText(string text);
     }
 }

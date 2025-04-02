@@ -18,26 +18,30 @@ namespace RAGNET.Infrastructure.Factories
         {
             int chunkSize = 600;
             int overlap = 100;
+            float threshold = 0.8f;
 
-            if (chunkerConfig.Metas != null && chunkerConfig.Metas.Any())
+            if (chunkerConfig.Metas != null && chunkerConfig.Metas.Count != 0)
             {
                 var metaDict = chunkerConfig.Metas.ToDictionary(m => m.Key, m => m.Value);
-                if (metaDict.TryGetValue("chunkSize", out string? value) && int.TryParse(value, out int parsedChunkSize))
+                if (metaDict.TryGetValue("chunkSize", out string? size) && int.TryParse(size, out int parsedChunkSize))
                     chunkSize = parsedChunkSize;
-                if (metaDict.ContainsKey("overlap") && int.TryParse(metaDict["overlap"], out int parsedOverlap))
+                if (metaDict.TryGetValue("overlap", out string? ovrlp) && int.TryParse(ovrlp, out int parsedOverlap))
                     overlap = parsedOverlap;
+                if (metaDict.TryGetValue("threshold", out string? thrshld) && float.TryParse(thrshld, out float parsedThreshold))
+                    threshold = parsedThreshold;
             }
 
             return chunkerConfig.StrategyType switch
             {
                 ChunkerStrategy.PROPOSITION => new PropositionChunkerAdapter(
-                    chunkSize,
-                    overlap,
+                    threshold,
                     _promptService.GetPrompt("PropositionChunker", "chunker"),
                     _promptService.GetPrompt("PropositionChunker", "evaluation"),
                     completionService
                 ),
-                ChunkerStrategy.SEMANTIC => new SemanticChunkerAdapter(chunkSize, overlap),
+
+                ChunkerStrategy.SEMANTIC => new SemanticChunkerAdapter(threshold, completionService),
+                ChunkerStrategy.PARAGRAPH => new ParagraphChunkerAdapter(chunkSize),
                 _ => throw new NotSupportedException("Estratégia de chunking não suportada."),
             };
         }
