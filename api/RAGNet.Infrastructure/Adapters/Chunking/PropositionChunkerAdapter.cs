@@ -21,14 +21,12 @@ namespace RAGNET.Infrastructure.Adapters.Chunking
 
         public async Task<IEnumerable<string>> ChunkText(string text)
         {
+
             var paragraphs = text.Split(['\n'], StringSplitOptions.RemoveEmptyEntries);
             var chunksBag = new ConcurrentBag<string>(); // Thread-safe list
 
-            Console.WriteLine($"Chunking text with {paragraphs.Length} paragraphs");
-
             await Parallel.ForEachAsync(paragraphs, async (paragraph, _) =>
             {
-                Console.WriteLine($"Processing paragraph: {paragraph}");
 
                 var chunks = await ChunkParagraph(paragraph);
                 var evaluatedChunks = await EvaluateChunks(chunks);

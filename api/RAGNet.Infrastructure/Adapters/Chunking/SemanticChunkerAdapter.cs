@@ -5,20 +5,15 @@ using RAGNET.Domain.Services;
 
 namespace RAGNET.Infrastructure.Adapters.Chunking
 {
-    public class SemanticChunkerAdapter : ITextChunkerService
+    public class SemanticChunkerAdapter(float threshold, IChatCompletionService completionService) : ITextChunkerService
     {
-        private readonly float _threshold;
-        private readonly IChatCompletionService _completionService;
-
-        public SemanticChunkerAdapter(float threshold, IChatCompletionService completionService)
-        {
-            _threshold = threshold;
-            _completionService = completionService;
-        }
+        private readonly float _threshold = threshold;
+        private readonly IChatCompletionService _completionService = completionService;
 
         public async Task<IEnumerable<string>> ChunkText(string text)
         {
             var sentences = Regex.Split(text, @"(?<=[\.!\?])\s+");
+
             List<string> chunks = [];
 
             if (sentences.Length == 0)
@@ -30,25 +25,13 @@ namespace RAGNET.Infrastructure.Adapters.Chunking
             {
                 string candidateSentence = sentences[i].Trim();
 
-                string systemMessage = $"Current Chunk: \"{currentChunk}" +
-                                 "Please evaluate the semantic similarity between the current chunk and the candidate sentence in percentage (0 <= eval <= 1).";
-
+                string systemMessage = BuildSystemMessage(currentChunk);
                 string message = $"\"\nCandidate Sentence: \"{candidateSentence}\"\n";
-
-                string schemaString = @"
-                {
-                    ""type"": ""object"",
-                    ""properties"": {
-                        ""similarity"": { ""type"": ""number"" }
-                    },
-                    ""required"": [""similarity""]
-                }";
-                using JsonDocument schemaDoc = JsonDocument.Parse(schemaString);
 
                 JsonDocument evaluationResult = await _completionService.GetCompletionStructuredAsync(
                     systemMessage,
                     message,
-                    schemaDoc,
+                    GetSchema(),
                     "SemanticEvaluation"
                 );
 
@@ -76,6 +59,26 @@ namespace RAGNET.Infrastructure.Adapters.Chunking
             }
 
             return chunks;
+        }
+
+        private JsonDocument GetSchema()
+        {
+            string schemaString = @"
+                {
+                    ""type"": ""object"",
+                    ""properties"": {
+                        ""similarity"": { ""type"": ""number"" }
+                    },
+                    ""required"": [""similarity""]
+                }";
+            return JsonDocument.Parse(schemaString);
+        }
+
+        private string BuildSystemMessage(StringBuilder chunk)
+        {
+            return $"Current Chunk: \"{chunk}" +
+                                 "Please evaluate the semantic similarity between the current chunk and the candidate sentence in percentage (0 <= eval <= 1).";
+
         }
     }
 }
