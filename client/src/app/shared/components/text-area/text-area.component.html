@@ -1,11 +1,12 @@
-<div class="flex flex-col gap-y-2 w-full">
+<div class="flex flex-col w-full">
   <label [for]="name" class="text-white">{{ label }}</label>
+  <p *ngIf="description.length"class="text-sm text-neutral-400 w-full">{{description}}</p>
   <textarea
     [name]="name"
     [value]="value"
     (input)="onValueChange($event)"
     (blur)="onTouched()"
-    class="w-full bg-black text-white rounded-lg p-2 border border-neutral-800"
+    class="w-full bg-black text-white rounded-lg p-2 border border-neutral-800 mt-2"
     required
   ></textarea>
 </div>

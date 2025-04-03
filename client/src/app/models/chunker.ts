@@ -7,4 +7,5 @@ export interface ChunkerSettings {
 export enum ChunkerStrategy {
   PROPOSITION = 0,
   SEMANTIC = 1,
+  PARAGRAPH = 2,
 }

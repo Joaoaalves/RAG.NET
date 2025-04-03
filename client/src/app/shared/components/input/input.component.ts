@@ -1,9 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'app-input',
   templateUrl: './input.component.html',
+  imports: [CommonModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -18,6 +20,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 export class InputComponent implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() type: string = 'text';
+  @Input() description: string = '';
   @Input() name: string = '';
   @Input() step?: number = 1;
   @Input() min?: number = 0;

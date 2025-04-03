@@ -23,6 +23,7 @@ import { HlmSelectImports } from '@spartan-ng/ui-select-helm';
 export class SelectComponent implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() name: string = '';
+  @Input() description: string = '';
   @Input() options: { value: string | number; label: string }[] = [];
 
   value: any;

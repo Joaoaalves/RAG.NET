@@ -1,3 +1,4 @@
+import { ConversationProvider } from './chat';
 import { ChunkerSettings, ChunkerStrategy } from './chunker';
 import { EmbeddingProvider } from './embedding';
 
@@ -22,6 +23,7 @@ export interface CreateWorkflowRequest {
   strategy: ChunkerStrategy;
   settings: ChunkerSettings;
   embeddingProvider: EmbeddingProvider;
+  conversationProvider: ConversationProvider;
 }
 
 export interface CreateWorkflowResponse {

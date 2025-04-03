@@ -11,6 +11,7 @@ import {
 } from '../models/workflow';
 
 import { EmbeddingModelsResponse } from '../models/embedding';
+import { ConversationModelsResponse } from '../models/chat';
 
 @Injectable({
   providedIn: 'root',
@@ -58,6 +59,12 @@ export class WorkflowService {
   getEmbeddingModels(): Observable<EmbeddingModelsResponse> {
     return this.httpClient
       .get<EmbeddingModelsResponse>(`${this.apiUrl}/api/models/embedding`)
+      .pipe(map((response) => response));
+  }
+
+  getConversationModels(): Observable<ConversationModelsResponse> {
+    return this.httpClient
+      .get<ConversationModelsResponse>(`${this.apiUrl}/api/models/conversation`)
       .pipe(map((response) => response));
   }
 }

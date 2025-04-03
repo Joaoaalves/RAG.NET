@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -6,6 +7,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   host: {
     style: 'display: block',
   },
+  imports: [CommonModule],
   templateUrl: './text-area.component.html',
   standalone: true,
   providers: [
@@ -18,6 +20,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class TextAreaComponent implements ControlValueAccessor {
   @Input() label: string = '';
+  @Input() description: string = '';
   @Input() name: string = '';
 
   value: any;

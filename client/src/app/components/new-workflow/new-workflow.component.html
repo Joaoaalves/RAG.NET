@@ -1,10 +1,10 @@
-<div class="p-8 bg-black">
+<div class="P-8">
   <h1 class="text-neutral-200 text-4xl">Create Workflow</h1>
   <p class="text-sm text-neutral-400 mt-2">
     Here you can add a new workflow to your collection.
   </p>
   <form
-    class="mt-8 bg-neutral-900 pb-8 rounded-2xl grid grid-cols-1 xl:grid-cols-2"
+    class="mt-8 pb-8 rounded-2xl grid grid-cols-1 gap-y-8 w-1/2"
     [formGroup]="form"
     (ngSubmit)="createWorkflow()"
   >
@@ -14,7 +14,7 @@
       >{{ error }}</span
     >
 
-    <div class="p-8 grid grid-cols-1 gap-y-4 w-full">
+    <div class="grid grid-cols-1 w-full p-4 ps-0 gap-y-4">
       <h2 class="text-neutral-300 text-2xl">Details</h2>
       <app-input
         label="Workflow Name *"
@@ -22,24 +22,27 @@
         name="name"
         formControlName="name"
       ></app-input>
-      <app-input
+      <app-text-area
         label="Description *"
         type="text"
         name="description"
         formControlName="description"
-      ></app-input>
+        description="Here you can categorize your workflow, saving things like the category of the documents contained in it or the RAG strategies adopted for it."
+      ></app-text-area>
     </div>
 
-    <div class="p-8 grid grid-cols-1 gap-y-4 w-full">
+    <div class="grid grid-cols-1 gap-y-4 w-full">
       <h2 class="text-2xl text-neutral-300">Chunker</h2>
       <app-select
         label="Chunking Strategy *"
         name="strategy"
         [options]="chunkerStrategies"
         formControlName="strategy"
+        description="
+        This is one of the most important parts of RAG, however, strategies that use conversational models for chunking (Proposition and Semantic) exponentially increase the time and price costs. If you just need a simple RAG, you can take the PARAGRAPH strategy."
       ></app-select>
 
-      <div class="grid grid-cols-2 w-full gap-x-4" formGroupName="settings">
+      <div class="grid grid-cols-1 w-full gap-4" formGroupName="settings">
         <app-input
           label="Threshold *"
           type="number"
@@ -47,6 +50,7 @@
           [step]="0.01"
           [min]="0"
           [max]="1"
+          description="This threshold will define which generated chunkings will actually be embedded or discarded. Since this process happens via LLM and they are very lenient in the evaluation, values ​​between 0.85 and 1.0 are better."
           formControlName="threshold"
         ></app-input>
         <app-input
@@ -55,32 +59,30 @@
           name="maxChunkSize"
           [min]="100"
           [max]="2000"
+          description="Most embedding models are limited to 4096 to 8192 tokens, but this range is not recommended for Queries. Chunks with fewer than 1000 tokens are more recommended. Remember, smaller chunks improve your results but will increase the cost and time required to perform the embedding."
           formControlName="maxChunkSize"
         ></app-input>
       </div>
-      <div class="w-full" formGroupName="settings">
-        <app-text-area
-          label="Evaluation Prompt"
-          name="evaluationPrompt"
-          formControlName="evaluationPrompt"
-        ></app-text-area>
-      </div>
+
     </div>
 
-    <div class="p-8 grid grid-cols-1 gap-y-4 w-full" formGroupName="embeddingProvider">
+    <div class="grid grid-cols-1 gap-y-4 w-full" formGroupName="embeddingProvider">
       <h2 class="text-2xl text-neutral-300">Embedding Provider</h2>
+      <p class="mb-4 text-neutral-400 text-sm">If you want to explore the top-ranked models, visit <a class="text-purple-600" href="https://huggingface.co/spaces/mteb/leaderboard">MTEB Leaderboard</a>.</p>
       <app-select
         label="Provider *"
         name="provider"
         [options]="embeddingProviders"
         formControlName="provider"
+        description="Select the embedding model provider for your service. Keep in mind that you will need an API key to use the provider, and depending on the selected chunking strategy, the embedding cost may increase. Therefore, make sure to review the costs on the provider's website before choosing your embedding model and provider."
       ></app-select>
 
       <app-select
         label="Model *"
         name="model"
-        [options]="modelOptions"
+        [options]="embeddingModelOptions"
         formControlName="model"
+        description="Select the model for this provider. It’s important to note that some models are faster than others, but less efficient."
       ></app-select>
 
       <div class="grid grid-cols-1 w-full">
@@ -93,6 +95,37 @@
       </div>
 
       <input type="hidden" formControlName="vectorSize" />
+    </div>
+
+
+    <div class="grid grid-cols-1 gap-y-4 w-full" formGroupName="conversationProvider">
+      <h2 class="text-2xl text-neutral-300">Conversation Provider</h2>
+      <p class="mb-4 text-neutral-400 text-sm">If you want to explore the top-ranked models, visit <a class="text-purple-600" href="https://llm-stats.com/">LLM stats</a>.</p>
+      <app-select
+        label="Provider *"
+        name="provider"
+        [options]="conversationProviders"
+        formControlName="provider"
+        description="Select the Conversation model provider for your service. Keep in mind that you will need an API key to use the provider, and depending on the selected chunking strategy, the embedding cost may increase. Therefore, make sure to review the costs on the provider's website before choosing your embedding model and provider."
+      ></app-select>
+
+      <app-select
+        label="Model *"
+        name="model"
+        [options]="conversationModelOptions"
+        formControlName="model"
+        description="Select the model for this provider. It’s important to note that some models are faster than others, but less efficient."
+      ></app-select>
+
+      <div class="grid grid-cols-1 w-full">
+        <app-input
+          label="API Key *"
+          type="text"
+          name="apiKey"
+          formControlName="apiKey"
+        ></app-input>
+      </div>
+
     </div>
 
     <button
