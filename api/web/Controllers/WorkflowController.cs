@@ -7,6 +7,9 @@ using RAGNET.Application.UseCases.WorkflowUseCases;
 using RAGNET.Application.UseCases.EmbeddingUseCases;
 using RAGNET.Application.Attributes;
 using RAGNET.Domain.Exceptions;
+using RAGNET.Domain.Enums;
+using RAGNET.Domain.Factories;
+using RAGNET.Infrastructure.Adapters.Chat;
 
 namespace web.Controllers
 {
@@ -18,6 +21,7 @@ namespace web.Controllers
         IDeleteWorkflowUseCase deleteWorkflowUseCase,
         IGetWorkflowUseCase getWorkflowUseCase,
         IProcessEmbeddingUseCase processEmbeddingUseCase,
+        IQueryEnhancerFactory queryEnhancerFactory,
         UserManager<User> userManager) : ControllerBase
     {
         private readonly IGetUserWorkflowsUseCase _getUserWorkflowsUseCase = getUserWorkflowsUseCase;
@@ -25,6 +29,7 @@ namespace web.Controllers
         private readonly IDeleteWorkflowUseCase _deleteWorkflowUseCase = deleteWorkflowUseCase;
         private readonly IGetWorkflowUseCase _getWorkflowUseCase = getWorkflowUseCase;
         private readonly IProcessEmbeddingUseCase _processEmbeddingUseCase = processEmbeddingUseCase;
+        private readonly IQueryEnhancerFactory _queryEnhancerFactory = queryEnhancerFactory;
         private readonly UserManager<User> _userManager = userManager;
 
         [HttpPost]
