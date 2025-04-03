@@ -1,16 +1,15 @@
-import { Component, model, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 // Components
-import { EnumMapperService } from './../../shared/services/enum-mapper.service';
 import { InputComponent } from 'src/app/shared/components/input/input.component';
 import { SelectComponent } from 'src/app/shared/components/select/select.component';
 import { TextAreaComponent } from 'src/app/shared/components/text-area/text-area.component';
@@ -23,23 +22,24 @@ import {
   EmbeddingModel,
   EmbeddingModelsResponse,
 } from 'src/app/models/embedding';
-
-// Services
-import { WorkflowService } from 'src/app/services/workflow.service';
 import {
   ConversationModel,
   ConversationModelsResponse,
   ConversationProviderEnum,
 } from 'src/app/models/chat';
 
+// Services
+import { WorkflowService } from 'src/app/services/workflow.service';
+import { EnumMapperService } from 'src/app/shared/services/enum-mapper.service';
+
 @Component({
   imports: [
-    InputComponent,
-    SelectComponent,
-    TextAreaComponent,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    InputComponent,
+    SelectComponent,
+    TextAreaComponent,
   ],
   templateUrl: './new-workflow.component.html',
   standalone: true,
@@ -50,8 +50,8 @@ export class NewWorkflowComponent implements OnInit {
   chunkerStrategies: { label: string; value: number }[] = [];
   embeddingProviders: { label: string; value: number }[] = [];
   conversationProviders: { label: string; value: number }[] = [];
-  conversationModelsResponse!: ConversationModelsResponse;
   embeddingModelsResponse!: EmbeddingModelsResponse;
+  conversationModelsResponse!: ConversationModelsResponse;
   embeddingModelOptions: EmbeddingModel[] = [];
   conversationModelOptions: ConversationModel[] = [];
 
@@ -63,22 +63,30 @@ export class NewWorkflowComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.initializeOptions();
+    this.initForm();
+    this.loadModels();
+    this.setupSubscriptions();
+  }
+
+  private initializeOptions(): void {
     this.embeddingProviders = this.mapper.mapEnumToOptions(
       EmbeddingProviderEnum
     );
     this.conversationProviders = this.mapper.mapEnumToOptions(
       ConversationProviderEnum
     );
-
     this.chunkerStrategies = this.mapper.mapEnumToOptions(ChunkerStrategy);
+  }
 
+  private initForm(): void {
     this.form = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
       strategy: [ChunkerStrategy.PROPOSITION, Validators.required],
       settings: this.fb.group({
         threshold: [
-          0.8,
+          0.9,
           [Validators.required, Validators.min(0), Validators.max(1)],
         ],
         evaluationPrompt: [''],
@@ -99,28 +107,37 @@ export class NewWorkflowComponent implements OnInit {
         model: [null, Validators.required],
       }),
     });
+  }
 
+  get strategyValue(): number {
+    return this.form.get('strategy')?.value;
+  }
+
+  private loadModels(): void {
     this.workflowService.getEmbeddingModels().subscribe((response) => {
       this.embeddingModelsResponse = response;
-      this.updateEmbeddingModelOptions(
-        this.form.get('embeddingProvider.provider')?.value
-      );
+      const currentProvider = this.form.get(
+        'embeddingProvider.provider'
+      )?.value;
+      this.updateEmbeddingModelOptions(currentProvider);
     });
 
     this.workflowService.getConversationModels().subscribe((response) => {
       this.conversationModelsResponse = response;
-      this.updateConversationModelOptions(
-        this.form.get('conversationProvider.provider')?.value
-      );
+      const currentProvider = this.form.get(
+        'conversationProvider.provider'
+      )?.value;
+      this.updateConversationModelOptions(currentProvider);
     });
+  }
 
-    this.form
-      .get('conversationProvider.provider')
-      ?.valueChanges.subscribe((providerValue: number) => {
-        this.updateConversationModelOptions(providerValue);
-        this.form.get('conversationProvider.model')?.reset();
-      });
+  private setupSubscriptions(): void {
+    this.subscribeEmbeddingProviderChanges();
+    this.subscribeConversationProviderChanges();
+    this.subscribeEmbeddingModelChanges();
+  }
 
+  private subscribeEmbeddingProviderChanges(): void {
     this.form
       .get('embeddingProvider.provider')
       ?.valueChanges.subscribe((providerValue: number) => {
@@ -128,7 +145,18 @@ export class NewWorkflowComponent implements OnInit {
         this.form.get('embeddingProvider.model')?.reset();
         this.form.get('embeddingProvider.vectorSize')?.setValue(0);
       });
+  }
 
+  private subscribeConversationProviderChanges(): void {
+    this.form
+      .get('conversationProvider.provider')
+      ?.valueChanges.subscribe((providerValue: number) => {
+        this.updateConversationModelOptions(providerValue);
+        this.form.get('conversationProvider.model')?.reset();
+      });
+  }
+
+  private subscribeEmbeddingModelChanges(): void {
     this.form
       .get('embeddingProvider.model')
       ?.valueChanges.subscribe((modelValue: any) => {
@@ -144,7 +172,7 @@ export class NewWorkflowComponent implements OnInit {
       });
   }
 
-  updateEmbeddingModelOptions(provider: number): void {
+  private updateEmbeddingModelOptions(provider: number): void {
     if (provider === EmbeddingProviderEnum.OPENAI) {
       this.embeddingModelOptions = this.embeddingModelsResponse.openAI;
     } else if (provider === EmbeddingProviderEnum.VOYAGE) {
@@ -154,7 +182,7 @@ export class NewWorkflowComponent implements OnInit {
     }
   }
 
-  updateConversationModelOptions(provider: number): void {
+  private updateConversationModelOptions(provider: number): void {
     if (provider === ConversationProviderEnum.OPENAI) {
       this.conversationModelOptions = this.conversationModelsResponse.openAI;
     } else if (provider === ConversationProviderEnum.ANTHROPIC) {
@@ -170,20 +198,14 @@ export class NewWorkflowComponent implements OnInit {
       return;
     }
     const formValue = this.form.value;
-
     if (typeof formValue.embeddingProvider.model === 'object') {
       formValue.embeddingProvider.model =
         formValue.embeddingProvider.model.value;
     }
-
     const workflowDetails: CreateWorkflowRequest = formValue;
     this.workflowService.createWorkflow(workflowDetails).subscribe(
-      (id) => {
-        this.router.navigate(['/dashboard']);
-      },
-      (error) => {
-        this.error = error;
-      }
+      (id) => this.router.navigate(['/dashboard']),
+      (error) => (this.error = error)
     );
   }
 }
