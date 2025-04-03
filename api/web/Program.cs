@@ -111,6 +111,7 @@ builder.Services.AddScoped<IDeleteWorkflowUseCase, DeleteWorkflowUseCase>();
 builder.Services.AddScoped<ITextChunkerFactory, TextChunkerFactory>();
 builder.Services.AddScoped<IChatCompletionFactory, ChatCompletionFactory>();
 builder.Services.AddScoped<IEmbedderFactory, EmbedderFactory>();
+builder.Services.AddScoped<IQueryEnhancerFactory, QueryEnhancerFactory>();
 
 // Adapters
 builder.Services.AddScoped<IVectorDatabaseService, QDrantAdapter>();
