@@ -11,7 +11,7 @@ namespace RAGNET.Infrastructure.Adapters.QueryEnhancer
         public async Task<List<string>> GenerateQueries(string text)
         {
             List<string> queries = [];
-            var promptWithMaxQueries = _hydePrompt.Replace("{_maxQueries}", _maxQueries.ToString());
+            var promptWithMaxQueries = _hydePrompt.Replace("{MAX_QUERIES}", _maxQueries.ToString());
 
             JsonDocument result = await _completionService.GetCompletionStructuredAsync(
                 promptWithMaxQueries,

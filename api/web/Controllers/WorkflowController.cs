@@ -10,6 +10,7 @@ using RAGNET.Domain.Exceptions;
 using RAGNET.Domain.Enums;
 using RAGNET.Domain.Factories;
 using RAGNET.Infrastructure.Adapters.Chat;
+using RAGNET.Infrastructure.Adapters.QueryEnhancer;
 
 namespace web.Controllers
 {
