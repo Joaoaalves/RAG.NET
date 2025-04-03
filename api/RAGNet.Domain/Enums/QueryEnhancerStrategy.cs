@@ -3,7 +3,6 @@ namespace RAGNET.Domain.Enums
     public enum QueryEnhancerStrategy
     {
         AUTO_QUERY,
-        HYPOTHETICAL_DOCUMENT_EMBEDDING,
-        SELF_QUERYING_RETRIEVAL
+        HYPOTHETICAL_DOCUMENT_EMBEDDING
     }
 }

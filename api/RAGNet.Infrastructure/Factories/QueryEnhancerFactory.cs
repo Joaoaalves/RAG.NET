@@ -19,11 +19,6 @@ namespace RAGNET.Infrastructure.Factories
                     enhancerConfig.MaxQueries,
                     completionService
                 ),
-                QueryEnhancerStrategy.SELF_QUERYING_RETRIEVAL => new SQRAdapter
-                (
-                    enhancerConfig.MaxQueries,
-                    completionService
-                ),
                 QueryEnhancerStrategy.AUTO_QUERY => new AutoQueryAdapter
                 (
                     enhancerConfig.MaxQueries,
