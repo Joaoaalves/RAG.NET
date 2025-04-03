@@ -62,14 +62,22 @@ docker-compose up --build
 - Retrieval Pipeline
 - Adapters
   - Pinecone
-  - Gemini (Chat Completion)
+  - Gemini (Chat Completion, Embedding)
+  - DeepSeek (Chat completion)
   - Other Embedding and Chat Completion Providers
 
 ### Features Completed
 
 - Authentication
 - Embedding
-- Chunker Strategy Factory
+  - Embedding Service Factory
+- Chunkers
+  - Chunker Factory
+  - Paragraph Chunker (Default)
+  - Semantical Chunker
+  - Proposition Chunker
+- Conversation
+  - Conversation Service Factory
 - Workflows
   - Create Workflow
   - List Workflows
