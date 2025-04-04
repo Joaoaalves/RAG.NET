@@ -6,6 +6,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { NewWorkflowComponent } from './components/new-workflow/new-workflow.component';
 import { EmbeddingUploadComponent } from './components/embedding/embedding-upload.component';
 import { WorkflowsComponent } from './components/workflows/workflows.component';
+import { WorkflowComponent } from './components/workflow/workflow.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'Login - RAG.NET' },
@@ -24,6 +25,7 @@ export const routes: Routes = [
         path: 'workflows',
         component: WorkflowsComponent,
         canActivate: [AuthGuard],
+        title: 'Workflows - RAG.NET',
       },
       {
         path: 'workflows/new',
@@ -36,6 +38,12 @@ export const routes: Routes = [
         component: EmbeddingUploadComponent,
         title: 'Embedding - RAG.NET',
         canActivate: [AuthGuard],
+      },
+      {
+        path: 'workflows/:workflowId',
+        canActivate: [AuthGuard],
+        title: 'Workflow - RAG.NET',
+        component: WorkflowComponent,
       },
     ],
   },

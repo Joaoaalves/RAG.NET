@@ -5,6 +5,7 @@ import { heroTrash } from '@ng-icons/heroicons/outline';
 import { WorkflowService } from 'src/app/services/workflow.service';
 import { AlertComponent } from '../alert/alert.component';
 import { Workflow } from 'src/app/models/workflow';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-workflow-card',
@@ -17,10 +18,17 @@ import { Workflow } from 'src/app/models/workflow';
   standalone: true,
 })
 export class WorkflowCardComponent {
-  constructor(private workflowService: WorkflowService) {}
+  constructor(
+    private workflowService: WorkflowService,
+    private route: Router
+  ) {}
 
   @Input() workflow!: Workflow;
   @Output() workflowDeleted = new EventEmitter<string>();
+
+  handleNavigateWorkflow() {
+    return this.route.navigate([`/dashboard/workflows/${this.workflow.id}`]);
+  }
 
   deleteWorkflow() {
     return this.workflowService
