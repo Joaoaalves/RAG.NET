@@ -5,16 +5,11 @@ import { WorkflowService } from './../../services/workflow.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { InputComponent } from 'src/app/shared/components/input/input.component';
-import { BehaviorSubject } from 'rxjs';
 import { TextAreaComponent } from 'src/app/shared/components/text-area/text-area.component';
 import { QueryEnhancerService } from 'src/app/services/query-enhancer.service';
+import { QueryEnhancerConfigComponent } from 'src/app/shared/components/query-enhancer-config/query-enhancer-config.component';
 
 @Component({
   standalone: true,
@@ -24,37 +19,24 @@ import { QueryEnhancerService } from 'src/app/services/query-enhancer.service';
     ReactiveFormsModule,
     InputComponent,
     TextAreaComponent,
+    QueryEnhancerConfigComponent,
   ],
   templateUrl: 'workflow.component.html',
 })
 export class WorkflowComponent implements OnInit {
   workflowId!: string;
   workflow!: Workflow;
-
-  autoQueryForm!: FormGroup;
-  autoQueryEnabled$ = new BehaviorSubject<boolean>(false);
-  private autoQueryEnhancer?: QueryEnhancer;
+  autoQueryEnhancer?: QueryEnhancer;
+  hydeEnhancer?: QueryEnhancer;
 
   constructor(
     private readonly workflowService: WorkflowService,
     private readonly route: ActivatedRoute,
-    private readonly queryEnhancerService: QueryEnhancerService,
-    private readonly fb: FormBuilder
+    private readonly queryEnhancerService: QueryEnhancerService
   ) {}
 
   ngOnInit(): void {
-    this.initializeForm();
     this.loadWorkflowFromRoute();
-  }
-
-  private initializeForm(): void {
-    this.autoQueryForm = this.fb.group({
-      maxQueries: [
-        1,
-        [Validators.required, Validators.min(1), Validators.max(10)],
-      ],
-      guidance: ['', Validators.required],
-    });
   }
 
   private loadWorkflowFromRoute(): void {
@@ -70,43 +52,57 @@ export class WorkflowComponent implements OnInit {
   private loadWorkflow(id: string): void {
     this.workflowService.getWorkflow(id).subscribe((workflow) => {
       this.workflow = workflow;
-      this.updateAutoQueryState(workflow.queryEnhancers);
+      this.autoQueryEnhancer = workflow.queryEnhancers.find(
+        (qe) => qe.type === 'AUTO_QUERY'
+      );
+      this.hydeEnhancer = workflow.queryEnhancers.find(
+        (qe) => qe.type === 'HYPOTHETICAL_DOCUMENT_EMBEDDING'
+      );
     });
   }
 
-  private updateAutoQueryState(enhancers: QueryEnhancer[]): void {
-    const autoQuery = enhancers.find((qe) => qe.type === 'AUTO_QUERY');
+  onSaveAutoQuery(formData: any, workflowId: string): void {
+    if (!formData) return;
 
-    const isEnabled = !!autoQuery;
-    this.autoQueryEnabled$.next(isEnabled);
-
-    if (isEnabled && autoQuery) {
-      this.autoQueryEnhancer = autoQuery;
-      this.patchAutoQueryForm(autoQuery);
-    }
-  }
-
-  private patchAutoQueryForm(autoQuery: QueryEnhancer): void {
-    this.autoQueryForm.patchValue({
-      maxQueries: autoQuery.maxQueries ?? 1,
-      guidance: autoQuery.guidance ?? '',
+    this.queryEnhancerService.enableAutoQuery(formData, workflowId).subscribe({
+      next: () => {},
+      error: (err: Error) => {
+        console.error('Error enabling auto-query:', err);
+      },
     });
   }
 
-  onToggleAutoQuery(): void {
-    this.autoQueryEnabled$.next(!this.autoQueryEnabled$.value);
+  onSaveHyde(formData: any, workflowId: string): void {
+    if (!formData) return;
+
+    this.queryEnhancerService.enableHyde(formData, workflowId).subscribe({
+      next: () => {},
+      error: (err: Error) => {
+        console.error('Error enabling hyde:', err);
+      },
+    });
   }
 
-  onSaveAutoQuery(): void {
-    if (this.autoQueryForm.invalid) return;
+  onDeleteAutoQuery(): void {
+    if (!this.workflowId) return;
 
     this.queryEnhancerService
-      .enableAutoQuery(this.autoQueryForm.value, this.workflowId)
-      .subscribe({
-        next: () => {},
-        error: (err: Error) => {
-          console.error('Error enabling auto-query:', err);
-        },
+      .deleteAutoQuery(this.workflowId)
+      .subscribe((response) => {
+        if (response) {
+          this.autoQueryEnhancer = undefined;
+        }
+      });
+  }
+  onDeleteHyde(): void {
+    if (!this.workflowId) return;
+
+    this.queryEnhancerService
+      .deleteHyde(this.workflowId)
+      .subscribe((response) => {
+        if (response) {
+          this.hydeEnhancer = undefined;
+        }
       });
   }
 }

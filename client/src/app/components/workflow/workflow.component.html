@@ -1,44 +1,33 @@
 <div class="">
-  <h1 *ngIf="workflow" class="text-4xl text-neutral-200">{{workflow.name}}</h1>
-  <p *ngIf="workflow" class="text-sm text-neutral-300">{{workflow.description}}</p>
+  <h1 *ngIf="workflow" class="text-4xl text-neutral-200">{{ workflow.name }}</h1>
+  <p *ngIf="workflow" class="text-sm text-neutral-300">{{ workflow.description }}</p>
 
   <div class="border-t-2 border-neutral-600 mt-8 py-4 space-y-4">
     <h2 class="text-3xl text-neutral-300">Query Enhancers</h2>
 
-    <div class="w-full grid grid-cols-[0.8fr_1fr] gap-x-8 border-b-neutral-900 border-b-2 pb-8">
-      <div class="bg-zinc-900 w-full rounded-xl space-y-4 py-8  px-4 h-fit">
-        <div class="flex items-center justify-between w-full">
-          <div class="flex items-end justify-center gap-x-6">
-            <h3 class="text-white text-2xl/8">Auto Querying</h3>
-            <div class="px-3 border border-green-400 rounded-2xl text-green-400 text-sm">
-              Recommended
-            </div>
-          </div>
+    <app-query-enhancer-config
+      title="Auto Querying"
+      description="Auto Querying is a feature that automatically generates multiple relevant search queries based on the user's original input. Instead of relying solely on a single query, the system expands the input into several targeted queries to retrieve more comprehensive information from a knowledge base. This ensures more complete and accurate responses. You can customize how many queries are generated using the 'Maximum queries' field. Additionally, the 'Guidance' field allows you to provide extra context or instructions to steer how the queries should be constructed."
+      [queryEnhancer]="autoQueryEnhancer"
+      [workflowId]="workflowId"
+      [onSubmit]="onSaveAutoQuery.bind(this)"
+      [onDelete]="onDeleteAutoQuery.bind(this)"
+      [guidanceEnabled]="true"
+      [maxQueriesEnabled]="true"
+      [recommended]="true"
+      >
+    </app-query-enhancer-config>
 
-          <hlm-switch class="mr-2 bg-white" (click)="onToggleAutoQuery()" [checked]="autoQueryEnabled$.value" />
-        </div>
-        <p class="text-neutral-300 text-sm">
-          Auto Querying is a feature that automatically generates multiple relevant search queries based on the user's original input. Instead of relying solely on a single query, the system expands the input into several targeted queries to retrieve more comprehensive information from a knowledge base. This ensures more complete and accurate responses. You can customize how many queries are generated using the "Maximum queries" field. Additionally, the "Guidance" field allows you to provide extra context or instructions to steer how the queries should be constructed.
-        </p>
-      </div>
-      <form *ngIf="autoQueryEnabled$.value" [formGroup]="autoQueryForm" (ngSubmit)="onSaveAutoQuery()" class="space-y-8">
-        <app-input label="Maximum queries *" type="number" name="maxQueries"
-        [min]="1" [max]="10"
-        description="Here you can define the maximum number of queries that will be generated for each query made by the user. This is a very important parameter, since it will define how many queries will be generated for each query made by the user. The more queries, the more expensive and time-consuming it will be."
-        formControlName="maxQueries"></app-input>
-
-        <app-text-area
-        label="Guidance" type="text"
-         name="guidance" formControlName="guidance"
-        description="This field allows you to provide additional context or instructions to guide the generation of queries. It can help in shaping the queries to be more relevant to your specific use case."
-        ></app-text-area>
-
-        <button
-        class="w-full place-self-center col-start-1 bg-purple-500 p-2 rounded-xl hover:bg-white hover:text-black cursor-pointer transition-all duration-300 text-white"
-        type="submit">
-        Save
-      </button>
-      </form>
-    </div>
+    <app-query-enhancer-config
+    title="Hypothetical Document Embedding"
+    description="Auto Querying is a feature that automatically generates multiple relevant search queries based on the user's original input. Instead of relying solely on a single query, the system expands the input into several targeted queries to retrieve more comprehensive information from a knowledge base. This ensures more complete and accurate responses. You can customize how many queries are generated using the 'Maximum queries' field. Additionally, the 'Guidance' field allows you to provide extra context or instructions to steer how the queries should be constructed."
+    [queryEnhancer]="hydeEnhancer"
+    [workflowId]="workflowId"
+    [onSubmit]="onSaveHyde.bind(this)"
+    [onDelete]="onDeleteHyde.bind(this)"
+    [maxQueriesEnabled]="true"
+    [recommended]="true"
+    >
+  </app-query-enhancer-config>
   </div>
 </div>
