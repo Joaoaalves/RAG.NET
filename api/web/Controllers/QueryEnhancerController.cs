@@ -10,6 +10,7 @@ using RAGNET.Application.DTOs.QueryEnhancer;
 using RAGNET.Application.Mappers;
 using RAGNET.Application.UseCases.QueryEnhancerUseCases;
 using RAGNET.Application.UseCases.WorkflowUseCases;
+using RAGNET.Domain.Enums;
 
 namespace web.Controllers
 {
@@ -35,6 +36,9 @@ namespace web.Controllers
 
                 if (workflow == null)
                     return Unauthorized();
+
+                if (workflow.QueryEnhancers.Any(qe => qe.Type == QueryEnhancerStrategy.AUTO_QUERY))
+                    return BadRequest("Auto Query already enabled!");
 
 
                 var qeCreationDTO = dto.ToQueryEnhancerDTOFromAutoQueryCreationDTO();
@@ -64,6 +68,8 @@ namespace web.Controllers
                 if (workflow == null)
                     return Unauthorized();
 
+                if (workflow.QueryEnhancers.Any(qe => qe.Type == QueryEnhancerStrategy.HYPOTHETICAL_DOCUMENT_EMBEDDING))
+                    return BadRequest("HyDE already enabled!");
 
                 var qeCreationDTO = dto.ToQueryEnhancerDTOFromHyDECreationDTO();
 
