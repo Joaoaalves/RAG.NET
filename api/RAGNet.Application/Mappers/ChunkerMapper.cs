@@ -1,7 +1,6 @@
 using RAGNET.Application.DTOs.Chunker;
 using RAGNET.Application.DTOs.Workflow;
 using RAGNET.Domain.Entities;
-using RAGNET.Domain.Enums;
 
 namespace RAGNET.Application.Mappers
 {

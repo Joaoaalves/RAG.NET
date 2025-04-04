@@ -19,6 +19,7 @@ using RAGNET.Infrastructure.Factories;
 using RAGNET.Infrastructure.Adapters.VectorDB;
 using RAGNET.Infrastructure.Services;
 using UglyToad.PdfPig.Fonts.Encodings;
+using RAGNET.Application.UseCases.QueryEnhancerUseCases;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -106,6 +107,7 @@ builder.Services.AddScoped<IProcessEmbeddingUseCase, ProcessEmbeddingUseCase>();
 builder.Services.AddScoped<ICreateWorkflowUseCase, CreateWorkflowUseCase>();
 builder.Services.AddScoped<IGetWorkflowUseCase, GetWorkflowUseCase>();
 builder.Services.AddScoped<IDeleteWorkflowUseCase, DeleteWorkflowUseCase>();
+builder.Services.AddScoped<ICreateQueryEnhancerUseCase, CreateQueryEnhancerUseCase>();
 
 // Factories
 builder.Services.AddScoped<ITextChunkerFactory, TextChunkerFactory>();

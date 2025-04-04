@@ -1,5 +1,6 @@
 using RAGNET.Application.DTOs.Chunker;
 using RAGNET.Application.DTOs.Embedder;
+using RAGNET.Application.DTOs.QueryEnhancer;
 using RAGNET.Application.DTOs.Workflow;
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Enums;
@@ -26,7 +27,9 @@ namespace RAGNET.Application.Mappers
         public static WorkflowDetailsDTO ToWorkflowDetailsDTOFromWorkflow(
             this Workflow workflow,
             ChunkerStrategy strategy, ChunkerSettingsDTO settings,
-            EmbeddingProviderConfigDTO embedding, ConversationProviderConfigDTO conversationProvider)
+            EmbeddingProviderConfigDTO embedding,
+            ConversationProviderConfigDTO conversationProvider,
+            List<QueryEnhancerDTO>? queryEnhancers)
         {
             return new WorkflowDetailsDTO
             {
@@ -38,7 +41,8 @@ namespace RAGNET.Application.Mappers
                 ApiKey = workflow.ApiKey,
                 Settings = settings,
                 EmbeddingProvider = embedding,
-                ConversationProvider = conversationProvider
+                ConversationProvider = conversationProvider,
+                QueryEnhancers = queryEnhancers ?? []
             };
         }
     }
