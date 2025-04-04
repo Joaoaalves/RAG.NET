@@ -6,10 +6,30 @@ namespace RAGNET.Application.Mappers
 {
     public static class QueryEnhancerMapper
     {
-        public static QueryEnhancer ToQueryEnhancerFromCreationDTO(this QueryEnhancerCreationDTO dto, Guid workflowId)
+        // QueryEnhancerDTO -> QueryEnhancer
+        public static QueryEnhancer ToQueryEnhancer(this QueryEnhancerDTO dto, Guid workflowId, string userId)
         {
             return new QueryEnhancer
             {
+                Id = dto.Id,
+                Type = dto.Type,
+                WorkflowId = workflowId,
+                MaxQueries = dto.MaxQueries,
+                UserId = userId,
+                Metas =
+                [
+                    new() {Key = "Guidance", Value = dto.Guidance ?? ""}
+                ]
+            };
+        }
+
+
+        // QueryEnhancerDTO -> QueryEnhancer
+        public static QueryEnhancer ToQueryEnhancer(this QueryEnhancerDTO dto, Guid workflowId)
+        {
+            return new QueryEnhancer
+            {
+                Id = dto.Id,
                 Type = dto.Type,
                 WorkflowId = workflowId,
                 MaxQueries = dto.MaxQueries,
@@ -19,27 +39,36 @@ namespace RAGNET.Application.Mappers
                 ]
             };
         }
-
-        public static QueryEnhancerCreationDTO ToQueryEnhancerDTOFromAutoQueryCreationDTO(this AutoQueryCreationDTO dto)
+        // AutoQueryCreationDTO -> QueryEnhancerDTO
+        public static QueryEnhancer ToQueryEnhancer(this AutoQueryCreationDTO dto, Guid workflowId, string userId)
         {
-            return new QueryEnhancerCreationDTO
+            return new QueryEnhancer
             {
                 Type = QueryEnhancerStrategy.AUTO_QUERY,
                 MaxQueries = dto.MaxQueries,
-                Guidance = dto.Guidance
+                WorkflowId = workflowId,
+                UserId = userId,
+                Metas =
+                [
+                    new() {Key = "Guidance", Value = dto.Guidance ?? ""}
+                ]
             };
         }
 
-        public static QueryEnhancerCreationDTO ToQueryEnhancerDTOFromHyDECreationDTO(this HyDECreationDTO dto)
+        // HyDECreationDTO -> QueryEnhancerDTO
+        public static QueryEnhancer ToQueryEnhancer(this HyDECreationDTO dto, Guid workflowId, string userId)
         {
-            return new QueryEnhancerCreationDTO
+            return new QueryEnhancer
             {
                 Type = QueryEnhancerStrategy.HYPOTHETICAL_DOCUMENT_EMBEDDING,
-                MaxQueries = dto.MaxQueries
+                WorkflowId = workflowId,
+                UserId = userId,
+                MaxQueries = dto.MaxQueries,
             };
         }
 
-        public static QueryEnhancerDTO ToDTOFromQueryEnhancer(this QueryEnhancer qe)
+        // QueryEnhancer -> QueryEnhancerDTO
+        public static QueryEnhancerDTO ToQueryEnhancerDTO(this QueryEnhancer qe)
         {
             return new QueryEnhancerDTO
             {
@@ -49,5 +78,6 @@ namespace RAGNET.Application.Mappers
                 Guidance = qe.Metas.FirstOrDefault(m => m.Key == "Guidance")?.Value
             };
         }
+
     }
 }

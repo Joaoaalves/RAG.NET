@@ -28,7 +28,7 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
 
             foreach (var qe in workflow.QueryEnhancers)
             {
-                var dto = qe.ToDTOFromQueryEnhancer();
+                var dto = qe.ToQueryEnhancerDTO();
                 queryEnhancers.Add(dto);
             }
 

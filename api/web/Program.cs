@@ -108,7 +108,7 @@ builder.Services.AddScoped<ICreateWorkflowUseCase, CreateWorkflowUseCase>();
 builder.Services.AddScoped<IGetWorkflowUseCase, GetWorkflowUseCase>();
 builder.Services.AddScoped<IDeleteWorkflowUseCase, DeleteWorkflowUseCase>();
 builder.Services.AddScoped<ICreateQueryEnhancerUseCase, CreateQueryEnhancerUseCase>();
-
+builder.Services.AddScoped<IUpdateQueryEnhancerUseCase, UpdateQueryEnhancerUseCase>();
 // Factories
 builder.Services.AddScoped<ITextChunkerFactory, TextChunkerFactory>();
 builder.Services.AddScoped<IChatCompletionFactory, ChatCompletionFactory>();

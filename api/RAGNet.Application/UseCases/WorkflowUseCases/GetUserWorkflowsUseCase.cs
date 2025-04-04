@@ -33,7 +33,7 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
 
                 foreach (var qe in workflow.QueryEnhancers)
                 {
-                    queryEnhancers.Add(qe.ToDTOFromQueryEnhancer());
+                    queryEnhancers.Add(qe.ToQueryEnhancerDTO());
                 }
 
                 workflowsDTO.Add(
