@@ -10,6 +10,7 @@ namespace RAGNET.Application.DTOs.QueryEnhancer
         [JsonConverter(typeof(QueryEnhancerStrategyConverter))]
         public QueryEnhancerStrategy Type { get; set; }
         public int MaxQueries { get; set; }
+        public bool IsEnabled { get; set; } = true;
         public string? Guidance { get; set; }
     }
 }

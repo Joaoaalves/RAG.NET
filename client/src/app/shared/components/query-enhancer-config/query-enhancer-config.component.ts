@@ -1,3 +1,4 @@
+import { QueryEnhancerService } from 'src/app/services/query-enhancer.service';
 import {
   Component,
   Input,
@@ -34,14 +35,15 @@ import { QueryEnhancer } from 'src/app/models/query-enhancer';
 })
 export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
   @Input() queryEnhancer?: QueryEnhancer;
-  @Input() workflowId!: string;
   @Input() recommended: boolean = false;
   @Input() title!: string;
   @Input() description!: string;
   @Input() guidanceEnabled: boolean = false;
   @Input() maxQueriesEnabled: boolean = false;
-  @Input() onDelete!: (workflowId: string) => any;
-  @Input() onSubmit!: (formData: any, workflowId: string) => any;
+
+  @Input() onDelete!: () => any;
+  @Input() onSubmit!: (formData: any) => any;
+  @Input() onUpdate!: (formData: any) => any;
   configForm!: FormGroup;
 
   enabled$ = new BehaviorSubject<boolean>(false);
@@ -50,8 +52,10 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.initializeForm();
-    this.enabled$.next(!!this.queryEnhancer);
+
     if (this.queryEnhancer) {
+      console.log('Query Enhancer:', this.queryEnhancer);
+      this.enabled$.next(this.queryEnhancer.isEnabled);
       this.patchForm(this.queryEnhancer);
     }
     this.updateControlsState();
@@ -63,7 +67,7 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
     }
 
     if (changes['queryEnhancer'] && changes['queryEnhancer'].currentValue) {
-      this.enabled$.next(true);
+      this.enabled$.next(!!this.queryEnhancer?.isEnabled);
       this.patchForm(changes['queryEnhancer'].currentValue);
     }
     if (changes['guidanceEnabled'] || changes['maxQueriesEnabled']) {
@@ -113,16 +117,49 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
   }
 
   toggleEnabled(): void {
-    this.enabled$.next(!this.enabled$.value);
+    if (!this.queryEnhancer) {
+      var isEnabled = this.enabled$.getValue();
+      this.enabled$.next(!isEnabled);
+      return;
+    }
+
+    this.queryEnhancer.isEnabled = !this.queryEnhancer.isEnabled;
+    this.onUpdate(this.queryEnhancer).subscribe({
+      next: (updatedEnhancer: QueryEnhancer) => {
+        this.queryEnhancer = updatedEnhancer;
+        this.enabled$.next(updatedEnhancer.isEnabled);
+      },
+      error: (err: Error) => {
+        console.error('Error toggling enable:', err);
+      },
+    });
   }
 
   submitForm(): void {
     if (this.configForm.invalid) return;
-    this.onSubmit(this.configForm.value, this.workflowId);
+    this.onSubmit(this.configForm.value).subscribe({
+      next: (newEnhancer: QueryEnhancer) => {
+        this.queryEnhancer = newEnhancer;
+        this.enabled$.next(newEnhancer.isEnabled);
+      },
+      error: (err: Error) => {
+        console.error('Error submitting form:', err);
+      },
+    });
+  }
+
+  update(): void {
+    if (this.configForm.invalid) return;
+    this.onUpdate(this.configForm.value).subscribe({
+      next: (updatedEnhancer: QueryEnhancer) => {
+        this.queryEnhancer = updatedEnhancer;
+      },
+      error: (err: Error) => {},
+    });
   }
 
   delete(): void {
-    this.onDelete(this.workflowId).subscribe({
+    this.onDelete().subscribe({
       next: () => {
         this.enabled$.next(false);
       },

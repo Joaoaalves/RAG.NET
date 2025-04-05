@@ -12,7 +12,9 @@ namespace RAGNET.Domain.Entities
 
         [ForeignKey("Workflow")]
         public Guid WorkflowId { get; set; }
+        public bool IsEnabled { get; set; } = true;
         public Workflow Workflow { get; set; } = null!;
+
         [ForeignKey("User")]
         public string UserId { get; set; } = String.Empty;
         public string Prompt { get; set; } = String.Empty;

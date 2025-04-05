@@ -2,6 +2,7 @@ export interface QueryEnhancer {
   id: string;
   type: QueryEnhancerStrategy | string;
   maxQueries: number;
+  isEnabled: boolean;
   guidance?: string;
 }
 
@@ -12,5 +13,5 @@ export enum QueryEnhancerStrategy {
 
 export interface QueryEnhancerEnableResponse {
   message: string;
-  queryEnhancerId: string;
+  queryEnhancer: QueryEnhancer;
 }

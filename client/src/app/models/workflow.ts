@@ -28,6 +28,11 @@ export interface CreateWorkflowRequest {
   conversationProvider: ConversationProvider;
 }
 
+export interface QueryEnhancerUpdateResponse {
+  message: string;
+  queryEnhancer: QueryEnhancer;
+}
+
 export interface CreateWorkflowResponse {
   message: string;
   workflowId: string;

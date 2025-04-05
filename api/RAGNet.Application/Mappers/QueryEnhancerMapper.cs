@@ -15,6 +15,7 @@ namespace RAGNET.Application.Mappers
                 Type = dto.Type,
                 WorkflowId = workflowId,
                 MaxQueries = dto.MaxQueries,
+                IsEnabled = dto.IsEnabled,
                 UserId = userId,
                 Metas =
                 [
@@ -33,6 +34,7 @@ namespace RAGNET.Application.Mappers
                 Type = dto.Type,
                 WorkflowId = workflowId,
                 MaxQueries = dto.MaxQueries,
+                IsEnabled = dto.IsEnabled,
                 Metas =
                 [
                     new() {Key = "Guidance", Value = dto.Guidance ?? ""}
@@ -47,6 +49,7 @@ namespace RAGNET.Application.Mappers
                 Type = QueryEnhancerStrategy.AUTO_QUERY,
                 MaxQueries = dto.MaxQueries,
                 WorkflowId = workflowId,
+                IsEnabled = dto.IsEnabled ?? true,
                 UserId = userId,
                 Metas =
                 [
@@ -62,6 +65,7 @@ namespace RAGNET.Application.Mappers
             {
                 Type = QueryEnhancerStrategy.HYPOTHETICAL_DOCUMENT_EMBEDDING,
                 WorkflowId = workflowId,
+                IsEnabled = dto.IsEnabled ?? true,
                 UserId = userId,
                 MaxQueries = dto.MaxQueries,
             };
@@ -74,6 +78,7 @@ namespace RAGNET.Application.Mappers
             {
                 Id = qe.Id,
                 Type = qe.Type,
+                IsEnabled = qe.IsEnabled,
                 MaxQueries = qe.MaxQueries,
                 Guidance = qe.Metas.FirstOrDefault(m => m.Key == "Guidance")?.Value
             };

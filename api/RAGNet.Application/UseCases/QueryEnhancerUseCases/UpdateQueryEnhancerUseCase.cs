@@ -21,6 +21,7 @@ namespace RAGNET.Application.UseCases.QueryEnhancerUseCases
 
                 qe.MaxQueries = data.MaxQueries;
                 qe.Metas = data.Metas;
+                qe.IsEnabled = data.IsEnabled;
 
                 await _repo.UpdateAsync(qe, userId);
                 return qe.ToQueryEnhancerDTO();

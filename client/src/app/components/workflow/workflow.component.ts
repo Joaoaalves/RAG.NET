@@ -1,26 +1,23 @@
-import { QueryEnhancer } from './../../models/query-enhancer';
-import { HlmSwitchComponent } from './../../../../libs/ui/ui-switch-helm/src/lib/hlm-switch.component';
-import { Workflow } from 'src/app/models/workflow';
-import { WorkflowService } from './../../services/workflow.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { InputComponent } from 'src/app/shared/components/input/input.component';
-import { TextAreaComponent } from 'src/app/shared/components/text-area/text-area.component';
-import { QueryEnhancerService } from 'src/app/services/query-enhancer.service';
+import { Observable, tap, throwError } from 'rxjs';
+
+// Models
+import { QueryEnhancer } from '../../models/query-enhancer';
+import { Workflow } from 'src/app/models/workflow';
+
+// Components
 import { QueryEnhancerConfigComponent } from 'src/app/shared/components/query-enhancer-config/query-enhancer-config.component';
+
+// Services
+import { QueryEnhancerService } from 'src/app/services/query-enhancer.service';
+import { WorkflowService } from '../../services/workflow.service';
 
 @Component({
   standalone: true,
-  imports: [
-    CommonModule,
-    HlmSwitchComponent,
-    ReactiveFormsModule,
-    InputComponent,
-    TextAreaComponent,
-    QueryEnhancerConfigComponent,
-  ],
+  imports: [CommonModule, ReactiveFormsModule, QueryEnhancerConfigComponent],
   templateUrl: 'workflow.component.html',
 })
 export class WorkflowComponent implements OnInit {
@@ -61,48 +58,95 @@ export class WorkflowComponent implements OnInit {
     });
   }
 
-  onSaveAutoQuery(formData: any, workflowId: string): void {
-    if (!formData) return;
+  onSaveAutoQuery(formData: any): Observable<QueryEnhancer> {
+    if (!formData || !this.workflowId) {
+      return throwError(
+        () => new Error('Form data or Workflow ID is undefined')
+      );
+    }
 
-    this.queryEnhancerService.enableAutoQuery(formData, workflowId).subscribe({
-      next: () => {},
-      error: (err: Error) => {
-        console.error('Error enabling auto-query:', err);
-      },
-    });
+    return this.queryEnhancerService
+      .enableAutoQuery(formData, this.workflowId)
+      .pipe(
+        tap((queryEnhancer) => {
+          if (queryEnhancer) {
+            this.autoQueryEnhancer = queryEnhancer;
+          }
+        })
+      );
   }
 
-  onSaveHyde(formData: any, workflowId: string): void {
-    if (!formData) return;
+  onSaveHyde(formData: any): Observable<QueryEnhancer> {
+    if (!formData || !this.workflowId) {
+      return throwError(
+        () => new Error('Form data or Workflow ID is undefined')
+      );
+    }
 
-    this.queryEnhancerService.enableHyde(formData, workflowId).subscribe({
-      next: () => {},
-      error: (err: Error) => {
-        console.error('Error enabling hyde:', err);
-      },
-    });
+    return this.queryEnhancerService.enableHyde(formData, this.workflowId).pipe(
+      tap((queryEnhancer) => {
+        if (queryEnhancer) {
+          this.hydeEnhancer = queryEnhancer;
+        }
+      })
+    );
   }
 
-  onDeleteAutoQuery(): void {
-    if (!this.workflowId) return;
+  onUpdateAutoQuery(formData: any): Observable<QueryEnhancer> {
+    if (!formData || !this.workflowId || !this.autoQueryEnhancer) {
+      return throwError(
+        () => new Error('Form data or Workflow ID is undefined')
+      );
+    }
 
-    this.queryEnhancerService
-      .deleteAutoQuery(this.workflowId)
-      .subscribe((response) => {
+    return this.queryEnhancerService
+      .updateAutoQuery(formData, this.workflowId)
+      .pipe(
+        tap((updated) => {
+          this.autoQueryEnhancer = updated;
+        })
+      );
+  }
+
+  onUpdateHyde(formData: any): Observable<QueryEnhancer> {
+    if (!formData || !this.workflowId || !this.hydeEnhancer) {
+      return throwError(
+        () => new Error('Form data or Workflow ID is undefined')
+      );
+    }
+
+    return this.queryEnhancerService.updateHyde(formData, this.workflowId).pipe(
+      tap((updated) => {
+        this.hydeEnhancer = updated;
+      })
+    );
+  }
+
+  onDeleteAutoQuery(): Observable<boolean> {
+    if (!this.workflowId) {
+      return throwError(() => new Error('Workflow ID is undefined'));
+    }
+
+    return this.queryEnhancerService.deleteAutoQuery(this.workflowId).pipe(
+      tap((response) => {
         if (response) {
           this.autoQueryEnhancer = undefined;
         }
-      });
+      })
+    );
   }
-  onDeleteHyde(): void {
-    if (!this.workflowId) return;
 
-    this.queryEnhancerService
-      .deleteHyde(this.workflowId)
-      .subscribe((response) => {
+  onDeleteHyde(): Observable<boolean> {
+    if (!this.workflowId) {
+      return throwError(() => new Error('Workflow ID is undefined'));
+    }
+
+    return this.queryEnhancerService.deleteHyde(this.workflowId).pipe(
+      tap((response) => {
         if (response) {
           this.hydeEnhancer = undefined;
         }
-      });
+      })
+    );
   }
 }

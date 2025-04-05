@@ -41,8 +41,8 @@
                    formControlName="guidance"
                    description="This field allows you to provide additional context or instructions to guide the generation of queries. It can help in shaping the queries to be more relevant to your specific use case.">
     </app-text-area>
-    <div class="grid grid-cols-2 gap-x-8">
-      <button class="bg-purple-500 p-2 rounded-xl hover:bg-white hover:text-black cursor-pointer transition-all duration-300 text-white"
+    <div *ngIf="queryEnhancer" class="grid grid-cols-2 gap-x-8">
+      <button class="bg-white p-2 rounded-xl text-black hover:bg-violet-600 hover:text-white cursor-pointer transition-all duration-300"
       type="submit">
         Save
         </button>
@@ -52,6 +52,11 @@
           Delete
           </button>
     </div>
-
+    <div *ngIf="!queryEnhancer" class="w-full grid grid-cols-1">
+      <button class="bg-white  p-2 rounded-xl text-black hover:bg-violet-600 hover:text-white cursor-pointer transition-all duration-300"
+      type="submit">
+        Create
+        </button>
+    </div>
   </form>
 </div>

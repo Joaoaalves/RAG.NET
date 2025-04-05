@@ -51,7 +51,7 @@ namespace web.Controllers
 
                 var queryEnhancer = await _createQueryEnhancerUseCase.Execute(qeCreationDTO, workflow.Id, user.Id);
 
-                return Ok(new { Message = "Auto Query enabled!", QueryEnhancerId = queryEnhancer.Id });
+                return Ok(new { Message = "Auto Query enabled!", QueryEnhancer = queryEnhancer.ToQueryEnhancerDTO() });
             }
             catch (Exception exc)
             {
@@ -122,7 +122,6 @@ namespace web.Controllers
             }
         }
 
-
         [HttpPost("{workflowId}/query-enhancer/hyde")]
         [Authorize]
         public async Task<IActionResult> EnableHyde([FromBody] HyDECreationDTO dto, Guid workflowId)
@@ -143,7 +142,7 @@ namespace web.Controllers
 
                 var queryEnhancer = await _createQueryEnhancerUseCase.Execute(dto.ToQueryEnhancer(workflow.Id, user.Id), workflow.Id, user.Id);
 
-                return Ok(new { Message = "Hyde enabled!", QueryEnhancerId = queryEnhancer.Id });
+                return Ok(new { Message = "Hyde enabled!", QueryEnhancer = queryEnhancer.ToQueryEnhancerDTO() });
             }
             catch (Exception exc)
             {
