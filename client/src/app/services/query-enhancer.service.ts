@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import {
-  QueryEnhancerEnableResponse,
-  QueryEnhancer,
-} from '../models/query-enhancer';
-import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, Observable, of } from 'rxjs';
-import { QueryEnhancerUpdateResponse } from '../models/workflow';
+import { environment } from 'src/environments/environment';
+import {
+  QueryEnhancer,
+  QueryEnhancerEnableResponse,
+  QueryEnhancerUpdateResponse,
+} from '../models/query-enhancer';
 
 @Injectable({
   providedIn: 'root',
@@ -16,97 +16,48 @@ export class QueryEnhancerService {
 
   constructor(private httpClient: HttpClient) {}
 
-  enableAutoQuery(
-    autoQuery: QueryEnhancer,
-    workflowId: string
+  private getEndpoint(workflowId: string, type: string): string {
+    return `${this.apiUrl}/api/workflows/${workflowId}/query-enhancer/${type}`;
+  }
+
+  enableQueryEnhancer(
+    qe: QueryEnhancer,
+    workflowId: string,
+    type: string
   ): Observable<QueryEnhancer> {
     return this.httpClient
-      .post<QueryEnhancerEnableResponse>(
-        `${this.apiUrl}/api/workflows/${workflowId}/query-enhancer/auto-query`,
-        autoQuery
-      )
+      .post<QueryEnhancerEnableResponse>(this.getEndpoint(workflowId, type), qe)
       .pipe(map((response) => response.queryEnhancer));
   }
 
-  enableHyde(
-    hyde: QueryEnhancer,
-    workflowId: string
+  updateQueryEnhancer(
+    qe: QueryEnhancer,
+    workflowId: string,
+    type: string
   ): Observable<QueryEnhancer> {
     return this.httpClient
-      .post<QueryEnhancerEnableResponse>(
-        `${this.apiUrl}/api/workflows/${workflowId}/query-enhancer/hyde`,
-        hyde
-      )
+      .put<QueryEnhancerUpdateResponse>(this.getEndpoint(workflowId, type), {
+        maxQueries: qe.maxQueries,
+        guidance: qe.guidance ?? undefined,
+        isEnabled: qe.isEnabled,
+      })
       .pipe(map((response) => response.queryEnhancer));
   }
 
-  updateAutoQuery(
-    autoQuery: QueryEnhancer,
-    workflowId: string
+  deleteQueryEnhancer(workflowId: string, type: string): Observable<boolean> {
+    return this.httpClient.delete(this.getEndpoint(workflowId, type)).pipe(
+      map(() => true),
+      catchError(() => of(false))
+    );
+  }
+
+  toggleQueryEnhancer(
+    qe: QueryEnhancer,
+    workflowId: string,
+    type: string,
+    newStatus: boolean
   ): Observable<QueryEnhancer> {
-    return this.httpClient
-      .put<QueryEnhancerUpdateResponse>(
-        `${this.apiUrl}/api/workflows/${workflowId}/query-enhancer/auto-query`,
-        {
-          maxQueries: autoQuery.maxQueries,
-          guidance: autoQuery.guidance ?? undefined,
-          isEnabled: autoQuery.isEnabled,
-        }
-      )
-      .pipe(
-        map((response) => {
-          return response.queryEnhancer;
-        })
-      );
-  }
-
-  updateHyde(
-    hyde: QueryEnhancer,
-    workflowId: string
-  ): Observable<QueryEnhancer> {
-    return this.httpClient
-      .put<QueryEnhancerUpdateResponse>(
-        `${this.apiUrl}/api/workflows/${workflowId}/query-enhancer/hyde`,
-        {
-          maxQueries: hyde.maxQueries,
-          guidance: hyde.guidance ?? undefined,
-          isEnabled: hyde.isEnabled,
-        }
-      )
-      .pipe(
-        map((response) => {
-          return response.queryEnhancer;
-        })
-      );
-  }
-
-  deleteAutoQuery(workflowId: string): Observable<boolean> {
-    return this.httpClient
-      .delete<QueryEnhancer>(
-        `${this.apiUrl}/api/workflows/${workflowId}/query-enhancer/auto-query`
-      )
-      .pipe(
-        map(() => {
-          return true;
-        }),
-        catchError(() => {
-          return of(false);
-        })
-      );
-  }
-
-  deleteHyde(workflowId: string): Observable<boolean> {
-    return this.httpClient
-      .delete<QueryEnhancer>(
-        `${this.apiUrl}/api/workflows/${workflowId}/query-enhancer/hyde`
-      )
-      .pipe(
-        map(() => {
-          return true;
-        }),
-        catchError(() => {
-          return of(false);
-        })
-      );
+    const updatedQE = { ...qe, isEnabled: newStatus };
+    return this.updateQueryEnhancer(updatedQE, workflowId, type);
   }
 }

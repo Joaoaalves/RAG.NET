@@ -1,4 +1,3 @@
-import { QueryEnhancerService } from 'src/app/services/query-enhancer.service';
 import {
   Component,
   Input,
@@ -20,6 +19,7 @@ import { TextAreaComponent } from 'src/app/shared/components/text-area/text-area
 import { HlmSwitchComponent } from 'libs/ui/ui-switch-helm/src/lib/hlm-switch.component';
 
 import { QueryEnhancer } from 'src/app/models/query-enhancer';
+import { QueryEnhancerService } from 'src/app/services/query-enhancer.service';
 
 @Component({
   selector: 'app-query-enhancer-config',
@@ -35,26 +35,25 @@ import { QueryEnhancer } from 'src/app/models/query-enhancer';
 })
 export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
   @Input() queryEnhancer?: QueryEnhancer;
+  @Input() workflowId!: string;
+  @Input() type!: string;
   @Input() recommended: boolean = false;
   @Input() title!: string;
   @Input() description!: string;
   @Input() guidanceEnabled: boolean = false;
   @Input() maxQueriesEnabled: boolean = false;
 
-  @Input() onDelete!: () => any;
-  @Input() onSubmit!: (formData: any) => any;
-  @Input() onUpdate!: (formData: any) => any;
   configForm!: FormGroup;
-
   enabled$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private readonly fb: FormBuilder) {}
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly qeService: QueryEnhancerService
+  ) {}
 
   ngOnInit(): void {
     this.initializeForm();
-
     if (this.queryEnhancer) {
-      console.log('Query Enhancer:', this.queryEnhancer);
       this.enabled$.next(this.queryEnhancer.isEnabled);
       this.patchForm(this.queryEnhancer);
     }
@@ -65,7 +64,6 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
     if (!this.configForm) {
       return;
     }
-
     if (changes['queryEnhancer'] && changes['queryEnhancer'].currentValue) {
       this.enabled$.next(!!this.queryEnhancer?.isEnabled);
       this.patchForm(changes['queryEnhancer'].currentValue);
@@ -87,7 +85,6 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
 
   private patchForm(queryEnhancer: QueryEnhancer): void {
     if (!this.configForm) return;
-
     this.configForm.patchValue({
       maxQueries: queryEnhancer.maxQueries ?? 1,
       guidance: queryEnhancer.guidance ?? '',
@@ -96,7 +93,6 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
 
   private updateControlsState(): void {
     if (!this.configForm) return;
-
     const maxQueriesControl = this.configForm.get('maxQueries');
     const guidanceControl = this.configForm.get('guidance');
 
@@ -116,52 +112,79 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
     }
   }
 
+  // Toggle the enabled state and update via the service.
   toggleEnabled(): void {
     if (!this.queryEnhancer) {
-      var isEnabled = this.enabled$.getValue();
-      this.enabled$.next(!isEnabled);
+      // If no QE exists yet, simply toggle the local BehaviorSubject.
+      this.enabled$.next(!this.enabled$.getValue());
       return;
     }
-
-    this.queryEnhancer.isEnabled = !this.queryEnhancer.isEnabled;
-    this.onUpdate(this.queryEnhancer).subscribe({
-      next: (updatedEnhancer: QueryEnhancer) => {
-        this.queryEnhancer = updatedEnhancer;
-        this.enabled$.next(updatedEnhancer.isEnabled);
-      },
-      error: (err: Error) => {
-        console.error('Error toggling enable:', err);
-      },
-    });
+    const newStatus = !this.queryEnhancer.isEnabled;
+    this.qeService
+      .toggleQueryEnhancer(
+        this.queryEnhancer,
+        this.workflowId,
+        this.type,
+        newStatus
+      )
+      .subscribe({
+        next: (updatedQE: QueryEnhancer) => {
+          this.queryEnhancer = updatedQE;
+          this.enabled$.next(updatedQE.isEnabled);
+        },
+        error: (err: Error) => {
+          console.error('Error toggling enable:', err);
+        },
+      });
   }
 
+  // If a QE already exists, update it; otherwise, create it.
   submitForm(): void {
     if (this.configForm.invalid) return;
-    this.onSubmit(this.configForm.value).subscribe({
-      next: (newEnhancer: QueryEnhancer) => {
-        this.queryEnhancer = newEnhancer;
-        this.enabled$.next(newEnhancer.isEnabled);
-      },
-      error: (err: Error) => {
-        console.error('Error submitting form:', err);
-      },
-    });
-  }
-
-  update(): void {
-    if (this.configForm.invalid) return;
-    this.onUpdate(this.configForm.value).subscribe({
-      next: (updatedEnhancer: QueryEnhancer) => {
-        this.queryEnhancer = updatedEnhancer;
-      },
-      error: (err: Error) => {},
-    });
+    const formData = this.configForm.value;
+    if (this.queryEnhancer) {
+      const updatedQE = { ...this.queryEnhancer, ...formData };
+      this.qeService
+        .updateQueryEnhancer(updatedQE, this.workflowId, this.type)
+        .subscribe({
+          next: (newQE: QueryEnhancer) => {
+            this.queryEnhancer = newQE;
+            this.enabled$.next(newQE.isEnabled);
+          },
+          error: (err: Error) => {
+            console.error('Error updating query enhancer:', err);
+          },
+        });
+    } else {
+      const newQE: QueryEnhancer = {
+        ...formData,
+        type: this.type,
+        isEnabled: true,
+      };
+      this.qeService
+        .enableQueryEnhancer(newQE, this.workflowId, this.type)
+        .subscribe({
+          next: (createdQE: QueryEnhancer) => {
+            this.queryEnhancer = createdQE;
+            this.enabled$.next(createdQE.isEnabled);
+          },
+          error: (err: Error) => {
+            console.error('Error enabling query enhancer:', err);
+          },
+        });
+    }
   }
 
   delete(): void {
-    this.onDelete().subscribe({
-      next: () => {
-        this.enabled$.next(false);
+    this.qeService.deleteQueryEnhancer(this.workflowId, this.type).subscribe({
+      next: (success: boolean) => {
+        if (success) {
+          this.queryEnhancer = undefined;
+          this.enabled$.next(false);
+        }
+      },
+      error: (err: Error) => {
+        console.error('Error deleting query enhancer:', err);
       },
     });
   }

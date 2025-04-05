@@ -15,3 +15,8 @@ export interface QueryEnhancerEnableResponse {
   message: string;
   queryEnhancer: QueryEnhancer;
 }
+
+export interface QueryEnhancerUpdateResponse {
+  message: string;
+  queryEnhancer: QueryEnhancer;
+}

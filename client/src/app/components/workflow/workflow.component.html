@@ -6,28 +6,24 @@
     <h2 class="text-3xl text-neutral-300">Query Enhancers</h2>
 
     <app-query-enhancer-config
-      title="Auto Querying"
-      description="Auto Querying is a feature that automatically generates multiple relevant search queries based on the user's original input. Instead of relying solely on a single query, the system expands the input into several targeted queries to retrieve more comprehensive information from a knowledge base. This ensures more complete and accurate responses. You can customize how many queries are generated using the 'Maximum queries' field. Additionally, the 'Guidance' field allows you to provide extra context or instructions to steer how the queries should be constructed."
-      [queryEnhancer]="autoQueryEnhancer"
-      [onSubmit]="onSaveAutoQuery.bind(this)"
-      [onUpdate]="onUpdateAutoQuery.bind(this)"
-      [onDelete]="onDeleteAutoQuery.bind(this)"
-      [guidanceEnabled]="true"
-      [maxQueriesEnabled]="true"
-      [recommended]="true"
-      >
-    </app-query-enhancer-config>
-
-    <app-query-enhancer-config
-    title="Hypothetical Document Embedding"
+    [workflowId]="workflowId"
+    [queryEnhancer]="autoQueryEnhancer"
+    type="auto-query"
+    title="Auto Querying"
     description="Auto Querying is a feature that automatically generates multiple relevant search queries based on the user's original input. Instead of relying solely on a single query, the system expands the input into several targeted queries to retrieve more comprehensive information from a knowledge base. This ensures more complete and accurate responses. You can customize how many queries are generated using the 'Maximum queries' field. Additionally, the 'Guidance' field allows you to provide extra context or instructions to steer how the queries should be constructed."
-    [queryEnhancer]="hydeEnhancer"
-    [onSubmit]="onSaveHyde.bind(this)"
-    [onUpdate]="onUpdateHyde.bind(this)"
-    [onDelete]="onDeleteHyde.bind(this)"
+    [guidanceEnabled]="true"
     [maxQueriesEnabled]="true"
-    [recommended]="true"
-    >
+    [recommended]="true">
+  </app-query-enhancer-config>
+
+  <app-query-enhancer-config
+    [workflowId]="workflowId"
+    [queryEnhancer]="hydeEnhancer"
+    type="hyde"
+    title="Hypothetical Document Embedding"
+    description="Hyde processes documents for embedding purposes."
+    [guidanceEnabled]="false"
+    [maxQueriesEnabled]="true">
   </app-query-enhancer-config>
   </div>
 </div>

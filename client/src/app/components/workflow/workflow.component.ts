@@ -1,23 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Observable, tap, throwError } from 'rxjs';
-
-// Models
-import { QueryEnhancer } from '../../models/query-enhancer';
 import { Workflow } from 'src/app/models/workflow';
+import { QueryEnhancer } from 'src/app/models/query-enhancer';
 
 // Components
 import { QueryEnhancerConfigComponent } from 'src/app/shared/components/query-enhancer-config/query-enhancer-config.component';
 
 // Services
-import { QueryEnhancerService } from 'src/app/services/query-enhancer.service';
-import { WorkflowService } from '../../services/workflow.service';
+import { WorkflowService } from 'src/app/services/workflow.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, QueryEnhancerConfigComponent],
+  imports: [CommonModule, QueryEnhancerConfigComponent],
   templateUrl: 'workflow.component.html',
 })
 export class WorkflowComponent implements OnInit {
@@ -28,8 +23,7 @@ export class WorkflowComponent implements OnInit {
 
   constructor(
     private readonly workflowService: WorkflowService,
-    private readonly route: ActivatedRoute,
-    private readonly queryEnhancerService: QueryEnhancerService
+    private readonly route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -56,97 +50,5 @@ export class WorkflowComponent implements OnInit {
         (qe) => qe.type === 'HYPOTHETICAL_DOCUMENT_EMBEDDING'
       );
     });
-  }
-
-  onSaveAutoQuery(formData: any): Observable<QueryEnhancer> {
-    if (!formData || !this.workflowId) {
-      return throwError(
-        () => new Error('Form data or Workflow ID is undefined')
-      );
-    }
-
-    return this.queryEnhancerService
-      .enableAutoQuery(formData, this.workflowId)
-      .pipe(
-        tap((queryEnhancer) => {
-          if (queryEnhancer) {
-            this.autoQueryEnhancer = queryEnhancer;
-          }
-        })
-      );
-  }
-
-  onSaveHyde(formData: any): Observable<QueryEnhancer> {
-    if (!formData || !this.workflowId) {
-      return throwError(
-        () => new Error('Form data or Workflow ID is undefined')
-      );
-    }
-
-    return this.queryEnhancerService.enableHyde(formData, this.workflowId).pipe(
-      tap((queryEnhancer) => {
-        if (queryEnhancer) {
-          this.hydeEnhancer = queryEnhancer;
-        }
-      })
-    );
-  }
-
-  onUpdateAutoQuery(formData: any): Observable<QueryEnhancer> {
-    if (!formData || !this.workflowId || !this.autoQueryEnhancer) {
-      return throwError(
-        () => new Error('Form data or Workflow ID is undefined')
-      );
-    }
-
-    return this.queryEnhancerService
-      .updateAutoQuery(formData, this.workflowId)
-      .pipe(
-        tap((updated) => {
-          this.autoQueryEnhancer = updated;
-        })
-      );
-  }
-
-  onUpdateHyde(formData: any): Observable<QueryEnhancer> {
-    if (!formData || !this.workflowId || !this.hydeEnhancer) {
-      return throwError(
-        () => new Error('Form data or Workflow ID is undefined')
-      );
-    }
-
-    return this.queryEnhancerService.updateHyde(formData, this.workflowId).pipe(
-      tap((updated) => {
-        this.hydeEnhancer = updated;
-      })
-    );
-  }
-
-  onDeleteAutoQuery(): Observable<boolean> {
-    if (!this.workflowId) {
-      return throwError(() => new Error('Workflow ID is undefined'));
-    }
-
-    return this.queryEnhancerService.deleteAutoQuery(this.workflowId).pipe(
-      tap((response) => {
-        if (response) {
-          this.autoQueryEnhancer = undefined;
-        }
-      })
-    );
-  }
-
-  onDeleteHyde(): Observable<boolean> {
-    if (!this.workflowId) {
-      return throwError(() => new Error('Workflow ID is undefined'));
-    }
-
-    return this.queryEnhancerService.deleteHyde(this.workflowId).pipe(
-      tap((response) => {
-        if (response) {
-          this.hydeEnhancer = undefined;
-        }
-      })
-    );
   }
 }
