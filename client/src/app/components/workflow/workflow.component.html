@@ -21,7 +21,7 @@
     [queryEnhancer]="hydeEnhancer"
     type="hyde"
     title="Hypothetical Document Embedding"
-    description="Hyde processes documents for embedding purposes."
+    description="  HyDE (Hypothetical Document Embedding) is a technique designed to enhance retrieval performance when the available retriever struggles with new or specialized domains. It is particularly useful when your retrieval system's performance (e.g., Recall) is not optimal, or when the queries and documents come from a domain that differs from the data the retriever was originally trained on. The method works by first prompting an instruction-following language model in a zero-shot manner to generate multiple “fake” documents based on the input query. These hypothetical documents are then encoded into embedding vectors and averaged to form a single, robust representation. This averaged embedding better captures the relevant textual patterns, allowing for more accurate identification of similar documents from a larger dataset. The retrieved documents can then be used in downstream applications such as generating responses in a RAG (Retrieval-Augmented Generation) pipeline."
     [guidanceEnabled]="false"
     [maxQueriesEnabled]="true">
   </app-query-enhancer-config>
