@@ -13,11 +13,15 @@ import {
 } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { toast } from 'ngx-sonner';
 
+// Components
 import { InputComponent } from 'src/app/shared/components/input/input.component';
 import { TextAreaComponent } from 'src/app/shared/components/text-area/text-area.component';
 import { HlmSwitchComponent } from 'libs/ui/ui-switch-helm/src/lib/hlm-switch.component';
+import { HlmToasterComponent } from './../../../../../libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component';
 
+// Models
 import { QueryEnhancer } from 'src/app/models/query-enhancer';
 import { QueryEnhancerService } from 'src/app/services/query-enhancer.service';
 
@@ -28,6 +32,7 @@ import { QueryEnhancerService } from 'src/app/services/query-enhancer.service';
     CommonModule,
     ReactiveFormsModule,
     HlmSwitchComponent,
+    HlmToasterComponent,
     InputComponent,
     TextAreaComponent,
   ],
@@ -79,7 +84,7 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
         1,
         [Validators.required, Validators.min(1), Validators.max(10)],
       ],
-      guidance: ['', Validators.required],
+      guidance: ['', [Validators.required, Validators.minLength(20)]],
     });
   }
 
@@ -140,8 +145,14 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
 
   // If a QE already exists, update it; otherwise, create it.
   submitForm(): void {
-    if (this.configForm.invalid) return;
+    if (this.configForm.invalid) {
+      if (!this.displayValidationErrors()) {
+        return;
+      }
+    }
+
     const formData = this.configForm.value;
+
     if (this.queryEnhancer) {
       const updatedQE = { ...this.queryEnhancer, ...formData };
       this.qeService
@@ -150,6 +161,9 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
           next: (newQE: QueryEnhancer) => {
             this.queryEnhancer = newQE;
             this.enabled$.next(newQE.isEnabled);
+            toast('Query Enhancer updated successfully', {
+              description: 'The query enhancer has been updated.',
+            });
           },
           error: (err: Error) => {
             console.error('Error updating query enhancer:', err);
@@ -167,6 +181,9 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
           next: (createdQE: QueryEnhancer) => {
             this.queryEnhancer = createdQE;
             this.enabled$.next(createdQE.isEnabled);
+            toast('Query Enhancer created successfully', {
+              description: 'The query enhancer has been created.',
+            });
           },
           error: (err: Error) => {
             console.error('Error enabling query enhancer:', err);
@@ -179,13 +196,65 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
     this.qeService.deleteQueryEnhancer(this.workflowId, this.type).subscribe({
       next: (success: boolean) => {
         if (success) {
+          toast('Query Enhancer deleted successfully', {
+            description: 'The query enhancer has been deleted.',
+          });
           this.queryEnhancer = undefined;
           this.enabled$.next(false);
         }
       },
       error: (err: Error) => {
-        console.error('Error deleting query enhancer:', err);
+        toast('Error deleting query enhancer', {
+          description: 'An error occurred while deleting the query enhancer.',
+        });
       },
     });
+  }
+
+  get guidanceControl() {
+    return this.configForm.get('guidance');
+  }
+
+  get maxQueriesControl() {
+    return this.configForm.get('maxQueries');
+  }
+
+  private displayValidationErrors(): boolean {
+    let isValid = true;
+
+    if (this.guidanceControl && this.guidanceControl.invalid) {
+      if (this.guidanceControl.hasError('required')) {
+        toast('Guidance is required', {
+          description: 'Please provide guidance for the query enhancer.',
+        });
+        isValid = false;
+      } else if (this.guidanceControl.hasError('minlength')) {
+        toast('Guidance is too short', {
+          description: 'Guidance must be at least 20 characters long.',
+        });
+        isValid = false;
+      }
+    }
+
+    if (this.maxQueriesControl && this.maxQueriesControl.invalid) {
+      if (this.maxQueriesControl.hasError('required')) {
+        toast('Max Queries is required', {
+          description: 'Please provide a value for max queries.',
+        });
+        isValid = false;
+      } else if (this.maxQueriesControl.hasError('min')) {
+        toast('Max Queries is too low', {
+          description: 'Max queries must be at least 1.',
+        });
+        isValid = false;
+      } else if (this.maxQueriesControl.hasError('max')) {
+        toast('Max Queries is too high', {
+          description: 'Max queries cannot exceed 10.',
+        });
+        isValid = false;
+      }
+    }
+
+    return isValid;
   }
 }
