@@ -1,26 +1,46 @@
-<div (click)="handleNavigateWorkflow()" class="flex flex-col items-start justify-start border border-neutral-600 text-neutral-200 p-4 w-100 min-h-50 max-w-100 min-w-70 gap-y-4 rounded-xl cursor-pointer hover:shadow-2xl shadow-purple-600/20 transition-all duration-300">
+<div
+  class="flex flex-col items-start justify-start border border-neutral-600 text-neutral-200 p-4 w-100 min-h-50 max-w-100 min-w-70 gap-y-4 rounded-xl cursor-pointer hover:shadow-2xl shadow-purple-600/20 transition-all duration-300"
+>
   <div class="w-full flex items-center justify-between">
     <h2 class="text-xl uppercase">{{ workflow.name }}</h2>
-    <app-alert
-      [id]="'deleteWorkflow'"
-      [title]="'Delete Workflow'"
-      description="Are you sure you want to delete this workflow?"
-      (actionConfirmed)="deleteWorkflow()"
-    >
-      <div class="w-7 h-7 hover:bg-white hover:!text-black transition-all duration-300 cursor-pointer rounded-full flex items-center justify-center">
-        <ng-icon name="heroTrash" class="w-3"></ng-icon>
+    <div class="flex items-center justify-center gap-x-2">
+      <div
+        class="w-7 h-7 hover:bg-white hover:!text-black transition-all duration-300 cursor-pointer rounded-full flex items-center justify-center"
+        (click)="copyToClipboard()"
+        >
+        <ng-icon name="heroClipboard" class="w-3"></ng-icon>
       </div>
-    </app-alert>
+      <app-alert
+        [id]="'deleteWorkflow'"
+        [title]="'Delete Workflow'"
+        description="Are you sure you want to delete this workflow?"
+        (actionConfirmed)="deleteWorkflow()"
+      >
+        <div
+          class="w-7 h-7 hover:bg-white hover:!text-black transition-all duration-300 cursor-pointer rounded-full flex items-center justify-center"
+        >
+          <ng-icon name="heroTrash" class="w-3"></ng-icon>
+        </div>
+      </app-alert>
+    </div>
   </div>
 
-
-  <p class="text-sm text-neutral-300 line-clamp-3 text-ellipsis">{{workflow.description}}</p>
+  <p class="text-sm text-neutral-300 line-clamp-3 text-ellipsis">
+    {{ workflow.description }}
+  </p>
 
   <div class="flex items-center justify-between gap-x-2 w-full mt-auto">
-    <a [href]="'/dashboard/workflows/' + workflow.id + '/embedd'" class="bg-white text-black px-3 py-1 rounded hover:bg-purple-500 hover:text-white transition-all duration-300">Embedd Document</a>
+    <a
+      [href]="'/dashboard/workflows/' + workflow.id + '/embedd'"
+      class="bg-white text-black px-3 py-1 rounded hover:bg-purple-500 hover:text-white transition-all duration-300"
+      >Embedd Document</a
+    >
 
-    <div class="rounded bg-neutral-900 text-white px-3 py-1">
-      Documents: {{workflow.documents}}
+    <div
+      class="rounded bg-neutral-900 text-white px-3 py-1"
+      (click)="handleNavigateWorkflow()"
+    >
+      Settings
     </div>
   </div>
 </div>

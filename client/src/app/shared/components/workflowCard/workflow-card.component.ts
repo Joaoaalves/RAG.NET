@@ -1,16 +1,24 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroTrash } from '@ng-icons/heroicons/outline';
-import { WorkflowService } from 'src/app/services/workflow.service';
-import { AlertComponent } from '../alert/alert.component';
-import { Workflow } from 'src/app/models/workflow';
+import { toast } from 'ngx-sonner';
 import { Router } from '@angular/router';
+// Icons
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { heroTrash, heroClipboard } from '@ng-icons/heroicons/outline';
+
+// Components
+import { AlertComponent } from '../alert/alert.component';
+
+// Models
+import { Workflow } from 'src/app/models/workflow';
+
+// Services
+import { WorkflowService } from 'src/app/services/workflow.service';
 
 @Component({
   selector: 'app-workflow-card',
   imports: [CommonModule, NgIcon, AlertComponent],
-  providers: [provideIcons({ heroTrash })],
+  providers: [provideIcons({ heroTrash, heroClipboard })],
   templateUrl: './workflow-card.component.html',
   host: {
     style: 'display: block',
@@ -37,6 +45,18 @@ export class WorkflowCardComponent {
         if (success) {
           this.workflowDeleted.emit(this.workflow.id);
         }
+      });
+  }
+
+  copyToClipboard() {
+    const textToCopy = this.workflow.apiKey;
+    navigator.clipboard
+      .writeText(textToCopy)
+      .then(() => {
+        toast('Workflow API Key copied to clipboard!');
+      })
+      .catch((err) => {
+        toast('Failed to copy text: ' + err);
       });
   }
 }

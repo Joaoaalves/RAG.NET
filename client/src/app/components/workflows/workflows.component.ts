@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 // Components
 import { WorkflowCardComponent } from 'src/app/shared/components/workflowCard/workflow-card.component';
+import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component';
 
 // Models
 import { Workflow } from 'src/app/models/workflow';
@@ -12,7 +13,7 @@ import { WorkflowService } from '../../services/workflow.service';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [WorkflowCardComponent, CommonModule],
+  imports: [WorkflowCardComponent, CommonModule, HlmToasterComponent],
   templateUrl: './workflows.component.html',
   standalone: true,
 })
