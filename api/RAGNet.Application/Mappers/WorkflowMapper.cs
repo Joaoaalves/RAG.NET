@@ -37,6 +37,7 @@ namespace RAGNET.Application.Mappers
                 Name = workflow.Name,
                 Description = workflow.Description,
                 Documents = workflow.Documents,
+                CollectionId = workflow.CollectionId,
                 Strategy = strategy,
                 ApiKey = workflow.ApiKey,
                 Settings = settings,

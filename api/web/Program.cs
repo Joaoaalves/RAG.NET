@@ -101,6 +101,7 @@ builder.Services.AddScoped<IPdfTextExtractorService, PdfTextExtractorAdapter>();
 builder.Services.AddScoped<IEmbeddingProviderValidator, EmbeddingProviderValidator>();
 builder.Services.AddScoped<IConversationProviderValidator, ConversationProviderValidator>();
 builder.Services.AddScoped<IPromptService, PromptService>();
+builder.Services.AddScoped<IQueryResultAggregatorService, QueryResultAggregatorService>();
 
 // Use Cases
 builder.Services.AddScoped<IGetUserWorkflowsUseCase, GetUserWorkflowsUseCase>();

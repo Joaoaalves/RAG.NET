@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RAGNET.Application.Attributes;
+using RAGNET.Application.DTOs.Chunk;
 using RAGNET.Application.DTOs.Query;
+using RAGNET.Application.Mappers;
 using RAGNET.Application.UseCases.Query;
 using RAGNET.Application.UseCases.QueryEnhancerUseCases;
 using RAGNET.Domain.Entities;
@@ -29,7 +31,17 @@ namespace web.Controllers
                 var apiKey = Request.Headers["x-api-key"].ToString();
                 var queries = await _enhanceQueryUseCase.Execute(apiKey, queryDTO);
 
-                var chunks = await _queryChunksUseCase.Execute(apiKey, queries);
+                var chunksResult = await _queryChunksUseCase.Execute(apiKey, queries);
+
+                // TODO:
+                // Filter results before ranking.
+
+                List<ChunkDTO> chunks = [];
+
+                foreach (var c in chunksResult)
+                {
+                    chunks.Add(c.ToDTO());
+                }
                 return Ok(new { chunks });
             }
             catch (Exception exc)

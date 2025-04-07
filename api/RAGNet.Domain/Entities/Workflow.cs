@@ -18,6 +18,7 @@ namespace RAGNET.Domain.Entities
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public Guid CollectionId { get; set; }
+        public ICollection<Chunk> Chunks { get; set; } = [];
 
         // Related configurations
         public Chunker? Chunker { get; set; }

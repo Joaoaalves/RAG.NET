@@ -41,7 +41,7 @@ namespace RAGNET.Infrastructure.Adapters.VectorDB
             await _client.UpsertAsync(collectionName, [point]);
         }
 
-        public async Task<IEnumerable<VectorQueryResult>> QueryAsync(float[] vector, string collectionName, int topK)
+        public async Task<List<VectorQueryResult>> QueryAsync(float[] vector, string collectionName, int topK)
         {
             var searchParams = new SearchParams { Exact = false, HnswEf = 128 };
 
@@ -59,13 +59,10 @@ namespace RAGNET.Infrastructure.Adapters.VectorDB
             {
                 DocumentId = point.Payload.TryGetValue("documentId", out Value? value) ? value.StringValue : string.Empty,
                 Score = point.Score,
-                Metadata = point.Payload.ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => kvp.Value.StringValue
-                )
-            });
+            }).ToList(); // Convert to List<VectorQueryResult>
 
             return results;
         }
+
     }
 }

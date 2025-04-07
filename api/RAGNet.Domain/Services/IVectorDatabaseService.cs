@@ -11,6 +11,6 @@ namespace RAGNET.Domain.Services
     {
         Task CreateCollectionAsync(Guid collectionName, int vectorSize);
         Task InsertAsync(string documentId, float[] vector, string collectionName, Dictionary<string, string> metadata);
-        Task<IEnumerable<VectorQueryResult>> QueryAsync(float[] vector, string collectionId, int topK);
+        Task<List<VectorQueryResult>> QueryAsync(float[] vector, string collectionId, int topK);
     }
 }

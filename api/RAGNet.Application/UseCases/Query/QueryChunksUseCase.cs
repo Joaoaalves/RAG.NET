@@ -1,3 +1,4 @@
+using RAGNET.Domain.Entities;
 using RAGNET.Domain.Exceptions;
 using RAGNET.Domain.Factories;
 using RAGNET.Domain.Repositories;
@@ -7,37 +8,65 @@ namespace RAGNET.Application.UseCases.Query
 {
     public interface IQueryChunksUseCase
     {
-        Task<Task<IEnumerable<VectorQueryResult>>[]?> Execute(string apiKey, List<string> queries);
+        Task<List<Chunk>> Execute(string apiKey, List<string> queries);
     }
 
     public class QueryChunksUseCase(
         IVectorDatabaseService vectorDatabaseService,
+        IQueryResultAggregatorService queryResultAggregatorService,
         IWorkflowRepository workflowRepository,
-        IEmbedderFactory embedderFactory
+        IEmbedderFactory embedderFactory,
+        IChunkRepository chunkRepository
     ) : IQueryChunksUseCase
     {
         private readonly IVectorDatabaseService _vectorDatabaseService = vectorDatabaseService;
+        private readonly IQueryResultAggregatorService _queryResultAggregatorService = queryResultAggregatorService;
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
         private readonly IEmbedderFactory _embedderFactory = embedderFactory;
-        public async Task<Task<IEnumerable<VectorQueryResult>>[]?> Execute(string apiKey, List<string> queries)
+        private readonly IChunkRepository _chunkRepository = chunkRepository;
+
+        public async Task<List<Chunk>> Execute(string apiKey, List<string> queries)
         {
             try
             {
-                var workflow = await _workflowRepository.GetWithRelationsByApiKey(apiKey) ?? throw new InvalidWorkflowApiKeyException("Invalid apikey.");
+                // Setup
+                var workflow = await _workflowRepository.GetWithRelationsByApiKey(apiKey)
+                    ?? throw new InvalidWorkflowApiKeyException("Invalid apikey.");
 
-                var embConfig = workflow.EmbeddingProviderConfig ?? throw new EmbeddingProviderNotSetException("You must set your embedding provider config");
+                var embConfig = workflow.EmbeddingProviderConfig
+                    ?? throw new EmbeddingProviderNotSetException("You must set your embedding provider config");
+
                 var embedderService = _embedderFactory.CreateEmbeddingService(embConfig.ApiKey, embConfig.Model, embConfig.Provider);
 
+                // Exec query on vectorDB
                 var tasks = queries.Select(async query =>
                 {
                     var embedding = await embedderService.GetEmbeddingAsync(query);
-                    return _vectorDatabaseService.QueryAsync(embedding, workflow.CollectionId.ToString(), 4);
+                    return await _vectorDatabaseService.QueryAsync(embedding, workflow.CollectionId.ToString(), 5);
                 });
 
-                var results = await Task.WhenAll(tasks);
+                // Await all queries
+                var queryResults = await Task.WhenAll(tasks);
 
-                return results;
+                // Aggregate queryResult of every chunk
+                var allResults = queryResults.SelectMany(qr => qr).ToList();
 
+                // Aggregate and rank topK results
+                VectorQueryResult?[] aggregatedResults = _queryResultAggregatorService.AggregateResults(allResults, 5);
+
+                // For each aggregate result, search for the corresponding chunk
+                var finalChunks = new List<Chunk>();
+                foreach (var aggregatedResult in aggregatedResults)
+                {
+                    if (aggregatedResult != null)
+                    {
+                        var chunk = await _chunkRepository.GetByDocumentId(aggregatedResult.DocumentId);
+                        if (chunk != null)
+                            finalChunks.Add(chunk);
+                    }
+                }
+
+                return finalChunks;
             }
             catch (Exception exc)
             {

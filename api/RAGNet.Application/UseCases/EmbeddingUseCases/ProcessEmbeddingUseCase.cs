@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Channels;
 using Microsoft.AspNetCore.Http;
 using RAGNET.Application.DTOs;
+using RAGNET.Domain.Entities;
 using RAGNET.Domain.Factories;
 using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services;
@@ -24,7 +25,8 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
         ITextChunkerFactory chunkerFactory,
         IEmbedderFactory embedderFactory,
         IVectorDatabaseService vectorDatabaseService,
-        IChatCompletionFactory chatCompletionFactory
+        IChatCompletionFactory chatCompletionFactory,
+        IChunkRepository chunkRepository
         ) : IProcessEmbeddingUseCase
     {
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
@@ -33,6 +35,7 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
         private readonly IEmbedderFactory _embedderFactory = embedderFactory;
         private readonly IVectorDatabaseService _vectorDatabaseService = vectorDatabaseService;
         private readonly IChatCompletionFactory _chatCompletionFactory = chatCompletionFactory;
+        private readonly IChunkRepository _chunkRepository = chunkRepository;
 
         public async Task<int> Execute(IFormFile file, string apiKey)
         {
@@ -72,13 +75,16 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
             {
                 var embedding = await embedder.GetEmbeddingAsync(chunk);
 
-                var documentId = $"{workflow.Id}-{Interlocked.Increment(ref processedChunks)}";
-                var metadata = new Dictionary<string, string>
-                {
-                    { "chunk", chunk }
-                };
+                var documentId = Guid.NewGuid().ToString();
 
-                await _vectorDatabaseService.InsertAsync(documentId, embedding, collectionId, metadata);
+                await _vectorDatabaseService.InsertAsync(documentId, embedding, collectionId, []);
+
+                await _chunkRepository.AddAsync(new Chunk
+                {
+                    Text = chunk,
+                    DocumentId = documentId
+                });
+
             });
 
             workflow.Documents++;
@@ -131,13 +137,16 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
 
                     // Create a document id and metadata.
                     var documentId = Guid.NewGuid().ToString();
-                    var metadata = new Dictionary<string, string>
-                    {
-                    { "chunk", chunk }
-                    };
 
                     // Insert the embedded chunk into the vector database.
-                    await _vectorDatabaseService.InsertAsync(documentId, embedding, collectionId, metadata);
+                    await _vectorDatabaseService.InsertAsync(documentId, embedding, collectionId, []);
+
+                    // Insert the chunk into the database
+                    await _chunkRepository.AddAsync(new Chunk
+                    {
+                        Text = chunk,
+                        DocumentId = documentId
+                    });
 
                     // Increment processed chunk count in a thread-safe manner.
                     int currentCount = Interlocked.Increment(ref processedChunks);
