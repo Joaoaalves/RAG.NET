@@ -10,7 +10,8 @@ namespace RAGNET.Application.Mappers
             return new ChunkDTO
             {
                 DocumentId = chunk.DocumentId,
-                Text = chunk.Text
+                Text = chunk.Text,
+                Score = chunk.Score
             };
         }
     }

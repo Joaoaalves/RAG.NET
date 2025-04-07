@@ -17,12 +17,11 @@ namespace RAGNET.Application.Services
                 }
                 else
                 {
-                    // Clone the result (or create a new instance) to avoid modifying the original object.
+                    // Clone the result to avoid modifying the original object.
                     aggregatedResults[result.DocumentId] = new VectorQueryResult
                     {
                         DocumentId = result.DocumentId,
                         Score = result.Score,
-                        // Copy metadata if needed.
                         Metadata = new Dictionary<string, string>(result.Metadata)
                     };
                 }
@@ -33,6 +32,13 @@ namespace RAGNET.Application.Services
                                               .OrderByDescending(r => r.Score)
                                               .Take(topK)
                                               .ToList();
+
+            // Normalize the score
+            double maxScore = topResults.Count != 0 ? topResults.First().Score : 1.0;
+            foreach (var r in topResults)
+            {
+                r.Score /= maxScore;
+            }
 
             // Create an array of exactly K positions.
             VectorQueryResult?[] orderedResults = new VectorQueryResult?[topK];

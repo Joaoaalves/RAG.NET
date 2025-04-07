@@ -8,7 +8,7 @@ namespace RAGNET.Application.UseCases.Query
 {
     public interface IQueryChunksUseCase
     {
-        Task<List<Chunk>> Execute(string apiKey, List<string> queries);
+        Task<List<Chunk>> Execute(string apiKey, List<string> queries, int topK);
     }
 
     public class QueryChunksUseCase(
@@ -24,8 +24,7 @@ namespace RAGNET.Application.UseCases.Query
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
         private readonly IEmbedderFactory _embedderFactory = embedderFactory;
         private readonly IChunkRepository _chunkRepository = chunkRepository;
-
-        public async Task<List<Chunk>> Execute(string apiKey, List<string> queries)
+        public async Task<List<Chunk>> Execute(string apiKey, List<string> queries, int topK)
         {
             try
             {
@@ -36,23 +35,24 @@ namespace RAGNET.Application.UseCases.Query
                 var embConfig = workflow.EmbeddingProviderConfig
                     ?? throw new EmbeddingProviderNotSetException("You must set your embedding provider config");
 
-                var embedderService = _embedderFactory.CreateEmbeddingService(embConfig.ApiKey, embConfig.Model, embConfig.Provider);
+                var embedderService = _embedderFactory.CreateEmbeddingService
+                (
+                    embConfig.ApiKey,
+                    embConfig.Model,
+                    embConfig.Provider
+                );
 
-                // Exec query on vectorDB
-                var tasks = queries.Select(async query =>
-                {
-                    var embedding = await embedderService.GetEmbeddingAsync(query);
-                    return await _vectorDatabaseService.QueryAsync(embedding, workflow.CollectionId.ToString(), 5);
-                });
-
-                // Await all queries
-                var queryResults = await Task.WhenAll(tasks);
-
-                // Aggregate queryResult of every chunk
-                var allResults = queryResults.SelectMany(qr => qr).ToList();
+                // Embedd All
+                var embeddings = await embedderService.GetMultipleEmbeddingAsync(queries);
+                var queryResults = await _vectorDatabaseService.QueryHybridMedianAsync
+                (
+                    embeddings,
+                    workflow.CollectionId.ToString(),
+                    topK
+                );
 
                 // Aggregate and rank topK results
-                VectorQueryResult?[] aggregatedResults = _queryResultAggregatorService.AggregateResults(allResults, 5);
+                VectorQueryResult?[] aggregatedResults = _queryResultAggregatorService.AggregateResults(queryResults, topK);
 
                 // For each aggregate result, search for the corresponding chunk
                 var finalChunks = new List<Chunk>();
@@ -62,7 +62,10 @@ namespace RAGNET.Application.UseCases.Query
                     {
                         var chunk = await _chunkRepository.GetByDocumentId(aggregatedResult.DocumentId);
                         if (chunk != null)
+                        {
+                            chunk.Score = aggregatedResult.Score;
                             finalChunks.Add(chunk);
+                        }
                     }
                 }
 

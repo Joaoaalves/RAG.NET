@@ -31,7 +31,7 @@ namespace web.Controllers
                 var apiKey = Request.Headers["x-api-key"].ToString();
                 var queries = await _enhanceQueryUseCase.Execute(apiKey, queryDTO);
 
-                var chunksResult = await _queryChunksUseCase.Execute(apiKey, queries);
+                var chunksResult = await _queryChunksUseCase.Execute(apiKey, queries, queryDTO.TopK);
 
                 // TODO:
                 // Filter results before ranking.

@@ -14,6 +14,17 @@ namespace RAGNET.Infrastructure.Adapters.Embedding
             return embedding.ToFloats().ToArray();
         }
 
+        public async Task<List<float[]>> GetMultipleEmbeddingAsync(List<string> texts)
+        {
+            var tasks = texts.Select(async chunk =>
+            {
+                return await GetEmbeddingAsync(chunk);
+            });
+
+            var embeddingsArr = await Task.WhenAll(tasks);
+            return [.. embeddingsArr];
+        }
+
         public static List<EmbeddingModel> GetModels()
         {
             return [
@@ -22,5 +33,7 @@ namespace RAGNET.Infrastructure.Adapters.Embedding
                 new() { Label = "Embedding Ada 002", Value = "text-embedding-ada-002", Speed = 3, Price = 0.10f, MaxContext = 8191, VectorSize = 1536 },
             ];
         }
+
+
     }
 }
