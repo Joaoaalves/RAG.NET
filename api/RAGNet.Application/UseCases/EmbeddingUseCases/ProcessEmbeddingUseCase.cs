@@ -75,7 +75,7 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
                 var documentId = $"{workflow.Id}-{Interlocked.Increment(ref processedChunks)}";
                 var metadata = new Dictionary<string, string>
                 {
-                    { "chunkPreview", chunk.Length > 100 ? chunk[..100] : chunk }
+                    { "chunk", chunk }
                 };
 
                 await _vectorDatabaseService.InsertAsync(documentId, embedding, collectionId, metadata);
@@ -133,7 +133,7 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
                     var documentId = Guid.NewGuid().ToString();
                     var metadata = new Dictionary<string, string>
                     {
-                { "chunkPreview", chunk.Length > 100 ? chunk[..100] : chunk }
+                    { "chunk", chunk }
                     };
 
                     // Insert the embedded chunk into the vector database.

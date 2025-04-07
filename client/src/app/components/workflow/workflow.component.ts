@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Workflow } from 'src/app/models/workflow';
 import { QueryEnhancer } from 'src/app/models/query-enhancer';
+import { CommonModule } from '@angular/common';
 
 // Components
 import { QueryEnhancerConfigComponent } from 'src/app/shared/components/query-enhancer-config/query-enhancer-config.component';
 
 // Services
 import { WorkflowService } from 'src/app/services/workflow.service';
-import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
