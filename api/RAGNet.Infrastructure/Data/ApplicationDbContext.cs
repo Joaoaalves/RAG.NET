@@ -18,6 +18,8 @@ namespace RAGNET.Infrastructure.Data
         public DbSet<FilterMeta> FilterMetas { get; set; }
         public DbSet<Ranker> Rankers { get; set; }
         public DbSet<RankerMeta> RankerMetas { get; set; }
+        public DbSet<Document> Documents { get; set; }
+        public DbSet<Page> Pages { get; set; }
         public DbSet<Chunk> Chunks { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -49,6 +51,13 @@ namespace RAGNET.Infrastructure.Data
                         .HasMany(w => w.Rankers)
                         .WithOne(r => r.Workflow)
                         .HasForeignKey(r => r.WorkflowId)
+                        .OnDelete(DeleteBehavior.Cascade);
+
+            // Relationship: Workflow -> Documents
+            builder.Entity<Workflow>()
+                        .HasMany(w => w.Documents)
+                        .WithOne(d => d.Workflow)
+                        .HasForeignKey(d => d.WorkflowId)
                         .OnDelete(DeleteBehavior.Cascade);
 
             // Relationship: Chunker -> ChunkerMetas
@@ -91,6 +100,20 @@ namespace RAGNET.Infrastructure.Data
                         .HasOne(rm => rm.Ranker)
                         .WithMany(r => r.Metas)
                         .HasForeignKey(rm => rm.RankerId)
+                        .OnDelete(DeleteBehavior.Cascade);
+
+            // Relationship: Document -> Pages
+            builder.Entity<Document>()
+                        .HasMany(d => d.Pages)
+                        .WithOne(p => p.Document)
+                        .HasForeignKey(p => p.DocumentId)
+                        .OnDelete(DeleteBehavior.Cascade);
+
+            // Relationship: Page -> Chunks
+            builder.Entity<Page>()
+                        .HasMany(p => p.Chunks)
+                        .WithOne(c => c.Page)
+                        .HasForeignKey(c => c.PageId)
                         .OnDelete(DeleteBehavior.Cascade);
         }
     }

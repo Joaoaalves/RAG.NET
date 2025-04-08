@@ -13,7 +13,7 @@ namespace RAGNET.Application.DTOs.Workflow
         public string Name { get; set; } = String.Empty;
         public string Description { get; set; } = string.Empty;
         public Guid CollectionId { get; set; }
-        public int Documents { get; set; }
+        public int DocumentsCount { get; set; }
         [JsonConverter(typeof(ChunkerStrategyConverter))]
         public ChunkerStrategy? Strategy { get; set; }
         public ChunkerSettingsDTO? Settings { get; set; } = null!;

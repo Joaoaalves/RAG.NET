@@ -7,7 +7,7 @@ export interface Workflow {
   id: string;
   name: string;
   description: string;
-  documents: number;
+  documentsCount: number;
   strategy: ChunkerStrategy;
   settings: ChunkerSettings;
   apiKey: string;

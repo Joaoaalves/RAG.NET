@@ -6,9 +6,12 @@ namespace RAGNET.Domain.Entities
     {
         public Guid Id { get; set; }
         public string Text { get; set; } = String.Empty;
-
-        // Coming from VectorDB
+        public string SourceDocument { get; set; } = String.Empty;
         public string DocumentId { get; set; } = String.Empty;
+
+        [ForeignKey("Page")]
+        public Guid PageId { get; set; }
+        public Page Page { get; set; } = null!;
 
         [NotMapped]
         public float[][] Embedding { get; set; } = [];

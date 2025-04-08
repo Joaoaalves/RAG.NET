@@ -20,6 +20,7 @@ namespace tests.RAGNet.Application.Tests
         private readonly Mock<IVectorDatabaseService> _vectorDatabaseServiceMock;
         private readonly ProcessEmbeddingUseCase _useCase;
         private readonly Mock<IChatCompletionFactory> _chatCompletionFactory;
+        private readonly Mock<IChunkRepository> _chunkRepositoryMock;
 
         public ProcessEmbeddingUseCaseTests()
         {
@@ -29,6 +30,7 @@ namespace tests.RAGNet.Application.Tests
             _vectorDatabaseServiceMock = new Mock<IVectorDatabaseService>();
             _embedderFactoryMock = new Mock<IEmbedderFactory>();
             _chatCompletionFactory = new Mock<IChatCompletionFactory>();
+            _chunkRepositoryMock = new Mock<IChunkRepository>();
 
             _useCase = new ProcessEmbeddingUseCase(
                 _workflowRepositoryMock.Object,
@@ -36,7 +38,8 @@ namespace tests.RAGNet.Application.Tests
                 _chunkerFactoryMock.Object,
                 _embedderFactoryMock.Object,
                 _vectorDatabaseServiceMock.Object,
-                _chatCompletionFactory.Object);
+                _chatCompletionFactory.Object,
+                _chunkRepositoryMock.Object);
         }
 
         [Fact]
@@ -98,6 +101,7 @@ namespace tests.RAGNet.Application.Tests
             int processedChunks = await _useCase.Execute(file, apiKey);
 
             // Assert
+            Assert.Equal(1, workflow.DocumentsCount);
             Assert.Equal(3, processedChunks);
         }
 

@@ -84,10 +84,10 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
                     Text = chunk,
                     DocumentId = documentId
                 });
-
+                processedChunks++;
             });
 
-            workflow.Documents++;
+            workflow.DocumentsCount++;
 
             await _workflowRepository.UpdateByApiKey(workflow, apiKey);
 
@@ -174,7 +174,7 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
             // Ensure all processing is complete.
             await processingTask;
 
-            workflow.Documents++;
+            workflow.DocumentsCount++;
 
             await _workflowRepository.UpdateByApiKey(workflow, apiKey);
         }
