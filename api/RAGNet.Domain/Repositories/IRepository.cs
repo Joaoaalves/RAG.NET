@@ -25,12 +25,15 @@ namespace RAGNET.Domain.Repositories
     public interface IRankerRepository : IRepository<Ranker>, IConfigMeta<Ranker> { }
     public interface IEmbeddingProviderConfigRepository : IRepository<EmbeddingProviderConfig> { }
     public interface IConversationProviderConfigRepository : IRepository<ConversationProviderConfig> { }
-    public interface IChunkRepository : IRepository<Chunk>
-    {
-        Task<Chunk?> GetByDocumentId(string documentId);
-    }
+
     public interface IChunkerMetaRepository : IRepository<ChunkerMeta> { }
     public interface IQueryEnhancerMetaRepository : IRepository<QueryEnhancerMeta> { }
     public interface IFilterMetaRepository : IRepository<FilterMeta> { }
     public interface IRankerMetaRepository : IRepository<RankerMeta> { }
+    public interface IDocumentRepository : IRepository<Document> { }
+    public interface IPageRepository : IRepository<Page> { }
+    public interface IChunkRepository : IRepository<Chunk>
+    {
+        Task<Chunk?> GetByVectorId(string documentId);
+    }
 }

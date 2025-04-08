@@ -40,7 +40,31 @@ namespace RAGNET.Infrastructure.Adapters.VectorDB
 
             await _client.UpsertAsync(collectionName, [point]);
         }
+        public async Task InsertManyAsync(List<(string VectorId, float[] Vector, Dictionary<string, string> Metadata)> batch, string collectionName)
+        {
+            var points = batch.Select(entry =>
+            {
+                var metadataWithId = new Dictionary<string, string>(entry.Metadata)
+                {
+                    ["documentId"] = entry.VectorId,
+                    ["vectorId"] = entry.VectorId
+                };
 
+                return new PointStruct
+                {
+                    Id = Guid.NewGuid(),
+                    Vectors = entry.Vector,
+                    Payload = {
+                        metadataWithId.ToDictionary(
+                            kvp => kvp.Key,
+                            kvp => new Value { StringValue = kvp.Value }
+                        )
+                    }
+                };
+            });
+
+            await _client.UpsertAsync(collectionName, [.. points]);
+        }
         public async Task<List<VectorQueryResult>> QueryAsync(float[] vector, string collectionName, int topK)
         {
             var searchParams = new SearchParams { Exact = false, HnswEf = 128 };
@@ -56,7 +80,7 @@ namespace RAGNET.Infrastructure.Adapters.VectorDB
             // Transform the Qdrant response to match the VectorQueryResult interface.
             var results = response.Select(point => new VectorQueryResult
             {
-                DocumentId = point.Payload.TryGetValue("documentId", out Value? value) ? value.StringValue : string.Empty,
+                VectorId = point.Payload.TryGetValue("vectorId", out Value? value) ? value.StringValue : string.Empty,
                 Score = point.Score,
             }).ToList();
 

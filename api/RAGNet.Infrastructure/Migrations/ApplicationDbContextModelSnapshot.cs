@@ -160,18 +160,14 @@ namespace RAGNet.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("DocumentId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<Guid>("PageId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("SourceDocument")
+                    b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Text")
+                    b.Property<string>("VectorId")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -263,6 +259,10 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<Guid>("WorkflowId")
                         .HasColumnType("uuid");
@@ -360,6 +360,10 @@ namespace RAGNet.Infrastructure.Migrations
 
                     b.Property<Guid>("DocumentId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

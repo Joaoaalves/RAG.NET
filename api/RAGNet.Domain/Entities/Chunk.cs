@@ -6,8 +6,7 @@ namespace RAGNET.Domain.Entities
     {
         public Guid Id { get; set; }
         public string Text { get; set; } = String.Empty;
-        public string SourceDocument { get; set; } = String.Empty;
-        public string DocumentId { get; set; } = String.Empty;
+        public string VectorId { get; set; } = String.Empty;
 
         [ForeignKey("Page")]
         public Guid PageId { get; set; }

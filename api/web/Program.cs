@@ -94,14 +94,17 @@ builder.Services.AddScoped<IRankerRepository, RankerRepository>();
 builder.Services.AddScoped<IChunkRepository, ChunkRepository>();
 builder.Services.AddScoped<IEmbeddingProviderConfigRepository, EmbeddingProviderConfigRepository>();
 builder.Services.AddScoped<IConversationProviderConfigRepository, ConversationProviderConfigRepository>();
+builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+builder.Services.AddScoped<IPageRepository, PageRepository>();
 
 // Services
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IPdfTextExtractorService, PdfTextExtractorAdapter>();
+builder.Services.AddScoped<IPDFProcessingService, PdfProcessingAdapter>();
 builder.Services.AddScoped<IEmbeddingProviderValidator, EmbeddingProviderValidator>();
 builder.Services.AddScoped<IConversationProviderValidator, ConversationProviderValidator>();
 builder.Services.AddScoped<IPromptService, PromptService>();
 builder.Services.AddScoped<IQueryResultAggregatorService, QueryResultAggregatorService>();
+builder.Services.AddScoped<IEmbeddingProcessingService, EmbeddingProcessingService>();
 
 // Use Cases
 builder.Services.AddScoped<IGetUserWorkflowsUseCase, GetUserWorkflowsUseCase>();

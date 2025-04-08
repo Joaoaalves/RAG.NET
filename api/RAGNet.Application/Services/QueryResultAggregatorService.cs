@@ -11,16 +11,16 @@ namespace RAGNET.Application.Services
 
             foreach (var result in results)
             {
-                if (aggregatedResults.TryGetValue(result.DocumentId, out VectorQueryResult? value))
+                if (aggregatedResults.TryGetValue(result.VectorId, out VectorQueryResult? value))
                 {
                     value.Score += result.Score;
                 }
                 else
                 {
                     // Clone the result to avoid modifying the original object.
-                    aggregatedResults[result.DocumentId] = new VectorQueryResult
+                    aggregatedResults[result.VectorId] = new VectorQueryResult
                     {
-                        DocumentId = result.DocumentId,
+                        VectorId = result.VectorId,
                         Score = result.Score,
                         Metadata = new Dictionary<string, string>(result.Metadata)
                     };

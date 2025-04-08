@@ -9,7 +9,7 @@ namespace RAGNET.Application.Mappers
         {
             return new ChunkDTO
             {
-                DocumentId = chunk.DocumentId,
+                VectorId = chunk.VectorId,
                 Text = chunk.Text,
                 Score = chunk.Score
             };

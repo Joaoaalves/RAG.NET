@@ -60,7 +60,7 @@ namespace RAGNET.Application.UseCases.Query
                 {
                     if (aggregatedResult != null)
                     {
-                        var chunk = await _chunkRepository.GetByDocumentId(aggregatedResult.DocumentId);
+                        var chunk = await _chunkRepository.GetByVectorId(aggregatedResult.VectorId);
                         if (chunk != null)
                         {
                             chunk.Score = aggregatedResult.Score;

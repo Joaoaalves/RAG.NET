@@ -7,6 +7,7 @@ namespace RAGNET.Domain.Entities
     {
         [Key]
         public Guid Id { get; set; }
+        public string Title { get; set; } = String.Empty!;
         public ICollection<Page> Pages { get; set; } = [];
 
         [ForeignKey("Workflow")]

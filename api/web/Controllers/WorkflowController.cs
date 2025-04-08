@@ -141,6 +141,7 @@ namespace web.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 Response.StatusCode = 400;
                 await Response.WriteAsync(ex.Message);
             }
