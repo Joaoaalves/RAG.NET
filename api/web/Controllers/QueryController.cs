@@ -14,11 +14,9 @@ namespace web.Controllers
     [Route("/api/")]
     [ApiController]
     public class QueryController(
-        UserManager<User> userManager,
         IEnhanceQueryUseCase enhanceQueryUseCase,
         IQueryChunksUseCase queryChunksUseCase) : ControllerBase
     {
-        private readonly UserManager<User> _userManager = userManager;
         private readonly IEnhanceQueryUseCase _enhanceQueryUseCase = enhanceQueryUseCase;
         private readonly IQueryChunksUseCase _queryChunksUseCase = queryChunksUseCase;
 
@@ -30,6 +28,10 @@ namespace web.Controllers
             {
                 var apiKey = Request.Headers["x-api-key"].ToString();
                 var queries = await _enhanceQueryUseCase.Execute(apiKey, queryDTO);
+
+                // Now the user query is always sent to retrieval
+                // TODO: This must be set by the user
+                queries.Add(queryDTO.Query);
 
                 var chunksResult = await _queryChunksUseCase.Execute(apiKey, queries, queryDTO.TopK);
 
