@@ -31,9 +31,13 @@ namespace RAGNET.Domain.Repositories
     public interface IFilterMetaRepository : IRepository<FilterMeta> { }
     public interface IRankerMetaRepository : IRepository<RankerMeta> { }
     public interface IDocumentRepository : IRepository<Document> { }
-    public interface IPageRepository : IRepository<Page> { }
+    public interface IPageRepository : IRepository<Page>
+    {
+        Task<List<Page>> GetMany(Guid[] ids);
+    }
     public interface IChunkRepository : IRepository<Chunk>
     {
         Task<Chunk?> GetByVectorId(string documentId);
+        Task<List<Chunk>> GetManyByVectorId(string[] vectorIds);
     }
 }

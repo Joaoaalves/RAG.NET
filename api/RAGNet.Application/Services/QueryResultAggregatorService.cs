@@ -1,52 +1,76 @@
-using RAGNET.Domain.Entities;
 using RAGNET.Domain.Services;
 
 namespace RAGNET.Application.Services
 {
     public class QueryResultAggregatorService : IQueryResultAggregatorService
     {
-        public VectorQueryResult?[] AggregateResults(List<VectorQueryResult> results, int topK = 5)
+        public List<VectorQueryResult> AggregateResults(List<VectorQueryResult> results, int topK = 5)
         {
-            var aggregatedResults = new Dictionary<string, VectorQueryResult>();
+            var aggregatedResults = AggregateVectorResults(results);
+
+            var topResults = GetTopResults(aggregatedResults, topK);
+
+            NormalizeScores(topResults);
+
+            return FillOrderedResults(topResults, topK);
+        }
+
+        // Aggregates results by summing scores for entries with the same VectorId.
+        private static Dictionary<string, VectorQueryResult> AggregateVectorResults(List<VectorQueryResult> results)
+        {
+            var aggregated = new Dictionary<string, VectorQueryResult>();
 
             foreach (var result in results)
             {
-                if (aggregatedResults.TryGetValue(result.VectorId, out VectorQueryResult? value))
+                if (aggregated.TryGetValue(result.VectorId, out VectorQueryResult? existingResult))
                 {
-                    value.Score += result.Score;
+                    // Sum the scores if the result already exists and continue to the next iteration.
+                    existingResult.Score += result.Score;
+                    continue;
                 }
-                else
+                // Add a clone of the result to avoid modifying the original object.
+                aggregated[result.VectorId] = new VectorQueryResult
                 {
-                    // Clone the result to avoid modifying the original object.
-                    aggregatedResults[result.VectorId] = new VectorQueryResult
-                    {
-                        VectorId = result.VectorId,
-                        Score = result.Score,
-                        Metadata = new Dictionary<string, string>(result.Metadata)
-                    };
-                }
+                    VectorId = result.VectorId,
+                    Score = result.Score,
+                    Metadata = new Dictionary<string, string>(result.Metadata)
+                };
             }
 
-            // Order aggregated results by descending score and take the top K.
-            var topResults = aggregatedResults.Values
-                                              .OrderByDescending(r => r.Score)
-                                              .Take(topK)
-                                              .ToList();
+            return aggregated;
+        }
 
-            // Normalize the score
-            double maxScore = topResults.Count != 0 ? topResults.First().Score : 1.0;
-            foreach (var r in topResults)
+        // Orders the aggregated results descending by score and takes the top K results.
+        private static List<VectorQueryResult> GetTopResults(Dictionary<string, VectorQueryResult> aggregatedResults, int topK)
+        {
+            return aggregatedResults.Values
+                                    .OrderByDescending(r => r.Score)
+                                    .Take(topK)
+                                    .ToList();
+        }
+
+        // Normalizes the scores of the given results, using the highest score as the divisor.
+        private static void NormalizeScores(List<VectorQueryResult> results)
+        {
+            if (results.Count == 0) return;
+
+            double maxScore = results.First().Score;
+            foreach (var r in results)
             {
                 r.Score /= maxScore;
             }
+        }
 
-            // Create an array of exactly K positions.
-            VectorQueryResult?[] orderedResults = new VectorQueryResult?[topK];
-
-            // Fill the positions.
+        // Returns a list with a maximum of topK elements.
+        private static List<VectorQueryResult> FillOrderedResults(List<VectorQueryResult> topResults, int topK)
+        {
+            var orderedResults = new List<VectorQueryResult>();
             for (int i = 0; i < topK; i++)
             {
-                orderedResults[i] = i < topResults.Count ? topResults[i] : null;
+                if (i < topResults.Count)
+                {
+                    orderedResults.Add(topResults[i]);
+                }
             }
 
             return orderedResults;

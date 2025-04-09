@@ -45,7 +45,7 @@ namespace RAGNET.Application.Services
 
         public async Task<List<(string ChunkText, string VectorId, float[] Embedding)>> GetEmbeddingsAsync(List<string> chunks, EmbeddingProviderConfig embeddingConfig)
         {
-            var embedder = _embedderFactory.CreateEmbeddingService(embeddingConfig.ApiKey, embeddingConfig.Model, embeddingConfig.Provider);
+            var embedder = _embedderFactory.CreateEmbeddingService(embeddingConfig);
 
             var embeddings = await embedder.GetMultipleEmbeddingAsync(chunks);
             var result = new List<(string, string, float[])>();

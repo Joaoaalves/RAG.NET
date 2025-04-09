@@ -1,3 +1,4 @@
+using RAGNET.Domain.Entities;
 using RAGNET.Domain.Enums;
 using RAGNET.Domain.Factories;
 using RAGNET.Domain.Services;
@@ -7,13 +8,13 @@ namespace RAGNET.Infrastructure.Factories
 {
     public class EmbedderFactory : IEmbedderFactory
     {
-        public IEmbeddingService CreateEmbeddingService(string apiKey, string model, EmbeddingProviderEnum provider)
+        public IEmbeddingService CreateEmbeddingService(EmbeddingProviderConfig config)
         {
 
-            return provider switch
+            return config.Provider switch
             {
-                EmbeddingProviderEnum.OPENAI => new OpenAIEmbeddingAdapter(apiKey, model),
-                EmbeddingProviderEnum.VOYAGE => new VoyageEmbeddingAdapter(apiKey, model),
+                EmbeddingProviderEnum.OPENAI => new OpenAIEmbeddingAdapter(config.ApiKey, config.Model),
+                EmbeddingProviderEnum.VOYAGE => new VoyageEmbeddingAdapter(config.ApiKey, config.Model),
                 _ => throw new NotSupportedException("Embedding provider not supported.")
             };
         }

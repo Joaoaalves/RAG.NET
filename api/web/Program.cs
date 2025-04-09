@@ -105,6 +105,7 @@ builder.Services.AddScoped<IConversationProviderValidator, ConversationProviderV
 builder.Services.AddScoped<IPromptService, PromptService>();
 builder.Services.AddScoped<IQueryResultAggregatorService, QueryResultAggregatorService>();
 builder.Services.AddScoped<IEmbeddingProcessingService, EmbeddingProcessingService>();
+builder.Services.AddScoped<IChunkRetrieverService, ChunkRetrieverService>();
 
 // Use Cases
 builder.Services.AddScoped<IGetUserWorkflowsUseCase, GetUserWorkflowsUseCase>();

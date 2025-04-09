@@ -11,5 +11,12 @@ namespace RAGNET.Infrastructure.Repositories
         {
             return await _context.Chunks.FirstOrDefaultAsync(c => c.VectorId == vectorId);
         }
+
+        public async Task<List<Chunk>> GetManyByVectorId(string[] vectorIds)
+        {
+            return await _context.Chunks
+                .Where(c => vectorIds.Contains(c.VectorId))
+                .ToListAsync();
+        }
     }
 }
