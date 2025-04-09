@@ -1,37 +1,31 @@
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Exceptions;
 using RAGNET.Domain.Factories;
-using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services;
 
 namespace RAGNET.Application.UseCases.Query
 {
     public interface IQueryChunksUseCase
     {
-        Task<List<Chunk>> Execute(string apiKey, List<string> queries, int topK);
+        Task<List<Chunk>> Execute(Workflow workflow, List<string> queries, int topK);
     }
 
     public class QueryChunksUseCase(
         IVectorDatabaseService vectorDatabaseService,
         IQueryResultAggregatorService queryResultAggregatorService,
-        IWorkflowRepository workflowRepository,
         IEmbedderFactory embedderFactory,
         IChunkRetrieverService chunkRetrieverService
     ) : IQueryChunksUseCase
     {
         private readonly IVectorDatabaseService _vectorDatabaseService = vectorDatabaseService;
         private readonly IQueryResultAggregatorService _queryResultAggregatorService = queryResultAggregatorService;
-        private readonly IWorkflowRepository _workflowRepository = workflowRepository;
         private readonly IEmbedderFactory _embedderFactory = embedderFactory;
         private readonly IChunkRetrieverService _chunkRetrieverService = chunkRetrieverService;
-        public async Task<List<Chunk>> Execute(string apiKey, List<string> queries, int topK)
+        public async Task<List<Chunk>> Execute(Workflow workflow, List<string> queries, int topK)
         {
             try
             {
                 // Setup
-                var workflow = await _workflowRepository.GetWithRelationsByApiKey(apiKey)
-                    ?? throw new InvalidWorkflowApiKeyException("Invalid apikey.");
-
                 var embConfig = workflow.EmbeddingProviderConfig
                     ?? throw new EmbeddingProviderNotSetException("You must set your embedding provider config");
 

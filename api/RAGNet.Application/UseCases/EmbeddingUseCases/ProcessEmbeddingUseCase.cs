@@ -11,8 +11,8 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
 {
     public interface IProcessEmbeddingUseCase
     {
-        Task<int> Execute(IFormFile file, string apiKey);
-        IAsyncEnumerable<EmbeddingProgressDTO> ExecuteStreaming(IFormFile file, string apiKey, CancellationToken cancellationToken = default);
+        Task<int> Execute(IFormFile file, Workflow workflow);
+        IAsyncEnumerable<EmbeddingProgressDTO> ExecuteStreaming(IFormFile file, Workflow workflow, CancellationToken cancellationToken = default);
     }
 
     public class ProcessEmbeddingUseCase(
@@ -23,12 +23,6 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
         private readonly IPDFProcessingService _pdfProcessingService = pdfProcessingService;
         private readonly IEmbeddingProcessingService _embeddingProcessingService = embeddingProcessingService;
-
-        private async Task<Workflow> GetWorkflowAsync(string apiKey)
-        {
-            var workflow = await _workflowRepository.GetWithRelationsByApiKey(apiKey) ?? throw new Exception("Workflow not found.");
-            return workflow;
-        }
 
         private (string collectionId, Chunker chunkerConfig, EmbeddingProviderConfig embeddingProviderConfig, ConversationProviderConfig conversationProviderConfig) GetConfig(Workflow workflow)
         {
@@ -50,9 +44,8 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
             );
         }
 
-        public async Task<int> Execute(IFormFile file, string apiKey)
+        public async Task<int> Execute(IFormFile file, Workflow workflow)
         {
-            var workflow = await GetWorkflowAsync(apiKey);
             var (collectionId, chunkerConfig, embeddingProviderConfig, conversationProviderConfig) = GetConfig(workflow);
             var document = await ProcessPdfAsync(file, workflow);
 
@@ -81,13 +74,12 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
             await _embeddingProcessingService.AddChunksAsync(chunksToSaveBag.ToList());
 
             workflow.DocumentsCount++;
-            await _workflowRepository.UpdateByApiKey(workflow, apiKey);
+            await _workflowRepository.UpdateByApiKey(workflow, workflow.ApiKey);
             return processedChunks;
         }
 
-        public async IAsyncEnumerable<EmbeddingProgressDTO> ExecuteStreaming(IFormFile file, string apiKey, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<EmbeddingProgressDTO> ExecuteStreaming(IFormFile file, Workflow workflow, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var workflow = await GetWorkflowAsync(apiKey);
             var (collectionId, chunkerConfig, embeddingProviderConfig, conversationProviderConfig) = GetConfig(workflow);
             var document = await ProcessPdfAsync(file, workflow);
 
@@ -137,7 +129,7 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
             }
 
             workflow.DocumentsCount++;
-            await _workflowRepository.UpdateByApiKey(workflow, apiKey);
+            await _workflowRepository.UpdateByApiKey(workflow, workflow.ApiKey);
         }
     }
 }

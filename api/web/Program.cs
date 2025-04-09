@@ -18,9 +18,9 @@ using RAGNET.Infrastructure.Repositories;
 using RAGNET.Infrastructure.Factories;
 using RAGNET.Infrastructure.Adapters.VectorDB;
 using RAGNET.Infrastructure.Services;
-using UglyToad.PdfPig.Fonts.Encodings;
 using RAGNET.Application.UseCases.QueryEnhancerUseCases;
 using RAGNET.Application.UseCases.Query;
+using RAGNET.Application.Filters;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -84,6 +84,9 @@ builder.Services.ConfigureAll<BearerTokenOptions>(option =>
 });
 
 builder.Services.AddAuthorization();
+
+// Filters
+builder.Services.AddScoped<ApiWorkflowFilter>();
 
 // Repositories
 builder.Services.AddScoped<IWorkflowRepository, WorkflowRepository>();

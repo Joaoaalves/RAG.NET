@@ -35,19 +35,6 @@ namespace web.Configurations
                 });
 
                 option.OperationFilter<FileUploadOperation>();
-
-                // API KEY
-                option.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
-                {
-                    Description = "Add you API Key on field. E.g: 123456abcdef",
-                    Type = SecuritySchemeType.ApiKey,
-                    Name = "x-api-key",
-                    In = ParameterLocation.Header,
-                    Scheme = "ApiKeyScheme"
-                });
-
-                // Register the OperationFilter that adds the API key only for endpoints with [ApiKeyCheck]
-                option.OperationFilter<ApiKeyOperationFilter>();
             });
 
         }

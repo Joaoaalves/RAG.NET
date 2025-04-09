@@ -1,13 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using RAGNET.Application.DTOs.Workflow;
+
 using RAGNET.Domain.Entities;
+using RAGNET.Domain.Exceptions;
+
+using RAGNET.Application.DTOs.Workflow;
 using RAGNET.Application.UseCases.WorkflowUseCases;
 using RAGNET.Application.UseCases.EmbeddingUseCases;
-using RAGNET.Application.Attributes;
-using RAGNET.Domain.Exceptions;
-using RAGNET.Domain.Factories;
+using RAGNET.Application.Filters;
 
 namespace web.Controllers
 {
@@ -107,20 +108,21 @@ namespace web.Controllers
 
         [HttpPost("embedding")]
         [Consumes("multipart/form-data")]
-        [ApiKeyCheck]
+        [ServiceFilter(typeof(ApiWorkflowFilter))]
         public async Task ProcessEmbedding(IFormFile file, [FromQuery] bool stream = false)
         {
-            var apiKey = Request.Headers["x-api-key"].ToString();
-
             try
             {
+                var workflow = HttpContext.Items["Workflow"] as Workflow
+                    ?? throw new Exception("Workflow not found in context.");
+
                 if (stream)
                 {
                     // Set the response type for SSE
                     Response.ContentType = "text/event-stream";
 
                     // Get the progress stream from the use case.
-                    await foreach (var progress in _processEmbeddingUseCase.ExecuteStreaming(file, apiKey))
+                    await foreach (var progress in _processEmbeddingUseCase.ExecuteStreaming(file, workflow))
                     {
                         // Write the current progress as JSON
                         var json = System.Text.Json.JsonSerializer.Serialize(progress);
@@ -131,7 +133,7 @@ namespace web.Controllers
                 else
                 {
                     // Use the traditional synchronous method
-                    int processedChunks = await _processEmbeddingUseCase.Execute(file, apiKey);
+                    int processedChunks = await _processEmbeddingUseCase.Execute(file, workflow);
                     await Response.WriteAsJsonAsync(new
                     {
                         Message = "Embedding done successfully.",

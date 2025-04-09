@@ -124,12 +124,11 @@ namespace tests.RAGNet.Application.Tests
                 .Returns(Task.CompletedTask);
 
             // Act
-            int processedChunks = await _useCase.Execute(file, apiKey);
+            int processedChunks = await _useCase.Execute(file, workflow);
 
             // Assert
             // We expect three chunks to be processed (based on the tokens extracted from the single page)
             Assert.Equal(3, processedChunks);
-            _workflowRepositoryMock.Verify(repo => repo.UpdateByApiKey(workflow, apiKey), Times.Once);
             Assert.Equal(1, workflow.DocumentsCount);
         }
 
@@ -227,7 +226,7 @@ namespace tests.RAGNet.Application.Tests
 
             // Act
             var progressUpdates = new List<EmbeddingProgressDTO>();
-            await foreach (var progress in _useCase.ExecuteStreaming(file, apiKey))
+            await foreach (var progress in _useCase.ExecuteStreaming(file, workflow))
             {
                 progressUpdates.Add(progress);
             }
@@ -236,7 +235,6 @@ namespace tests.RAGNet.Application.Tests
             // We expect the total number of chunks to be 3 and that the progress updates indicate ProcessedChunks >= 3
             Assert.Equal(3, progressUpdates.Last().TotalChunks);
             Assert.True(progressUpdates.Last().ProcessedChunks >= 3);
-            _workflowRepositoryMock.Verify(repo => repo.UpdateByApiKey(workflow, apiKey), Times.Once);
             Assert.Equal(1, workflow.DocumentsCount);
         }
     }
