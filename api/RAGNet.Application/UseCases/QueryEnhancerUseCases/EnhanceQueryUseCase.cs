@@ -30,13 +30,21 @@ namespace RAGNET.Application.UseCases.QueryEnhancerUseCases
 
                 var tasks = workflow.QueryEnhancers.Select(async qeConfig =>
                 {
-                    var queryEnhancer = _queryEnhancerFactory.CreateQueryEnhancer(qeConfig, completionService);
-                    return await queryEnhancer.GenerateQueries(queryDTO.Query);
+                    if (qeConfig.IsEnabled)
+                    {
+                        var queryEnhancer = _queryEnhancerFactory.CreateQueryEnhancer(qeConfig, completionService);
+                        return await queryEnhancer.GenerateQueries(queryDTO.Query);
+                    }
+
+                    return null;
+
                 }).ToList();
 
                 var results = await Task.WhenAll(tasks);
-
-                var queries = results.SelectMany(result => result).ToList();
+                var queries = results
+                    .Where(result => result != null)
+                    .SelectMany(result => result ?? [])
+                    .ToList();
                 return queries;
             }
             catch (Exception exc)

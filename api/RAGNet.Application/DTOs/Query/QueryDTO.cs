@@ -4,5 +4,6 @@ namespace RAGNET.Application.DTOs.Query
     {
         public string Query { get; set; } = String.Empty;
         public int TopK { get; set; } = 5;
+        public double MinNormalizedScore { get; set; } = 0.6;
     }
 }

@@ -1,3 +1,4 @@
+using RAGNET.Application.DTOs.Query;
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Exceptions;
 using RAGNET.Domain.Factories;
@@ -7,7 +8,7 @@ namespace RAGNET.Application.UseCases.Query
 {
     public interface IQueryChunksUseCase
     {
-        Task<List<Chunk>> Execute(Workflow workflow, List<string> queries, int topK);
+        Task<List<Chunk>> Execute(Workflow workflow, List<string> queries, QueryDTO queryDTO);
     }
 
     public class QueryChunksUseCase(
@@ -21,7 +22,7 @@ namespace RAGNET.Application.UseCases.Query
         private readonly IQueryResultAggregatorService _queryResultAggregatorService = queryResultAggregatorService;
         private readonly IEmbedderFactory _embedderFactory = embedderFactory;
         private readonly IChunkRetrieverService _chunkRetrieverService = chunkRetrieverService;
-        public async Task<List<Chunk>> Execute(Workflow workflow, List<string> queries, int topK)
+        public async Task<List<Chunk>> Execute(Workflow workflow, List<string> queries, QueryDTO queryDTO)
         {
             try
             {
@@ -37,11 +38,12 @@ namespace RAGNET.Application.UseCases.Query
                 (
                     embeddings,
                     workflow.CollectionId.ToString(),
-                    topK
+                    queryDTO.TopK
                 );
 
                 // Aggregate and rank topK results
-                List<VectorQueryResult> aggregatedResults = _queryResultAggregatorService.AggregateResults(queryResults, topK);
+                List<VectorQueryResult> aggregatedResults = _queryResultAggregatorService.AggregateResults(queryResults,
+                    queryDTO.TopK);
 
                 // Return chunks data with query scores.
                 return await _chunkRetrieverService.RetrieveChunks(aggregatedResults);

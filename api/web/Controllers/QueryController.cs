@@ -33,7 +33,7 @@ namespace web.Controllers
                 // TODO: This must be set by the user
                 queries.Add(queryDTO.Query);
 
-                var chunksResult = await _queryChunksUseCase.Execute(workflow, queries, queryDTO.TopK);
+                var chunksResult = await _queryChunksUseCase.Execute(workflow, queries, queryDTO);
 
                 // TODO:
                 // Filter results before ranking.
