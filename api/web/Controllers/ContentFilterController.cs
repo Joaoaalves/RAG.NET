@@ -13,6 +13,7 @@ namespace web.Controllers
     public class ContentFilterController(
         ICreateContentFilterUseCase createContentFilterUseCase,
         IUpdateContentFilterUseCase updateContentFilterUseCase,
+        IDeleteContentFilterUseCase deleteContentFilterUseCase,
         UserManager<User> userManager
     ) : ControllerBase
     {
@@ -20,6 +21,7 @@ namespace web.Controllers
 
         readonly ICreateContentFilterUseCase _createContentFilterUseCase = createContentFilterUseCase;
         readonly IUpdateContentFilterUseCase _updateContentFilterUseCase = updateContentFilterUseCase;
+        readonly IDeleteContentFilterUseCase _deleteContentFilterUseCase = deleteContentFilterUseCase;
 
         [HttpPost("{workflowId}/content-filter/rse")]
         [ServiceFilter(typeof(WebWorkflowFilter))]
@@ -67,6 +69,31 @@ namespace web.Controllers
                 var rseDto = await _updateContentFilterUseCase.Execute(workflow.Filter.Id, filter, user.Id);
 
                 return Ok(new { Message = "Relevant Segment Extraction updated!", Filter = rseDto });
+            }
+            catch (Exception exc)
+            {
+                return Problem(exc.Message);
+            }
+        }
+
+        [HttpDelete("{workflowId}/content-filter/rse")]
+        [ServiceFilter(typeof(WebWorkflowFilter))]
+        public async Task<IActionResult> DeleteRSE(Guid workflowId)
+        {
+            try
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                    return Unauthorized();
+
+                var workflow = HttpContext.Items["Workflow"] as Workflow ?? throw new Exception("Workflow not found in context");
+
+                if (workflow.Filter == null)
+                    return BadRequest("Relevant Segment Extraction not enabled!");
+
+                var rseDto = await _deleteContentFilterUseCase.Execute(workflow.Filter.Id, user.Id);
+
+                return Ok(new { Message = "Relevant Segment Extraction deleted!", Filter = rseDto });
             }
             catch (Exception exc)
             {

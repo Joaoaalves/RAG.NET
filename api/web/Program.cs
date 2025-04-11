@@ -130,6 +130,7 @@ builder.Services.AddScoped<IProcessQueryUseCase, ProcessQueryUseCase>();
 builder.Services.AddScoped<IFilterContentUseCase, FilterContentUseCase>();
 builder.Services.AddScoped<ICreateContentFilterUseCase, CreateContentFilterUseCase>();
 builder.Services.AddScoped<IUpdateContentFilterUseCase, UpdateContentFilterUseCase>();
+builder.Services.AddScoped<IDeleteContentFilterUseCase, DeleteContentFilterUseCase>();
 
 // Factories
 builder.Services.AddScoped<ITextChunkerFactory, TextChunkerFactory>();
