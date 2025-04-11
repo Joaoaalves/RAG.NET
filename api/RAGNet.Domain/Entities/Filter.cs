@@ -15,6 +15,8 @@ namespace RAGNET.Domain.Entities
         public Workflow Workflow { get; set; } = null!;
         [ForeignKey("User")]
         public string UserId { get; set; } = String.Empty;
+        public int MaxItems { get; set; } = 5;
+        public bool IsEnabled { get; set; } = false;
         public ICollection<FilterMeta> Metas { get; set; } = [];
     }
 

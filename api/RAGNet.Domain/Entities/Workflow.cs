@@ -23,9 +23,9 @@ namespace RAGNET.Domain.Entities
         public Chunker? Chunker { get; set; }
         public ICollection<Document> Documents { get; set; } = [];
         public ICollection<QueryEnhancer> QueryEnhancers { get; set; } = [];
-        public ICollection<Filter> Filters { get; set; } = [];
         public ICollection<Ranker> Rankers { get; set; } = [];
         public ConversationProviderConfig? ConversationProviderConfig { get; set; }
         public EmbeddingProviderConfig? EmbeddingProviderConfig { get; set; }
+        public Filter? Filter { get; set; }
     }
 }

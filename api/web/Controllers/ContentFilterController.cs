@@ -1,0 +1,48 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using RAGNET.Application.DTOs.ContentFilter;
+using RAGNET.Application.Filters;
+using RAGNET.Application.Mappers;
+using RAGNET.Application.UseCases.ContentFilterUseCases;
+using RAGNET.Domain.Entities;
+
+namespace web.Controllers
+{
+    [Route("api/workflows")]
+    [ApiController]
+    public class ContentFilterController(
+        ICreateContentFilterUseCase createContentFilterUseCase,
+        UserManager<User> userManager
+    ) : ControllerBase
+    {
+        readonly UserManager<User> _userManager = userManager;
+
+        readonly ICreateContentFilterUseCase _createContentFilterUseCase = createContentFilterUseCase;
+
+        [HttpPost("{workflowId}/content-filter/rse")]
+        [ServiceFilter(typeof(WebWorkflowFilter))]
+        public async Task<IActionResult> EnableRSE([FromBody] RSECreationDTO dto, Guid workflowId)
+        {
+            try
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                    return Unauthorized();
+
+                var workflow = HttpContext.Items["Workflow"] as Workflow ?? throw new Exception("Workflow not found in context");
+                if (workflow.Filter != null && workflow.Filter.IsEnabled)
+                {
+                    return BadRequest("Relevant Segment Extraction already enabled!");
+                }
+                var filter = dto.ToFilter(workflow.Id, user.Id);
+                var rse = await _createContentFilterUseCase.Execute(filter, workflow.Id, user.Id);
+
+                return Ok(new { Message = "Relevant Segment Extraction enabled!", Filter = rse.ToDTO() });
+            }
+            catch (Exception exc)
+            {
+                return Problem(exc.Message);
+            }
+        }
+    }
+}

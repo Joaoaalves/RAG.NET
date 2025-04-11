@@ -26,7 +26,8 @@ namespace RAGNET.Application.Mappers
 
         public static WorkflowDetailsDTO ToWorkflowDetailsDTOFromWorkflow(
             this Workflow workflow,
-            ChunkerStrategy strategy, ChunkerSettingsDTO settings,
+            ChunkerStrategy strategy,
+            ChunkerSettingsDTO settings,
             EmbeddingProviderConfigDTO embedding,
             ConversationProviderConfigDTO conversationProvider,
             List<QueryEnhancerDTO>? queryEnhancers)
@@ -43,6 +44,7 @@ namespace RAGNET.Application.Mappers
                 Settings = settings,
                 EmbeddingProvider = embedding,
                 ConversationProvider = conversationProvider,
+                Filter = workflow.Filter?.ToDTO(),
                 QueryEnhancers = queryEnhancers ?? []
             };
         }

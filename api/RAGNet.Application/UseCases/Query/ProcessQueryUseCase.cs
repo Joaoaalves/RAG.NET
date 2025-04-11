@@ -1,23 +1,21 @@
-using RAGNET.Application.DTOs.Chunk;
 using RAGNET.Application.DTOs.Query;
-using RAGNET.Application.Mappers;
-using RAGNET.Application.UseCases.Query;
 using RAGNET.Application.UseCases.QueryEnhancerUseCases;
 using RAGNET.Domain.Entities;
 
-namespace RAGNET.Application.UseCases
+namespace RAGNET.Application.UseCases.Query
 {
     public interface IProcessQueryUseCase
     {
-        Task<List<ContentItem>> Execute(Workflow workflow, QueryDTO queryDTO);
+        Task<(List<ContentItem>, List<string>)> Execute(Workflow workflow, QueryDTO queryDTO);
     }
 
     public class ProcessQueryUseCase(
         IEnhanceQueryUseCase enhanceQueryUseCase,
-        IQueryChunksUseCase queryChunksUseCase
+        IQueryChunksUseCase queryChunksUseCase,
+        IFilterContentUseCase filterContentUseCase
     ) : IProcessQueryUseCase
     {
-        public async Task<List<ContentItem>> Execute(Workflow workflow, QueryDTO queryDTO)
+        public async Task<(List<ContentItem>, List<string>)> Execute(Workflow workflow, QueryDTO queryDTO)
         {
             var queries = await enhanceQueryUseCase.Execute(workflow, queryDTO);
 
@@ -27,11 +25,11 @@ namespace RAGNET.Application.UseCases
                 queries.Add(queryDTO.Query);
             }
 
+            var contentRetrieved = await queryChunksUseCase.Execute(workflow, queries, queryDTO);
 
-            // TODO:
-            // Filter results before ranking.
+            var filteredText = await filterContentUseCase.Execute(contentRetrieved, workflow, queryDTO.Query);
 
-            return await queryChunksUseCase.Execute(workflow, queries, queryDTO);
+            return (contentRetrieved, filteredText);
         }
     }
 }

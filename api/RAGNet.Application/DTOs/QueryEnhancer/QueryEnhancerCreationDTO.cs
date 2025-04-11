@@ -1,5 +1,3 @@
-using RAGNET.Domain.Enums;
-
 namespace RAGNET.Application.DTOs.QueryEnhancer
 {
     public class AutoQueryCreationDTO

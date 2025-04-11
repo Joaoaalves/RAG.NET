@@ -23,6 +23,7 @@ using RAGNET.Application.UseCases.Query;
 using RAGNET.Application.Filters;
 using RAGNET.Domain.Services.Query;
 using RAGNET.Application.UseCases;
+using RAGNET.Application.UseCases.ContentFilterUseCases;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -89,6 +90,7 @@ builder.Services.AddAuthorization();
 
 // Filters
 builder.Services.AddScoped<ApiWorkflowFilter>();
+builder.Services.AddScoped<WebWorkflowFilter>();
 
 // Repositories
 builder.Services.AddScoped<IWorkflowRepository, WorkflowRepository>();
@@ -125,12 +127,15 @@ builder.Services.AddScoped<IDeleteQueryEnhancerUseCase, DeleteQueryEnhancerUseCa
 builder.Services.AddScoped<IEnhanceQueryUseCase, EnhanceQueryUseCase>();
 builder.Services.AddScoped<IQueryChunksUseCase, QueryChunksUseCase>();
 builder.Services.AddScoped<IProcessQueryUseCase, ProcessQueryUseCase>();
+builder.Services.AddScoped<IFilterContentUseCase, FilterContentUseCase>();
+builder.Services.AddScoped<ICreateContentFilterUseCase, CreateContentFilterUseCase>();
 
 // Factories
 builder.Services.AddScoped<ITextChunkerFactory, TextChunkerFactory>();
 builder.Services.AddScoped<IChatCompletionFactory, ChatCompletionFactory>();
 builder.Services.AddScoped<IEmbedderFactory, EmbedderFactory>();
 builder.Services.AddScoped<IQueryEnhancerFactory, QueryEnhancerFactory>();
+builder.Services.AddScoped<IContentFilterFactory, ContentFilterFactory>();
 
 // Adapters
 builder.Services.AddScoped<IVectorDatabaseService, QDrantAdapter>();

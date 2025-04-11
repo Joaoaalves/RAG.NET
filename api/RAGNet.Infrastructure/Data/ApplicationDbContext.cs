@@ -39,12 +39,6 @@ namespace RAGNET.Infrastructure.Data
                         .HasForeignKey(q => q.WorkflowId)
                         .OnDelete(DeleteBehavior.Cascade);
 
-            // Relationship: Workflow -> Filters
-            builder.Entity<Workflow>()
-                        .HasMany(w => w.Filters)
-                        .WithOne(f => f.Workflow)
-                        .HasForeignKey(f => f.WorkflowId)
-                        .OnDelete(DeleteBehavior.Cascade);
 
             // Relationship: Workflow -> Rankers
             builder.Entity<Workflow>()
@@ -86,6 +80,13 @@ namespace RAGNET.Infrastructure.Data
                         .HasOne(qm => qm.QueryEnhancer)
                         .WithMany(q => q.Metas)
                         .HasForeignKey(qm => qm.QueryEnhancerId)
+                        .OnDelete(DeleteBehavior.Cascade);
+
+            // Relationship: Workflow -> Filter
+            builder.Entity<Workflow>()
+                        .HasOne(w => w.Filter)
+                        .WithOne(f => f.Workflow)
+                        .HasForeignKey<Filter>(f => f.WorkflowId)
                         .OnDelete(DeleteBehavior.Cascade);
 
             // Relationship: Filter -> FilterMetas

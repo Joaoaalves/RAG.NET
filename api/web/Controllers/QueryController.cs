@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RAGNET.Application.DTOs.Query;
 using RAGNET.Application.Filters;
-using RAGNET.Application.UseCases;
+using RAGNET.Application.UseCases.Query;
 using RAGNET.Domain.Entities;
 
 namespace web.Controllers
@@ -22,9 +22,9 @@ namespace web.Controllers
                 var workflow = HttpContext.Items["Workflow"] as Workflow
                     ?? throw new Exception("Workflow not found in context.");
 
-                var result = await _processsQueryUseCase.Execute(workflow, queryDTO);
+                var (chunks, filteredContent) = await _processsQueryUseCase.Execute(workflow, queryDTO);
 
-                return Ok(new { Chunks = result });
+                return Ok(new { Chunks = chunks, FilteredContent = filteredContent });
             }
             catch (Exception exc)
             {
