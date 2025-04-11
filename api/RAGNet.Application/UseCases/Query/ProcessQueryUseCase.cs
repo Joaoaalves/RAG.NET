@@ -9,7 +9,7 @@ namespace RAGNET.Application.UseCases
 {
     public interface IProcessQueryUseCase
     {
-        Task<List<ChunkDTO>> Execute(Workflow workflow, QueryDTO queryDTO);
+        Task<List<ContentItem>> Execute(Workflow workflow, QueryDTO queryDTO);
     }
 
     public class ProcessQueryUseCase(
@@ -17,7 +17,7 @@ namespace RAGNET.Application.UseCases
         IQueryChunksUseCase queryChunksUseCase
     ) : IProcessQueryUseCase
     {
-        public async Task<List<ChunkDTO>> Execute(Workflow workflow, QueryDTO queryDTO)
+        public async Task<List<ContentItem>> Execute(Workflow workflow, QueryDTO queryDTO)
         {
             var queries = await enhanceQueryUseCase.Execute(workflow, queryDTO);
 
@@ -31,10 +31,7 @@ namespace RAGNET.Application.UseCases
             // TODO:
             // Filter results before ranking.
 
-            var chunks = await queryChunksUseCase.Execute(workflow, queries, queryDTO);
-
-            return chunks.Select(c => c.ToDTO()).ToList();
-
+            return await queryChunksUseCase.Execute(workflow, queries, queryDTO);
         }
     }
 }

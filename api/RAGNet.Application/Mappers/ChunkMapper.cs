@@ -14,5 +14,6 @@ namespace RAGNET.Application.Mappers
                 Score = chunk.Score
             };
         }
+
     }
 }

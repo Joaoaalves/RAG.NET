@@ -9,7 +9,7 @@ namespace RAGNET.Application.UseCases.Query
 {
     public interface IQueryChunksUseCase
     {
-        Task<List<Chunk>> Execute(Workflow workflow, List<string> queries, QueryDTO queryDTO);
+        Task<List<ContentItem>> Execute(Workflow workflow, List<string> queries, QueryDTO queryDTO);
     }
 
     public class QueryChunksUseCase(
@@ -25,7 +25,7 @@ namespace RAGNET.Application.UseCases.Query
         private readonly IEmbedderFactory _embedderFactory = embedderFactory;
         private readonly IScoreNormalizerService _scoreNormalizerService = scoreNormalizerService;
         private readonly IChunkRetrieverService _chunkRetrieverService = chunkRetrieverService;
-        public async Task<List<Chunk>> Execute(Workflow workflow, List<string> queries, QueryDTO queryDTO)
+        public async Task<List<ContentItem>> Execute(Workflow workflow, List<string> queries, QueryDTO queryDTO)
         {
             try
             {
@@ -58,7 +58,8 @@ namespace RAGNET.Application.UseCases.Query
                 );
 
                 // Return chunks data with query scores.
-                return await _chunkRetrieverService.RetrieveChunks(aggregatedResults);
+                // If Parent-Child technique is enabled, retrieve the entire parent content.
+                return await _chunkRetrieverService.RetrieveContent(aggregatedResults, queryDTO.ParentChild);
             }
             catch (Exception exc)
             {
