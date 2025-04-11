@@ -22,6 +22,7 @@ using RAGNET.Application.UseCases.QueryEnhancerUseCases;
 using RAGNET.Application.UseCases.Query;
 using RAGNET.Application.Filters;
 using RAGNET.Domain.Services.Query;
+using RAGNET.Application.UseCases;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -123,6 +124,7 @@ builder.Services.AddScoped<IUpdateQueryEnhancerUseCase, UpdateQueryEnhancerUseCa
 builder.Services.AddScoped<IDeleteQueryEnhancerUseCase, DeleteQueryEnhancerUseCase>();
 builder.Services.AddScoped<IEnhanceQueryUseCase, EnhanceQueryUseCase>();
 builder.Services.AddScoped<IQueryChunksUseCase, QueryChunksUseCase>();
+builder.Services.AddScoped<IProcessQueryUseCase, ProcessQueryUseCase>();
 
 // Factories
 builder.Services.AddScoped<ITextChunkerFactory, TextChunkerFactory>();

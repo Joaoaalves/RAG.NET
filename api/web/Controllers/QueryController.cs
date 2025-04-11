@@ -1,10 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using RAGNET.Application.DTOs.Chunk;
 using RAGNET.Application.DTOs.Query;
 using RAGNET.Application.Filters;
-using RAGNET.Application.Mappers;
-using RAGNET.Application.UseCases.Query;
-using RAGNET.Application.UseCases.QueryEnhancerUseCases;
+using RAGNET.Application.UseCases;
 using RAGNET.Domain.Entities;
 
 namespace web.Controllers
@@ -12,11 +9,9 @@ namespace web.Controllers
     [Route("/api/")]
     [ApiController]
     public class QueryController(
-        IEnhanceQueryUseCase enhanceQueryUseCase,
-        IQueryChunksUseCase queryChunksUseCase) : ControllerBase
+        IProcessQueryUseCase processQueryUseCase) : ControllerBase
     {
-        private readonly IEnhanceQueryUseCase _enhanceQueryUseCase = enhanceQueryUseCase;
-        private readonly IQueryChunksUseCase _queryChunksUseCase = queryChunksUseCase;
+        private readonly IProcessQueryUseCase _processsQueryUseCase = processQueryUseCase;
 
         [HttpPost("query")]
         [ServiceFilter(typeof(ApiWorkflowFilter))]
@@ -27,25 +22,9 @@ namespace web.Controllers
                 var workflow = HttpContext.Items["Workflow"] as Workflow
                     ?? throw new Exception("Workflow not found in context.");
 
-                var queries = await _enhanceQueryUseCase.Execute(workflow, queryDTO);
+                var result = await _processsQueryUseCase.Execute(workflow, queryDTO);
 
-                // Now the user query is always sent to retrieval
-                // TODO: This must be set by the user
-                if (queries.Count == 0)
-                    queries.Add(queryDTO.Query);
-
-                var chunksResult = await _queryChunksUseCase.Execute(workflow, queries, queryDTO);
-
-                // TODO:
-                // Filter results before ranking.
-
-                List<ChunkDTO> chunks = [];
-
-                foreach (var c in chunksResult)
-                {
-                    chunks.Add(c.ToDTO());
-                }
-                return Ok(new { chunks });
+                return Ok(new { Chunks = result });
             }
             catch (Exception exc)
             {
