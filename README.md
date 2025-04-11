@@ -48,12 +48,9 @@ docker-compose up --build
 
 - Front-End
 - Context Enrichers
-  - ParentChild
   - SERP
 - Query Enhancers
-  - Auto Query
   - Self Querying Retrieval
-  - Hypothetical Document Embedding
 - Filters
   - Relevant Segment Extraction
   - Multiple Score Filter
@@ -76,6 +73,11 @@ docker-compose up --build
   - Paragraph Chunker (Default)
   - Semantical Chunker
   - Proposition Chunker
+- Context Enrichers
+  - ParentChild
+- Query Enhancers
+  - Hypothetical Document Embedding
+  - Auto Query
 - Conversation
   - Conversation Service Factory
 - Workflows
