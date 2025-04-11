@@ -19,6 +19,7 @@ namespace RAGNET.Application.UseCases.ContentFilterUseCases
             {
                 var qe = await _repo.GetByIdAsync(filterId, userId) ?? throw new Exception("Filter not found.");
 
+                qe.MaxItems = data.MaxItems;
                 qe.Metas = data.Metas;
                 qe.IsEnabled = data.IsEnabled;
 

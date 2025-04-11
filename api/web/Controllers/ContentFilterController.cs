@@ -39,6 +39,7 @@ namespace web.Controllers
                     return BadRequest("Relevant Segment Extraction already enabled!");
                 }
                 var filter = dto.ToFilter(workflow.Id, user.Id);
+                filter.IsEnabled = true;
                 var rse = await _createContentFilterUseCase.Execute(filter, workflow.Id, user.Id);
 
                 return Ok(new { Message = "Relevant Segment Extraction enabled!", Filter = rse.ToDTO() });
@@ -65,6 +66,11 @@ namespace web.Controllers
                     return BadRequest("Relevant Segment Extraction not enabled!");
 
                 var filter = dto.ToFilter(workflow.Id, user.Id);
+
+                if (dto.IsEnabled == null)
+                {
+                    filter.IsEnabled = workflow.Filter.IsEnabled;
+                }
 
                 var rseDto = await _updateContentFilterUseCase.Execute(workflow.Filter.Id, filter, user.Id);
 
