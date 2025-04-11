@@ -5,13 +5,13 @@ namespace RAGNET.Application.Services
 {
     public class QueryResultAggregatorService : IQueryResultAggregatorService
     {
-        public List<VectorQueryResult> AggregateResults(List<VectorQueryResult> results, int topK = 5)
+        public List<VectorQueryResult> AggregateResults(List<VectorQueryResult> results, double? minScore, int topK = 5)
         {
             var aggregatedResults = AggregateVectorResults(results);
 
             var topResults = GetTopResults(aggregatedResults, topK);
 
-            return FillOrderedResults(topResults, topK);
+            return FillOrderedResults(topResults, minScore, topK);
         }
 
         // Aggregates results by summing scores for entries with the same VectorId.
@@ -49,14 +49,15 @@ namespace RAGNET.Application.Services
         }
 
         // Returns a list with a maximum of topK elements.
-        private static List<VectorQueryResult> FillOrderedResults(List<VectorQueryResult> topResults, int topK)
+        private static List<VectorQueryResult> FillOrderedResults(List<VectorQueryResult> topResults, double? minScore, int topK)
         {
             var orderedResults = new List<VectorQueryResult>();
             for (int i = 0; i < topK; i++)
             {
                 if (i < topResults.Count)
                 {
-                    orderedResults.Add(topResults[i]);
+                    if (minScore == null || topResults[i].Score >= minScore)
+                        orderedResults.Add(topResults[i]);
                 }
             }
 

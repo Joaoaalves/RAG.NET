@@ -46,6 +46,7 @@ namespace RAGNET.Application.UseCases.Query
 
                 // Aggregate and rank topK results
                 List<VectorQueryResult> aggregatedResults = _queryResultAggregatorService.AggregateResults(queryResults,
+                    queryDTO.MinScore,
                     queryDTO.TopK);
 
                 // Normalize scores
