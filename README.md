@@ -57,6 +57,12 @@ docker-compose up --build
 - Rankers
   - Cohere Reranker
 - Retrieval Pipeline
+- Filter
+- Tokenizer
+  - Tokenizer Service
+  - Max tokens on Query retrieval
+  - Max tokens on Query Enhancing
+  - Max tokens on Embedding
 - Adapters
   - Pinecone
   - Gemini (Chat Completion, Embedding)
@@ -80,6 +86,9 @@ docker-compose up --build
   - Auto Query
 - Conversation
   - Conversation Service Factory
+- Retrieval Pipeline
+  - Query Enhancer
+  - Parent Child
 - Workflows
   - Create Workflow
   - List Workflows
