@@ -2,7 +2,6 @@ using RAGNET.Application.DTOs.Query;
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Exceptions;
 using RAGNET.Domain.Factories;
-using RAGNET.Domain.Repositories;
 
 namespace RAGNET.Application.UseCases.QueryEnhancerUseCases
 {

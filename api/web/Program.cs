@@ -21,6 +21,7 @@ using RAGNET.Infrastructure.Services;
 using RAGNET.Application.UseCases.QueryEnhancerUseCases;
 using RAGNET.Application.UseCases.Query;
 using RAGNET.Application.Filters;
+using RAGNET.Domain.Services.Query;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -109,6 +110,7 @@ builder.Services.AddScoped<IPromptService, PromptService>();
 builder.Services.AddScoped<IQueryResultAggregatorService, QueryResultAggregatorService>();
 builder.Services.AddScoped<IEmbeddingProcessingService, EmbeddingProcessingService>();
 builder.Services.AddScoped<IChunkRetrieverService, ChunkRetrieverService>();
+builder.Services.AddScoped<IScoreNormalizerService, ScoreNormalizerService>();
 
 // Use Cases
 builder.Services.AddScoped<IGetUserWorkflowsUseCase, GetUserWorkflowsUseCase>();

@@ -1,18 +1,17 @@
 using RAGNET.Domain.Services;
+using RAGNET.Domain.Services.Query;
 
 namespace RAGNET.Application.Services
 {
     public class QueryResultAggregatorService : IQueryResultAggregatorService
     {
-        public List<VectorQueryResult> AggregateResults(List<VectorQueryResult> results, int topK = 5, double minNormalizedScore = 0.6)
+        public List<VectorQueryResult> AggregateResults(List<VectorQueryResult> results, int topK = 5)
         {
             var aggregatedResults = AggregateVectorResults(results);
 
             var topResults = GetTopResults(aggregatedResults, topK);
 
-            NormalizeScores(topResults);
-
-            return FillOrderedResults(topResults, topK, minNormalizedScore);
+            return FillOrderedResults(topResults, topK);
         }
 
         // Aggregates results by summing scores for entries with the same VectorId.
@@ -49,25 +48,13 @@ namespace RAGNET.Application.Services
                                     .ToList();
         }
 
-        // Normalizes the scores of the given results, using the highest score as the divisor.
-        private static void NormalizeScores(List<VectorQueryResult> results)
-        {
-            if (results.Count == 0) return;
-
-            double maxScore = results.First().Score;
-            foreach (var r in results)
-            {
-                r.Score /= maxScore;
-            }
-        }
-
         // Returns a list with a maximum of topK elements.
-        private static List<VectorQueryResult> FillOrderedResults(List<VectorQueryResult> topResults, int topK, double minNormalizedScore)
+        private static List<VectorQueryResult> FillOrderedResults(List<VectorQueryResult> topResults, int topK)
         {
             var orderedResults = new List<VectorQueryResult>();
             for (int i = 0; i < topK; i++)
             {
-                if (i < topResults.Count && topResults[i].Score >= minNormalizedScore)
+                if (i < topResults.Count)
                 {
                     orderedResults.Add(topResults[i]);
                 }

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using RAGNET.Domain.Services;
+using RAGNET.Domain.Services.Query;
 
 namespace RAGNET.Infrastructure.Adapters.QueryEnhancer
 {

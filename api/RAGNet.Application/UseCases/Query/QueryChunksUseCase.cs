@@ -3,6 +3,7 @@ using RAGNET.Domain.Entities;
 using RAGNET.Domain.Exceptions;
 using RAGNET.Domain.Factories;
 using RAGNET.Domain.Services;
+using RAGNET.Domain.Services.Query;
 
 namespace RAGNET.Application.UseCases.Query
 {
@@ -15,12 +16,14 @@ namespace RAGNET.Application.UseCases.Query
         IVectorDatabaseService vectorDatabaseService,
         IQueryResultAggregatorService queryResultAggregatorService,
         IEmbedderFactory embedderFactory,
+        IScoreNormalizerService scoreNormalizerService,
         IChunkRetrieverService chunkRetrieverService
     ) : IQueryChunksUseCase
     {
         private readonly IVectorDatabaseService _vectorDatabaseService = vectorDatabaseService;
         private readonly IQueryResultAggregatorService _queryResultAggregatorService = queryResultAggregatorService;
         private readonly IEmbedderFactory _embedderFactory = embedderFactory;
+        private readonly IScoreNormalizerService _scoreNormalizerService = scoreNormalizerService;
         private readonly IChunkRetrieverService _chunkRetrieverService = chunkRetrieverService;
         public async Task<List<Chunk>> Execute(Workflow workflow, List<string> queries, QueryDTO queryDTO)
         {
@@ -44,6 +47,14 @@ namespace RAGNET.Application.UseCases.Query
                 // Aggregate and rank topK results
                 List<VectorQueryResult> aggregatedResults = _queryResultAggregatorService.AggregateResults(queryResults,
                     queryDTO.TopK);
+
+                // Normalize scores
+                aggregatedResults = _scoreNormalizerService.MaybeNormalizeScores
+                (
+                    aggregatedResults,
+                    queryDTO.NormalizeScore,
+                    queryDTO.MinNormalizedScore
+                );
 
                 // Return chunks data with query scores.
                 return await _chunkRetrieverService.RetrieveChunks(aggregatedResults);

@@ -2,6 +2,7 @@ using RAGNET.Domain.Entities;
 using RAGNET.Domain.Enums;
 using RAGNET.Domain.Factories;
 using RAGNET.Domain.Services;
+using RAGNET.Domain.Services.Query;
 using RAGNET.Infrastructure.Adapters.QueryEnhancer;
 
 namespace RAGNET.Infrastructure.Factories
