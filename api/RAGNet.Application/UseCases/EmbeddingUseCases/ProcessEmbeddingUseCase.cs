@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Channels;
 using Microsoft.AspNetCore.Http;
 using RAGNET.Application.DTOs;
-using RAGNET.Domain.Factories;
+using RAGNET.Domain.Entities;
 using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services;
 
@@ -11,163 +11,125 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
 {
     public interface IProcessEmbeddingUseCase
     {
-        Task<int> Execute(IFormFile file, string apiKey);
-        IAsyncEnumerable<EmbeddingProgressDTO> ExecuteStreaming(
-            IFormFile file,
-            string apiKey,
-            CancellationToken cancellationToken = default);
+        Task<int> Execute(IFormFile file, Workflow workflow);
+        IAsyncEnumerable<EmbeddingProgressDTO> ExecuteStreaming(IFormFile file, Workflow workflow, CancellationToken cancellationToken = default);
     }
 
     public class ProcessEmbeddingUseCase(
         IWorkflowRepository workflowRepository,
-        IPdfTextExtractorService pdfTextExtractor,
-        ITextChunkerFactory chunkerFactory,
-        IEmbedderFactory embedderFactory,
-        IVectorDatabaseService vectorDatabaseService,
-        IChatCompletionFactory chatCompletionFactory
-        ) : IProcessEmbeddingUseCase
+        IPDFProcessingService pdfProcessingService,
+        IEmbeddingProcessingService embeddingProcessingService) : IProcessEmbeddingUseCase
     {
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
-        private readonly IPdfTextExtractorService _pdfTextExtractor = pdfTextExtractor;
-        private readonly ITextChunkerFactory _chunkerFactory = chunkerFactory;
-        private readonly IEmbedderFactory _embedderFactory = embedderFactory;
-        private readonly IVectorDatabaseService _vectorDatabaseService = vectorDatabaseService;
-        private readonly IChatCompletionFactory _chatCompletionFactory = chatCompletionFactory;
+        private readonly IPDFProcessingService _pdfProcessingService = pdfProcessingService;
+        private readonly IEmbeddingProcessingService _embeddingProcessingService = embeddingProcessingService;
 
-        public async Task<int> Execute(IFormFile file, string apiKey)
+        private (string collectionId, Chunker chunkerConfig, EmbeddingProviderConfig embeddingProviderConfig, ConversationProviderConfig conversationProviderConfig) GetConfig(Workflow workflow)
         {
+            return (
+                workflow.CollectionId.ToString(),
+                workflow.Chunker ?? throw new Exception("Chunker not found."),
+                workflow.EmbeddingProviderConfig ?? throw new Exception("Embedding Provider not set."),
+                workflow.ConversationProviderConfig ?? throw new Exception("Conversation provider config not set.")
+            );
+        }
 
-            var workflow = await _workflowRepository.GetWithRelationsByApiKey(apiKey)
-                           ?? throw new Exception("Workflow not found.");
+        private async Task<Document> ProcessPdfAsync(IFormFile file, Workflow workflow)
+        {
+            var pdfExtractResult = await _pdfProcessingService.ExtractTextAsync(file);
+            return await _pdfProcessingService.CreateDocumentWithPagesAsync(
+                file.FileName.Replace(".pdf", ""),
+                workflow.Id,
+                pdfExtractResult.Pages
+            );
+        }
 
-            var chunkerConfig = workflow.Chunker
-                                ?? throw new Exception("Chunker not found.");
+        public async Task<int> Execute(IFormFile file, Workflow workflow)
+        {
+            var (collectionId, chunkerConfig, embeddingProviderConfig, conversationProviderConfig) = GetConfig(workflow);
+            var document = await ProcessPdfAsync(file, workflow);
 
-            var embeddingProviderConfig = workflow.EmbeddingProviderConfig
-                                ?? throw new Exception("Embedding Provider not set");
+            var chunksToSaveBag = new ConcurrentBag<Chunk>();
 
-            var conversationProviderConfig = workflow.ConversationProviderConfig
-                                ?? throw new Exception("Conversation provider config not set");
-
-            // Creates the completion service for this workflow
-            var completionService = _chatCompletionFactory.CreateCompletionService(conversationProviderConfig);
-
-            // Creates the chunking Strategy for this workflow
-            var chunker = _chunkerFactory.CreateChunker(chunkerConfig, completionService);
-
-            // Creates the Embedder for this workflow
-            var embedder = _embedderFactory.CreateEmbeddingService(embeddingProviderConfig.ApiKey, embeddingProviderConfig.Model, embeddingProviderConfig.Provider);
-
-            // Get text from PDF
-            var text = await _pdfTextExtractor.ExtractTextAsync(file);
-
-            // Chunk
-            var chunks = await chunker.ChunkText(text);
-
-            var processedChunks = 0;
-            var collectionId = workflow.CollectionId.ToString();
-
-            // Embedd
-            await Parallel.ForEachAsync(chunks, async (chunk, _) =>
+            var tasks = document.Pages.Select(async page =>
             {
-                var embedding = await embedder.GetEmbeddingAsync(chunk);
+                var chunks = (await _embeddingProcessingService.ChunkTextAsync(page.Text, chunkerConfig, conversationProviderConfig)).ToList();
+                var embeddingResults = await _embeddingProcessingService.GetEmbeddingsAsync(chunks, embeddingProviderConfig);
 
-                var documentId = $"{workflow.Id}-{Interlocked.Increment(ref processedChunks)}";
-                var metadata = new Dictionary<string, string>
+                var batchToInsert = new List<(string, float[], Dictionary<string, string>)>();
+
+                foreach (var (chunk, vectorId, embedding) in embeddingResults)
                 {
-                    { "chunkPreview", chunk.Length > 100 ? chunk[..100] : chunk }
-                };
+                    batchToInsert.Add((vectorId, embedding, []));
+                    chunksToSaveBag.Add(new Chunk { Text = chunk, VectorId = vectorId, PageId = page.Id });
+                }
 
-                await _vectorDatabaseService.InsertAsync(documentId, embedding, collectionId, metadata);
+                await _embeddingProcessingService.InsertEmbeddingBatchAsync(batchToInsert, collectionId);
+                return chunks.Count;
             });
 
-            workflow.Documents++;
+            var results = await Task.WhenAll(tasks);
+            var processedChunks = results.Sum();
 
-            await _workflowRepository.UpdateByApiKey(workflow, apiKey);
+            await _embeddingProcessingService.AddChunksAsync(chunksToSaveBag.ToList());
 
+            workflow.DocumentsCount++;
+            await _workflowRepository.UpdateByApiKey(workflow, workflow.ApiKey);
             return processedChunks;
         }
 
-        public async IAsyncEnumerable<EmbeddingProgressDTO> ExecuteStreaming(
-            IFormFile file,
-            string apiKey,
-            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<EmbeddingProgressDTO> ExecuteStreaming(IFormFile file, Workflow workflow, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var workflow = await _workflowRepository.GetWithRelationsByApiKey(apiKey)
-                           ?? throw new Exception("Workflow not found.");
+            var (collectionId, chunkerConfig, embeddingProviderConfig, conversationProviderConfig) = GetConfig(workflow);
+            var document = await ProcessPdfAsync(file, workflow);
 
-            var chunkerConfig = workflow.Chunker
-                                ?? throw new Exception("Chunker not found.");
-
-            var embeddingProviderConfig = workflow.EmbeddingProviderConfig
-                                ?? throw new Exception("Embedding Provider not set");
-
-            var conversationProviderConfig = workflow.ConversationProviderConfig
-                                ?? throw new Exception("Conversation provider config not set");
-
-            var completionService = _chatCompletionFactory.CreateCompletionService(conversationProviderConfig);
-
-            var chunker = _chunkerFactory.CreateChunker(chunkerConfig, completionService);
-            var embedder = _embedderFactory.CreateEmbeddingService(embeddingProviderConfig.ApiKey, embeddingProviderConfig.Model, embeddingProviderConfig.Provider);
-
-            var text = await _pdfTextExtractor.ExtractTextAsync(file);
-
-            var chunks = await chunker.ChunkText(text);
-            int totalChunks = chunks.Count();
-
-            int processedChunks = 0;
-            var collectionId = workflow.CollectionId.ToString();
-
-            // Create a channel to stream progress updates.
-            var channel = Channel.CreateUnbounded<EmbeddingProgressDTO>();
-
-            // Start parallel processing of chunks.
-            var processingTask = Task.Run(async () =>
+            var pageChunksMapping = new ConcurrentBag<(Page page, List<string> chunks)>();
+            await Task.WhenAll(document.Pages.Select(async page =>
             {
-                await Parallel.ForEachAsync(chunks, cancellationToken, async (chunk, token) =>
+                var chunks = (await _embeddingProcessingService.ChunkTextAsync(page.Text, chunkerConfig, conversationProviderConfig)).ToList();
+                pageChunksMapping.Add((page, chunks));
+            }));
+
+            int totalChunks = pageChunksMapping.Sum(x => x.chunks.Count);
+            int processedChunks = 0;
+            var chunksToSaveBag = new ConcurrentBag<Chunk>();
+
+            var channel = Channel.CreateUnbounded<EmbeddingProgressDTO>();
+            _ = Task.Run(async () =>
+            {
+                var parallelTasks = pageChunksMapping.Select(async mapping =>
                 {
-                    // Get the embedding for this chunk.
-                    var embedding = await embedder.GetEmbeddingAsync(chunk);
+                    var embeddingResults = await _embeddingProcessingService.GetEmbeddingsAsync(mapping.chunks, embeddingProviderConfig);
+                    var batchToInsert = new List<(string, float[], Dictionary<string, string>)>();
 
-                    // Create a document id and metadata.
-                    var documentId = Guid.NewGuid().ToString();
-                    var metadata = new Dictionary<string, string>
+                    foreach (var (chunk, vectorId, embedding) in embeddingResults)
                     {
-                { "chunkPreview", chunk.Length > 100 ? chunk[..100] : chunk }
-                    };
+                        batchToInsert.Add((vectorId, embedding, []));
+                        chunksToSaveBag.Add(new Chunk { Text = chunk, VectorId = vectorId, PageId = mapping.page.Id });
 
-                    // Insert the embedded chunk into the vector database.
-                    await _vectorDatabaseService.InsertAsync(documentId, embedding, collectionId, metadata);
+                        int currentCount = Interlocked.Increment(ref processedChunks);
+                        await channel.Writer.WriteAsync(new EmbeddingProgressDTO
+                        {
+                            ProcessedChunks = currentCount,
+                            TotalChunks = totalChunks
+                        }, cancellationToken);
+                    }
 
-                    // Increment processed chunk count in a thread-safe manner.
-                    int currentCount = Interlocked.Increment(ref processedChunks);
-
-                    var progressUpdate = new EmbeddingProgressDTO
-                    {
-                        ProcessedChunks = currentCount,
-                        TotalChunks = totalChunks
-                    };
-
-                    // Report progress by writing to the channel.
-                    await channel.Writer.WriteAsync(progressUpdate, cancellationToken);
+                    await _embeddingProcessingService.InsertEmbeddingBatchAsync(batchToInsert, collectionId);
                 });
 
-                // Complete the channel when processing is done.
+                await Task.WhenAll(parallelTasks);
+                await _embeddingProcessingService.AddChunksAsync(chunksToSaveBag.ToList());
                 channel.Writer.Complete();
             }, cancellationToken);
 
-            // Yield progress updates as they become available.
             await foreach (var progress in channel.Reader.ReadAllAsync(cancellationToken))
             {
                 yield return progress;
             }
 
-            // Ensure all processing is complete.
-            await processingTask;
-
-            workflow.Documents++;
-
-            await _workflowRepository.UpdateByApiKey(workflow, apiKey);
+            workflow.DocumentsCount++;
+            await _workflowRepository.UpdateByApiKey(workflow, workflow.ApiKey);
         }
     }
 }

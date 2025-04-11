@@ -54,19 +54,6 @@ namespace RAGNet.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Chunks",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Text = table.Column<string>(type: "text", nullable: false),
-                    DocumentId = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Chunks", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -179,7 +166,7 @@ namespace RAGNet.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    Documents = table.Column<int>(type: "integer", nullable: false),
+                    DocumentsCount = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: false),
                     ApiKey = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -239,6 +226,25 @@ namespace RAGNet.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Documents",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    WorkflowId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Documents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Documents_Workflows_WorkflowId",
+                        column: x => x.WorkflowId,
+                        principalTable: "Workflows",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EmbeddingProviderConfigs",
                 columns: table => new
                 {
@@ -287,6 +293,7 @@ namespace RAGNet.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Type = table.Column<int>(type: "integer", nullable: false),
                     WorkflowId = table.Column<Guid>(type: "uuid", nullable: false),
+                    IsEnabled = table.Column<bool>(type: "boolean", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: false),
                     Prompt = table.Column<string>(type: "text", nullable: false),
                     MaxQueries = table.Column<int>(type: "integer", nullable: false)
@@ -338,6 +345,25 @@ namespace RAGNet.Infrastructure.Migrations
                         name: "FK_ChunkerMetas_Chunkers_ChunkerId",
                         column: x => x.ChunkerId,
                         principalTable: "Chunkers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Pages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Text = table.Column<string>(type: "text", nullable: false),
+                    DocumentId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pages_Documents_DocumentId",
+                        column: x => x.DocumentId,
+                        principalTable: "Documents",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -402,6 +428,26 @@ namespace RAGNet.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Chunks",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Text = table.Column<string>(type: "text", nullable: false),
+                    VectorId = table.Column<string>(type: "text", nullable: false),
+                    PageId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Chunks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Chunks_Pages_PageId",
+                        column: x => x.PageId,
+                        principalTable: "Pages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -451,10 +497,20 @@ namespace RAGNet.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Chunks_PageId",
+                table: "Chunks",
+                column: "PageId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ConversationProviderConfigs_WorkflowId",
                 table: "ConversationProviderConfigs",
                 column: "WorkflowId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Documents_WorkflowId",
+                table: "Documents",
+                column: "WorkflowId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EmbeddingProviderConfigs_WorkflowId",
@@ -471,6 +527,11 @@ namespace RAGNet.Infrastructure.Migrations
                 name: "IX_Filters_WorkflowId",
                 table: "Filters",
                 column: "WorkflowId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pages_DocumentId",
+                table: "Pages",
+                column: "DocumentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_QueryEnhancerMetas_QueryEnhancerId",
@@ -544,6 +605,9 @@ namespace RAGNet.Infrastructure.Migrations
                 name: "Chunkers");
 
             migrationBuilder.DropTable(
+                name: "Pages");
+
+            migrationBuilder.DropTable(
                 name: "Filters");
 
             migrationBuilder.DropTable(
@@ -551,6 +615,9 @@ namespace RAGNet.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Rankers");
+
+            migrationBuilder.DropTable(
+                name: "Documents");
 
             migrationBuilder.DropTable(
                 name: "Workflows");

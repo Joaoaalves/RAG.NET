@@ -11,7 +11,7 @@ namespace RAGNET.Domain.Entities
 
         public string Name { get; set; } = String.Empty;
         public string Description { get; set; } = String.Empty;
-        public int Documents { get; set; } = 0;
+        public int DocumentsCount { get; set; } = 0;
         [ForeignKey("User")]
         public string UserId { get; set; } = String.Empty;
         public string ApiKey { get; set; } = String.Empty;
@@ -21,6 +21,7 @@ namespace RAGNET.Domain.Entities
 
         // Related configurations
         public Chunker? Chunker { get; set; }
+        public ICollection<Document> Documents { get; set; } = [];
         public ICollection<QueryEnhancer> QueryEnhancers { get; set; } = [];
         public ICollection<Filter> Filters { get; set; } = [];
         public ICollection<Ranker> Rankers { get; set; } = [];

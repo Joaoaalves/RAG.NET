@@ -8,7 +8,7 @@ namespace RAGNET.Infrastructure.Adapters.Chunking
 
         public Task<IEnumerable<string>> ChunkText(string text)
         {
-            var paragraphs = text.Split(['\n'], StringSplitOptions.RemoveEmptyEntries);
+            var paragraphs = text.Split(["./n"], StringSplitOptions.RemoveEmptyEntries);
             var chunks = new List<string>();
 
             foreach (var paragraph in paragraphs)
@@ -22,7 +22,6 @@ namespace RAGNET.Infrastructure.Adapters.Chunking
                     chunks.AddRange(SplitIntoChunks(paragraph, _maxChunkSize));
                 }
             }
-
             return Task.FromResult<IEnumerable<string>>(chunks);
         }
 

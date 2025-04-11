@@ -1,6 +1,4 @@
-using RAGNET.Domain.Entities;
-
-namespace RAGNET.Domain.Services
+namespace RAGNET.Domain.Services.Query
 {
     public interface IQueryEnhancerService
     {

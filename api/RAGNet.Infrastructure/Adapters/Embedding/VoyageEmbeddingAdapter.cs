@@ -46,6 +46,18 @@ namespace RAGNET.Infrastructure.Adapters.Embedding
             return embeddings;
         }
 
+
+        public async Task<List<float[]>> GetMultipleEmbeddingAsync(List<string> texts)
+        {
+            var tasks = texts.Select(async chunk =>
+            {
+                return await GetEmbeddingAsync(chunk);
+            });
+
+            var embeddingsArr = await Task.WhenAll(tasks);
+            return [.. embeddingsArr];
+        }
+
         public static List<EmbeddingModel> GetModels()
         {
             return
@@ -59,5 +71,6 @@ namespace RAGNET.Infrastructure.Adapters.Embedding
                 new() { Label = "Voyage Code 2", Value = "voyage-code-2", Speed = 4, Price = 0.12f, MaxContext = 32000, VectorSize = 1024 }
             ];
         }
+
     }
 }

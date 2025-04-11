@@ -160,15 +160,20 @@ namespace RAGNet.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("DocumentId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("PageId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("VectorId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("PageId");
 
                     b.ToTable("Chunks");
                 });
@@ -249,6 +254,26 @@ namespace RAGNet.Infrastructure.Migrations
                     b.ToTable("ConversationProviderConfigs");
                 });
 
+            modelBuilder.Entity("RAGNET.Domain.Entities.Document", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("WorkflowId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkflowId");
+
+                    b.ToTable("Documents");
+                });
+
             modelBuilder.Entity("RAGNET.Domain.Entities.EmbeddingProviderConfig", b =>
                 {
                     b.Property<Guid>("Id")
@@ -325,6 +350,26 @@ namespace RAGNet.Infrastructure.Migrations
                     b.HasIndex("FilterId");
 
                     b.ToTable("FilterMetas");
+                });
+
+            modelBuilder.Entity("RAGNET.Domain.Entities.Page", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DocumentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocumentId");
+
+                    b.ToTable("Pages");
                 });
 
             modelBuilder.Entity("RAGNET.Domain.Entities.QueryEnhancer", b =>
@@ -523,7 +568,7 @@ namespace RAGNet.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Documents")
+                    b.Property<int>("DocumentsCount")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -595,6 +640,17 @@ namespace RAGNet.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RAGNET.Domain.Entities.Chunk", b =>
+                {
+                    b.HasOne("RAGNET.Domain.Entities.Page", "Page")
+                        .WithMany("Chunks")
+                        .HasForeignKey("PageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Page");
+                });
+
             modelBuilder.Entity("RAGNET.Domain.Entities.Chunker", b =>
                 {
                     b.HasOne("RAGNET.Domain.Entities.Workflow", "Workflow")
@@ -622,6 +678,17 @@ namespace RAGNet.Infrastructure.Migrations
                     b.HasOne("RAGNET.Domain.Entities.Workflow", "Workflow")
                         .WithOne("ConversationProviderConfig")
                         .HasForeignKey("RAGNET.Domain.Entities.ConversationProviderConfig", "WorkflowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Workflow");
+                });
+
+            modelBuilder.Entity("RAGNET.Domain.Entities.Document", b =>
+                {
+                    b.HasOne("RAGNET.Domain.Entities.Workflow", "Workflow")
+                        .WithMany("Documents")
+                        .HasForeignKey("WorkflowId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -659,6 +726,17 @@ namespace RAGNet.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Filter");
+                });
+
+            modelBuilder.Entity("RAGNET.Domain.Entities.Page", b =>
+                {
+                    b.HasOne("RAGNET.Domain.Entities.Document", "Document")
+                        .WithMany("Pages")
+                        .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Document");
                 });
 
             modelBuilder.Entity("RAGNET.Domain.Entities.QueryEnhancer", b =>
@@ -719,9 +797,19 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Navigation("Metas");
                 });
 
+            modelBuilder.Entity("RAGNET.Domain.Entities.Document", b =>
+                {
+                    b.Navigation("Pages");
+                });
+
             modelBuilder.Entity("RAGNET.Domain.Entities.Filter", b =>
                 {
                     b.Navigation("Metas");
+                });
+
+            modelBuilder.Entity("RAGNET.Domain.Entities.Page", b =>
+                {
+                    b.Navigation("Chunks");
                 });
 
             modelBuilder.Entity("RAGNET.Domain.Entities.QueryEnhancer", b =>
@@ -744,6 +832,8 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Navigation("Chunker");
 
                     b.Navigation("ConversationProviderConfig");
+
+                    b.Navigation("Documents");
 
                     b.Navigation("EmbeddingProviderConfig");
 

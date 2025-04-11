@@ -15,7 +15,7 @@ namespace RAGNET.Application.Mappers
             {
                 Name = dto.Name,
                 Description = dto.Description,
-                Documents = 0,
+                DocumentsCount = 0,
                 ApiKey = Guid.NewGuid().ToString("N"),
                 UserId = user.Id,
                 CollectionId = Guid.NewGuid(),
@@ -36,7 +36,8 @@ namespace RAGNET.Application.Mappers
                 Id = workflow.Id,
                 Name = workflow.Name,
                 Description = workflow.Description,
-                Documents = workflow.Documents,
+                DocumentsCount = workflow.DocumentsCount,
+                CollectionId = workflow.CollectionId,
                 Strategy = strategy,
                 ApiKey = workflow.ApiKey,
                 Settings = settings,

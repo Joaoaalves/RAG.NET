@@ -1,5 +1,5 @@
 using RAGNET.Domain.Services;
-
+using System.Linq;
 namespace tests.RAGNet.Application.Tests.Dummies
 {
     public class DummyEmbedder : IEmbeddingService
@@ -9,6 +9,12 @@ namespace tests.RAGNet.Application.Tests.Dummies
         public Task<float[]> GetEmbeddingAsync(string chunk)
         {
             return Task.FromResult(result);
+        }
+
+        public Task<List<float[]>> GetMultipleEmbeddingAsync(List<string> texts)
+        {
+            var embeddings = texts.Select(_ => result).ToList();
+            return Task.FromResult(embeddings);
         }
     }
 }

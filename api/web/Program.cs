@@ -18,8 +18,11 @@ using RAGNET.Infrastructure.Repositories;
 using RAGNET.Infrastructure.Factories;
 using RAGNET.Infrastructure.Adapters.VectorDB;
 using RAGNET.Infrastructure.Services;
-using UglyToad.PdfPig.Fonts.Encodings;
 using RAGNET.Application.UseCases.QueryEnhancerUseCases;
+using RAGNET.Application.UseCases.Query;
+using RAGNET.Application.Filters;
+using RAGNET.Domain.Services.Query;
+using RAGNET.Application.UseCases;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -84,6 +87,9 @@ builder.Services.ConfigureAll<BearerTokenOptions>(option =>
 
 builder.Services.AddAuthorization();
 
+// Filters
+builder.Services.AddScoped<ApiWorkflowFilter>();
+
 // Repositories
 builder.Services.AddScoped<IWorkflowRepository, WorkflowRepository>();
 builder.Services.AddScoped<IChunkerRepository, ChunkerRepository>();
@@ -93,13 +99,19 @@ builder.Services.AddScoped<IRankerRepository, RankerRepository>();
 builder.Services.AddScoped<IChunkRepository, ChunkRepository>();
 builder.Services.AddScoped<IEmbeddingProviderConfigRepository, EmbeddingProviderConfigRepository>();
 builder.Services.AddScoped<IConversationProviderConfigRepository, ConversationProviderConfigRepository>();
+builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
+builder.Services.AddScoped<IPageRepository, PageRepository>();
 
 // Services
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IPdfTextExtractorService, PdfTextExtractorAdapter>();
+builder.Services.AddScoped<IPDFProcessingService, PdfProcessingAdapter>();
 builder.Services.AddScoped<IEmbeddingProviderValidator, EmbeddingProviderValidator>();
 builder.Services.AddScoped<IConversationProviderValidator, ConversationProviderValidator>();
 builder.Services.AddScoped<IPromptService, PromptService>();
+builder.Services.AddScoped<IQueryResultAggregatorService, QueryResultAggregatorService>();
+builder.Services.AddScoped<IEmbeddingProcessingService, EmbeddingProcessingService>();
+builder.Services.AddScoped<IChunkRetrieverService, ChunkRetrieverService>();
+builder.Services.AddScoped<IScoreNormalizerService, ScoreNormalizerService>();
 
 // Use Cases
 builder.Services.AddScoped<IGetUserWorkflowsUseCase, GetUserWorkflowsUseCase>();
@@ -110,6 +122,9 @@ builder.Services.AddScoped<IDeleteWorkflowUseCase, DeleteWorkflowUseCase>();
 builder.Services.AddScoped<ICreateQueryEnhancerUseCase, CreateQueryEnhancerUseCase>();
 builder.Services.AddScoped<IUpdateQueryEnhancerUseCase, UpdateQueryEnhancerUseCase>();
 builder.Services.AddScoped<IDeleteQueryEnhancerUseCase, DeleteQueryEnhancerUseCase>();
+builder.Services.AddScoped<IEnhanceQueryUseCase, EnhanceQueryUseCase>();
+builder.Services.AddScoped<IQueryChunksUseCase, QueryChunksUseCase>();
+builder.Services.AddScoped<IProcessQueryUseCase, ProcessQueryUseCase>();
 
 // Factories
 builder.Services.AddScoped<ITextChunkerFactory, TextChunkerFactory>();
