@@ -31,7 +31,8 @@ namespace web.Controllers
 
                 // Now the user query is always sent to retrieval
                 // TODO: This must be set by the user
-                queries.Add(queryDTO.Query);
+                if (queries.Count == 0)
+                    queries.Add(queryDTO.Query);
 
                 var chunksResult = await _queryChunksUseCase.Execute(workflow, queries, queryDTO);
 
