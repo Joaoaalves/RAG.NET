@@ -124,6 +124,7 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
       this.enabled$.next(!this.enabled$.getValue());
       return;
     }
+
     const newStatus = !this.queryEnhancer.isEnabled;
     this.qeService
       .toggleQueryEnhancer(
@@ -136,9 +137,16 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
         next: (updatedQE: QueryEnhancer) => {
           this.queryEnhancer = updatedQE;
           this.enabled$.next(updatedQE.isEnabled);
+          toast.success(
+            `${this.title} ${
+              updatedQE.isEnabled ? 'enabled' : 'disabled'
+            } successfully.`
+          );
         },
         error: (err: Error) => {
-          console.error('Error toggling enable:', err);
+          toast.error('Error toggling query enhancer', {
+            description: 'An error occurred while toggling the query enhancer.',
+          });
         },
       });
   }
@@ -161,12 +169,15 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
           next: (newQE: QueryEnhancer) => {
             this.queryEnhancer = newQE;
             this.enabled$.next(newQE.isEnabled);
-            toast('Query Enhancer updated successfully', {
+            toast.success('Query Enhancer updated successfully', {
               description: 'The query enhancer has been updated.',
             });
           },
           error: (err: Error) => {
-            console.error('Error updating query enhancer:', err);
+            toast.error('Error updating query enhancer', {
+              description:
+                'An error occurred while updating the query enhancer.',
+            });
           },
         });
     } else {
@@ -181,12 +192,15 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
           next: (createdQE: QueryEnhancer) => {
             this.queryEnhancer = createdQE;
             this.enabled$.next(createdQE.isEnabled);
-            toast('Query Enhancer created successfully', {
+            toast.success('Query Enhancer created successfully', {
               description: 'The query enhancer has been created.',
             });
           },
           error: (err: Error) => {
-            console.error('Error enabling query enhancer:', err);
+            toast.error('Error creating query enhancer', {
+              description:
+                'An error occurred while creating the query enhancer.',
+            });
           },
         });
     }
@@ -196,7 +210,7 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
     this.qeService.deleteQueryEnhancer(this.workflowId, this.type).subscribe({
       next: (success: boolean) => {
         if (success) {
-          toast('Query Enhancer deleted successfully', {
+          toast.success('Query Enhancer deleted successfully', {
             description: 'The query enhancer has been deleted.',
           });
           this.queryEnhancer = undefined;
@@ -204,7 +218,7 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
         }
       },
       error: (err: Error) => {
-        toast('Error deleting query enhancer', {
+        toast.error('Error deleting query enhancer', {
           description: 'An error occurred while deleting the query enhancer.',
         });
       },
@@ -224,12 +238,12 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
 
     if (this.guidanceControl && this.guidanceControl.invalid) {
       if (this.guidanceControl.hasError('required')) {
-        toast('Guidance is required', {
+        toast.error('Guidance is required', {
           description: 'Please provide guidance for the query enhancer.',
         });
         isValid = false;
       } else if (this.guidanceControl.hasError('minlength')) {
-        toast('Guidance is too short', {
+        toast.error('Guidance is too short', {
           description: 'Guidance must be at least 20 characters long.',
         });
         isValid = false;
@@ -238,17 +252,17 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
 
     if (this.maxQueriesControl && this.maxQueriesControl.invalid) {
       if (this.maxQueriesControl.hasError('required')) {
-        toast('Max Queries is required', {
+        toast.error('Max Queries is required', {
           description: 'Please provide a value for max queries.',
         });
         isValid = false;
       } else if (this.maxQueriesControl.hasError('min')) {
-        toast('Max Queries is too low', {
+        toast.error('Max Queries is too low', {
           description: 'Max queries must be at least 1.',
         });
         isValid = false;
       } else if (this.maxQueriesControl.hasError('max')) {
-        toast('Max Queries is too high', {
+        toast.error('Max Queries is too high', {
           description: 'Max queries cannot exceed 10.',
         });
         isValid = false;

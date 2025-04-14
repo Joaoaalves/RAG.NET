@@ -1,6 +1,7 @@
 import { ConversationProvider } from './chat';
 import { ChunkerSettings, ChunkerStrategy } from './chunker';
 import { EmbeddingProvider } from './embedding';
+import { Filter } from './filter';
 import { QueryEnhancer } from './query-enhancer';
 
 export interface Workflow {
@@ -13,6 +14,7 @@ export interface Workflow {
   apiKey: string;
   embeddingProvider: EmbeddingProvider;
   queryEnhancers: QueryEnhancer[];
+  filter?: Filter;
 }
 
 export interface WorkflowsInfoResponse {

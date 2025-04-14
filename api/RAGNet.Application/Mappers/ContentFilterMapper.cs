@@ -12,11 +12,9 @@ namespace RAGNET.Application.Mappers
             {
                 Strategy = FilterStrategy.RELEVANT_SEGMENT_EXTRACTION,
                 WorkflowId = workflowId,
+                IsEnabled = dto.IsEnabled ?? false,
+                MaxItems = dto.MaxItems,
                 UserId = userId,
-                Metas =
-                [
-                    new() {Key = "MaximumItems", Value = dto.MaxItems.ToString()}
-                ]
             };
         }
 

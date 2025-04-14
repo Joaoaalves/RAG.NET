@@ -21,9 +21,21 @@
     [queryEnhancer]="hydeEnhancer"
     type="hyde"
     title="Hypothetical Document Embedding"
-    description="  HyDE (Hypothetical Document Embedding) is a technique designed to enhance retrieval performance when the available retriever struggles with new or specialized domains. It is particularly useful when your retrieval system's performance (e.g., Recall) is not optimal, or when the queries and documents come from a domain that differs from the data the retriever was originally trained on. The method works by first prompting an instruction-following language model in a zero-shot manner to generate multiple “fake” documents based on the input query. These hypothetical documents are then encoded into embedding vectors and averaged to form a single, robust representation. This averaged embedding better captures the relevant textual patterns, allowing for more accurate identification of similar documents from a larger dataset. The retrieved documents can then be used in downstream applications such as generating responses in a RAG (Retrieval-Augmented Generation) pipeline."
+    description=" HyDE (Hypothetical Document Embedding) is a technique designed to enhance retrieval performance when the available retriever struggles with new or specialized domains. It is particularly useful when your retrieval system's performance (e.g., Recall) is not optimal, or when the queries and documents come from a domain that differs from the data the retriever was originally trained on. The method works by first prompting an instruction-following language model in a zero-shot manner to generate multiple “fake” documents based on the input query. These hypothetical documents are then encoded into embedding vectors and averaged to form a single, robust representation. This averaged embedding better captures the relevant textual patterns, allowing for more accurate identification of similar documents from a larger dataset. The retrieved documents can then be used in downstream applications such as generating responses in a RAG (Retrieval-Augmented Generation) pipeline."
     [guidanceEnabled]="false"
     [maxQueriesEnabled]="true">
   </app-query-enhancer-config>
+  </div>
+
+  <div class="border-t-2 border-neutral-600 py-4 space-y-4">
+    <h2 class="text-3xl text-neutral-300">Filters</h2>
+    <app-filter-config
+    title="Relevant Segment Extraction"
+    description="Relevant Segment Extraction is a technique used to identify and extract the most pertinent segments of text from a larger document or dataset. This process is particularly useful in scenarios where the goal is to retrieve specific information or insights from extensive textual data. By focusing on the most relevant segments, the system can enhance the efficiency and accuracy of information retrieval, making it easier to find and utilize the desired content."
+    [recommended]="true"
+    [workflowId]="workflowId"
+    [filter]="filter"
+    strategy="rse">
+  </app-filter-config>
   </div>
 </div>

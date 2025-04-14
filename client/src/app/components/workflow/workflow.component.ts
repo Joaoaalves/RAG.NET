@@ -9,10 +9,12 @@ import { QueryEnhancerConfigComponent } from 'src/app/shared/components/query-en
 
 // Services
 import { WorkflowService } from 'src/app/services/workflow.service';
+import { FilterConfigComponent } from 'src/app/shared/components/filter-config/filter-config.component';
+import { Filter } from 'src/app/models/filter';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, QueryEnhancerConfigComponent],
+  imports: [CommonModule, QueryEnhancerConfigComponent, FilterConfigComponent],
   templateUrl: 'workflow.component.html',
 })
 export class WorkflowComponent implements OnInit {
@@ -20,6 +22,7 @@ export class WorkflowComponent implements OnInit {
   workflow!: Workflow;
   autoQueryEnhancer?: QueryEnhancer;
   hydeEnhancer?: QueryEnhancer;
+  filter?: Filter;
 
   constructor(
     private readonly workflowService: WorkflowService,
@@ -49,6 +52,7 @@ export class WorkflowComponent implements OnInit {
       this.hydeEnhancer = workflow.queryEnhancers.find(
         (qe) => qe.type === 'HYPOTHETICAL_DOCUMENT_EMBEDDING'
       );
+      this.filter = workflow.filter;
     });
   }
 }
