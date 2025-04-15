@@ -4,7 +4,11 @@ import { toast } from 'ngx-sonner';
 import { Router } from '@angular/router';
 // Icons
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroTrash, heroClipboard } from '@ng-icons/heroicons/outline';
+import {
+  heroTrash,
+  heroClipboard,
+  heroCog8Tooth,
+} from '@ng-icons/heroicons/outline';
 
 // Components
 import { AlertComponent } from '../alert/alert.component';
@@ -18,7 +22,7 @@ import { WorkflowService } from 'src/app/services/workflow.service';
 @Component({
   selector: 'app-workflow-card',
   imports: [CommonModule, NgIcon, AlertComponent],
-  providers: [provideIcons({ heroTrash, heroClipboard })],
+  providers: [provideIcons({ heroTrash, heroClipboard, heroCog8Tooth })],
   templateUrl: './workflow-card.component.html',
   host: {
     style: 'display: block',
@@ -36,6 +40,12 @@ export class WorkflowCardComponent {
 
   handleNavigateWorkflow() {
     return this.route.navigate([`/dashboard/workflows/${this.workflow.id}`]);
+  }
+
+  handleNavigateQuery() {
+    return this.route.navigate([
+      `/dashboard/workflows/${this.workflow.id}/query`,
+    ]);
   }
 
   deleteWorkflow() {

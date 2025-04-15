@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // Components
-import { WorkflowCardComponent } from 'src/app/shared/components/workflowCard/workflow-card.component';
+import { WorkflowCardComponent } from 'src/app/shared/components/workflow-card/workflow-card.component';
 import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component';
 
 // Models

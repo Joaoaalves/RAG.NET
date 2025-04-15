@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WorkflowCardComponent } from './components/workflowCard/workflow-card.component';
+import { WorkflowCardComponent } from './components/workflow-card/workflow-card.component';
 
 @NgModule({
   declarations: [WorkflowCardComponent],

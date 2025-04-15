@@ -6,8 +6,14 @@
     <div class="flex items-center justify-center gap-x-2">
       <div
         class="w-7 h-7 hover:bg-white hover:!text-black transition-all duration-300 cursor-pointer rounded-full flex items-center justify-center"
+        (click)="handleNavigateWorkflow()"
+      >
+        <ng-icon name="heroCog8Tooth" class="w-3"></ng-icon>
+      </div>
+      <div
+        class="w-7 h-7 hover:bg-white hover:!text-black transition-all duration-300 cursor-pointer rounded-full flex items-center justify-center"
         (click)="copyToClipboard()"
-        >
+      >
         <ng-icon name="heroClipboard" class="w-3"></ng-icon>
       </div>
       <app-alert
@@ -36,11 +42,8 @@
       >Embedd Document</a
     >
 
-    <div
-      class="rounded bg-neutral-900 text-white px-3 py-1"
-      (click)="handleNavigateWorkflow()"
-    >
-      Settings
+    <div class="rounded bg-neutral-900 text-white px-3 py-1 hover:bg-purple-500 transition-all duration-300">
+      Query Collection
     </div>
   </div>
 </div>
