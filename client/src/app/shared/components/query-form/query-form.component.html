@@ -4,7 +4,7 @@
         label="Query *"
         type="text"
         name="query"
-        [description]="'Enter your query here'"
+        [description]="'This is the main input for your search. Enter your question or a descriptive prompt here. Based on this query, the system will perform a semantic search across the collection to identify the most relevant documents or passages that match your intent.'"
         formControlName="query"
         ></app-text-area>
 
@@ -15,7 +15,7 @@
             class="mr-2 bg-white"
             formControlName="enableTopK" />
           </div>
-          <p class="text-neutral-400">Text about what is Top K</p>
+          <p class="text-neutral-400">Top K defines the maximum number of top-ranked results to be retrieved during the search phase. In a RAG pipeline, setting the value of K helps balance breadth and precision by returning only the top K documents or chunks with the highest semantic similarity.</p>
           <app-input
             *ngIf="queryForm.get('enableTopK')?.value"
             type="number"
@@ -34,7 +34,9 @@
             class="mr-2 bg-white"
             formControlName="parentChild" />
           </div>
-          <p class="text-neutral-400">Text about what is Parent-child technique</p>
+          <p class="text-neutral-400">
+            Enabling score normalization means that raw similarity scores will be adjusted to a standard range (e.g., between 0 and 1). Normalization allows for more consistent comparison between results, making it easier to set reliable thresholds for what is considered relevant.
+          </p>
 
         </div>
 
@@ -45,7 +47,7 @@
             class="mr-2 bg-white"
             formControlName="normalizeScore" />
           </div>
-          <p class="text-neutral-400 mb-6">Text about what is normalization</p>
+          <p class="text-neutral-400">When normalization is disabled, the score threshold allows you to define a minimum raw score that a result must exceed to be considered relevant. This helps filter out low-scoring results and improves the overall quality of the retrieval.</p>
 
           <app-input
             *ngIf="queryForm.get('normalizeScore')?.value"
