@@ -5,11 +5,12 @@ import { Component, OnInit } from '@angular/core';
 import { Workflow } from 'src/app/models/workflow';
 import { QueryService } from 'src/app/services/query.service';
 import { QueryFormComponent } from 'src/app/shared/components/query-form/query-form.component';
+import { QueryResultComponent } from 'src/app/shared/components/query-result/query-result.component';
 
 @Component({
   templateUrl: './query.component.html',
   selector: 'app-query',
-  imports: [CommonModule, QueryFormComponent],
+  imports: [CommonModule, QueryFormComponent, QueryResultComponent],
   standalone: true,
 })
 export class QueryComponent implements OnInit {

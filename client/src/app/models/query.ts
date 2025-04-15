@@ -11,8 +11,8 @@ export interface ContentItem {
   id: string;
   text: string;
   score: number;
-  pageId: string;
-  chunkId: string;
+  pageId?: string;
+  chunkId?: string;
 }
 
 export interface QueryResponse {

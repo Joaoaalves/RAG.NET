@@ -1,14 +1,16 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { QueryRequest, QueryResponse } from '../models/query';
+import { map, Observable } from 'rxjs';
+import { ContentItem, QueryRequest, QueryResponse } from '../models/query';
 import { BaseApiService } from './base-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class QueryService extends BaseApiService {
+  chunks?: ContentItem[];
+  filteredContent?: string[];
+
   constructor(http: HttpClient) {
     super(http);
   }
@@ -18,12 +20,19 @@ export class QueryService extends BaseApiService {
   }
 
   query(data: QueryRequest, apiKey: string): Observable<QueryResponse> {
-    console.log('Querying with API key:', apiKey, this.getQueryEndpoint());
-    return this.http.post<QueryResponse>(this.getQueryEndpoint(), data, {
-      headers: {
-        'x-api-key': apiKey,
-      },
-      responseType: 'json',
-    });
+    return this.http
+      .post<QueryResponse>(this.getQueryEndpoint(), data, {
+        headers: {
+          'x-api-key': apiKey,
+        },
+        responseType: 'json',
+      })
+      .pipe(
+        map((response) => {
+          this.chunks = response.chunks;
+          this.filteredContent = response.filteredContent;
+          return response;
+        })
+      );
   }
 }
