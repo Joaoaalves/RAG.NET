@@ -1,10 +1,10 @@
 export interface QueryRequest {
   query: string;
-  topK: number;
-  parentChild: boolean;
-  normalizeScore: boolean;
-  minNormalizedScore: number;
-  minScore: number;
+  topK?: number;
+  parentChild?: boolean;
+  normalizeScore?: boolean;
+  minNormalizedScore?: number;
+  minScore?: number;
 }
 
 export interface ContentItem {

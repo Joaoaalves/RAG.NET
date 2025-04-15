@@ -13,11 +13,12 @@ export class QueryService extends BaseApiService {
     super(http);
   }
 
-  private getQueryEndpoint() {
+  getQueryEndpoint(): string {
     return this.buildUrl('/api/query');
   }
 
   query(data: QueryRequest, apiKey: string): Observable<QueryResponse> {
+    console.log('Querying with API key:', apiKey, this.getQueryEndpoint());
     return this.http.post<QueryResponse>(this.getQueryEndpoint(), data, {
       headers: {
         'x-api-key': apiKey,

@@ -7,7 +7,10 @@
     retrieval and contextual AI interactions.
   </p>
 
+  <span class="text-neutral-400 mt-2">Documents: <strong class="text-white">{{workflow?.documentsCount}}</strong></span>
 
-  <app-query-form [onQuery]="queryService.query"></app-query-form>
+  <app-query-form
+    *ngIf="workflow"
+  [onQuery]="queryService.query.bind(queryService)" [apiKey]="workflow.apiKey"></app-query-form>
 
 </div>

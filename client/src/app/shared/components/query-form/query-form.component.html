@@ -1,5 +1,5 @@
 <div class="max-w-2xl mt-8 space-y-4">
-  <form (ngSubmit)="onSubmit()">
+  <form (ngSubmit)="onSubmit($event)" class="space-y-8" [formGroup]="queryForm">
       <app-text-area
         label="Query *"
         type="text"
@@ -7,11 +7,86 @@
         [description]="'Enter your query here'"
         formControlName="query"
         ></app-text-area>
-    </form>
 
-    <button
-      class="w-full bg-white text-black py-2 px-4 rounded mt-4 hover:bg-gray-300 transition duration-300"
-    >
-      Search
-    </button>
+        <div class="border-t-2 bg-neutral-900 rounded-2xl p-3">
+          <div class="flex items-center justify-between w-full mb-4">
+            <h2 class="text-neutral-200 text-xl">Top K</h2>
+            <hlm-switch
+            class="mr-2 bg-white"
+            formControlName="enableTopK" />
+          </div>
+          <p class="text-neutral-400">Text about what is Top K</p>
+          <app-input
+            *ngIf="queryForm.get('enableTopK')?.value"
+            type="number"
+            name="topK"
+            formControlName="topK"
+            [min]="1"
+            [max]="10"
+            [step]="1"
+            ></app-input>
+        </div>
+
+        <div class="border-t-2 bg-neutral-900 rounded-2xl p-3">
+          <div class="flex items-center justify-between w-full mb-4">
+            <h2 class="text-neutral-200 text-xl">Parent Child</h2>
+            <hlm-switch
+            class="mr-2 bg-white"
+            formControlName="parentChild" />
+          </div>
+          <p class="text-neutral-400">Text about what is Parent-child technique</p>
+
+        </div>
+
+        <div class="border-t-2 bg-neutral-900 rounded-2xl p-3 space-y-4">
+          <div class="flex items-center justify-between w-full">
+            <h2 class="text-neutral-200 text-xl">Normalize Score</h2>
+            <hlm-switch
+            class="mr-2 bg-white"
+            formControlName="normalizeScore" />
+          </div>
+          <p class="text-neutral-400 mb-6">Text about what is normalization</p>
+
+          <app-input
+            *ngIf="queryForm.get('normalizeScore')?.value"
+            label="Minimun Normalized Score"
+            type="number"
+            name="minNormalizedScore"
+            description="Enter the minimum score after normalization"
+            formControlName="minNormalizedScore"
+            [min]="0"
+            [max]="1"
+            [step]="0.01"
+          ></app-input>
+        </div>
+
+        <div *ngIf="!queryForm.get('normalizeScore')?.value" class="border-t-2 bg-neutral-900 rounded-2xl p-3 space-y-4">
+            <div>
+              <div class="flex items-center justify-between w-full">
+              <h2 class="text-neutral-200 text-xl mb-4">Score Threshold</h2>
+              <hlm-switch
+              class="mr-2 bg-white"
+              formControlName="scoreThreshold" />
+            </div>
+            <p class="text-neutral-400">Text about what is score threshold</p>
+          </div>
+
+          <app-input
+            *ngIf="queryForm.get('scoreThreshold')?.value"
+            type="number"
+            name="minScore"
+            formControlName="minScore"
+            [min]="0"
+            [max]="1"
+            [step]="0.01"
+          ></app-input>
+
+        </div>
+        <button
+        type="submit"
+        class="w-full bg-white text-black py-2 px-4 rounded mt-4 hover:bg-gray-300 transition duration-300"
+      >
+        Search
+      </button>
+      </form>
 </div>
