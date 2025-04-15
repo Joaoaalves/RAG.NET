@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 import { TextAreaComponent } from '../text-area/text-area.component';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { QueryRequest, QueryResponse } from 'src/app/models/query';
 import {
   FormBuilder,
@@ -11,6 +11,10 @@ import {
 } from '@angular/forms';
 import { HlmSwitchComponent } from 'libs/ui/ui-switch-helm/src/lib/hlm-switch.component';
 import { CommonModule } from '@angular/common';
+import { lucideLoaderCircle } from '@ng-icons/lucide';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component';
+import { toast } from 'ngx-sonner';
 
 @Component({
   templateUrl: './query-form.component.html',
@@ -21,11 +25,16 @@ import { CommonModule } from '@angular/common';
     InputComponent,
     HlmSwitchComponent,
     ReactiveFormsModule,
+    HlmToasterComponent,
+    NgIcon,
   ],
+  providers: [provideIcons({ lucideLoaderCircle })],
   standalone: true,
 })
 export class QueryFormComponent implements OnInit {
   queryForm!: FormGroup;
+  private isLoadingSubject = new BehaviorSubject<boolean>(false);
+  isLoading$ = this.isLoadingSubject.asObservable();
 
   @Input() apiKey!: string;
   @Input() onQuery!: (
@@ -38,8 +47,8 @@ export class QueryFormComponent implements OnInit {
   ngOnInit(): void {
     this.queryForm = this.fb.group({
       query: ['', [Validators.required]],
-      enableTopK: [true, [Validators.required]],
-      topK: [5, [Validators.required, Validators.min(1), Validators.max(10)]],
+      enableTopK: [false, [Validators.required]],
+      topK: [5, [Validators.min(1), Validators.max(10)]],
       parentChild: [false, [Validators.required]],
       normalizeScore: [false, [Validators.required]],
       minNormalizedScore: [0.5, [Validators.min(0), Validators.max(1)]],
@@ -50,6 +59,7 @@ export class QueryFormComponent implements OnInit {
 
   onSubmit(event: Event) {
     event.preventDefault();
+    this.isLoadingSubject.next(true);
 
     if (this.queryForm.valid) {
       const data: QueryRequest = {
@@ -69,11 +79,26 @@ export class QueryFormComponent implements OnInit {
         data.minScore = this.queryForm.value.minScore;
       }
 
-      this.onQuery(data, this.apiKey).subscribe((response) => {
-        console.log('Query response:', response);
+      this.onQuery(data, this.apiKey).subscribe({
+        next: (response) => {
+          if (response.chunks.length === 0) {
+            toast.error('No results found for your query.');
+          } else {
+            toast.success('Query executed successfully!');
+          }
+          this.queryForm.value.query = '';
+        },
+        error: (err) => {
+          toast.error('Error on request:', err);
+          this.isLoadingSubject.next(false);
+        },
+        complete: () => {
+          this.isLoadingSubject.next(false);
+        },
       });
     } else {
-      console.error('Invalid form submission:', this.queryForm.errors);
+      toast.error('Please fill in all required fields.');
+      this.isLoadingSubject.next(false);
     }
   }
 }

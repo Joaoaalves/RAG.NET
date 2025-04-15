@@ -20,6 +20,9 @@ export class QueryService extends BaseApiService {
   }
 
   query(data: QueryRequest, apiKey: string): Observable<QueryResponse> {
+    this.chunks = [];
+    this.filteredContent = [];
+
     return this.http
       .post<QueryResponse>(this.getQueryEndpoint(), data, {
         headers: {
