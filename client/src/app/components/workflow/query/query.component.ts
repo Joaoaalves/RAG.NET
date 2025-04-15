@@ -35,4 +35,11 @@ export class QueryComponent implements OnInit {
       }
     });
   }
+
+  get isDataAvailable(): boolean {
+    return !!(
+      this.queryService?.chunks?.length &&
+      this.queryService?.filteredContent?.length
+    );
+  }
 }

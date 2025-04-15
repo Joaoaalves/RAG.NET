@@ -14,8 +14,9 @@
     [onQuery]="queryService.query.bind(queryService)" [apiKey]="workflow.apiKey"></app-query-form>
 
     <app-query-result
-    *ngIf="queryService?.chunks?.length as chunkLength"
-      [chunks]="queryService.chunks"></app-query-result>
+    *ngIf="isDataAvailable"
+      [chunks]="queryService.chunks"
+      [filteredContent]="queryService.filteredContent"></app-query-result>
   </div>
 
 </div>
