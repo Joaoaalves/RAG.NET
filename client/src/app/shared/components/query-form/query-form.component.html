@@ -1,0 +1,17 @@
+<div class="max-w-2xl mt-8 space-y-4">
+  <form (ngSubmit)="onSubmit()">
+      <app-text-area
+        label="Query *"
+        type="text"
+        name="query"
+        [description]="'Enter your query here'"
+        formControlName="query"
+        ></app-text-area>
+    </form>
+
+    <button
+      class="w-full bg-white text-black py-2 px-4 rounded mt-4 hover:bg-gray-300 transition duration-300"
+    >
+      Search
+    </button>
+</div>

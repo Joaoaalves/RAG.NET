@@ -1,0 +1,13 @@
+<div class="flex flex-col p-8 col-start-2 relative">
+  <h1 class="text-4xl text-neutral-200 font-bold">Query on your Collection</h1>
+
+  <p class="text-neutral-300 text-sm text-left max-w-lg mt-4">
+    The embedding process in RAG (Retrieval-Augmented Generation) transforms
+    your document into a searchable vector format, enabling efficient
+    retrieval and contextual AI interactions.
+  </p>
+
+
+  <app-query-form [onQuery]="queryService.query"></app-query-form>
+
+</div>
