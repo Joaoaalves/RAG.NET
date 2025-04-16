@@ -12,6 +12,7 @@ namespace web.Configurations
             services.AddScoped<IEmbedderFactory, EmbedderFactory>();
             services.AddScoped<IQueryEnhancerFactory, QueryEnhancerFactory>();
             services.AddScoped<IContentFilterFactory, ContentFilterFactory>();
+            services.AddScoped<IDocumentProcessorFactory, DocumentProcessorFactory>();
             return services;
         }
     }

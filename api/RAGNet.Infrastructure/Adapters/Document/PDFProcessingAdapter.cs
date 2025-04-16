@@ -6,7 +6,7 @@ using RAGNET.Domain.Repositories;
 
 namespace RAGNET.Infrastructure.Adapters.Document
 {
-    public class PdfProcessingAdapter(IDocumentRepository documentRepository, IPageRepository pageRepository) : IDocumentProcessingService
+    public class PDFProcessingAdapter(IDocumentRepository documentRepository, IPageRepository pageRepository) : IDocumentProcessingService
     {
         private readonly IDocumentRepository _documentRepository = documentRepository;
         private readonly IPageRepository _pageRepository = pageRepository;
