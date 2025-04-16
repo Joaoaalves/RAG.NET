@@ -2,7 +2,6 @@ using RAGNET.Application.Interfaces;
 using RAGNET.Application.Services;
 using RAGNET.Domain.Services;
 using RAGNET.Domain.Services.Query;
-using RAGNET.Infrastructure.Adapters.Document;
 using RAGNET.Infrastructure.Services;
 
 namespace web.Configurations

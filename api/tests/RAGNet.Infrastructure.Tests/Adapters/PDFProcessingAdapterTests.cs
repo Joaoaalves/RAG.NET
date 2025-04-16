@@ -1,4 +1,3 @@
-using System.Text;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using RAGNET.Domain.Entities;
@@ -12,14 +11,14 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
     {
         private readonly Mock<IDocumentRepository> _documentRepositoryMock;
         private readonly Mock<IPageRepository> _pageRepositoryMock;
-        private readonly PdfProcessingAdapter _adapter;
+        private readonly PDFProcessingAdapter _adapter;
 
         public PdfProcessingAdapterTests()
         {
             _documentRepositoryMock = new Mock<IDocumentRepository>();
             _pageRepositoryMock = new Mock<IPageRepository>();
 
-            _adapter = new PdfProcessingAdapter(_documentRepositoryMock.Object, _pageRepositoryMock.Object);
+            _adapter = new PDFProcessingAdapter(_documentRepositoryMock.Object, _pageRepositoryMock.Object);
         }
 
         [Fact]
