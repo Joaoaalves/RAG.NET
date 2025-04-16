@@ -3,6 +3,7 @@ using Moq;
 using RAGNET.Application.DTOs;
 using RAGNET.Application.UseCases.EmbeddingUseCases;
 using RAGNET.Domain.Entities;
+using RAGNET.Domain.Factories;
 using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services;
 
@@ -11,21 +12,27 @@ namespace tests.RAGNet.Application.Tests
     public class ProcessEmbeddingUseCaseTests
     {
         private readonly Mock<IWorkflowRepository> _workflowRepositoryMock;
+        private readonly Mock<IDocumentProcessorFactory> _documentProcessorFactoryMock;
         private readonly Mock<IDocumentProcessingService> _pdfProcessingServiceMock;
         private readonly Mock<IEmbeddingProcessingService> _embeddingProcessingServiceMock;
         private readonly ProcessEmbeddingUseCase _useCase;
-        private static readonly float[] sourceArray = { 0.1f, 0.2f, 0.3f };
-        private static readonly float[] singleArray = new float[] { 0.1f, 0.2f, 0.3f };
+        private static readonly float[] singleArray = [0.1f, 0.2f, 0.3f];
 
         public ProcessEmbeddingUseCaseTests()
         {
             _workflowRepositoryMock = new Mock<IWorkflowRepository>();
+            _documentProcessorFactoryMock = new Mock<IDocumentProcessorFactory>();
             _pdfProcessingServiceMock = new Mock<IDocumentProcessingService>();
             _embeddingProcessingServiceMock = new Mock<IEmbeddingProcessingService>();
 
+            // Configures the factory to return the PDF adapter
+            _documentProcessorFactoryMock
+                .Setup(factory => factory.CreateDocumentProcessor(It.Is<string>(ext => ext.Equals(".pdf", StringComparison.OrdinalIgnoreCase))))
+                .Returns(_pdfProcessingServiceMock.Object);
+
             _useCase = new ProcessEmbeddingUseCase(
                 _workflowRepositoryMock.Object,
-                _pdfProcessingServiceMock.Object,
+                _documentProcessorFactoryMock.Object,
                 _embeddingProcessingServiceMock.Object);
         }
 
@@ -33,20 +40,20 @@ namespace tests.RAGNet.Application.Tests
         public async Task Execute_Returns_Correct_ProcessedChunks()
         {
             // Arrange
-            string apiKey = "dummyApiKey";
+            const string dummyApiKey = "dummyApiKey";
 
-            // Create a dummy PDF extraction result with one page
+            // Creates a dummy DocumentExtractResult with a single page (containing three "chunks")
             var pdfResult = new DocumentExtractResult
             {
                 DocumentTitle = "TestDocument",
                 Pages = ["Chunk 1. Chunk 2. Chunk 3."]
             };
 
-            // Create a dummy IFormFile
+            // Creates a dummy IFormFile representing a PDF file
             var memoryStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(pdfResult.Pages.First()));
             IFormFile file = new FormFile(memoryStream, 0, memoryStream.Length, "dummy", "dummy.pdf");
 
-            // Create a dummy workflow
+            // Creates a dummy Workflow
             var workflow = new Workflow
             {
                 Id = Guid.NewGuid(),
@@ -54,23 +61,25 @@ namespace tests.RAGNet.Application.Tests
                 Chunker = new DummyChunkerConfig(),
                 EmbeddingProviderConfig = new EmbeddingProviderConfig { ApiKey = "embeddingApiKey" },
                 ConversationProviderConfig = new ConversationProviderConfig { ApiKey = "conversationApiKey" },
-                DocumentsCount = 0
+                DocumentsCount = 0,
+                ApiKey = dummyApiKey
             };
 
-            // Set up the workflow repository mock
+            // Configures the workflow repository
             _workflowRepositoryMock
-                .Setup(repo => repo.GetWithRelationsByApiKey(apiKey))
+                .Setup(repo => repo.GetWithRelationsByApiKey(dummyApiKey))
                 .ReturnsAsync(workflow);
 
-            // Set up the PDF extraction service mock
+            // Configures the extract method to return the simulated result
             _pdfProcessingServiceMock
                 .Setup(service => service.ExtractTextAsync(file))
                 .ReturnsAsync(pdfResult);
 
-            // Create dummy pages for the document
+            // Creates dummy Pages to compose the document
             var dummyPages = pdfResult.Pages
                 .Select(text => new Page { Id = Guid.NewGuid(), Text = text })
                 .ToList();
+
             var document = new Document
             {
                 Id = Guid.NewGuid(),
@@ -78,6 +87,7 @@ namespace tests.RAGNet.Application.Tests
                 Pages = dummyPages
             };
 
+            // Configures the creation of the document from the adapter
             _pdfProcessingServiceMock
                 .Setup(service => service.CreateDocumentWithPagesAsync(
                     It.IsAny<string>(),
@@ -85,7 +95,7 @@ namespace tests.RAGNet.Application.Tests
                     pdfResult.Pages))
                 .ReturnsAsync(document);
 
-            // Set up the chunking method to split text using period as a delimiter
+            // Configures the chunking method: splits the page text into three chunks using periods as delimiters
             _embeddingProcessingServiceMock
                 .Setup(service => service.ChunkTextAsync(
                     It.IsAny<string>(),
@@ -98,7 +108,7 @@ namespace tests.RAGNet.Application.Tests
                                .Where(x => !string.IsNullOrEmpty(x));
                 });
 
-            // Set up the method to get embeddings for chunks
+            // Configures the method to obtain embeddings for the chunks
             _embeddingProcessingServiceMock
                 .Setup(service => service.GetEmbeddingsAsync(
                     It.IsAny<List<string>>(),
@@ -108,17 +118,17 @@ namespace tests.RAGNet.Application.Tests
                     return chunks.Select(chunk => (
                         ChunkText: chunk,
                         VectorId: Guid.NewGuid().ToString(),
-                        Embedding: singleArray)).ToList();
+                        Embedding: singleArray
+                    )).ToList();
                 });
 
-            // Set up the method to insert embeddings into the vector database
+            // Configures the methods for inserting embeddings and chunks
             _embeddingProcessingServiceMock
                 .Setup(service => service.InsertEmbeddingBatchAsync(
                     It.IsAny<List<(string VectorId, float[] Embedding, Dictionary<string, string> Metadata)>>(),
                     It.IsAny<string>()))
                 .Returns(Task.CompletedTask);
 
-            // Set up the method to insert chunks into the relational database
             _embeddingProcessingServiceMock
                 .Setup(service => service.AddChunksAsync(It.IsAny<List<Chunk>>()))
                 .Returns(Task.CompletedTask);
@@ -127,7 +137,7 @@ namespace tests.RAGNet.Application.Tests
             int processedChunks = await _useCase.Execute(file, workflow);
 
             // Assert
-            // We expect three chunks to be processed (based on the tokens extracted from the single page)
+            // Expected to process three chunks, based on the page split
             Assert.Equal(3, processedChunks);
             Assert.Equal(1, workflow.DocumentsCount);
         }
@@ -136,21 +146,21 @@ namespace tests.RAGNet.Application.Tests
         public async Task ExecuteStreaming_Returns_All_Progress_Updates()
         {
             // Arrange
-            string apiKey = "dummyApiKey";
+            const string dummyApiKey = "dummyApiKey";
 
-            // Create a dummy page with three chunks
-            List<string> pages = ["Chunk 1. Chunk 2. Chunk 3."];
+            // Creates a dummy page with three chunks
+            List<string> pages = new List<string> { "Chunk 1. Chunk 2. Chunk 3." };
             var pdfResult = new DocumentExtractResult
             {
                 DocumentTitle = "TestDocument",
                 Pages = pages
             };
 
-            // Create a dummy IFormFile
-            var memoryStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(pages[0]));
+            // Creates a dummy IFormFile representing a PDF file
+            var memoryStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(pages.First()));
             IFormFile file = new FormFile(memoryStream, 0, memoryStream.Length, "dummy", "dummy.pdf");
 
-            // Create a dummy workflow
+            // Creates a dummy Workflow
             var workflow = new Workflow
             {
                 Id = Guid.NewGuid(),
@@ -158,19 +168,20 @@ namespace tests.RAGNet.Application.Tests
                 Chunker = new DummyChunkerConfig(),
                 EmbeddingProviderConfig = new EmbeddingProviderConfig { ApiKey = "embeddingApiKey" },
                 ConversationProviderConfig = new ConversationProviderConfig { ApiKey = "conversationApiKey" },
-                DocumentsCount = 0
+                DocumentsCount = 0,
+                ApiKey = dummyApiKey
             };
 
-            // Set up mocks
+            // Configures workflow and extraction mocks
             _workflowRepositoryMock
-                .Setup(repo => repo.GetWithRelationsByApiKey(apiKey))
+                .Setup(repo => repo.GetWithRelationsByApiKey(dummyApiKey))
                 .ReturnsAsync(workflow);
 
             _pdfProcessingServiceMock
                 .Setup(service => service.ExtractTextAsync(file))
                 .ReturnsAsync(pdfResult);
 
-            var dummyPage = new Page { Id = Guid.NewGuid(), Text = pages[0] };
+            var dummyPage = new Page { Id = Guid.NewGuid(), Text = pages.First() };
             var document = new Document
             {
                 Id = Guid.NewGuid(),
@@ -185,7 +196,7 @@ namespace tests.RAGNet.Application.Tests
                     pdfResult.Pages))
                 .ReturnsAsync(document);
 
-            // Set up ChunkTextAsync to split text into three chunks
+            // Configures chunking method to split the text into three chunks
             _embeddingProcessingServiceMock
                 .Setup(service => service.ChunkTextAsync(
                     dummyPage.Text,
@@ -198,7 +209,7 @@ namespace tests.RAGNet.Application.Tests
                                .Where(x => !string.IsNullOrEmpty(x));
                 });
 
-            // Set up the method to get embeddings for chunks
+            // Configures the method to obtain embeddings for the chunks
             _embeddingProcessingServiceMock
                 .Setup(service => service.GetEmbeddingsAsync(
                     It.IsAny<List<string>>(),
@@ -212,14 +223,13 @@ namespace tests.RAGNet.Application.Tests
                     )).ToList();
                 });
 
-            // Set up the method to insert embeddings into the vector database
+            // Configures the methods for inserting embeddings and chunks
             _embeddingProcessingServiceMock
                 .Setup(service => service.InsertEmbeddingBatchAsync(
                     It.IsAny<List<(string VectorId, float[] Embedding, Dictionary<string, string> Metadata)>>(),
                     It.IsAny<string>()))
                 .Returns(Task.CompletedTask);
 
-            // Set up the method to insert chunks into the relational database
             _embeddingProcessingServiceMock
                 .Setup(service => service.AddChunksAsync(It.IsAny<List<Chunk>>()))
                 .Returns(Task.CompletedTask);
@@ -232,7 +242,6 @@ namespace tests.RAGNet.Application.Tests
             }
 
             // Assert
-            // We expect the total number of chunks to be 3 and that the progress updates indicate ProcessedChunks >= 3
             Assert.Equal(3, progressUpdates.Last().TotalChunks);
             Assert.True(progressUpdates.Last().ProcessedChunks >= 3);
             Assert.Equal(1, workflow.DocumentsCount);

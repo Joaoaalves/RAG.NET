@@ -65,7 +65,10 @@ export class EmbeddingUploadComponent implements OnInit {
 
     if (event.dataTransfer?.files.length) {
       const file = event.dataTransfer.files[0];
-      if (file.type === 'application/pdf') {
+      if (
+        file.type === 'application/pdf' ||
+        file.type === 'application/epub+zip'
+      ) {
         this.selectedFile = file;
       } else {
         this.error = 'We only support PDF files.';

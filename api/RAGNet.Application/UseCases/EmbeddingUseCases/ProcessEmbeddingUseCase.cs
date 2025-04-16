@@ -4,6 +4,7 @@ using System.Threading.Channels;
 using Microsoft.AspNetCore.Http;
 using RAGNET.Application.DTOs;
 using RAGNET.Domain.Entities;
+using RAGNET.Domain.Factories;
 using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services;
 
@@ -17,11 +18,11 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
 
     public class ProcessEmbeddingUseCase(
         IWorkflowRepository workflowRepository,
-        IDocumentProcessingService pdfProcessingService,
+        IDocumentProcessorFactory documentProcessorFactory,
         IEmbeddingProcessingService embeddingProcessingService) : IProcessEmbeddingUseCase
     {
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
-        private readonly IDocumentProcessingService _pdfProcessingService = pdfProcessingService;
+        private readonly IDocumentProcessorFactory _documentProcessorFactory = documentProcessorFactory;
         private readonly IEmbeddingProcessingService _embeddingProcessingService = embeddingProcessingService;
 
         private (string collectionId, Chunker chunkerConfig, EmbeddingProviderConfig embeddingProviderConfig, ConversationProviderConfig conversationProviderConfig) GetConfig(Workflow workflow)
@@ -34,20 +35,29 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
             );
         }
 
-        private async Task<Document> ProcessPdfAsync(IFormFile file, Workflow workflow)
+        private async Task<Document> ProcessDocumentAsync(IFormFile file, Workflow workflow)
         {
-            var pdfExtractResult = await _pdfProcessingService.ExtractTextAsync(file);
-            return await _pdfProcessingService.CreateDocumentWithPagesAsync(
-                file.FileName.Replace(".pdf", ""),
+            var documentExtension = GetFileExtension(file.FileName);
+            var documentProcessingAdapter = _documentProcessorFactory.CreateDocumentProcessor(documentExtension);
+
+            var pdfExtractResult = await documentProcessingAdapter.ExtractTextAsync(file);
+
+            return await documentProcessingAdapter.CreateDocumentWithPagesAsync(
+                file.FileName.Replace(documentExtension, ""),
                 workflow.Id,
                 pdfExtractResult.Pages
             );
         }
 
+        private string GetFileExtension(string fileName)
+        {
+            return Path.GetExtension(fileName).ToLowerInvariant();
+        }
+
         public async Task<int> Execute(IFormFile file, Workflow workflow)
         {
             var (collectionId, chunkerConfig, embeddingProviderConfig, conversationProviderConfig) = GetConfig(workflow);
-            var document = await ProcessPdfAsync(file, workflow);
+            var document = await ProcessDocumentAsync(file, workflow);
 
             var chunksToSaveBag = new ConcurrentBag<Chunk>();
 
@@ -81,7 +91,7 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
         public async IAsyncEnumerable<EmbeddingProgressDTO> ExecuteStreaming(IFormFile file, Workflow workflow, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var (collectionId, chunkerConfig, embeddingProviderConfig, conversationProviderConfig) = GetConfig(workflow);
-            var document = await ProcessPdfAsync(file, workflow);
+            var document = await ProcessDocumentAsync(file, workflow);
 
             var pageChunksMapping = new ConcurrentBag<(Page page, List<string> chunks)>();
             await Task.WhenAll(document.Pages.Select(async page =>

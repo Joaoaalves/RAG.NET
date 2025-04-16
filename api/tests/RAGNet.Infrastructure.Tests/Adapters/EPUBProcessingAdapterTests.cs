@@ -67,7 +67,6 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
 
             // Assert
             Assert.NotEmpty(result.Pages);
-            Console.WriteLine($"Total pages extracted: {result.Pages.Count}");
         }
 
         [Fact]

@@ -21,7 +21,7 @@ const mockWorkflow: Workflow = {
   apiKey: 'FAKE_API_KEY',
   name: '',
   description: '',
-  documents: 0,
+  documentsCount: 0,
   strategy: ChunkerStrategy.PROPOSITION,
   settings: {
     threshold: 0,
@@ -34,6 +34,8 @@ const mockWorkflow: Workflow = {
     vectorSize: 0,
     model: '',
   },
+  queryEnhancers: [],
+  filter: undefined,
 };
 
 describe('EmbeddingUploadComponent', () => {

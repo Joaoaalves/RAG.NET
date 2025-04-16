@@ -54,7 +54,6 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
         {
             // Arrange
             string pdfPath = TestFileHelper.GetTestFilePath("sample.pdf");
-            Console.WriteLine(pdfPath);
             Assert.True(File.Exists(pdfPath), "PDF test file not found.");
 
             using FileStream stream = File.OpenRead(pdfPath);
