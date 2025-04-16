@@ -9,6 +9,6 @@ import { ContentItem } from 'src/app/models/query';
   standalone: true,
 })
 export class QueryResultComponent {
-  @Input() chunks?: ContentItem[];
-  @Input() filteredContent?: string[];
+  @Input() chunks: ContentItem[] = [];
+  @Input() filteredContent: string[] = [];
 }

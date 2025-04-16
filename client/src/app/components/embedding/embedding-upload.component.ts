@@ -71,7 +71,7 @@ export class EmbeddingUploadComponent implements OnInit {
       ) {
         this.selectedFile = file;
       } else {
-        this.error = 'We only support PDF files.';
+        this.error = 'We only support PDF and Epub files.';
       }
     }
   }
@@ -84,10 +84,13 @@ export class EmbeddingUploadComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
       const file = input.files[0];
-      if (file.type === 'application/pdf') {
+      if (
+        file.type === 'application/pdf' ||
+        file.type === 'application/epub+zip'
+      ) {
         this.selectedFile = file;
       } else {
-        this.error = 'We only support PDF files.';
+        this.error = 'We only support PDF and Epub files.';
       }
     }
   }

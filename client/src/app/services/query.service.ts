@@ -8,8 +8,8 @@ import { BaseApiService } from './base-api.service';
   providedIn: 'root',
 })
 export class QueryService extends BaseApiService {
-  chunks?: ContentItem[];
-  filteredContent?: string[];
+  chunks: ContentItem[] = [];
+  filteredContent: string[] = [];
 
   constructor(http: HttpClient) {
     super(http);

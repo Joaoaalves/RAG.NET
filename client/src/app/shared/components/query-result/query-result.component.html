@@ -1,46 +1,56 @@
 <div class="flex flex-col items-center justify-center gap-4 w-full max-w-4xl mx-auto">
-  <div *ngIf="filteredContent && filteredContent.length > 0" class="mb-12">
-    <h3 class="self-start text-neutral-300 text-2xl mt-12">Filtered Content</h3>
-    <p class="self-start text-start text-neutral-400 text-sm">This section displays only the chunks that passed through an additional filtering step, defined specifically for this workflow. The filter is designed to refine the results by showing only the most relevant segments according to the configured filtering strategy. In other words, these are the most pertinent pieces of content in response to your query, excluding redundant or low-relevance data.</p>
-    <ng-container *ngFor="let filtered of filteredContent; index as i">
-      <div class="w-full bg-neutral-900 border border-neutral-700 rounded-2xl p-4 shadow-md flex gap-4 mt-8">
-        <div class="text-2xl font-bold text-white flex-shrink-0 w-10 text-center">
-          {{ i + 1 }}
-        </div>
 
-        <div class="flex-1">
-          <p class="text-neutral-100 text-base whitespace-pre-line">
-            {{ filtered }}
-          </p>
-        </div>
-      </div>
-    </ng-container>
-  </div>
-
-  <div *ngIf="chunks && chunks.length > 0" class="mb-12">
-    <h3 class="self-start text-neutral-300 text-2xl">Chunks</h3>
-    <p class="self-start text-start text-neutral-400 text-sm">This section shows all the extracted segments (chunks) from your document collection. Each text block includes a score that indicates how relevant the chunk is to the submitted query. The chunks are ordered by relevance, with the highest scores appearing first. If available, additional metadata such as the Page ID or Chunk ID helps you trace the origin of the content for deeper investigation.</p>
-    <ng-container *ngFor="let chunk of chunks; index as i">
-      <div class="w-full bg-neutral-900 border border-neutral-700 rounded-2xl p-4 shadow-md flex gap-4 mt-8">
-        <!-- Index / Rank -->
-        <div class="text-2xl font-bold text-white flex-shrink-0 w-10 text-center">
-          {{ i + 1 }}
-        </div>
-
-        <!-- Content Body -->
-        <div class="flex-1">
-          <p class="text-neutral-100 text-base whitespace-pre-line">
-            {{ chunk.text }}
-          </p>
-
-          <div class="text-sm text-neutral-400 mt-2 flex flex-wrap items-center gap-4">
-            <span>Score: <span class="text-white font-medium">{{ chunk.score | number:'1.2-2' }}</span></span>
-            <span *ngIf="chunk.pageId">Page: <span class="text-white">{{ chunk.pageId }}</span></span>
-            <span *ngIf="chunk.chunkId">Chunk ID: <span class="text-white">{{ chunk.chunkId }}</span></span>
+  <!-- FILTERED CONTENT -->
+  <ng-container *ngIf="filteredContent.length > 0">
+    <div class="mb-12">
+      <h3 class="self-start text-neutral-300 text-2xl mt-12">Filtered Content</h3>
+      <p class="self-start text-start text-neutral-400 text-sm">
+        This section displays only the chunks that passed through an additional filtering step...
+      </p>
+      <ng-container *ngFor="let filtered of filteredContent; index as i">
+        <div class="w-full bg-neutral-900 border border-neutral-700 rounded-2xl p-4 shadow-md flex gap-4 mt-8">
+          <!-- Index / Rank -->
+          <div class="text-2xl font-bold text-white flex-shrink-0 w-10 text-center">
+            {{ i + 1 }}
+          </div>
+          <!-- Content Body -->
+          <div class="flex-1">
+            <p class="text-neutral-100 text-base whitespace-pre-line">
+              {{ filtered }}
+            </p>
           </div>
         </div>
-      </div>
-    </ng-container>
-  </div>
+      </ng-container>
+    </div>
+  </ng-container>
+
+  <!-- CHUNKS -->
+  <ng-container *ngIf="chunks.length > 0">
+    <div class="mb-12">
+      <h3 class="self-start text-neutral-300 text-2xl">Chunks</h3>
+      <p class="self-start text-start text-neutral-400 text-sm">
+        This section shows all the extracted segments (chunks) from your document collection...
+      </p>
+      <ng-container *ngFor="let chunk of chunks; index as i">
+        <div class="w-full bg-neutral-900 border border-neutral-700 rounded-2xl p-4 shadow-md flex gap-4 mt-8">
+          <!-- Index / Rank -->
+          <div class="text-2xl font-bold text-white flex-shrink-0 w-10 text-center">
+            {{ i + 1 }}
+          </div>
+          <!-- Content Body -->
+          <div class="flex-1">
+            <p class="text-neutral-100 text-base whitespace-pre-line">
+              {{ chunk.text }}
+            </p>
+            <div class="text-sm text-neutral-400 mt-2 flex flex-wrap items-center gap-4">
+              <span>Score: <span class="text-white font-medium">{{ chunk.score | number:'1.2-2' }}</span></span>
+              <span *ngIf="chunk.pageId">Page: <span class="text-white">{{ chunk.pageId }}</span></span>
+              <span *ngIf="chunk.chunkId">Chunk ID: <span class="text-white">{{ chunk.chunkId }}</span></span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
 
 </div>

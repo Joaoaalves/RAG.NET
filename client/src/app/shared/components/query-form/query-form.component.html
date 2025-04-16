@@ -35,7 +35,7 @@
             formControlName="parentChild" />
           </div>
           <p class="text-neutral-400">
-            Enabling score normalization means that raw similarity scores will be adjusted to a standard range (e.g., between 0 and 1). Normalization allows for more consistent comparison between results, making it easier to set reliable thresholds for what is considered relevant.
+            The Parent-Child technique in RAG is useful when you want to retrieve a larger context surrounding a matched chunk. Instead of returning only the chunk that matched the query, this setting ensures the parent document or section is returned as well — for example, an entire chapter in the case of EPUB files. This can improve answer quality in some scenarios by providing more complete context. However, this approach is not ideal for certain data types like CSV collections, where the parent-child relationship does not naturally exist and could lead to less precise or excessive results.
           </p>
 
         </div>
@@ -47,7 +47,9 @@
             class="mr-2 bg-white"
             formControlName="normalizeScore" />
           </div>
-          <p class="text-neutral-400">When normalization is disabled, the score threshold allows you to define a minimum raw score that a result must exceed to be considered relevant. This helps filter out low-scoring results and improves the overall quality of the retrieval.</p>
+          <p class="text-neutral-400">
+            Enabling score normalization means that raw similarity scores will be adjusted to a standard range (e.g., between 0 and 1). Normalization allows for more consistent comparison between results, making it easier to set reliable thresholds for what is considered relevant.
+          </p>
 
           <app-input
             *ngIf="queryForm.get('normalizeScore')?.value"
@@ -70,7 +72,9 @@
               class="mr-2 bg-white"
               formControlName="scoreThreshold" />
             </div>
-            <p class="text-neutral-400">Text about what is score threshold</p>
+            <p class="text-neutral-400">
+              When normalization is disabled, the score threshold allows you to define a minimum raw score that a result must exceed to be considered relevant. This helps filter out low-scoring results and improves the overall quality of the retrieval.
+            </p>
           </div>
 
           <app-input

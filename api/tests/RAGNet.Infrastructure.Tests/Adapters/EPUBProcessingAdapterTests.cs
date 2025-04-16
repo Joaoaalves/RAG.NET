@@ -1,4 +1,3 @@
-using System.Text;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using RAGNET.Domain.Entities;
@@ -54,7 +53,6 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
         public async Task ExtractTextAsync_Shoul_ExtractPagesFromEPUB()
         {
             // Arrange
-
             var epubFilePath = TestFileHelper.GetTestFilePath("sample.epub");
             Assert.True(File.Exists(epubFilePath), "EPUB test file not found.");
             var epubBytes = File.ReadAllBytes(epubFilePath);
@@ -70,28 +68,39 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
         }
 
         [Fact]
-        public void PaginateText_Should_Return_PagesWithExpectedWordCount()
+        public async Task ExtractTextAsync_Should_ReturnPagesFromRealEpubFile()
         {
             // Arrange
-            string texto = "This is a test message that will be divided in pages " +
-                            "Each page should contain a fixed number of words to ensure that the text is paginated correctly. ";
-            int wordsPerPage = 5;
+            var epubFilePath = TestFileHelper.GetTestFilePath("sample.epub");
+            Assert.True(File.Exists(epubFilePath), "EPUB test file not found.");
+            var epubBytes = File.ReadAllBytes(epubFilePath);
 
-            // reflection for private method access
-            var method = typeof(EpubProcessingAdapter).GetMethod("PaginateText", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            Assert.NotNull(method);
+            // Simulate uploaded file (IFormFile)
+            var stream = new MemoryStream(epubBytes);
+            var formFile = new FormFile(stream, 0, epubBytes.Length, "file", "sample.epub")
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "application/epub+zip"
+            };
+
+            var adapter = new EpubProcessingAdapter(
+                Mock.Of<IDocumentRepository>(),
+                Mock.Of<IPageRepository>()
+            );
 
             // Act
-            var result = method.Invoke(_adapter, [texto, wordsPerPage]) as List<string>;
+            var result = await adapter.ExtractTextAsync(formFile);
 
             // Assert
             Assert.NotNull(result);
+            Assert.False(string.IsNullOrWhiteSpace(result.DocumentTitle), "Document title should not be empty.");
+            Assert.NotEmpty(result.Pages); // At least one page should be returned
 
-            // Valida que cada página possui no máximo as palavras definidas (exceto possivelmente a última)
-            foreach (var page in result)
+            foreach (var page in result.Pages)
             {
-                var count = page.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length;
-                Assert.True(count <= wordsPerPage);
+                Assert.False(string.IsNullOrWhiteSpace(page), "Page content should not be empty.");
+                Assert.DoesNotContain("<style", page); // Example: style tags should be removed
+                Assert.DoesNotContain("<meta", page);  // Example: meta tags should be removed
             }
         }
     }

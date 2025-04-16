@@ -1,8 +1,10 @@
+using HtmlAgilityPack;
 using Microsoft.AspNetCore.Http;
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services;
 using VersOne.Epub;
+using System.Text;
 
 namespace RAGNET.Infrastructure.Adapters.Document
 {
@@ -13,21 +15,25 @@ namespace RAGNET.Infrastructure.Adapters.Document
         private readonly IDocumentRepository _documentRepository = documentRepository;
         private readonly IPageRepository _pageRepository = pageRepository;
 
-        private const int WordsPerPage = 400;
-
         public async Task<DocumentExtractResult> ExtractTextAsync(IFormFile file)
         {
             var result = new DocumentExtractResult();
-
             using var stream = file.OpenReadStream();
             EpubBook epubBook = await EpubReader.ReadBookAsync(stream);
 
-            foreach (var item in epubBook.ReadingOrder)
+            result.DocumentTitle = epubBook.Title ?? "Untitled";
+
+            foreach (var contentFile in epubBook.ReadingOrder)
             {
-                if (item != null && !string.IsNullOrWhiteSpace(item.Content))
+                if (contentFile == null || string.IsNullOrWhiteSpace(contentFile.Content))
+                    continue;
+
+                // Extract only the desired HTML elements and ignore unwanted tags
+                var cleanedText = ExtractCleanTextFromHtml(contentFile.Content);
+
+                if (!string.IsNullOrWhiteSpace(cleanedText))
                 {
-                    List<string> pages = PaginateText(item.Content, WordsPerPage);
-                    result.Pages.AddRange(pages);
+                    result.Pages.Add(cleanedText);
                 }
             }
 
@@ -40,7 +46,7 @@ namespace RAGNET.Infrastructure.Adapters.Document
             {
                 Title = title,
                 WorkflowId = workflowId,
-                Pages = []
+                Pages = new List<Page>()
             });
 
             foreach (var pageText in pages)
@@ -48,25 +54,48 @@ namespace RAGNET.Infrastructure.Adapters.Document
                 await _pageRepository.AddAsync(new Page
                 {
                     Text = pageText.Trim(),
-                    DocumentId = document.Id,
+                    DocumentId = document.Id
                 });
             }
 
             return document;
         }
-        private List<string> PaginateText(string text, int wordsPerPage)
-        {
-            var words = text.Split([' ', '\n', '\r'], StringSplitOptions.RemoveEmptyEntries);
-            var pages = new List<string>();
 
-            for (int i = 0; i < words.Length; i += wordsPerPage)
+        private string ExtractCleanTextFromHtml(string html)
+        {
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(html);
+
+            // Remove undesired tags
+            string[] tagsToRemove = ["title", "meta", "link", "style", "img", "script", "nav"];
+            foreach (var tag in tagsToRemove)
             {
-                var pageWords = words.Skip(i).Take(wordsPerPage);
-                pages.Add(string.Join(" ", pageWords));
+                var nodes = htmlDoc.DocumentNode.SelectNodes($"//{tag}");
+                if (nodes != null)
+                {
+                    foreach (var node in nodes)
+                        node.Remove();
+                }
             }
 
-            return pages;
+            var sb = new StringBuilder();
+
+            // Extract <h3> and <p> content
+            var h3Nodes = htmlDoc.DocumentNode.SelectNodes("//h3");
+            if (h3Nodes != null)
+            {
+                foreach (var h3 in h3Nodes)
+                    sb.AppendLine(h3.InnerText.Trim());
+            }
+
+            var pNodes = htmlDoc.DocumentNode.SelectNodes("//p");
+            if (pNodes != null)
+            {
+                foreach (var p in pNodes)
+                    sb.AppendLine(p.InnerText.Trim());
+            }
+
+            return sb.ToString();
         }
     }
 }
-

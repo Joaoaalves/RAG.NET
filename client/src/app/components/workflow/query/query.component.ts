@@ -38,8 +38,8 @@ export class QueryComponent implements OnInit {
 
   get isDataAvailable(): boolean {
     return !!(
-      this.queryService?.chunks?.length &&
-      this.queryService?.filteredContent?.length
+      this.queryService.chunks?.length > 0 ||
+      this.queryService.filteredContent?.length > 0
     );
   }
 }

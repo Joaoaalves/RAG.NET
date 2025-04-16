@@ -23,7 +23,7 @@ namespace RAGNET.Application.UseCases.Query
             string query
         )
         {
-            if (workflow.Filter == null)
+            if (workflow.Filter == null || !workflow.Filter.IsEnabled)
                 return [];
 
 

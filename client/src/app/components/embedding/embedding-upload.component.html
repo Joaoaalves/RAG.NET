@@ -1,5 +1,5 @@
 <div class="flex flex-col p-8 col-start-2 relative">
-  <h1 class="text-4xl text-neutral-200 font-bold">Upload a PDF document</h1>
+  <h1 class="text-4xl text-neutral-200 font-bold">Upload your document</h1>
 
   <p class="text-neutral-300 text-sm text-left max-w-lg mt-4">
     The embedding process in RAG (Retrieval-Augmented Generation) transforms
@@ -28,7 +28,7 @@
         *ngIf="!isDragging && !selectedFile"
         class="text-neutral-300 text-sm"
       >
-        Drag and drop a PDF file here
+        Drag and drop your document here
       </p>
       <p
         *ngIf="!isDragging && !selectedFile"
@@ -40,10 +40,10 @@
         {{ selectedFile.name }}
       </p>
       <input
-        id="pdfInput"
+        id="documentInput"
         type="file"
         (change)="onFileSelected($event)"
-        accept="application/pdf"
+        accept="application/pdf, application/epub+zip"
         class="hidden"
         #fileInput
       />
