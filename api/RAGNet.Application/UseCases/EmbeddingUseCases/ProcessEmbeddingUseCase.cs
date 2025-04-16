@@ -17,11 +17,11 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
 
     public class ProcessEmbeddingUseCase(
         IWorkflowRepository workflowRepository,
-        IPDFProcessingService pdfProcessingService,
+        IDocumentProcessingService pdfProcessingService,
         IEmbeddingProcessingService embeddingProcessingService) : IProcessEmbeddingUseCase
     {
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
-        private readonly IPDFProcessingService _pdfProcessingService = pdfProcessingService;
+        private readonly IDocumentProcessingService _pdfProcessingService = pdfProcessingService;
         private readonly IEmbeddingProcessingService _embeddingProcessingService = embeddingProcessingService;
 
         private (string collectionId, Chunker chunkerConfig, EmbeddingProviderConfig embeddingProviderConfig, ConversationProviderConfig conversationProviderConfig) GetConfig(Workflow workflow)

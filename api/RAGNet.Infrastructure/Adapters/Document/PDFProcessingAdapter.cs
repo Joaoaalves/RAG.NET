@@ -6,7 +6,7 @@ using RAGNET.Domain.Repositories;
 
 namespace RAGNET.Infrastructure.Adapters.Document
 {
-    public class PdfProcessingAdapter(IDocumentRepository documentRepository, IPageRepository pageRepository) : IPDFProcessingService
+    public class PdfProcessingAdapter(IDocumentRepository documentRepository, IPageRepository pageRepository) : IDocumentProcessingService
     {
         private readonly IDocumentRepository _documentRepository = documentRepository;
         private readonly IPageRepository _pageRepository = pageRepository;
@@ -33,11 +33,11 @@ namespace RAGNET.Infrastructure.Adapters.Document
             return document;
         }
 
-        public async Task<PDFExtractResult> ExtractTextAsync(IFormFile file)
+        public async Task<DocumentExtractResult> ExtractTextAsync(IFormFile file)
         {
             // Open the PDF stream
             using var stream = file.OpenReadStream();
-            var result = new PDFExtractResult();
+            var result = new DocumentExtractResult();
 
             // Wraps the result in Task.FromResult.
             using (var pdf = PdfDocument.Open(stream))

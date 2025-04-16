@@ -11,7 +11,7 @@ namespace tests.RAGNet.Application.Tests
     public class ProcessEmbeddingUseCaseTests
     {
         private readonly Mock<IWorkflowRepository> _workflowRepositoryMock;
-        private readonly Mock<IPDFProcessingService> _pdfProcessingServiceMock;
+        private readonly Mock<IDocumentProcessingService> _pdfProcessingServiceMock;
         private readonly Mock<IEmbeddingProcessingService> _embeddingProcessingServiceMock;
         private readonly ProcessEmbeddingUseCase _useCase;
         private static readonly float[] sourceArray = { 0.1f, 0.2f, 0.3f };
@@ -20,7 +20,7 @@ namespace tests.RAGNet.Application.Tests
         public ProcessEmbeddingUseCaseTests()
         {
             _workflowRepositoryMock = new Mock<IWorkflowRepository>();
-            _pdfProcessingServiceMock = new Mock<IPDFProcessingService>();
+            _pdfProcessingServiceMock = new Mock<IDocumentProcessingService>();
             _embeddingProcessingServiceMock = new Mock<IEmbeddingProcessingService>();
 
             _useCase = new ProcessEmbeddingUseCase(
@@ -36,10 +36,10 @@ namespace tests.RAGNet.Application.Tests
             string apiKey = "dummyApiKey";
 
             // Create a dummy PDF extraction result with one page
-            var pdfResult = new PDFExtractResult
+            var pdfResult = new DocumentExtractResult
             {
                 DocumentTitle = "TestDocument",
-                Pages = new List<string> { "Chunk 1. Chunk 2. Chunk 3." }
+                Pages = ["Chunk 1. Chunk 2. Chunk 3."]
             };
 
             // Create a dummy IFormFile
@@ -139,8 +139,8 @@ namespace tests.RAGNet.Application.Tests
             string apiKey = "dummyApiKey";
 
             // Create a dummy page with three chunks
-            List<string> pages = new List<string> { "Chunk 1. Chunk 2. Chunk 3." };
-            var pdfResult = new PDFExtractResult
+            List<string> pages = ["Chunk 1. Chunk 2. Chunk 3."];
+            var pdfResult = new DocumentExtractResult
             {
                 DocumentTitle = "TestDocument",
                 Pages = pages

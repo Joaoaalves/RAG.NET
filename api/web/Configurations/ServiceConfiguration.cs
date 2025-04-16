@@ -12,7 +12,7 @@ namespace web.Configurations
         public static IServiceCollection AddServiceConfiguration(this IServiceCollection services)
         {
             services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IPDFProcessingService, PdfProcessingAdapter>();
+            services.AddScoped<IDocumentProcessingService, PdfProcessingAdapter>();
             services.AddScoped<IEmbeddingProviderValidator, EmbeddingProviderValidator>();
             services.AddScoped<IConversationProviderValidator, ConversationProviderValidator>();
             services.AddScoped<IPromptService, PromptService>();
