@@ -28,9 +28,10 @@ namespace RAGNET.Application.UseCases.UserApiKey
                 throw new InvalidOperationException("API key already exists for this user.");
 
             var encryptedApiKey = _cryptoService.Encrypt(dto.ApiKey);
+            var suffix = dto.ApiKey.Substring(dto.ApiKey.Length - 4, 4);
             dto.ApiKey = encryptedApiKey;
 
-            var userApiKey = dto.ToUserApiKey(userId);
+            var userApiKey = dto.ToUserApiKey(userId, suffix);
             await _userApiKeyRepository.AddAsync(userApiKey);
 
             return userApiKey;

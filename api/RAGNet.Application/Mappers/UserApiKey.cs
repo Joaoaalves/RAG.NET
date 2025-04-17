@@ -5,12 +5,13 @@ namespace RAGNET.Application.Mappers
 {
     public static class UserApiKeyMapper
     {
-        public static UserApiKey ToUserApiKey(this CreateUserApiKeyDTO dto, string userId)
+        public static UserApiKey ToUserApiKey(this CreateUserApiKeyDTO dto, string userId, string suffix)
         {
             return new UserApiKey
             {
                 Id = Guid.NewGuid(),
                 UserId = userId,
+                KeySuffix = suffix,
                 ApiKey = dto.ApiKey,
                 Provider = dto.Provider
             };
@@ -21,7 +22,7 @@ namespace RAGNET.Application.Mappers
             return new UserApiKeyDTO
             {
                 Id = userApiKey.Id.ToString(),
-                ApiKey = userApiKey.ApiKey,
+                ApiKey = userApiKey.KeySuffix,
                 UserId = userApiKey.UserId,
                 Provider = userApiKey.Provider
             };

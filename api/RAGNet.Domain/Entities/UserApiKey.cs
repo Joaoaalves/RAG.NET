@@ -8,6 +8,7 @@ namespace RAGNET.Domain.Entities
         public Guid Id { get; set; }
         public SupportedProvider Provider { get; set; }
         public string ApiKey { get; set; } = String.Empty;
+        public string KeySuffix { get; set; } = String.Empty;
         [ForeignKey("User")]
         public string UserId { get; set; } = String.Empty;
         public User User { get; set; } = null!;
