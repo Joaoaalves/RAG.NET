@@ -1,8 +1,7 @@
-<div class="flex flex-col items-center justify-center gap-4 w-full max-w-4xl mx-auto">
+<div class="flex flex-col items-center justify-center gap-4 p-8 col-start-2 relative">
 
   <!-- FILTERED CONTENT -->
-  <ng-container *ngIf="filteredContent.length > 0">
-    <div class="mb-12">
+    <div class="w-full" *ngIf="filteredContent.length > 0">
       <h3 class="self-start text-neutral-300 text-2xl mt-12">Filtered Content</h3>
       <p class="self-start text-start text-neutral-400 text-sm">
         This section displays only the chunks that passed through an additional filtering step...
@@ -14,19 +13,16 @@
             {{ i + 1 }}
           </div>
           <!-- Content Body -->
-          <div class="flex-1">
-            <p class="text-neutral-100 text-base whitespace-pre-line">
+          <div class="flex-1 min-w-0">
+            <p class="text-neutral-100 text-base">
               {{ filtered }}
             </p>
           </div>
         </div>
       </ng-container>
     </div>
-  </ng-container>
-
   <!-- CHUNKS -->
-  <ng-container *ngIf="chunks.length > 0">
-    <div class="mb-12">
+    <div class="w-full" *ngIf="chunks.length > 0">
       <h3 class="self-start text-neutral-300 text-2xl">Chunks</h3>
       <p class="self-start text-start text-neutral-400 text-sm">
         This section shows all the extracted segments (chunks) from your document collection...
@@ -38,11 +34,11 @@
             {{ i + 1 }}
           </div>
           <!-- Content Body -->
-          <div class="flex-1">
-            <p class="text-neutral-100 text-base whitespace-pre-line">
+          <div class="flex-1 min-w-0">
+            <p class="text-neutral-100 text-base break-words">
               {{ chunk.text }}
             </p>
-            <div class="text-sm text-neutral-400 mt-2 flex flex-wrap items-center gap-4">
+            <div class="text-sm text-neutral-400 mt-2 flex items-center gap-4">
               <span>Score: <span class="text-white font-medium">{{ chunk.score | number:'1.2-2' }}</span></span>
               <span *ngIf="chunk.pageId">Page: <span class="text-white">{{ chunk.pageId }}</span></span>
               <span *ngIf="chunk.chunkId">Chunk ID: <span class="text-white">{{ chunk.chunkId }}</span></span>
@@ -51,6 +47,5 @@
         </div>
       </ng-container>
     </div>
-  </ng-container>
 
 </div>

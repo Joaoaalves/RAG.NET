@@ -8,15 +8,14 @@
   </p>
 
   <span class="text-neutral-400 mt-2">Documents: <strong class="text-white">{{workflow?.documentsCount}}</strong></span>
-  <div class="grid grid-cols-2 w-full">
-    <app-query-form
-      *ngIf="workflow"
-    [onQuery]="queryService.query.bind(queryService)" [apiKey]="workflow.apiKey"></app-query-form>
+    <div class="grid grid-cols-2 w-full">
+      <app-query-form
+        *ngIf="workflow"
+      [onQuery]="queryService.query.bind(queryService)" [apiKey]="workflow.apiKey"></app-query-form>
 
-    <app-query-result
-    *ngIf="isDataAvailable"
-      [chunks]="queryService.chunks"
-      [filteredContent]="queryService.filteredContent"></app-query-result>
-  </div>
+      <app-query-result
+        [chunks]="queryService.chunks"
+        [filteredContent]="queryService.filteredContent"></app-query-result>
+    </div>
 
 </div>

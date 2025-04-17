@@ -24,20 +24,25 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
         private readonly IConversationProviderResolver _conversationProviderResolver = conversationProviderResolver;
         public async Task<Guid> Execute(WorkflowCreationDTO dto, User user)
         {
-            var embeddingModel = _embeddingProviderResolver.Resolve(dto.EmbeddingProvider.ToEmbeddingProviderConfigFromEmbeddingProviderConfigDTO(Guid.NewGuid()));
-            dto.EmbeddingProvider.VectorSize = embeddingModel.VectorSize;
+            var embeddingModel = _embeddingProviderResolver.Resolve(
+                dto.EmbeddingProvider.ToEmbeddingProviderConfig(Guid.NewGuid())
+            );
 
-            _conversationProviderResolver.Resolve(dto.ConversationProvider.ToConversationProviderConfigFromConversationProviderConfigDTO(Guid.NewGuid()));
+            var vectorSize = embeddingModel.VectorSize;
+
+            _conversationProviderResolver.Resolve(
+                dto.ConversationProvider.ToConversationProviderConfig(Guid.NewGuid())
+            );
 
             var workflow = dto.ToWorkflowFromCreationDTO(user);
             await _workflowRepository.AddAsync(workflow);
 
             // Conversation Provider Config
-            var conversationProvider = dto.ConversationProvider.ToConversationProviderConfigFromConversationProviderConfigDTO(workflow.Id);
+            var conversationProvider = dto.ConversationProvider.ToConversationProviderConfig(workflow.Id);
             await _conversationProviderConfigRepository.AddAsync(conversationProvider);
 
             // Embedding Provider Config
-            var embeddingProvider = dto.EmbeddingProvider.ToEmbeddingProviderConfigFromEmbeddingProviderConfigDTO(workflow.Id);
+            var embeddingProvider = dto.EmbeddingProvider.ToEmbeddingProviderConfig(workflow.Id, vectorSize);
             await _embeddingProviderConfigRepository.AddAsync(embeddingProvider);
 
             // Chunker
@@ -45,7 +50,10 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
             await _chunkerRepository.AddAsync(chunker);
 
             // Vector Database
-            await _vectorDatabaseService.CreateCollectionAsync(workflow.CollectionId, embeddingProvider.VectorSize);
+            await _vectorDatabaseService.CreateCollectionAsync(
+                workflow.CollectionId,
+                embeddingProvider.VectorSize
+            );
             return workflow.Id;
         }
     }

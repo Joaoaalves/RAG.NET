@@ -23,7 +23,7 @@ namespace RAGNET.Infrastructure.Services
                 validModels = AnthropicChatAdapter.GetModels();
             }
 
-            ConversationModel validModel = validModels.FirstOrDefault(m => m.Label == config.Model) ?? throw new InvalidConversationModelException(
+            ConversationModel validModel = validModels.FirstOrDefault(m => m.Value == config.Model) ?? throw new InvalidConversationModelException(
                     $"This conversation model '{config.Model}' is not valid."
                 );
 

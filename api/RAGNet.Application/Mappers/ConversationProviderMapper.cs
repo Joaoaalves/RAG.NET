@@ -6,7 +6,7 @@ namespace RAGNET.Application.Mappers
 {
     public static class ConversationProviderMapper
     {
-        public static ConversationProviderConfig ToConversationProviderConfigFromConversationProviderConfigDTO(this ConversationProviderConfigDTO dto, Guid workflowId)
+        public static ConversationProviderConfig ToConversationProviderConfig(this ConversationProviderConfigDTO dto, Guid workflowId)
         {
             return new ConversationProviderConfig
             {

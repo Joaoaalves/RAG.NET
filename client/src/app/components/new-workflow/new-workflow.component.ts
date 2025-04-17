@@ -17,20 +17,19 @@ import { TextAreaComponent } from 'src/app/shared/components/text-area/text-area
 // Models
 import { ChunkerStrategy } from 'src/app/models/chunker';
 import { CreateWorkflowRequest } from 'src/app/models/workflow';
-import { EmbeddingProviderEnum } from 'src/app/models/embedding';
 import { EmbeddingModel } from 'src/app/models/embedding';
-import {
-  ConversationModel,
-  ConversationProviderEnum,
-} from 'src/app/models/chat';
+import { ConversationModel } from 'src/app/models/chat';
+import { ProviderOption, ProvidersResponse } from 'src/app/models/provider';
 
 // Services
 import { WorkflowService } from 'src/app/services/workflow.service';
-import { ProviderOption, ProvidersResponse } from 'src/app/models/provider';
+
+// Utils
 import {
   getProviderKeyByValueFromResponse,
   mapValidProviders,
 } from 'src/app/shared/utils/providers-utils';
+import { mapChunkerStrategies } from 'src/app/shared/utils/chunker-utils';
 
 @Component({
   imports: [
@@ -68,6 +67,8 @@ export class NewWorkflowComponent implements OnInit {
   }
 
   private initForm(): void {
+    this.chunkerStrategies = mapChunkerStrategies();
+
     this.form = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],

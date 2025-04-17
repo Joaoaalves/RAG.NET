@@ -6,12 +6,13 @@ namespace RAGNET.Application.Mappers
 {
     public static class EmbeddingProviderMapper
     {
-        public static EmbeddingProviderConfig ToEmbeddingProviderConfigFromEmbeddingProviderConfigDTO(this EmbeddingProviderConfigDTO dto, Guid workflowId)
+        public static EmbeddingProviderConfig ToEmbeddingProviderConfig(this EmbeddingProviderConfigDTO dto, Guid workflowId, int vectorSize = 0)
         {
             return new EmbeddingProviderConfig
             {
                 Provider = dto.Provider,
                 Model = dto.Model,
+                VectorSize = vectorSize,
                 WorkflowId = workflowId
             };
         }

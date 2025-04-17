@@ -31,7 +31,7 @@ namespace RAGNET.Infrastructure.Services
                 );
             }
 
-            EmbeddingModel validModel = validModels.FirstOrDefault(m => m.Label == config.Model) ?? throw new InvalidEmbeddingModelException(
+            EmbeddingModel validModel = validModels.FirstOrDefault(m => m.Value == config.Model) ?? throw new InvalidEmbeddingModelException(
                     $"This embedding model '{config.Model}' is not valid."
                 );
 
