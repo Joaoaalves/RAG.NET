@@ -2,6 +2,7 @@ using RAGNET.Application.UseCases.ContentFilterUseCases;
 using RAGNET.Application.UseCases.EmbeddingUseCases;
 using RAGNET.Application.UseCases.Query;
 using RAGNET.Application.UseCases.QueryEnhancerUseCases;
+using RAGNET.Application.UseCases.UserApiKey;
 using RAGNET.Application.UseCases.WorkflowUseCases;
 
 namespace web.Configurations
@@ -10,17 +11,34 @@ namespace web.Configurations
     {
         public static IServiceCollection AddUseCaseConfiguration(this IServiceCollection services)
         {
-            services.AddScoped<IGetUserWorkflowsUseCase, GetUserWorkflowsUseCase>();
-            services.AddScoped<IProcessEmbeddingUseCase, ProcessEmbeddingUseCase>();
-            services.AddScoped<ICreateWorkflowUseCase, CreateWorkflowUseCase>();
+            // User API Key
+            services.AddScoped<ICreateUserApiKeyUseCase, CreateUserApiKeyUseCase>();
+            services.AddScoped<IGetUserApiKeysUseCase, GetUserApiKeysUseCase>();
+            services.AddScoped<IUpdateUserApiKeyUseCase, UpdateUserApiKeyUseCase>();
+            services.AddScoped<IDeleteUserApiKeyUseCase, DeleteUserApiKeyUseCase>();
+
+            // Workflow
             services.AddScoped<IGetWorkflowUseCase, GetWorkflowUseCase>();
+            services.AddScoped<ICreateWorkflowUseCase, CreateWorkflowUseCase>();
+            services.AddScoped<IGetUserWorkflowsUseCase, GetUserWorkflowsUseCase>();
             services.AddScoped<IDeleteWorkflowUseCase, DeleteWorkflowUseCase>();
+
+            // Embedding
+            services.AddScoped<IProcessEmbeddingUseCase, ProcessEmbeddingUseCase>();
+
+            // Query Enhancer
             services.AddScoped<ICreateQueryEnhancerUseCase, CreateQueryEnhancerUseCase>();
             services.AddScoped<IUpdateQueryEnhancerUseCase, UpdateQueryEnhancerUseCase>();
             services.AddScoped<IDeleteQueryEnhancerUseCase, DeleteQueryEnhancerUseCase>();
             services.AddScoped<IEnhanceQueryUseCase, EnhanceQueryUseCase>();
+
+            // Chunk
             services.AddScoped<IQueryChunksUseCase, QueryChunksUseCase>();
+
+            // Query
             services.AddScoped<IProcessQueryUseCase, ProcessQueryUseCase>();
+
+            // Filter
             services.AddScoped<IFilterContentUseCase, FilterContentUseCase>();
             services.AddScoped<ICreateContentFilterUseCase, CreateContentFilterUseCase>();
             services.AddScoped<IUpdateContentFilterUseCase, UpdateContentFilterUseCase>();

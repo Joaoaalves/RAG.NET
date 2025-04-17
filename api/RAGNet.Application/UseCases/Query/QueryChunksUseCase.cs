@@ -1,15 +1,17 @@
 using RAGNET.Application.DTOs.Query;
+using RAGNET.Application.Mappers;
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Exceptions;
 using RAGNET.Domain.Factories;
 using RAGNET.Domain.Services;
+using RAGNET.Domain.Services.ApiKey;
 using RAGNET.Domain.Services.Query;
 
 namespace RAGNET.Application.UseCases.Query
 {
     public interface IQueryChunksUseCase
     {
-        Task<List<ContentItem>> Execute(Workflow workflow, List<string> queries, QueryDTO queryDTO);
+        Task<List<ContentItem>> Execute(Workflow workflow, List<string> queries, QueryDTO queryDTO, string userEmbeddingProviderApiKey);
     }
 
     public class QueryChunksUseCase(
@@ -25,7 +27,11 @@ namespace RAGNET.Application.UseCases.Query
         private readonly IEmbedderFactory _embedderFactory = embedderFactory;
         private readonly IScoreNormalizerService _scoreNormalizerService = scoreNormalizerService;
         private readonly IChunkRetrieverService _chunkRetrieverService = chunkRetrieverService;
-        public async Task<List<ContentItem>> Execute(Workflow workflow, List<string> queries, QueryDTO queryDTO)
+        public async Task<List<ContentItem>> Execute(
+            Workflow workflow,
+            List<string> queries,
+            QueryDTO queryDTO,
+            string userEmbeddingProviderApiKey)
         {
             try
             {
@@ -33,7 +39,8 @@ namespace RAGNET.Application.UseCases.Query
                 var embConfig = workflow.EmbeddingProviderConfig
                     ?? throw new EmbeddingProviderNotSetException("You must set your embedding provider config");
 
-                var embedderService = _embedderFactory.CreateEmbeddingService(embConfig);
+
+                var embedderService = _embedderFactory.CreateEmbeddingService(userEmbeddingProviderApiKey, embConfig);
 
                 // Embedd All
                 var embeddings = await embedderService.GetMultipleEmbeddingAsync(queries);

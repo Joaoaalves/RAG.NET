@@ -6,6 +6,7 @@ using RAGNET.Domain.Entities;
 using RAGNET.Domain.Factories;
 using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services;
+using RAGNET.Domain.Services.ApiKey;
 
 namespace tests.RAGNet.Application.Tests
 {
@@ -15,6 +16,7 @@ namespace tests.RAGNet.Application.Tests
         private readonly Mock<IDocumentProcessorFactory> _documentProcessorFactoryMock;
         private readonly Mock<IDocumentProcessingService> _pdfProcessingServiceMock;
         private readonly Mock<IEmbeddingProcessingService> _embeddingProcessingServiceMock;
+        private readonly Mock<IApiKeyResolverService> _apiKeyResolverServiceMock;
         private readonly ProcessEmbeddingUseCase _useCase;
         private static readonly float[] singleArray = [0.1f, 0.2f, 0.3f];
 
@@ -24,6 +26,7 @@ namespace tests.RAGNet.Application.Tests
             _documentProcessorFactoryMock = new Mock<IDocumentProcessorFactory>();
             _pdfProcessingServiceMock = new Mock<IDocumentProcessingService>();
             _embeddingProcessingServiceMock = new Mock<IEmbeddingProcessingService>();
+            _apiKeyResolverServiceMock = new Mock<IApiKeyResolverService>();
 
             // Configures the factory to return the PDF adapter
             _documentProcessorFactoryMock
@@ -33,7 +36,9 @@ namespace tests.RAGNet.Application.Tests
             _useCase = new ProcessEmbeddingUseCase(
                 _workflowRepositoryMock.Object,
                 _documentProcessorFactoryMock.Object,
-                _embeddingProcessingServiceMock.Object);
+                _embeddingProcessingServiceMock.Object,
+                _apiKeyResolverServiceMock.Object
+                );
         }
 
         [Fact]
@@ -59,8 +64,8 @@ namespace tests.RAGNet.Application.Tests
                 Id = Guid.NewGuid(),
                 CollectionId = Guid.NewGuid(),
                 Chunker = new DummyChunkerConfig(),
-                EmbeddingProviderConfig = new EmbeddingProviderConfig { ApiKey = "embeddingApiKey" },
-                ConversationProviderConfig = new ConversationProviderConfig { ApiKey = "conversationApiKey" },
+                EmbeddingProviderConfig = new EmbeddingProviderConfig { },
+                ConversationProviderConfig = new ConversationProviderConfig { },
                 DocumentsCount = 0,
                 ApiKey = dummyApiKey
             };
@@ -100,8 +105,10 @@ namespace tests.RAGNet.Application.Tests
                 .Setup(service => service.ChunkTextAsync(
                     It.IsAny<string>(),
                     workflow.Chunker,
-                    workflow.ConversationProviderConfig))
-                .ReturnsAsync((string text, Chunker chunker, ConversationProviderConfig config) =>
+                    workflow.ConversationProviderConfig,
+                    It.IsAny<string>() // ApiKey
+                    ))
+                .ReturnsAsync((string text, Chunker chunker, ConversationProviderConfig config, string userEmbeddingProviderApiKey) =>
                 {
                     return text.Split('.', StringSplitOptions.RemoveEmptyEntries)
                                .Select(x => x.Trim())
@@ -112,8 +119,10 @@ namespace tests.RAGNet.Application.Tests
             _embeddingProcessingServiceMock
                 .Setup(service => service.GetEmbeddingsAsync(
                     It.IsAny<List<string>>(),
-                    workflow.EmbeddingProviderConfig))
-                .ReturnsAsync((List<string> chunks, EmbeddingProviderConfig _) =>
+                    workflow.EmbeddingProviderConfig,
+                    It.IsAny<string>() // ApiKey
+                    ))
+                .ReturnsAsync((List<string> chunks, EmbeddingProviderConfig _, string userEmbeddingProviderApiKey) =>
                 {
                     return chunks.Select(chunk => (
                         ChunkText: chunk,
@@ -149,7 +158,7 @@ namespace tests.RAGNet.Application.Tests
             const string dummyApiKey = "dummyApiKey";
 
             // Creates a dummy page with three chunks
-            List<string> pages = new List<string> { "Chunk 1. Chunk 2. Chunk 3." };
+            List<string> pages = ["Chunk 1. Chunk 2. Chunk 3."];
             var pdfResult = new DocumentExtractResult
             {
                 DocumentTitle = "TestDocument",
@@ -166,8 +175,8 @@ namespace tests.RAGNet.Application.Tests
                 Id = Guid.NewGuid(),
                 CollectionId = Guid.NewGuid(),
                 Chunker = new DummyChunkerConfig(),
-                EmbeddingProviderConfig = new EmbeddingProviderConfig { ApiKey = "embeddingApiKey" },
-                ConversationProviderConfig = new ConversationProviderConfig { ApiKey = "conversationApiKey" },
+                EmbeddingProviderConfig = new EmbeddingProviderConfig { },
+                ConversationProviderConfig = new ConversationProviderConfig { },
                 DocumentsCount = 0,
                 ApiKey = dummyApiKey
             };
@@ -201,8 +210,10 @@ namespace tests.RAGNet.Application.Tests
                 .Setup(service => service.ChunkTextAsync(
                     dummyPage.Text,
                     workflow.Chunker,
-                    workflow.ConversationProviderConfig))
-                .ReturnsAsync((string text, Chunker chunker, ConversationProviderConfig config) =>
+                    workflow.ConversationProviderConfig,
+                    It.IsAny<string>() // ApiKey
+                    ))
+                .ReturnsAsync((string text, Chunker chunker, ConversationProviderConfig config, string userEmbeddingProviderApiKey) =>
                 {
                     return text.Split('.', StringSplitOptions.RemoveEmptyEntries)
                                .Select(x => x.Trim())
@@ -213,8 +224,10 @@ namespace tests.RAGNet.Application.Tests
             _embeddingProcessingServiceMock
                 .Setup(service => service.GetEmbeddingsAsync(
                     It.IsAny<List<string>>(),
-                    workflow.EmbeddingProviderConfig))
-                .ReturnsAsync((List<string> chunks, EmbeddingProviderConfig _) =>
+                    workflow.EmbeddingProviderConfig,
+                    It.IsAny<string>() // ApiKey
+                    ))
+                .ReturnsAsync((List<string> chunks, EmbeddingProviderConfig _, string userEmbeddingProviderApiKey) =>
                 {
                     return chunks.Select(chunk => (
                         ChunkText: chunk,

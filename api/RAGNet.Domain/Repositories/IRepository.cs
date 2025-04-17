@@ -1,4 +1,5 @@
 using RAGNET.Domain.Entities;
+using RAGNET.Domain.Enums;
 
 namespace RAGNET.Domain.Repositories
 {
@@ -18,6 +19,12 @@ namespace RAGNET.Domain.Repositories
         Task<IEnumerable<Workflow>> GetUserWorkflows(string id);
         Task UpdateByApiKey(Workflow workflow, string apiKey);
     }
+    public interface IUserApiKeyRepository : IRepository<UserApiKey>
+    {
+        Task<IEnumerable<UserApiKey>> GetByUserIdAsync(string userId);
+        Task<UserApiKey?> GetByUserIdAndProviderAsync(string userId, SupportedProvider provider);
+        Task<bool> ExistsAsync(SupportedProvider provider, string userId);
+    }
 
     public interface IChunkerRepository : IRepository<Chunker>, IConfigMeta<Chunker> { }
     public interface IQueryEnhancerRepository : IRepository<QueryEnhancer>, IConfigMeta<QueryEnhancer> { }
@@ -25,7 +32,6 @@ namespace RAGNET.Domain.Repositories
     public interface IRankerRepository : IRepository<Ranker>, IConfigMeta<Ranker> { }
     public interface IEmbeddingProviderConfigRepository : IRepository<EmbeddingProviderConfig> { }
     public interface IConversationProviderConfigRepository : IRepository<ConversationProviderConfig> { }
-
     public interface IChunkerMetaRepository : IRepository<ChunkerMeta> { }
     public interface IQueryEnhancerMetaRepository : IRepository<QueryEnhancerMeta> { }
     public interface IFilterMetaRepository : IRepository<FilterMeta> { }

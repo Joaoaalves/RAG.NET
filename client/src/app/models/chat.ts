@@ -20,6 +20,5 @@ export interface ConversationModelsResponse {
 
 export interface ConversationProvider {
   provider: ConversationProviderEnum;
-  apiKey: string;
   model: string;
 }

@@ -8,6 +8,7 @@ import { EmbeddingUploadComponent } from './components/embedding/embedding-uploa
 import { WorkflowsComponent } from './components/workflows/workflows.component';
 import { WorkflowComponent } from './components/workflow/workflow.component';
 import { QueryComponent } from './components/workflow/query/query.component';
+import { ProvidersComponent } from './components/providers/providers.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, title: 'Login - RAG.NET' },
@@ -27,6 +28,12 @@ export const routes: Routes = [
         component: WorkflowsComponent,
         canActivate: [AuthGuard],
         title: 'Workflows - RAG.NET',
+      },
+      {
+        path: 'providers',
+        component: ProvidersComponent,
+        canActivate: [AuthGuard],
+        title: 'Providers - RAG.NET',
       },
       {
         path: 'workflows/new',

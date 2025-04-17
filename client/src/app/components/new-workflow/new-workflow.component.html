@@ -42,12 +42,6 @@
 
       <app-select label="Model *" name="model" [options]="embeddingModelOptions" formControlName="model"
         description="Select the model for this provider. It’s important to note that some models are faster than others, but less efficient."></app-select>
-
-      <div class="grid grid-cols-1 w-full">
-        <app-input label="API Key *" type="text" name="apiKey" formControlName="apiKey"></app-input>
-      </div>
-
-      <input type="hidden" formControlName="vectorSize" />
     </div>
 
 
@@ -60,11 +54,6 @@
 
       <app-select label="Model *" name="model" [options]="conversationModelOptions" formControlName="model"
         description="Select the model for this provider. It’s important to note that some models are faster than others, but less efficient."></app-select>
-
-      <div class="grid grid-cols-1 w-full">
-        <app-input label="API Key *" type="text" name="apiKey" formControlName="apiKey"></app-input>
-      </div>
-
     </div>
 
     <button

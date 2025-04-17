@@ -1,5 +1,6 @@
 using RAGNET.Application.DTOs.Embedder;
 using RAGNET.Domain.Entities;
+using RAGNET.Domain.Enums;
 
 namespace RAGNET.Application.Mappers
 {
@@ -10,9 +11,7 @@ namespace RAGNET.Application.Mappers
             return new EmbeddingProviderConfig
             {
                 Provider = dto.Provider,
-                ApiKey = dto.ApiKey,
                 Model = dto.Model,
-                VectorSize = dto.VectorSize,
                 WorkflowId = workflowId
             };
         }
@@ -22,9 +21,18 @@ namespace RAGNET.Application.Mappers
             return new EmbeddingProviderConfigDTO
             {
                 Provider = embeddingProvider.Provider,
-                ApiKey = embeddingProvider.ApiKey,
                 VectorSize = embeddingProvider.VectorSize,
                 Model = embeddingProvider.Model
+            };
+        }
+
+        public static SupportedProvider ToSupportedProvider(this EmbeddingProviderEnum provider)
+        {
+            return provider switch
+            {
+                EmbeddingProviderEnum.OPENAI => SupportedProvider.OpenAI,
+                EmbeddingProviderEnum.VOYAGE => SupportedProvider.Voyage,
+                _ => throw new ArgumentOutOfRangeException("Unsupported provider")
             };
         }
     }

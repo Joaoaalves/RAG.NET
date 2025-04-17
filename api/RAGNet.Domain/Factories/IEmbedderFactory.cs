@@ -6,6 +6,6 @@ namespace RAGNET.Domain.Factories
 {
     public interface IEmbedderFactory
     {
-        IEmbeddingService CreateEmbeddingService(EmbeddingProviderConfig config);
+        IEmbeddingService CreateEmbeddingService(string userApiKey, EmbeddingProviderConfig config);
     }
 }

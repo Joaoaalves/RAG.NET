@@ -160,6 +160,26 @@ namespace RAGNet.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserApiKeys",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Provider = table.Column<int>(type: "integer", nullable: false),
+                    ApiKey = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserApiKeys", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserApiKeys_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Workflows",
                 columns: table => new
                 {
@@ -210,7 +230,6 @@ namespace RAGNet.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Provider = table.Column<int>(type: "integer", nullable: false),
-                    ApiKey = table.Column<string>(type: "text", nullable: false),
                     Model = table.Column<string>(type: "text", nullable: false),
                     WorkflowId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -250,7 +269,6 @@ namespace RAGNet.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Provider = table.Column<int>(type: "integer", nullable: false),
-                    ApiKey = table.Column<string>(type: "text", nullable: false),
                     Model = table.Column<string>(type: "text", nullable: false),
                     VectorSize = table.Column<int>(type: "integer", nullable: false),
                     WorkflowId = table.Column<Guid>(type: "uuid", nullable: false)
@@ -273,7 +291,9 @@ namespace RAGNet.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Strategy = table.Column<int>(type: "integer", nullable: false),
                     WorkflowId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: false)
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    MaxItems = table.Column<int>(type: "integer", nullable: false),
+                    IsEnabled = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -526,7 +546,8 @@ namespace RAGNet.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Filters_WorkflowId",
                 table: "Filters",
-                column: "WorkflowId");
+                column: "WorkflowId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Pages_DocumentId",
@@ -552,6 +573,11 @@ namespace RAGNet.Infrastructure.Migrations
                 name: "IX_Rankers_WorkflowId",
                 table: "Rankers",
                 column: "WorkflowId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserApiKeys_UserId",
+                table: "UserApiKeys",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Workflows_UserId",
@@ -597,6 +623,9 @@ namespace RAGNet.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "RankerMetas");
+
+            migrationBuilder.DropTable(
+                name: "UserApiKeys");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

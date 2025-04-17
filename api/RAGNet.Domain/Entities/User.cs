@@ -9,5 +9,6 @@ namespace RAGNET.Domain.Entities
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public ICollection<Workflow> Workflows { get; set; } = [];
+        public ICollection<UserApiKey> ApiKeys { get; set; } = [];
     }
 }

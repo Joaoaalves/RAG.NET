@@ -8,6 +8,7 @@ namespace RAGNET.Infrastructure.Data
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User>(options)
     {
         public DbSet<Workflow> Workflows { get; set; }
+        public DbSet<UserApiKey> UserApiKeys { get; set; }
         public DbSet<Chunker> Chunkers { get; set; }
         public DbSet<ChunkerMeta> ChunkerMetas { get; set; }
         public DbSet<EmbeddingProviderConfig> EmbeddingProviderConfigs { get; set; }
@@ -24,6 +25,13 @@ namespace RAGNET.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            // Relationship: User -> UserApiKeys
+            builder.Entity<User>()
+                        .HasMany(u => u.ApiKeys)
+                        .WithOne(u => u.User)
+                        .HasForeignKey(u => u.UserId)
+                        .OnDelete(DeleteBehavior.Cascade);
 
             // Relationship: Workflow -> Chunkers
             builder.Entity<Workflow>()

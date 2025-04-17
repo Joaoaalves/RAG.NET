@@ -8,13 +8,12 @@ namespace RAGNET.Infrastructure.Factories
 {
     public class EmbedderFactory : IEmbedderFactory
     {
-        public IEmbeddingService CreateEmbeddingService(EmbeddingProviderConfig config)
+        public IEmbeddingService CreateEmbeddingService(string userApiKey, EmbeddingProviderConfig config)
         {
-
             return config.Provider switch
             {
-                EmbeddingProviderEnum.OPENAI => new OpenAIEmbeddingAdapter(config.ApiKey, config.Model),
-                EmbeddingProviderEnum.VOYAGE => new VoyageEmbeddingAdapter(config.ApiKey, config.Model),
+                EmbeddingProviderEnum.OPENAI => new OpenAIEmbeddingAdapter(userApiKey, config.Model),
+                EmbeddingProviderEnum.VOYAGE => new VoyageEmbeddingAdapter(userApiKey, config.Model),
                 _ => throw new NotSupportedException("Embedding provider not supported.")
             };
         }

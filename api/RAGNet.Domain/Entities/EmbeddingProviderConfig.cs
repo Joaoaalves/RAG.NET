@@ -10,7 +10,6 @@ namespace RAGNET.Domain.Entities
         [Key]
         public Guid Id { get; set; }
         public EmbeddingProviderEnum Provider { get; set; }
-        public string ApiKey { get; set; } = String.Empty;
         public string Model { get; set; } = String.Empty;
         public int VectorSize { get; set; }
 

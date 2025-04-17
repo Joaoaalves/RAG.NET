@@ -12,20 +12,22 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
     }
     public class CreateWorkflowUseCase(IWorkflowRepository workflowRepository,
         IChunkerRepository chunkerRepository, IEmbeddingProviderConfigRepository embeddingProviderConfigRepository,
-         IVectorDatabaseService vectorDatabaseService, IEmbeddingProviderValidator embeddingProviderValidator,
-          IConversationProviderConfigRepository conversationProviderConfigRepository, IConversationProviderValidator conversationProviderValidator) : ICreateWorkflowUseCase
+         IVectorDatabaseService vectorDatabaseService, IEmbeddingProviderResolver embeddingProviderResolver,
+          IConversationProviderConfigRepository conversationProviderConfigRepository, IConversationProviderResolver conversationProviderResolver) : ICreateWorkflowUseCase
     {
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
         private readonly IChunkerRepository _chunkerRepository = chunkerRepository;
         private readonly IEmbeddingProviderConfigRepository _embeddingProviderConfigRepository = embeddingProviderConfigRepository;
         private readonly IVectorDatabaseService _vectorDatabaseService = vectorDatabaseService;
-        private readonly IEmbeddingProviderValidator _embeddingProviderValidator = embeddingProviderValidator;
+        private readonly IEmbeddingProviderResolver _embeddingProviderResolver = embeddingProviderResolver;
         private readonly IConversationProviderConfigRepository _conversationProviderConfigRepository = conversationProviderConfigRepository;
-        private readonly IConversationProviderValidator _conversationProviderValidator = conversationProviderValidator;
+        private readonly IConversationProviderResolver _conversationProviderResolver = conversationProviderResolver;
         public async Task<Guid> Execute(WorkflowCreationDTO dto, User user)
         {
-            _embeddingProviderValidator.Validate(dto.EmbeddingProvider.ToEmbeddingProviderConfigFromEmbeddingProviderConfigDTO(Guid.NewGuid()));
-            _conversationProviderValidator.Validate(dto.ConversationProvider.ToConversationProviderConfigFromConversationProviderConfigDTO(Guid.NewGuid()));
+            var embeddingModel = _embeddingProviderResolver.Resolve(dto.EmbeddingProvider.ToEmbeddingProviderConfigFromEmbeddingProviderConfigDTO(Guid.NewGuid()));
+            dto.EmbeddingProvider.VectorSize = embeddingModel.VectorSize;
+
+            _conversationProviderResolver.Resolve(dto.ConversationProvider.ToConversationProviderConfigFromConversationProviderConfigDTO(Guid.NewGuid()));
 
             var workflow = dto.ToWorkflowFromCreationDTO(user);
             await _workflowRepository.AddAsync(workflow);

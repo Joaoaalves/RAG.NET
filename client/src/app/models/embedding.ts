@@ -28,7 +28,5 @@ export enum EmbeddingProviderEnum {
 
 export interface EmbeddingProvider {
   provider: EmbeddingProviderEnum;
-  apiKey: string;
-  vectorSize: number;
   model: string;
 }

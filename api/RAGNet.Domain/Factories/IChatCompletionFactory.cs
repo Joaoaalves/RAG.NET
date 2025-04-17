@@ -5,6 +5,6 @@ namespace RAGNET.Domain.Factories
 {
     public interface IChatCompletionFactory
     {
-        IChatCompletionService CreateCompletionService(ConversationProviderConfig config);
+        IChatCompletionService CreateCompletionService(string userApiKey, ConversationProviderConfig config);
     }
 }

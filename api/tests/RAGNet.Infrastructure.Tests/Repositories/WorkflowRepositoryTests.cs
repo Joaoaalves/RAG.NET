@@ -55,7 +55,6 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
             var embeddingProvider = new EmbeddingProviderConfig
             {
                 Id = It.IsAny<Guid>(),
-                ApiKey = "Random Key",
                 Provider = EmbeddingProviderEnum.OPENAI,
                 VectorSize = 1000
             };
@@ -79,7 +78,6 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
             Assert.NotNull(result);
             Assert.NotNull(result.EmbeddingProviderConfig);
             Assert.Equal(1000, result.EmbeddingProviderConfig.VectorSize);
-            Assert.Equal("Random Key", result.EmbeddingProviderConfig.ApiKey);
             Assert.Equal(EmbeddingProviderEnum.OPENAI, result.EmbeddingProviderConfig.Provider);
         }
 
@@ -93,7 +91,6 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
             var embeddingProvider = new EmbeddingProviderConfig
             {
                 Id = Guid.NewGuid(),
-                ApiKey = correctApiKey,
                 Provider = EmbeddingProviderEnum.OPENAI,
                 VectorSize = 1000
             };
@@ -130,7 +127,6 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
             var embeddingProvider = new EmbeddingProviderConfig
             {
                 Id = Guid.NewGuid(),
-                ApiKey = apiKey,
                 Provider = EmbeddingProviderEnum.OPENAI,
                 VectorSize = 1000
             };

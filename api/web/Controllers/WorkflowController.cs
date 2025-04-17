@@ -44,7 +44,7 @@ namespace web.Controllers
             }
             catch (InvalidEmbeddingModelException exc)
             {
-                return BadRequest(exc.Message);
+                return BadRequest(new { exc.Message });
             }
             catch (Exception e)
             {

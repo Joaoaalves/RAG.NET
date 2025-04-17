@@ -6,7 +6,7 @@ namespace RAGNET.Application.UseCases.Query
 {
     public interface IFilterContentUseCase
     {
-        Task<List<string>> Execute(List<ContentItem> items, Workflow workflow, string query);
+        Task<List<string>> Execute(List<ContentItem> items, Workflow workflow, string query, string userConversationProviderApiKey);
     }
 
 
@@ -16,22 +16,22 @@ namespace RAGNET.Application.UseCases.Query
         IContentFilterFactory contentFilterFactory
     ) : IFilterContentUseCase
     {
-        public async Task<List<string>> Execute
-        (
+        public async Task<List<string>> Execute(
             List<ContentItem> items,
             Workflow workflow,
-            string query
+            string query,
+            string userConversationProviderApiKey
         )
         {
             if (workflow.Filter == null || !workflow.Filter.IsEnabled)
                 return [];
 
+            if (workflow.ConversationProviderConfig == null)
+                throw new ConversationProviderNotSetException("You must set your conversation provider before filtering.");
 
             var completionProvider = chatCompletionFactory.CreateCompletionService(
-                workflow.ConversationProviderConfig ??
-                throw new ConversationProviderNotSetException(
-                        "You must set your conversation provider before filtering."
-                )
+                userConversationProviderApiKey,
+                workflow.ConversationProviderConfig
             );
 
             var contentFilterService = contentFilterFactory.CreateContentFilter(workflow.Filter);

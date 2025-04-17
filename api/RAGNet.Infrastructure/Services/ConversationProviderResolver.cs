@@ -2,14 +2,15 @@ using RAGNET.Domain.Entities;
 using RAGNET.Domain.Enums;
 using RAGNET.Domain.Exceptions;
 using RAGNET.Domain.Services;
+
 using RAGNET.Infrastructure.Adapters.Chat;
 
 namespace RAGNET.Infrastructure.Services
 {
-    public class ConversationProviderValidator : IConversationProviderValidator
+    public class ConversationProviderResolver : IConversationProviderResolver
     {
 
-        public void Validate(ConversationProviderConfig config)
+        public ConversationModel Resolve(ConversationProviderConfig config)
         {
             List<ConversationModel> validModels = [];
             if (config.Provider == ConversationProviderEnum.OPENAI)
@@ -22,15 +23,11 @@ namespace RAGNET.Infrastructure.Services
                 validModels = AnthropicChatAdapter.GetModels();
             }
 
-            bool isValid = validModels.Any(
-                m => m.Value.Equals(config.Model, StringComparison.OrdinalIgnoreCase));
-
-            if (!isValid)
-            {
-                throw new InvalidConversationModelException(
-                    $"This embedding model '{config.Model}' is not valid."
+            ConversationModel validModel = validModels.FirstOrDefault(m => m.Label == config.Model) ?? throw new InvalidConversationModelException(
+                    $"This conversation model '{config.Model}' is not valid."
                 );
-            }
+
+            return validModel;
         }
     }
 }

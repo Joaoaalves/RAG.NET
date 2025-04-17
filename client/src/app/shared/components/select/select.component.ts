@@ -53,7 +53,6 @@ export class SelectComponent
     }
 
     this.value = value;
-    console.log(this.value);
   }
 
   registerOnChange(fn: any): void {

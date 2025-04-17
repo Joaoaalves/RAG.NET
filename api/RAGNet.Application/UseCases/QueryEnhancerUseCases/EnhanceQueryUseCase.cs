@@ -7,7 +7,7 @@ namespace RAGNET.Application.UseCases.QueryEnhancerUseCases
 {
     public interface IEnhanceQueryUseCase
     {
-        Task<List<string>> Execute(Workflow workflow, QueryDTO queryDTO);
+        Task<List<string>> Execute(Workflow workflow, QueryDTO queryDTO, string userConversationProviderApiKey);
     }
 
     public class EnhanceQueryUseCase(
@@ -18,13 +18,19 @@ namespace RAGNET.Application.UseCases.QueryEnhancerUseCases
         private readonly IQueryEnhancerFactory _queryEnhancerFactory = queryEnhancerFactory;
         private readonly IChatCompletionFactory _chatCompletionFactory = chatCompletionFactory;
 
-        public async Task<List<string>> Execute(Workflow workflow, QueryDTO queryDTO)
+        public async Task<List<string>> Execute(Workflow workflow, QueryDTO queryDTO, string userConversationProviderApiKey)
         {
             try
             {
+                if (workflow.QueryEnhancers == null || workflow.QueryEnhancers.Count == 0)
+                    return [];
+
+                if (workflow.ConversationProviderConfig == null)
+                    throw new ConversationProviderNotSetException("You must set your conversation provider before querying.");
+
                 var completionService = _chatCompletionFactory.CreateCompletionService(
-                    workflow.ConversationProviderConfig ??
-                    throw new ConversationProviderNotSetException("You must set your conversation provider before querying.")
+                    userConversationProviderApiKey,
+                    workflow.ConversationProviderConfig
                 );
 
                 var tasks = workflow.QueryEnhancers.Select(async qeConfig =>

@@ -12,8 +12,8 @@ using RAGNET.Infrastructure.Data;
 namespace RAGNet.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250411173626_ChangedWorkflowToOnlyHaveOneFilter")]
-    partial class ChangedWorkflowToOnlyHaveOneFilter
+    [Migration("20250417180826_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -235,10 +235,6 @@ namespace RAGNet.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("ApiKey")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasColumnType("text");
@@ -283,10 +279,6 @@ namespace RAGNet.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("ApiKey")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Model")
                         .IsRequired()
                         .HasColumnType("text");
@@ -313,6 +305,12 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("MaxItems")
+                        .HasColumnType("integer");
 
                     b.Property<int>("Strategy")
                         .HasColumnType("integer");
@@ -552,6 +550,30 @@ namespace RAGNet.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("RAGNET.Domain.Entities.UserApiKey", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ApiKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Provider")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserApiKeys");
+                });
+
             modelBuilder.Entity("RAGNET.Domain.Entities.Workflow", b =>
                 {
                     b.Property<Guid>("Id")
@@ -787,6 +809,17 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Navigation("Ranker");
                 });
 
+            modelBuilder.Entity("RAGNET.Domain.Entities.UserApiKey", b =>
+                {
+                    b.HasOne("RAGNET.Domain.Entities.User", "User")
+                        .WithMany("ApiKeys")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("RAGNET.Domain.Entities.Workflow", b =>
                 {
                     b.HasOne("RAGNET.Domain.Entities.User", null)
@@ -828,6 +861,8 @@ namespace RAGNet.Infrastructure.Migrations
 
             modelBuilder.Entity("RAGNET.Domain.Entities.User", b =>
                 {
+                    b.Navigation("ApiKeys");
+
                     b.Navigation("Workflows");
                 });
 

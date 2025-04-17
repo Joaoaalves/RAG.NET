@@ -97,13 +97,10 @@ export class NewWorkflowComponent implements OnInit {
       }),
       embeddingProvider: this.fb.group({
         provider: [-1, Validators.required],
-        apiKey: ['', Validators.required],
         model: [null, Validators.required],
-        vectorSize: [0, Validators.required],
       }),
       conversationProvider: this.fb.group({
         provider: [-1, Validators.required],
-        apiKey: ['', Validators.required],
         model: [null, Validators.required],
       }),
     });
@@ -205,7 +202,9 @@ export class NewWorkflowComponent implements OnInit {
     const workflowDetails: CreateWorkflowRequest = formValue;
     this.workflowService.createWorkflow(workflowDetails).subscribe(
       (id) => this.router.navigate(['/dashboard']),
-      (error) => (this.error = error)
+      (response) => {
+        this.error = response.error.message;
+      }
     );
   }
 }

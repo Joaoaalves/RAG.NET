@@ -1,5 +1,6 @@
 using RAGNET.Application.DTOs.Embedder;
 using RAGNET.Domain.Entities;
+using RAGNET.Domain.Enums;
 
 namespace RAGNET.Application.Mappers
 {
@@ -10,7 +11,6 @@ namespace RAGNET.Application.Mappers
             return new ConversationProviderConfig
             {
                 Provider = dto.Provider,
-                ApiKey = dto.ApiKey,
                 Model = dto.Model,
                 WorkflowId = workflowId
             };
@@ -21,8 +21,17 @@ namespace RAGNET.Application.Mappers
             return new ConversationProviderConfigDTO
             {
                 Provider = conversationProvider.Provider,
-                ApiKey = conversationProvider.ApiKey,
                 Model = conversationProvider.Model
+            };
+        }
+
+        public static SupportedProvider ToSupportedProvider(this ConversationProviderEnum provider)
+        {
+            return provider switch
+            {
+                ConversationProviderEnum.OPENAI => SupportedProvider.OpenAI,
+                ConversationProviderEnum.ANTHROPIC => SupportedProvider.Anthropic,
+                _ => throw new ArgumentOutOfRangeException("Unsupported provider")
             };
         }
     }

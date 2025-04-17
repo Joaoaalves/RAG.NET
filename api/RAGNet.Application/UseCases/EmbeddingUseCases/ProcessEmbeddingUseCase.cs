@@ -3,10 +3,12 @@ using System.Runtime.CompilerServices;
 using System.Threading.Channels;
 using Microsoft.AspNetCore.Http;
 using RAGNET.Application.DTOs;
+using RAGNET.Application.Mappers;
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Factories;
 using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services;
+using RAGNET.Domain.Services.ApiKey;
 
 namespace RAGNET.Application.UseCases.EmbeddingUseCases
 {
@@ -19,11 +21,13 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
     public class ProcessEmbeddingUseCase(
         IWorkflowRepository workflowRepository,
         IDocumentProcessorFactory documentProcessorFactory,
-        IEmbeddingProcessingService embeddingProcessingService) : IProcessEmbeddingUseCase
+        IEmbeddingProcessingService embeddingProcessingService,
+        IApiKeyResolverService apiKeyResolverService) : IProcessEmbeddingUseCase
     {
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
         private readonly IDocumentProcessorFactory _documentProcessorFactory = documentProcessorFactory;
         private readonly IEmbeddingProcessingService _embeddingProcessingService = embeddingProcessingService;
+        private readonly IApiKeyResolverService _apiKeyResolverService = apiKeyResolverService;
 
         private (string collectionId, Chunker chunkerConfig, EmbeddingProviderConfig embeddingProviderConfig, ConversationProviderConfig conversationProviderConfig) GetConfig(Workflow workflow)
         {
@@ -54,17 +58,41 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
             return Path.GetExtension(fileName).ToLowerInvariant();
         }
 
+        private async Task<string> GetConversationProviderApiKey(Workflow workflow, ConversationProviderConfig conversationProviderConfig)
+        {
+
+            return await _apiKeyResolverService.ResolveForUserAsync(workflow.UserId, conversationProviderConfig.Provider.ToSupportedProvider());
+        }
+
+        private async Task<string> GetEmbeddingProviderApiKey(Workflow workflow, EmbeddingProviderConfig embeddingProviderConfig)
+        {
+            return await _apiKeyResolverService.ResolveForUserAsync(workflow.UserId, embeddingProviderConfig.Provider.ToSupportedProvider());
+        }
+
         public async Task<int> Execute(IFormFile file, Workflow workflow)
         {
             var (collectionId, chunkerConfig, embeddingProviderConfig, conversationProviderConfig) = GetConfig(workflow);
+
             var document = await ProcessDocumentAsync(file, workflow);
 
             var chunksToSaveBag = new ConcurrentBag<Chunk>();
 
             var tasks = document.Pages.Select(async page =>
             {
-                var chunks = (await _embeddingProcessingService.ChunkTextAsync(page.Text, chunkerConfig, conversationProviderConfig)).ToList();
-                var embeddingResults = await _embeddingProcessingService.GetEmbeddingsAsync(chunks, embeddingProviderConfig);
+                var chunks = (await _embeddingProcessingService.ChunkTextAsync
+                (
+                    page.Text,
+                    chunkerConfig,
+                    conversationProviderConfig,
+                    await GetConversationProviderApiKey(workflow, conversationProviderConfig)
+                )).ToList();
+
+                var embeddingResults = await _embeddingProcessingService.GetEmbeddingsAsync
+                (
+                    chunks,
+                    embeddingProviderConfig,
+                    await GetEmbeddingProviderApiKey(workflow, embeddingProviderConfig)
+                );
 
                 var batchToInsert = new List<(string, float[], Dictionary<string, string>)>();
 
@@ -96,7 +124,13 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
             var pageChunksMapping = new ConcurrentBag<(Page page, List<string> chunks)>();
             await Task.WhenAll(document.Pages.Select(async page =>
             {
-                var chunks = (await _embeddingProcessingService.ChunkTextAsync(page.Text, chunkerConfig, conversationProviderConfig)).ToList();
+                var chunks = (await _embeddingProcessingService.ChunkTextAsync
+                (
+                    page.Text,
+                    chunkerConfig,
+                    conversationProviderConfig,
+                    await GetConversationProviderApiKey(workflow, conversationProviderConfig
+                    ))).ToList();
                 pageChunksMapping.Add((page, chunks));
             }));
 
@@ -109,7 +143,12 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
             {
                 var parallelTasks = pageChunksMapping.Select(async mapping =>
                 {
-                    var embeddingResults = await _embeddingProcessingService.GetEmbeddingsAsync(mapping.chunks, embeddingProviderConfig);
+                    var embeddingResults = await _embeddingProcessingService.GetEmbeddingsAsync(
+                        mapping.chunks,
+                        embeddingProviderConfig,
+                        await GetEmbeddingProviderApiKey(workflow, embeddingProviderConfig)
+                    );
+
                     var batchToInsert = new List<(string, float[], Dictionary<string, string>)>();
 
                     foreach (var (chunk, vectorId, embedding) in embeddingResults)

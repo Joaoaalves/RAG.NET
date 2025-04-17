@@ -36,16 +36,30 @@ namespace RAGNET.Application.Services
         public Task<IEnumerable<string>> ChunkTextAsync(
             string text,
             Chunker chunkerConfig,
-            ConversationProviderConfig conversationProviderConfig)
+            ConversationProviderConfig conversationProviderConfig,
+            string userConversationProviderApiKey)
         {
-            var completionService = _chatCompletionFactory.CreateCompletionService(conversationProviderConfig);
+            var completionService = _chatCompletionFactory.CreateCompletionService
+            (
+                userConversationProviderApiKey,
+                conversationProviderConfig
+            );
+
             var chunker = _chunkerFactory.CreateChunker(chunkerConfig, completionService);
             return chunker.ChunkText(text);
         }
 
-        public async Task<List<(string ChunkText, string VectorId, float[] Embedding)>> GetEmbeddingsAsync(List<string> chunks, EmbeddingProviderConfig embeddingConfig)
+        public async Task<List<(string ChunkText, string VectorId, float[] Embedding)>> GetEmbeddingsAsync(
+            List<string> chunks,
+            EmbeddingProviderConfig embeddingConfig,
+            string userEmbeddingProviderApiKey
+        )
         {
-            var embedder = _embedderFactory.CreateEmbeddingService(embeddingConfig);
+            var embedder = _embedderFactory.CreateEmbeddingService
+            (
+                userEmbeddingProviderApiKey,
+                embeddingConfig
+            );
 
             var embeddings = await embedder.GetMultipleEmbeddingAsync(chunks);
             var result = new List<(string, string, float[])>();

@@ -2,14 +2,16 @@ using RAGNET.Domain.Entities;
 using RAGNET.Domain.Enums;
 using RAGNET.Domain.Exceptions;
 using RAGNET.Domain.Services;
+
 using RAGNET.Infrastructure.Adapters.Embedding;
+
 
 namespace RAGNET.Infrastructure.Services
 {
-    public class EmbeddingProviderValidator : IEmbeddingProviderValidator
+    public class EmbeddingProviderResolver : IEmbeddingProviderResolver
     {
 
-        public void Validate(EmbeddingProviderConfig config)
+        public EmbeddingModel Resolve(EmbeddingProviderConfig config)
         {
             List<EmbeddingModel> validModels = [];
             if (config.Provider == EmbeddingProviderEnum.OPENAI)
@@ -22,16 +24,18 @@ namespace RAGNET.Infrastructure.Services
                 validModels = VoyageEmbeddingAdapter.GetModels();
             }
 
-            bool isValid = validModels.Any(
-                m => m.Value.Equals(config.Model, StringComparison.OrdinalIgnoreCase)
-                && m.VectorSize == config.VectorSize);
-
-            if (!isValid)
+            if (validModels.Count == 0)
             {
                 throw new InvalidEmbeddingModelException(
-                    $"This embedding model '{config.Model}' with vectorSize of {config.VectorSize} is not valid."
+                    $"This embedding provider '{config.Provider}' is not valid."
                 );
             }
+
+            EmbeddingModel validModel = validModels.FirstOrDefault(m => m.Label == config.Model) ?? throw new InvalidEmbeddingModelException(
+                    $"This embedding model '{config.Model}' is not valid."
+                );
+
+            return validModel;
         }
     }
 }
