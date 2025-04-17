@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Provider } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -18,19 +18,19 @@ import { TextAreaComponent } from 'src/app/shared/components/text-area/text-area
 import { ChunkerStrategy } from 'src/app/models/chunker';
 import { CreateWorkflowRequest } from 'src/app/models/workflow';
 import { EmbeddingProviderEnum } from 'src/app/models/embedding';
-import {
-  EmbeddingModel,
-  EmbeddingModelsResponse,
-} from 'src/app/models/embedding';
+import { EmbeddingModel } from 'src/app/models/embedding';
 import {
   ConversationModel,
-  ConversationModelsResponse,
   ConversationProviderEnum,
 } from 'src/app/models/chat';
 
 // Services
 import { WorkflowService } from 'src/app/services/workflow.service';
-import { EnumMapperService } from 'src/app/shared/services/enum-mapper.service';
+import { ProviderOption, ProvidersResponse } from 'src/app/models/provider';
+import {
+  getProviderKeyByValueFromResponse,
+  mapValidProviders,
+} from 'src/app/shared/utils/providers-utils';
 
 @Component({
   imports: [
@@ -48,35 +48,23 @@ export class NewWorkflowComponent implements OnInit {
   form!: FormGroup;
   error: string = '';
   chunkerStrategies: { label: string; value: number }[] = [];
-  embeddingProviders: { label: string; value: number }[] = [];
-  conversationProviders: { label: string; value: number }[] = [];
-  embeddingModelsResponse!: EmbeddingModelsResponse;
-  conversationModelsResponse!: ConversationModelsResponse;
+  embeddingProviders: ProviderOption[] = [];
+  conversationProviders: ProviderOption[] = [];
+  embeddingModelsResponse!: ProvidersResponse<EmbeddingModel>;
+  conversationModelsResponse!: ProvidersResponse<ConversationModel>;
   embeddingModelOptions: EmbeddingModel[] = [];
   conversationModelOptions: ConversationModel[] = [];
 
   constructor(
     private fb: FormBuilder,
     private workflowService: WorkflowService,
-    private router: Router,
-    private mapper: EnumMapperService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.initializeOptions();
     this.initForm();
     this.loadModels();
     this.setupSubscriptions();
-  }
-
-  private initializeOptions(): void {
-    this.embeddingProviders = this.mapper.mapEnumToOptions(
-      EmbeddingProviderEnum
-    );
-    this.conversationProviders = this.mapper.mapEnumToOptions(
-      ConversationProviderEnum
-    );
-    this.chunkerStrategies = this.mapper.mapEnumToOptions(ChunkerStrategy);
   }
 
   private initForm(): void {
@@ -113,6 +101,9 @@ export class NewWorkflowComponent implements OnInit {
   private loadModels(): void {
     this.workflowService.getEmbeddingModels().subscribe((response) => {
       this.embeddingModelsResponse = response;
+
+      this.embeddingProviders = mapValidProviders(response);
+
       const currentProvider = this.form.get(
         'embeddingProvider.provider'
       )?.value;
@@ -121,6 +112,9 @@ export class NewWorkflowComponent implements OnInit {
 
     this.workflowService.getConversationModels().subscribe((response) => {
       this.conversationModelsResponse = response;
+
+      this.conversationProviders = mapValidProviders(response);
+
       const currentProvider = this.form.get(
         'conversationProvider.provider'
       )?.value;
@@ -170,20 +164,25 @@ export class NewWorkflowComponent implements OnInit {
   }
 
   private updateEmbeddingModelOptions(provider: number): void {
-    if (provider === EmbeddingProviderEnum.OPENAI) {
-      this.embeddingModelOptions = this.embeddingModelsResponse.openAI;
-    } else if (provider === EmbeddingProviderEnum.VOYAGE) {
-      this.embeddingModelOptions = this.embeddingModelsResponse.voyage;
+    const providerKey = getProviderKeyByValueFromResponse(
+      provider,
+      this.embeddingModelsResponse
+    );
+    if (providerKey && this.embeddingModelsResponse[providerKey]) {
+      this.embeddingModelOptions = this.embeddingModelsResponse[providerKey];
     } else {
       this.embeddingModelOptions = [];
     }
   }
 
   private updateConversationModelOptions(provider: number): void {
-    if (provider === ConversationProviderEnum.OPENAI) {
-      this.conversationModelOptions = this.conversationModelsResponse.openAI;
-    } else if (provider === ConversationProviderEnum.ANTHROPIC) {
-      this.conversationModelOptions = this.conversationModelsResponse.anthropic;
+    const providerKey = getProviderKeyByValueFromResponse(
+      provider,
+      this.conversationModelsResponse
+    );
+    if (providerKey && this.conversationModelsResponse[providerKey]) {
+      this.conversationModelOptions =
+        this.conversationModelsResponse[providerKey];
     } else {
       this.conversationModelOptions = [];
     }

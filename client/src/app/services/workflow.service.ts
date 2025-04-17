@@ -9,9 +9,9 @@ import {
   CreateWorkflowRequest,
   CreateWorkflowResponse,
 } from '../models/workflow';
-
-import { EmbeddingModelsResponse } from '../models/embedding';
-import { ConversationModelsResponse } from '../models/chat';
+import { ProvidersResponse } from '../models/provider';
+import { EmbeddingModel } from '../models/embedding';
+import { ConversationModel } from '../models/chat';
 
 @Injectable({
   providedIn: 'root',
@@ -56,15 +56,19 @@ export class WorkflowService {
       );
   }
 
-  getEmbeddingModels(): Observable<EmbeddingModelsResponse> {
+  getEmbeddingModels(): Observable<ProvidersResponse<EmbeddingModel>> {
     return this.httpClient
-      .get<EmbeddingModelsResponse>(`${this.apiUrl}/api/models/embedding`)
+      .get<ProvidersResponse<EmbeddingModel>>(
+        `${this.apiUrl}/api/models/embedding`
+      )
       .pipe(map((response) => response));
   }
 
-  getConversationModels(): Observable<ConversationModelsResponse> {
+  getConversationModels(): Observable<ProvidersResponse<ConversationModel>> {
     return this.httpClient
-      .get<ConversationModelsResponse>(`${this.apiUrl}/api/models/conversation`)
+      .get<ProvidersResponse<ConversationModel>>(
+        `${this.apiUrl}/api/models/conversation`
+      )
       .pipe(map((response) => response));
   }
 }

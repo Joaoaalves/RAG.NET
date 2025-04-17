@@ -16,11 +16,6 @@ export interface EmbeddingModel {
   maxContent: number;
 }
 
-export interface EmbeddingModelsResponse {
-  openAI: EmbeddingModel[];
-  voyage: EmbeddingModel[];
-}
-
 export enum EmbeddingProviderEnum {
   OPENAI = 0,
   VOYAGE = 1,

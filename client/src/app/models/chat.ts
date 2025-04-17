@@ -13,11 +13,6 @@ export interface ConversationModel {
   contextWindow: number;
 }
 
-export interface ConversationModelsResponse {
-  openAI: ConversationModel[];
-  anthropic: ConversationModel[];
-}
-
 export interface ConversationProvider {
   provider: ConversationProviderEnum;
   model: string;

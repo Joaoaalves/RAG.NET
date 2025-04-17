@@ -35,8 +35,15 @@
 
     <div class="grid grid-cols-1 gap-y-4 w-full" formGroupName="embeddingProvider">
       <h2 class="text-2xl text-neutral-300">Embedding Provider</h2>
-      <p class="mb-4 text-neutral-400 text-sm">If you want to explore the top-ranked models, visit <a
-          class="text-purple-600" href="https://huggingface.co/spaces/mteb/leaderboard">MTEB Leaderboard</a>.</p>
+      <p class="mb-4 text-neutral-300 font-medium underline  text-sm">
+        Only providers with API keys added in the
+        <a class="text-purple-600" href="/dashboard/providers">Providers tab</a>
+        will be displayed here, along with the models available for your account.
+        Make sure you’ve configured them correctly before creating a workflow.
+        If you want to explore the top-ranked models, visit
+        <a class="text-purple-600" href="https://huggingface.co/spaces/mteb/leaderboard" target="_blank">MTEB Leaderboard</a>.
+      </p>
+
       <app-select label="Provider *" name="provider" [options]="embeddingProviders" formControlName="provider"
         description="Select the embedding model provider for your service. Keep in mind that you will need an API key to use the provider, and depending on the selected chunking strategy, the embedding cost may increase. Therefore, make sure to review the costs on the provider's website before choosing your embedding model and provider."></app-select>
 
@@ -47,8 +54,16 @@
 
     <div class="grid grid-cols-1 gap-y-4 w-full" formGroupName="conversationProvider">
       <h2 class="text-2xl text-neutral-300">Conversation Provider</h2>
-      <p class="mb-4 text-neutral-400 text-sm">If you want to explore the top-ranked models, visit <a
-          class="text-purple-600" href="https://llm-stats.com/">LLM stats</a>.</p>
+
+      <p class="mb-4 text-neutral-300 font-medium underline text-sm">
+        Only providers with valid API keys set in the
+        <a class="text-purple-600" href="/dashboard/providers">Providers tab</a>
+        will appear here, along with the models available under your account.
+        If no API key is configured, the provider will not show up.
+        To compare top models, visit
+        <a class="text-purple-600" href="https://llm-stats.com/" target="_blank">LLM stats</a>.
+      </p>
+
       <app-select label="Provider *" name="provider" [options]="conversationProviders" formControlName="provider"
         description="Select the Conversation model provider for your service. Keep in mind that you will need an API key to use the provider, and depending on the selected chunking strategy, the embedding cost may increase. Therefore, make sure to review the costs on the provider's website before choosing your embedding model and provider."></app-select>
 
