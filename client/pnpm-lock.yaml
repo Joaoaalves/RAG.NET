@@ -44,6 +44,9 @@ importers:
       '@ng-icons/lucide':
         specifier: '>=29.0.0'
         version: 31.2.0
+      '@ng-icons/remixicon':
+        specifier: ^31.3.0
+        version: 31.3.0
       '@spartan-ng/brain':
         specifier: 0.0.1-alpha.432
         version: 0.0.1-alpha.432(@angular/cdk@19.2.7(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0)))(rxjs@7.8.2))(clsx@2.1.1)(luxon@3.6.0)(rxjs@7.8.2)(tailwind-merge@2.6.0)(tailwindcss-animate@1.0.7(tailwindcss@4.0.17))(tailwindcss@4.0.17)
@@ -2127,6 +2130,9 @@ packages:
 
   '@ng-icons/lucide@31.2.0':
     resolution: {integrity: sha512-ygjiuwc5QyoOAfnbFLEL9XmFl3i19TF8rNJfMY1w0wzpKVenoLrgUr/iza3+vqD17o/ng4hgOiSeUY57bODXew==}
+
+  '@ng-icons/remixicon@31.3.0':
+    resolution: {integrity: sha512-mdSMGeaNVGd6yMYzYCEzfXgwKwJ9jRTmMNZXtReFX8tvWkRRviOVHyCSZLpBgi+xhvw6I7S8PQ4UzN+NzhTTTQ==}
 
   '@ngtools/webpack@19.2.4':
     resolution: {integrity: sha512-I2vG9Yb0W/PR5+quBmSUk6uGa4xN/YvfJk+30bFDB/CpJlTQEo+3AOFCDYcDOxrbtjON80VdFYPypQ5ztbpdYw==}
@@ -9918,6 +9924,10 @@ snapshots:
       tslib: 2.8.1
 
   '@ng-icons/lucide@31.2.0':
+    dependencies:
+      tslib: 2.8.1
+
+  '@ng-icons/remixicon@31.3.0':
     dependencies:
       tslib: 2.8.1
 

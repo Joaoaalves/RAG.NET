@@ -44,7 +44,7 @@
         <a class="text-purple-600" href="https://huggingface.co/spaces/mteb/leaderboard" target="_blank">MTEB Leaderboard</a>.
       </p>
 
-      <app-select label="Provider *" name="provider" [options]="embeddingProviders" formControlName="provider"
+      <app-select label="Provider *" name="provider" [options]="embeddingOptions" formControlName="provider"
         description="Select the embedding model provider for your service. Keep in mind that you will need an API key to use the provider, and depending on the selected chunking strategy, the embedding cost may increase. Therefore, make sure to review the costs on the provider's website before choosing your embedding model and provider."></app-select>
 
       <app-select label="Model *" name="model" [options]="embeddingModelOptions" formControlName="model"
@@ -64,7 +64,7 @@
         <a class="text-purple-600" href="https://llm-stats.com/" target="_blank">LLM stats</a>.
       </p>
 
-      <app-select label="Provider *" name="provider" [options]="conversationProviders" formControlName="provider"
+      <app-select label="Provider *" name="provider" [options]="conversationOptions" formControlName="provider"
         description="Select the Conversation model provider for your service. Keep in mind that you will need an API key to use the provider, and depending on the selected chunking strategy, the embedding cost may increase. Therefore, make sure to review the costs on the provider's website before choosing your embedding model and provider."></app-select>
 
       <app-select label="Model *" name="model" [options]="conversationModelOptions" formControlName="model"

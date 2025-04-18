@@ -16,6 +16,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
   host: {
     style: 'display: block',
   },
+  standalone: true,
 })
 export class InputComponent implements ControlValueAccessor {
   @Input() label: string = '';

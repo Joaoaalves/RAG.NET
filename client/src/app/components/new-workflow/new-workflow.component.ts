@@ -19,7 +19,11 @@ import { ChunkerStrategy } from 'src/app/models/chunker';
 import { CreateWorkflowRequest } from 'src/app/models/workflow';
 import { EmbeddingModel } from 'src/app/models/embedding';
 import { ConversationModel } from 'src/app/models/chat';
-import { ProviderOption, ProvidersResponse } from 'src/app/models/provider';
+import {
+  ProviderData,
+  ProviderOption,
+  ProvidersResponse,
+} from 'src/app/models/provider';
 
 // Services
 import { WorkflowService } from 'src/app/services/workflow.service';
@@ -47,8 +51,13 @@ export class NewWorkflowComponent implements OnInit {
   form!: FormGroup;
   error: string = '';
   chunkerStrategies: { label: string; value: number }[] = [];
-  embeddingProviders: ProviderOption[] = [];
-  conversationProviders: ProviderOption[] = [];
+
+  embeddingProviders: ProviderData[] = [];
+  conversationProviders: ProviderData[] = [];
+
+  embeddingOptions: ProviderOption[] = [];
+  conversationOptions: ProviderOption[] = [];
+
   embeddingModelsResponse!: ProvidersResponse<EmbeddingModel>;
   conversationModelsResponse!: ProvidersResponse<ConversationModel>;
   embeddingModelOptions: EmbeddingModel[] = [];
@@ -105,6 +114,13 @@ export class NewWorkflowComponent implements OnInit {
 
       this.embeddingProviders = mapValidProviders(response);
 
+      this.embeddingProviders.forEach((provider) => {
+        this.embeddingOptions.push({
+          label: provider.title,
+          value: provider.id,
+        });
+      });
+
       const currentProvider = this.form.get(
         'embeddingProvider.provider'
       )?.value;
@@ -115,6 +131,13 @@ export class NewWorkflowComponent implements OnInit {
       this.conversationModelsResponse = response;
 
       this.conversationProviders = mapValidProviders(response);
+
+      this.conversationProviders.forEach((provider) => {
+        this.conversationOptions.push({
+          label: provider.title,
+          value: provider.id,
+        });
+      });
 
       const currentProvider = this.form.get(
         'conversationProvider.provider'
