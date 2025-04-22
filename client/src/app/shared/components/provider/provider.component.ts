@@ -57,7 +57,14 @@ export class ProviderComponent implements OnInit {
 
   onSubmit(event: Event) {
     event.preventDefault();
-    this.hasApiKey ? this.save() : this.add();
+    if (this.form.valid) {
+      this.hasApiKey ? this.save() : this.add();
+      return;
+    }
+
+    toast.error('Invalid API Key', {
+      description: 'You should provide a valid API Key.',
+    });
   }
 
   save() {
