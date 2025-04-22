@@ -8,7 +8,7 @@
     <p class="text-neutral-200 text-sm">{{providerData.description}}</p>
 
     <form
-    class="w-full grid grid-cols-[1fr_160px] items-end gap-x-4 mt-4"
+    class="w-full grid grid-cols-[1fr_240px] items-end gap-x-4 mt-4"
     (ngSubmit)="onSubmit($event)"
     [formGroup]="form"
   >
@@ -19,17 +19,17 @@
       formControlName="apiKey"
     ></app-input>
 
-    <div *ngIf="hasApiKey">
+    <div *ngIf="hasApiKey" class="grid grid-cols-2 gap-x-2">
       <button
         type="submit"
-        class="bg-purple-600 text-white h-10 rounded-lg cursor-pointer hover:bg-white hover:text-purple-600 transition-all duration-300 w-16 me-4"
+        class="h-10 rounded-lg cursor-pointer bg-neutral-200 text-black hover:bg-purple-600 hover:text-white transition-all duration-300"
       >
         Update
       </button>
       <button
         type="button"
         (click)="delete()"
-        class="bg-red-600 text-white h-10 rounded-lg cursor-pointer hover:bg-white hover:text-red-600 transition-all duration-300 w-16"
+        class="bg-red-600 text-white h-10 rounded-lg cursor-pointer hover:bg-neutral-200 hover:text-red-600 transition-all duration-300"
       >
         Delete
       </button>
@@ -38,7 +38,7 @@
     <div *ngIf="!hasApiKey">
       <button
         type="submit"
-        class="bg-purple-600 text-white h-10 rounded-lg cursor-pointer hover:bg-white hover:text-purple-600 transition-all duration-300 w-24"
+        class="h-10 rounded-lg cursor-pointer bg-neutral-200 text-black hover:bg-purple-600 hover:text-white transition-all duration-300 w-full"
       >
         Save
       </button>
