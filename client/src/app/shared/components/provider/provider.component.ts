@@ -36,7 +36,7 @@ export class ProviderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.providerData = this.providersService.getProviderData(this.Provider);
+    this.providerData = this.providersService.mapProviderData(this.Provider);
 
     this.hasApiKey = !!this.ApiKey;
 
@@ -67,11 +67,7 @@ export class ProviderComponent implements OnInit {
     });
   }
 
-  save() {
-    toast.success('Provider saved successfully', {
-      description: 'The provider has been saved successfully.',
-    });
-  }
+  save() {}
 
   delete() {
     toast.error('Provider deleted successfully', {
@@ -84,9 +80,28 @@ export class ProviderComponent implements OnInit {
   }
 
   add() {
-    toast.success('Provider added successfully', {
-      description: 'The provider has been added successfully.',
-    });
-    this.hasApiKey = true;
+    const apiKey = this.form.get('apiKey')?.value;
+
+    if (!apiKey) {
+      toast.error('Invalid API Key', {
+        description: 'You should provide a valid API Key.',
+      });
+      return;
+    }
+
+    this.providersService.addProvider(this.Provider, apiKey).subscribe(
+      () => {
+        toast.success('Provider saved successfully', {
+          description: 'The provider has been saved successfully.',
+        });
+
+        this.hasApiKey = true;
+      },
+      (error) => {
+        toast.error('An error occurred', {
+          description: error,
+        });
+      }
+    );
   }
 }

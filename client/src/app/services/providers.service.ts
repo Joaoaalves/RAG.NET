@@ -7,8 +7,10 @@ import { PROVIDERS_DATA } from '../core/constants/providers.constant';
 import { BaseApiService } from './base-api.service';
 import { catchError, map, Observable, of } from 'rxjs';
 import {
-  ProviderCreateResponse,
+  Provider as AIProvider,
+  GetProvidersResponse,
   ProviderData,
+  ProvidersResponse,
   SupportedProvider,
 } from '../models/provider';
 
@@ -20,7 +22,7 @@ export class ProvidersService extends BaseApiService {
     super(http);
   }
 
-  getProviderData(provider: SupportedProvider): ProviderData {
+  mapProviderData(provider: SupportedProvider): ProviderData {
     return PROVIDERS_DATA[provider];
   }
 
@@ -28,37 +30,43 @@ export class ProvidersService extends BaseApiService {
     return Object.values(PROVIDERS_DATA);
   }
 
+  getUserProviders(): Observable<GetProvidersResponse> {
+    return this.http
+      .get<GetProvidersResponse>(this.buildUrl('/api/provider'))
+      .pipe(map((response) => response));
+  }
+
   addProvider(
     provider: SupportedProvider,
     apiKey: string
-  ): Observable<ProviderCreateResponse> {
-    const providerData = this.getProviderData(provider);
+  ): Observable<AIProvider> {
+    const providerData = this.mapProviderData(provider);
     if (!providerData) {
       throw new Error(`Provider ${provider} not found`);
     }
 
     return this.http
-      .post<ProviderCreateResponse>(this.buildUrl('/api/providers'), {
-        provider,
+      .post<AIProvider>(this.buildUrl('/api/provider'), {
+        provider: providerData.id,
         apiKey,
       })
       .pipe(map((response) => response));
   }
 
-  updateProvider(providerId: string, apiKey: string): Observable<string> {
+  updateProvider(
+    providerId: SupportedProvider,
+    apiKey: string
+  ): Observable<string> {
     return this.http
-      .put<ProviderCreateResponse>(
-        this.buildUrl(`/api/providers/${providerId}`),
-        {
-          apiKey,
-        }
-      )
+      .put<Provider>(this.buildUrl(`/api/provider/${providerId}`), {
+        apiKey,
+      })
       .pipe(map((response) => apiKey));
   }
 
   deleteProvider(providerId: string): Observable<boolean> {
     return this.http
-      .delete<void>(this.buildUrl(`/api/providers/${providerId}`))
+      .delete<void>(this.buildUrl(`/api/provider/${providerId}`))
       .pipe(
         map(() => true),
         catchError(() => of(false))

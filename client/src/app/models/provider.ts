@@ -8,13 +8,15 @@ export interface ProviderOption {
 
 export type SupportedProvider = 'openai' | 'anthropic' | 'voyage' | 'qdrant';
 
+export type GetProvidersResponse = Provider[];
+
 export interface ProvidersResponse<
   T extends EmbeddingModel | ConversationModel
 > {
   [key: string]: T[];
 }
 
-export interface ProviderCreateResponse {
+export interface Provider {
   id: string;
   apiKey: string;
   userId: string;
