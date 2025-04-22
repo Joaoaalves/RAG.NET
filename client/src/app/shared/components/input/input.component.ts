@@ -26,6 +26,8 @@ export class InputComponent implements ControlValueAccessor {
   @Input() step?: number = 1;
   @Input() min?: number = 0;
   @Input() max?: number = 1;
+  @Input() disabled?: boolean = false;
+  @Input() required?: boolean = true;
 
   value: any;
 

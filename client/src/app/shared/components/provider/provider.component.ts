@@ -15,11 +15,26 @@ import {
   SupportedProvider,
 } from 'src/app/models/provider';
 import { ProvidersService } from 'src/app/services/providers.service';
+import { provideIcons } from '@ng-icons/core';
+import { heroPencil, heroXMark } from '@ng-icons/heroicons/outline';
+import { NgIcon } from '@ng-icons/core';
 
 @Component({
   selector: 'app-provider',
   templateUrl: './provider.component.html',
-  imports: [CommonModule, InputComponent, ReactiveFormsModule, FormsModule],
+  imports: [
+    CommonModule,
+    InputComponent,
+    ReactiveFormsModule,
+    FormsModule,
+    NgIcon,
+  ],
+  providers: [
+    provideIcons({
+      heroPencil,
+      heroXMark,
+    }),
+  ],
   standalone: true,
 })
 export class ProviderComponent implements OnInit {
@@ -28,6 +43,7 @@ export class ProviderComponent implements OnInit {
   providerData: ProviderData | undefined;
   form: FormGroup;
   hasApiKey: boolean = false;
+  isUpdating: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -69,6 +85,18 @@ export class ProviderComponent implements OnInit {
 
     toast.error('Invalid API Key', {
       description: 'You should provide a valid API Key.',
+    });
+  }
+
+  startUpdating() {
+    this.isUpdating = true;
+    this.form.setValue({ apiKey: '' });
+  }
+
+  cancelUpdating() {
+    this.isUpdating = false;
+    this.form.setValue({
+      apiKey: this.providerData?.keyTemplate + this.Provider.apiKey,
     });
   }
 

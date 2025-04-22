@@ -17,15 +17,26 @@
       type="text"
       name="apiKey"
       formControlName="apiKey"
+      [disabled]="hasApiKey && !isUpdating"
     ></app-input>
 
     <div *ngIf="hasApiKey" class="grid grid-cols-2 gap-x-2">
-      <button
-        type="submit"
-        class="h-10 rounded-lg cursor-pointer bg-neutral-200 text-black hover:bg-purple-600 hover:text-white transition-all duration-300"
-      >
-        Update
+
+      <button type="button" (click)="startUpdating()" *ngIf="!isUpdating" class="h-10 grid place-items-center rounded-lg cursor-pointer bg-white text-black hover:bg-black hover:text-white transition-all duration-300">
+        <ng-icon name="heroPencil"></ng-icon>
       </button>
+      <div *ngIf="isUpdating" class="grid grid-cols-[32px_1fr] gap-x-2">
+        <button class="h-10 grid place-items-center rounded-lg cursor-pointer bg-white text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300"  type="button" (click)="cancelUpdating()">
+          <ng-icon name="heroXMark"></ng-icon>
+        </button>
+        <button
+          type="submit"
+          class="h-10 rounded-lg cursor-pointer bg-neutral-200 text-black hover:bg-purple-600 hover:text-white transition-all duration-300"
+        >
+          Update
+        </button>
+      </div>
+
       <button
         type="button"
         (click)="delete()"

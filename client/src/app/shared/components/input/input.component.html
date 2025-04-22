@@ -10,7 +10,8 @@
     [step]="step"
     (input)="onInputChange($event)"
     (blur)="onTouched()"
-    class="w-full bg-black text-white rounded-lg p-2 border border-neutral-800  mt-2"
-    required
+    class="w-full bg-black text-white rounded-lg p-2 border border-neutral-800  mt-2 disabled:cursor-not-allowed"
+    [disabled]="disabled"
+    [required]="required"
   />
 </div>
