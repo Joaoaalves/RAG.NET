@@ -4,19 +4,17 @@
       <h1 class="text-4xl text-neutral-200 font-bold">Providers</h1>
     </div>
   </div>
-  <div *ngIf="providers.length > 0" class="flex flex-col items-stretch justify-start gap-8 w-2/3">
-    <app-provider
-    [Provider]="getProvider('openai')"
-    ></app-provider>
+  <div
+    *ngIf="providers.length > 0"
+    class="flex flex-col items-stretch justify-start gap-8 w-2/3"
+  >
+    <app-provider [Provider]="getProvider('openai')"></app-provider>
 
-    <app-provider
-    [Provider]="getProvider('anthropic')"
-  ></app-provider>
+    <app-provider [Provider]="getProvider('anthropic')"></app-provider>
 
-    <app-provider
-    [Provider]="getProvider('voyage')"
-  ></app-provider>
+    <app-provider [Provider]="getProvider('voyage')"></app-provider>
 
+    <app-provider [Provider]="getProvider('qdrant')"></app-provider>
   </div>
 </div>
 

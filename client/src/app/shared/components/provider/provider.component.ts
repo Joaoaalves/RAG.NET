@@ -88,33 +88,55 @@ export class ProviderComponent implements OnInit {
     });
   }
 
-  startUpdating() {
+  startEdition() {
     this.isUpdating = true;
     this.form.setValue({ apiKey: '' });
   }
 
-  cancelUpdating() {
+  finishApiKeyEdition(apiKey?: string) {
     this.isUpdating = false;
+    const suffix = apiKey?.slice(0, -4) ?? this.Provider.apiKey;
     this.form.setValue({
-      apiKey: this.providerData?.keyTemplate + this.Provider.apiKey,
+      apiKey: this.providerData?.keyTemplate.slice(0, -4) + suffix,
     });
   }
 
   update() {
-    const apiKey = this.form.get('apiKey')?.value;
+    const apiKey: string = this.form.get('apiKey')?.value;
 
     if (!apiKey) {
       toast.error('Invalid API Key', {
         description: 'You should provide a valid API Key.',
       });
+
+      this.finishApiKeyEdition();
       return;
     }
 
-    this.providersService.updateProvider(this.Provider.id, apiKey).subscribe({
-      next: () => {
-        toast.success('Provider updated successfully');
-      },
-    });
+    try {
+      this.providersService
+        .updateProvider(
+          this.Provider.id,
+          apiKey,
+          this.Provider.provider.toLowerCase() as SupportedProvider
+        )
+        .subscribe({
+          next: () => {
+            toast.success('Provider updated successfully');
+
+            this.finishApiKeyEdition();
+          },
+          error: (msg) => {
+            toast.error('Update failed', {
+              description: `${msg}`,
+            });
+          },
+        });
+    } catch (err) {
+      toast.error('Update failed', {
+        description: `${err}`,
+      });
+    }
   }
 
   delete() {
@@ -145,25 +167,31 @@ export class ProviderComponent implements OnInit {
       });
       return;
     }
+    try {
+      this.providersService
+        .addProvider(
+          this.Provider.provider.toLowerCase() as SupportedProvider,
+          apiKey
+        )
+        .subscribe({
+          next: () => {
+            toast.success('Provider saved successfully', {
+              description: 'The provider has been saved successfully.',
+            });
+            this.hasApiKey = true;
 
-    this.providersService
-      .addProvider(
-        this.Provider.provider.toLowerCase() as SupportedProvider,
-        apiKey
-      )
-      .subscribe({
-        next: () => {
-          toast.success('Provider saved successfully', {
-            description: 'The provider has been saved successfully.',
-          });
-
-          this.hasApiKey = true;
-        },
-        error: (msg) => {
-          toast.error('An error occurred', {
-            description: msg,
-          });
-        },
+            this.finishApiKeyEdition(apiKey);
+          },
+          error: (msg) => {
+            toast.error('An error occurred', {
+              description: msg,
+            });
+          },
+        });
+    } catch (err) {
+      toast.error('An error occurred', {
+        description: `${err}`,
       });
+    }
   }
 }

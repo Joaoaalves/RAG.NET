@@ -29,4 +29,5 @@ export interface ProviderData {
   description: string;
   icon: string;
   keyTemplate: string;
+  regex: string;
 }

@@ -41,24 +41,37 @@ export class ProvidersService extends BaseApiService {
     apiKey: string
   ): Observable<AIProvider> {
     const providerData = this.mapProviderData(provider);
+
     if (!providerData) {
       throw new Error(`Provider ${provider} not found`);
     }
 
-    return this.http
-      .post<AIProvider>(this.buildUrl('/api/provider'), {
-        provider: providerData.id,
-        apiKey,
-      })
-      .pipe(map((response) => response));
+    if (this.isValidApiKey(provider, apiKey)) {
+      return this.http
+        .post<AIProvider>(this.buildUrl('/api/provider'), {
+          provider: providerData.id,
+          apiKey,
+        })
+        .pipe(map((response) => response));
+    }
+
+    throw new Error(`Invalid API Key format for provider ${provider}`);
   }
 
-  updateProvider(providerId: string, apiKey: string): Observable<string> {
-    return this.http
-      .put<Provider>(this.buildUrl(`/api/provider/${providerId}`), {
-        apiKey,
-      })
-      .pipe(map((response) => apiKey));
+  updateProvider(
+    providerId: string,
+    apiKey: string,
+    provider: SupportedProvider
+  ): Observable<string> {
+    if (this.isValidApiKey(provider, apiKey)) {
+      return this.http
+        .put<Provider>(this.buildUrl(`/api/provider/${providerId}`), {
+          apiKey,
+        })
+        .pipe(map((response) => apiKey));
+    }
+
+    throw new Error(`Invalid API Key format for provider ${provider}`);
   }
 
   deleteProvider(providerId: string): Observable<boolean> {
@@ -68,5 +81,13 @@ export class ProvidersService extends BaseApiService {
         map(() => true),
         catchError(() => of(false))
       );
+  }
+
+  private isValidApiKey(provider: SupportedProvider, apiKey: string): boolean {
+    const providerData = this.mapProviderData(provider);
+    if (!providerData || !providerData.regex) return false;
+
+    const regex = new RegExp(providerData.regex);
+    return regex.test(apiKey);
   }
 }
