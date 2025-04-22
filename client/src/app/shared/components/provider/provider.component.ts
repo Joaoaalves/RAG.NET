@@ -16,7 +16,11 @@ import {
 } from 'src/app/models/provider';
 import { ProvidersService } from 'src/app/services/providers.service';
 import { provideIcons } from '@ng-icons/core';
-import { heroPencil, heroXMark } from '@ng-icons/heroicons/outline';
+import {
+  heroArrowTopRightOnSquare,
+  heroPencil,
+  heroXMark,
+} from '@ng-icons/heroicons/outline';
 import { NgIcon } from '@ng-icons/core';
 
 @Component({
@@ -33,6 +37,7 @@ import { NgIcon } from '@ng-icons/core';
     provideIcons({
       heroPencil,
       heroXMark,
+      heroArrowTopRightOnSquare,
     }),
   ],
   standalone: true,
@@ -88,6 +93,15 @@ export class ProviderComponent implements OnInit {
     });
   }
 
+  navigateToProvider() {
+    if (this.providerData?.apiKeyUrl) {
+      window.open(this.providerData.apiKeyUrl, '_blank');
+    } else {
+      toast.error('Unable to open link', {
+        description: 'No URL found for this provider.',
+      });
+    }
+  }
   startEdition() {
     this.isUpdating = true;
     this.form.setValue({ apiKey: '' });

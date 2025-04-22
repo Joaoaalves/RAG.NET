@@ -27,6 +27,7 @@ export interface ProviderData {
   id: number;
   title: string;
   description: string;
+  apiKeyUrl: string;
   icon: string;
   keyTemplate: string;
   regex: string;
