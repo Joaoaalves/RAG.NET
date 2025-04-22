@@ -53,10 +53,7 @@ export class ProvidersService extends BaseApiService {
       .pipe(map((response) => response));
   }
 
-  updateProvider(
-    providerId: SupportedProvider,
-    apiKey: string
-  ): Observable<string> {
+  updateProvider(providerId: string, apiKey: string): Observable<string> {
     return this.http
       .put<Provider>(this.buildUrl(`/api/provider/${providerId}`), {
         apiKey,

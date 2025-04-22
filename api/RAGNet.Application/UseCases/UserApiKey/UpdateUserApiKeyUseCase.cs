@@ -26,6 +26,7 @@ namespace RAGNET.Application.UseCases.UserApiKey
 
                 var encryptedApiKey = _cryptoService.Encrypt(dto.ApiKey);
                 userApiKey.ApiKey = encryptedApiKey;
+                userApiKey.KeySuffix = dto.ApiKey.Substring(dto.ApiKey.Length - 4, 4);
 
                 await _userApiKeyRepository.UpdateAsync(userApiKey, userId);
 

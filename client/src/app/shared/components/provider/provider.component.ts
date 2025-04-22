@@ -63,7 +63,7 @@ export class ProviderComponent implements OnInit {
   onSubmit(event: Event) {
     event.preventDefault();
     if (this.form.valid) {
-      this.hasApiKey ? this.save() : this.add();
+      this.hasApiKey ? this.update() : this.add();
       return;
     }
 
@@ -72,11 +72,26 @@ export class ProviderComponent implements OnInit {
     });
   }
 
-  save() {}
+  update() {
+    const apiKey = this.form.get('apiKey')?.value;
+
+    if (!apiKey) {
+      toast.error('Invalid API Key', {
+        description: 'You should provide a valid API Key.',
+      });
+      return;
+    }
+
+    this.providersService.updateProvider(this.Provider.id, apiKey).subscribe({
+      next: () => {
+        toast.success('Provider updated successfully');
+      },
+    });
+  }
 
   delete() {
-    this.providersService.deleteProvider(this.Provider.id).subscribe(
-      () => {
+    this.providersService.deleteProvider(this.Provider.id).subscribe({
+      next: () => {
         toast.success('Provider deleted successfully', {
           description: 'The provider has been deleted successfully.',
         });
@@ -85,12 +100,12 @@ export class ProviderComponent implements OnInit {
         this.hasApiKey = false;
         this.Provider.apiKey = '';
       },
-      (error) => {
+      error: (msg) => {
         toast.error('An error occurred', {
-          description: error,
+          description: msg,
         });
-      }
-    );
+      },
+    });
   }
 
   add() {
@@ -108,19 +123,19 @@ export class ProviderComponent implements OnInit {
         this.Provider.provider.toLowerCase() as SupportedProvider,
         apiKey
       )
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           toast.success('Provider saved successfully', {
             description: 'The provider has been saved successfully.',
           });
 
           this.hasApiKey = true;
         },
-        (error) => {
+        error: (msg) => {
           toast.error('An error occurred', {
-            description: error,
+            description: msg,
           });
-        }
-      );
+        },
+      });
   }
 }
