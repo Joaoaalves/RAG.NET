@@ -9,7 +9,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { toast } from 'ngx-sonner';
-import { ProviderData, SupportedProvider } from 'src/app/models/provider';
+import {
+  Provider,
+  ProviderData,
+  SupportedProvider,
+} from 'src/app/models/provider';
 import { ProvidersService } from 'src/app/services/providers.service';
 
 @Component({
@@ -19,8 +23,7 @@ import { ProvidersService } from 'src/app/services/providers.service';
   standalone: true,
 })
 export class ProviderComponent implements OnInit {
-  @Input() Provider: SupportedProvider = 'openai';
-  @Input() ApiKey: string = '';
+  @Input() Provider!: Provider;
 
   providerData: ProviderData | undefined;
   form: FormGroup;
@@ -36,21 +39,23 @@ export class ProviderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.providerData = this.providersService.mapProviderData(this.Provider);
+    this.providerData = this.providersService.mapProviderData(
+      this.Provider.provider.toLowerCase() as SupportedProvider
+    );
 
-    this.hasApiKey = !!this.ApiKey;
+    this.hasApiKey = !!this.Provider.apiKey;
 
-    if (this.ApiKey && this.providerData?.keyTemplate) {
+    if (this.Provider.apiKey && this.providerData?.keyTemplate) {
       const visibleKey =
-        this.providerData?.keyTemplate.slice(0, -this.ApiKey.length) +
-        this.ApiKey;
+        this.providerData?.keyTemplate.slice(0, -this.Provider.apiKey.length) +
+        this.Provider.apiKey;
       this.form.patchValue({ apiKey: visibleKey });
     }
 
     this.form.get('apiKey')?.valueChanges.subscribe((value: string) => {
       if (value && this.providerData?.keyTemplate) {
         const lastPart = value.slice(-4);
-        this.ApiKey = lastPart;
+        this.Provider.apiKey = lastPart;
       }
     });
   }
@@ -70,13 +75,22 @@ export class ProviderComponent implements OnInit {
   save() {}
 
   delete() {
-    toast.error('Provider deleted successfully', {
-      description: 'The provider has been deleted successfully.',
-    });
+    this.providersService.deleteProvider(this.Provider.id).subscribe(
+      () => {
+        toast.success('Provider deleted successfully', {
+          description: 'The provider has been deleted successfully.',
+        });
 
-    this.form.reset();
-    this.hasApiKey = false;
-    this.ApiKey = '';
+        this.form.reset();
+        this.hasApiKey = false;
+        this.Provider.apiKey = '';
+      },
+      (error) => {
+        toast.error('An error occurred', {
+          description: error,
+        });
+      }
+    );
   }
 
   add() {
@@ -89,19 +103,24 @@ export class ProviderComponent implements OnInit {
       return;
     }
 
-    this.providersService.addProvider(this.Provider, apiKey).subscribe(
-      () => {
-        toast.success('Provider saved successfully', {
-          description: 'The provider has been saved successfully.',
-        });
+    this.providersService
+      .addProvider(
+        this.Provider.provider.toLowerCase() as SupportedProvider,
+        apiKey
+      )
+      .subscribe(
+        () => {
+          toast.success('Provider saved successfully', {
+            description: 'The provider has been saved successfully.',
+          });
 
-        this.hasApiKey = true;
-      },
-      (error) => {
-        toast.error('An error occurred', {
-          description: error,
-        });
-      }
-    );
+          this.hasApiKey = true;
+        },
+        (error) => {
+          toast.error('An error occurred', {
+            description: error,
+          });
+        }
+      );
   }
 }

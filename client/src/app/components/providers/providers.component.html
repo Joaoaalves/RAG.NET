@@ -6,18 +6,15 @@
   </div>
   <div *ngIf="providers.length > 0" class="flex flex-col items-stretch justify-start gap-8 w-2/3">
     <app-provider
-      Provider='openai'
-      [ApiKey]="getProviderApiKey('openai')"
+    [Provider]="getProvider('openai')"
     ></app-provider>
 
     <app-provider
-    Provider='anthropic'
-    [ApiKey]="getProviderApiKey('anthropic')"
+    [Provider]="getProvider('anthropic')"
   ></app-provider>
 
     <app-provider
-    Provider='voyage'
-    [ApiKey]="getProviderApiKey('voyage')"
+    [Provider]="getProvider('voyage')"
   ></app-provider>
 
   </div>

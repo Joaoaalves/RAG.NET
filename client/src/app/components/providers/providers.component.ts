@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component';
 import {
   GetProvidersResponse,
+  Provider,
   SupportedProvider,
 } from 'src/app/models/provider';
 import { ProvidersService } from 'src/app/services/providers.service';
@@ -21,16 +22,25 @@ export class ProvidersComponent implements OnInit {
     this.getUserProviders();
   }
 
-  getProviderApiKey(provider: string) {
-    if (this.providers) {
-      return (
-        this.providers
-          .filter((prov) => prov.provider.toLowerCase() === provider)
-          .at(0)?.apiKey ?? ''
-      );
+  getProvider(provider: string): Provider {
+    if (!this.providers || this.providers.length === 0) {
+      return this.getDefaultProvider(provider);
     }
 
-    return '';
+    const prov = this.providers.find(
+      (prov) => prov.provider.toLowerCase() === provider.toLowerCase()
+    );
+
+    return prov ?? this.getDefaultProvider(provider);
+  }
+
+  getDefaultProvider(provider: string): Provider {
+    return {
+      id: '',
+      apiKey: '',
+      userId: '',
+      provider: provider as SupportedProvider,
+    };
   }
 
   getUserProviders() {
