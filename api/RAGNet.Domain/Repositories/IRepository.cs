@@ -25,7 +25,10 @@ namespace RAGNET.Domain.Repositories
         Task<UserApiKey?> GetByUserIdAndProviderAsync(string userId, SupportedProvider provider);
         Task<bool> ExistsAsync(SupportedProvider provider, string userId);
     }
-    public interface ICallbackUrlRepository : IRepository<CallbackUrl> { }
+    public interface ICallbackUrlRepository : IRepository<CallbackUrl>
+    {
+        Task<List<string>> GetByWorkflowAsync(Guid workflowId);
+    }
     public interface IChunkerRepository : IRepository<Chunker>, IConfigMeta<Chunker> { }
     public interface IQueryEnhancerRepository : IRepository<QueryEnhancer>, IConfigMeta<QueryEnhancer> { }
     public interface IFilterRepository : IRepository<Filter>, IConfigMeta<Filter> { }
