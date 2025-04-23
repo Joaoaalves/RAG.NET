@@ -1,5 +1,7 @@
 using Confluent.Kafka;
 using RAGNET.Domain.Services;
+using RAGNET.Domain.Services.Queue;
+using RAGNET.Infrastructure.Adapters.Queue;
 using RAGNET.Infrastructure.Adapters.VectorDB;
 
 namespace web.Configurations
@@ -14,7 +16,7 @@ namespace web.Configurations
             {
                 BootstrapServers = configuration["Kafka:BootstrapServers"]
             });
-
+            services.AddScoped<IJobQueueService, RedisJobQueueService>();
             return services;
         }
     }

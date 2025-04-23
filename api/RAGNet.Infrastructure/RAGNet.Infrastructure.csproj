@@ -19,6 +19,7 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageReference Include="OpenAI" Version="2.1.0" />
     <PackageReference Include="Qdrant.Client" Version="1.13.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.8.31" />
     <PackageReference Include="UglyToad.PdfPig" Version="1.7.0-custom-5" />
     <PackageReference Include="VersOne.Epub" Version="3.3.3" />
   </ItemGroup>
