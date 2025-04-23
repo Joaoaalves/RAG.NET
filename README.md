@@ -47,6 +47,9 @@ docker-compose up --build
 ### Features to Implement
 
 - Front-End
+- Embedding
+  - Callback
+    - Queue
 - Context Enrichers
   - SERP
 - Query Enhancers
@@ -56,8 +59,6 @@ docker-compose up --build
   - Multiple Score Filter
 - Rankers
   - Cohere Reranker
-- Retrieval Pipeline
-- Filter
 - Tokenizer
   - Tokenizer Service
   - Max tokens on Query retrieval
@@ -65,7 +66,6 @@ docker-compose up --build
   - Max tokens on Embedding
 - Adapters
   - Pinecone
-  - Gemini (Chat Completion, Embedding)
   - DeepSeek (Chat completion)
   - Other Embedding and Chat Completion Providers
 
@@ -94,8 +94,11 @@ docker-compose up --build
   - List Workflows
   - Get Workflow by ID
   - API Key Generation
+- Filters
+  - Relevant Segment Extraction
 - Adapters
-  - QDrant
   - OpenAI (Embedding and Chat Completion)
+  - Gemini (Chat Completion, Embedding)
   - Claude (Chat Completion)
   - Voyage (Embedding)
+  - QDrant
