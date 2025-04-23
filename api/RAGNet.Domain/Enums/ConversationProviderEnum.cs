@@ -2,7 +2,8 @@ namespace RAGNET.Domain.Enums
 {
     public enum ConversationProviderEnum
     {
-        OPENAI,
-        ANTHROPIC
+        OPENAI = 0,
+        ANTHROPIC = 1,
+        GEMINI = 4
     }
 }

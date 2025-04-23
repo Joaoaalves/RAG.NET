@@ -6,5 +6,6 @@ namespace RAGNET.Domain.Enums
         Anthropic,
         Voyage,
         QDrant,
+        Gemini
     }
 }

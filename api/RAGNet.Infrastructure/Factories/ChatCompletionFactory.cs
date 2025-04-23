@@ -15,6 +15,7 @@ namespace RAGNET.Infrastructure.Factories
             {
                 ConversationProviderEnum.OPENAI => new OpenAIChatAdapter(userApiKey, config.Model),
                 ConversationProviderEnum.ANTHROPIC => new AnthropicChatAdapter(userApiKey, config.Model),
+                ConversationProviderEnum.GEMINI => new GeminiChatAdapter(userApiKey, config.Model),
                 _ => throw new NotSupportedException("Conversation Provider not supported")
             };
         }

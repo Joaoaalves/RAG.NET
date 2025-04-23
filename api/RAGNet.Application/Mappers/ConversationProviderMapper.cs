@@ -31,6 +31,7 @@ namespace RAGNET.Application.Mappers
             {
                 ConversationProviderEnum.OPENAI => SupportedProvider.OpenAI,
                 ConversationProviderEnum.ANTHROPIC => SupportedProvider.Anthropic,
+                ConversationProviderEnum.GEMINI => SupportedProvider.Gemini,
                 _ => throw new ArgumentOutOfRangeException("Unsupported provider")
             };
         }

@@ -46,6 +46,11 @@ namespace web.Controllers
 
                 if (userApiKey.Provider == SupportedProvider.Anthropic)
                     models.Anthropic = AnthropicChatAdapter.GetModels();
+
+                if (userApiKey.Provider == SupportedProvider.Gemini)
+                {
+                    models.Gemini = GeminiChatAdapter.GetModels();
+                }
             }
             return Ok(models);
         }

@@ -23,8 +23,13 @@ namespace RAGNET.Infrastructure.Services
                 validModels = AnthropicChatAdapter.GetModels();
             }
 
+            if (config.Provider == ConversationProviderEnum.GEMINI)
+            {
+                validModels = GeminiChatAdapter.GetModels();
+            }
+
             ConversationModel validModel = validModels.FirstOrDefault(m => m.Value == config.Model) ?? throw new InvalidConversationModelException(
-                    $"This conversation model '{config.Model}' is not valid."
+                    $"The model '{config.Model}' is not valid."
                 );
 
             return validModel;
