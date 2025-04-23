@@ -17,7 +17,7 @@ var clientURL = Environment.GetEnvironmentVariable("CLIENT_URL") ?? "http://loca
 builder.Configuration.AddJsonFile("Configurations/prompts.json", optional: false, reloadOnChange: true);
 
 builder.Services.AddDatabaseConfiguration(builder.Configuration);
-builder.Services.AddAuthConfiguration(builder.Configuration);
+builder.Services.AddAuthConfiguration();
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
@@ -36,7 +36,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddRepositoryConfiguration();
 builder.Services.AddServiceConfiguration();
-builder.Services.AddAdapterConfiguration();
+builder.Services.AddAdapterConfiguration(builder.Configuration);
 builder.Services.AddFilterConfiguration();
 builder.Services.AddUseCaseConfiguration();
 builder.Services.AddFactoryConfiguration();

@@ -6,7 +6,7 @@ namespace web.Extensions
 {
     public static class AuthConfiguration
     {
-        public static IServiceCollection AddAuthConfiguration(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddAuthConfiguration(this IServiceCollection services)
         {
             services.AddIdentityApiEndpoints<User>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
