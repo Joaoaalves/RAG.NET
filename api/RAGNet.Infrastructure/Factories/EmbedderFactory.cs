@@ -14,6 +14,7 @@ namespace RAGNET.Infrastructure.Factories
             {
                 EmbeddingProviderEnum.OPENAI => new OpenAIEmbeddingAdapter(userApiKey, config.Model),
                 EmbeddingProviderEnum.VOYAGE => new VoyageEmbeddingAdapter(userApiKey, config.Model),
+                EmbeddingProviderEnum.GEMINI => new GeminiEmbeddingAdapter(userApiKey, config.Model),
                 _ => throw new NotSupportedException("Embedding provider not supported.")
             };
         }

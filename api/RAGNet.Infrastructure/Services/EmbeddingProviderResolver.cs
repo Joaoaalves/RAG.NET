@@ -24,10 +24,15 @@ namespace RAGNET.Infrastructure.Services
                 validModels = VoyageEmbeddingAdapter.GetModels();
             }
 
+            if (config.Provider == EmbeddingProviderEnum.GEMINI)
+            {
+                validModels = GeminiEmbeddingAdapter.GetModels();
+            }
+
             if (validModels.Count == 0)
             {
                 throw new InvalidEmbeddingModelException(
-                    $"This embedding provider '{config.Provider}' is not valid."
+                    $"The embedding provider '{config.Provider}' is not valid."
                 );
             }
 

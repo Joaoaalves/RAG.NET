@@ -7,4 +7,12 @@ namespace RAGNET.Infrastructure.Exceptions.Adapters
         public GeminiChatException(string message, Exception innerException)
             : base(message, innerException) { }
     }
+
+    public class GeminiEmbeddingException : AdapterException
+    {
+        public GeminiEmbeddingException(string message) : base(message) { }
+
+        public GeminiEmbeddingException(string message, Exception innerException)
+            : base(message, innerException) { }
+    }
 }

@@ -79,6 +79,11 @@ namespace web.Controllers
 
                 if (userApiKey.Provider == SupportedProvider.Voyage)
                     models.Voyage = VoyageEmbeddingAdapter.GetModels();
+
+                if (userApiKey.Provider == SupportedProvider.Gemini)
+                {
+                    models.Gemini = GeminiEmbeddingAdapter.GetModels();
+                }
             }
 
             return Ok(models);

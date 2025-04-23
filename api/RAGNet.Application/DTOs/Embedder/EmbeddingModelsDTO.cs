@@ -6,5 +6,6 @@ namespace RAGNET.Application.DTOs.Embedder
     {
         public List<EmbeddingModel>? Voyage { get; set; } = [];
         public List<EmbeddingModel>? OpenAI { get; set; } = [];
+        public List<EmbeddingModel>? Gemini { get; set; } = [];
     }
 }

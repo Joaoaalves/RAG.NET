@@ -2,8 +2,8 @@ namespace RAGNET.Domain.Enums
 {
     public enum ConversationProviderEnum
     {
-        OPENAI = 0,
-        ANTHROPIC = 1,
-        GEMINI = 4
+        OPENAI = SupportedProvider.OpenAI,
+        ANTHROPIC = SupportedProvider.Anthropic,
+        GEMINI = SupportedProvider.Gemini
     }
 }
