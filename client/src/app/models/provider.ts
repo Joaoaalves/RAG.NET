@@ -6,7 +6,7 @@ export interface ProviderOption {
   value: number;
 }
 
-export type SupportedProvider = 'openai' | 'anthropic' | 'voyage' | 'qdrant';
+export type SupportedProvider = 'openai' | 'anthropic' | 'voyage' | 'qdrant' | 'gemini';
 
 export type GetProvidersResponse = Provider[];
 

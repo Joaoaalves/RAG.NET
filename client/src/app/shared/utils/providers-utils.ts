@@ -19,7 +19,9 @@ export function mapValidProviders<T extends Record<string, unknown[]>>(
   return Object.entries(response)
     .filter(([_, models]) => Array.isArray(models) && models.length > 0)
     .map(([provider]) => {
-      const option = getProviderOption(provider as SupportedProvider);
+      const option = getProviderOption(
+        provider.toLowerCase() as SupportedProvider
+      );
       return option ? option : null;
     })
     .filter((option): option is ProviderData => option !== null);

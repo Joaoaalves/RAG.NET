@@ -41,4 +41,13 @@ export const PROVIDERS_DATA: Record<SupportedProvider, ProviderData> = {
     keyTemplate: '***************',
     regex: '^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$',
   },
+  gemini: {
+    id: 4,
+    title: 'Gemini',
+    description: '',
+    icon: 'img/providers/gemini.svg',
+    apiKeyUrl: 'https://aistudio.google.com/app/apikey',
+    keyTemplate: '*****************',
+    regex: '^AIza[0-9A-Za-z_-]{35}$',
+  },
 };

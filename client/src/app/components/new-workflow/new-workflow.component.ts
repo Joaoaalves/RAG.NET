@@ -113,7 +113,6 @@ export class NewWorkflowComponent implements OnInit {
       this.embeddingModelsResponse = response;
 
       this.embeddingProviders = mapValidProviders(response);
-
       this.embeddingProviders.forEach((provider) => {
         this.embeddingOptions.push({
           label: provider.title,
@@ -129,9 +128,9 @@ export class NewWorkflowComponent implements OnInit {
 
     this.workflowService.getConversationModels().subscribe((response) => {
       this.conversationModelsResponse = response;
+      console.log(this.conversationModelsResponse);
 
       this.conversationProviders = mapValidProviders(response);
-
       this.conversationProviders.forEach((provider) => {
         this.conversationOptions.push({
           label: provider.title,
