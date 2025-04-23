@@ -1,4 +1,3 @@
-using System;
 using RAGNET.Domain.Enums;
 
 namespace RAGNET.Domain.Entities.Jobs
