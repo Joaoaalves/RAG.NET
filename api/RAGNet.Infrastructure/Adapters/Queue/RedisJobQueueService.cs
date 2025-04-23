@@ -10,7 +10,7 @@ namespace RAGNET.Infrastructure.Adapters.Queue
     public class RedisJobQueueService(IConnectionMultiplexer redis) : IJobQueueService
     {
         private readonly IDatabase _db = redis.GetDatabase();
-        private const string QueueKey = "embedding_jobs_queue";
+        private const string QueueKey = "embedding_jobs";
 
         public async Task EnqueueAsync(EmbeddingJob job)
         {
