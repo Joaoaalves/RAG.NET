@@ -8,6 +8,7 @@ namespace RAGNET.Infrastructure.Data
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User>(options)
     {
         public DbSet<Workflow> Workflows { get; set; }
+        public DbSet<CallbackUrl> CallbackUrls { get; set; }
         public DbSet<UserApiKey> UserApiKeys { get; set; }
         public DbSet<Chunker> Chunkers { get; set; }
         public DbSet<ChunkerMeta> ChunkerMetas { get; set; }
@@ -31,6 +32,13 @@ namespace RAGNET.Infrastructure.Data
                         .HasMany(u => u.ApiKeys)
                         .WithOne(u => u.User)
                         .HasForeignKey(u => u.UserId)
+                        .OnDelete(DeleteBehavior.Cascade);
+
+            // Relationship: Workflow -> CallbackURLs
+            builder.Entity<Workflow>()
+                        .HasMany(w => w.CallbackUrls)
+                        .WithOne(c => c.Workflow)
+                        .HasForeignKey(c => c.WorkflowId)
                         .OnDelete(DeleteBehavior.Cascade);
 
             // Relationship: Workflow -> Chunkers

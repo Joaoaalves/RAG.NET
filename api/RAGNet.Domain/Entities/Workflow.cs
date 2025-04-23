@@ -20,6 +20,7 @@ namespace RAGNET.Domain.Entities
         public Guid CollectionId { get; set; }
 
         // Related configurations
+        public ICollection<CallbackUrl> CallbackUrls { get; set; } = [];
         public Chunker? Chunker { get; set; }
         public ICollection<Document> Documents { get; set; } = [];
         public ICollection<QueryEnhancer> QueryEnhancers { get; set; } = [];
