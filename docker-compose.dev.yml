@@ -8,6 +8,7 @@ services:
     depends_on:
       - postgres
       - qdrant
+      - redis
     environment:
       - CLIENT_URL=http://localhost:4200
       - PRODUCTION=false
@@ -50,25 +51,19 @@ services:
       target: migrations
     depends_on:
       - postgres
-  zookeeper:
-    image: bitnami/zookeeper:3.8
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
+  rabbitmq:
+    image: rabbitmq:3-management
     ports:
-      - "2181:2181"
-
-  kafka:
-    image: bitnami/kafka:3
-    depends_on:
-      - zookeeper
+      - "5672:5672"
+      - "15672:15672"
     environment:
-      - KAFKA_BROKER_ID=1
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_LISTENERS=PLAINTEXT://:9092
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
-      - ALLOW_PLAINTEXT_LISTENER=yes
-    ports:
-      - "9092:9092"
+      RABBITMQ_DEFAULT_USER: rag_user
+      RABBITMQ_DEFAULT_PASS: rag_password
+      RABBITMQ_SSL_CACERTFILE: /certs/ca_certificate.pem
+      RABBITMQ_SSL_CERTFILE: /certs/server_certificate.pem
+      RABBITMQ_SSL_KEYFILE: /certs/server_key.pem
+    volumes:
+      - ./certs:/certs:ro
 
   redis:
     image: bitnami/redis:latest
@@ -78,5 +73,6 @@ services:
       - "6379:6379"
 
 volumes:
+  rabbitmq_data:
   postgres_data:
   qdrant_data:

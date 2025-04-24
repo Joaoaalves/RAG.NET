@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http;
 using RAGNET.Application.DTOs;
 using RAGNET.Application.Mappers;
 using RAGNET.Domain.Entities;
+using RAGNET.Domain.Entities.Jobs;
+using RAGNET.Domain.Enums;
 using RAGNET.Domain.Factories;
 using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services;
@@ -22,12 +24,14 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
         IWorkflowRepository workflowRepository,
         IDocumentProcessorFactory documentProcessorFactory,
         IEmbeddingProcessingService embeddingProcessingService,
+        IJobStatusRepository jobStatusRepository,
         IApiKeyResolverService apiKeyResolverService) : IProcessEmbeddingUseCase
     {
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
         private readonly IDocumentProcessorFactory _documentProcessorFactory = documentProcessorFactory;
         private readonly IEmbeddingProcessingService _embeddingProcessingService = embeddingProcessingService;
         private readonly IApiKeyResolverService _apiKeyResolverService = apiKeyResolverService;
+        private readonly IJobStatusRepository _jobStatusRepository = jobStatusRepository;
 
         private (string collectionId, Chunker chunkerConfig, EmbeddingProviderConfig embeddingProviderConfig, ConversationProviderConfig conversationProviderConfig) GetConfig(Workflow workflow)
         {
@@ -69,8 +73,34 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
             return await _apiKeyResolverService.ResolveForUserAsync(workflow.UserId, embeddingProviderConfig.Provider.ToSupportedProvider());
         }
 
+        private async Task<Guid> EnqueueJob(IFormFile file, Workflow workflow)
+        {
+            using var ms = new MemoryStream();
+            await file.CopyToAsync(ms);
+
+            var job = new EmbeddingJob
+            {
+                WorkflowId = workflow.Id,
+                FileName = file.FileName,
+                FileContent = ms.ToArray(),
+                CallbackUrls = [.. workflow.CallbackUrls]
+            };
+
+            await _jobStatusRepository.SetPendingAsync(job.JobId);
+
+            return job.JobId;
+        }
+
+        private async Task CompleteJob(Guid jobId)
+        {
+            await _jobStatusRepository.MarkAsCompletedAsync(jobId);
+        }
+
         public async Task<int> Execute(IFormFile file, Workflow workflow)
         {
+            // Enque
+            var jobId = await EnqueueJob(file, workflow);
+
             var (collectionId, chunkerConfig, embeddingProviderConfig, conversationProviderConfig) = GetConfig(workflow);
 
             var document = await ProcessDocumentAsync(file, workflow);
@@ -113,6 +143,8 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
 
             workflow.DocumentsCount++;
             await _workflowRepository.UpdateByApiKey(workflow, workflow.ApiKey);
+
+            await CompleteJob(jobId);
             return processedChunks;
         }
 

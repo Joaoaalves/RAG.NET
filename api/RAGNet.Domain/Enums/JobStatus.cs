@@ -5,5 +5,5 @@ namespace RAGNET.Domain.Enums
         PENDING,
         DONE,
         FAILED
-    };
+    }
 }
