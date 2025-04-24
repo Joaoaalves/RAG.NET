@@ -6,6 +6,7 @@ using RAGNET.Application.Services;
 using RAGNET.Domain.Services;
 using RAGNET.Domain.Services.ApiKey;
 using RAGNET.Domain.Services.Query;
+using RAGNET.Domain.Services.Queue;
 
 namespace web.Configurations
 {
@@ -21,6 +22,7 @@ namespace web.Configurations
             services.AddScoped<IEmbeddingProcessingService, EmbeddingProcessingService>();
             services.AddScoped<IChunkRetrieverService, ChunkRetrieverService>();
             services.AddScoped<IScoreNormalizerService, ScoreNormalizerService>();
+            services.AddScoped<ICallbackNotificationService, CallbackNotificationService>();
 
             // ApiKey
             services.AddScoped<IApiKeyResolverService, ApiKeyResolverService>();

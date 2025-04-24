@@ -24,12 +24,12 @@ namespace RAGNET.Infrastructure.Services
 
             _retryPolicy = Policy
                 .Handle<HttpRequestException>()
-                .WaitAndRetryAsync(new[]
-                {
+                .WaitAndRetryAsync(
+                [
                     TimeSpan.FromSeconds(2),
                     TimeSpan.FromSeconds(5),
                     TimeSpan.FromSeconds(10)
-                },
+                ],
                 onRetry: (exception, timeSpan, retryCount, context) =>
                 {
                     _logger.LogWarning(
