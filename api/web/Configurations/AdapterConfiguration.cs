@@ -12,10 +12,6 @@ namespace web.Configurations
         {
 
             services.AddScoped<IVectorDatabaseService, QDrantAdapter>();
-            services.AddSingleton(new ProducerConfig
-            {
-                BootstrapServers = configuration["Kafka:BootstrapServers"]
-            });
             services.AddScoped<IJobQueueService, RedisJobQueueService>();
             return services;
         }
