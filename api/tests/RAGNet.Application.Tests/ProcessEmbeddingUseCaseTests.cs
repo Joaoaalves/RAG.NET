@@ -14,6 +14,7 @@ namespace tests.RAGNet.Application.Tests
     {
         private readonly Mock<IWorkflowRepository> _workflowRepositoryMock;
         private readonly Mock<IDocumentProcessorFactory> _documentProcessorFactoryMock;
+        private readonly Mock<IJobStatusRepository> _jobStatusRepositoryMock;
         private readonly Mock<IDocumentProcessingService> _pdfProcessingServiceMock;
         private readonly Mock<IEmbeddingProcessingService> _embeddingProcessingServiceMock;
         private readonly Mock<IApiKeyResolverService> _apiKeyResolverServiceMock;
@@ -27,6 +28,7 @@ namespace tests.RAGNet.Application.Tests
             _pdfProcessingServiceMock = new Mock<IDocumentProcessingService>();
             _embeddingProcessingServiceMock = new Mock<IEmbeddingProcessingService>();
             _apiKeyResolverServiceMock = new Mock<IApiKeyResolverService>();
+            _jobStatusRepositoryMock = new Mock<IJobStatusRepository>();
 
             // Configures the factory to return the PDF adapter
             _documentProcessorFactoryMock
@@ -37,6 +39,7 @@ namespace tests.RAGNet.Application.Tests
                 _workflowRepositoryMock.Object,
                 _documentProcessorFactoryMock.Object,
                 _embeddingProcessingServiceMock.Object,
+                _jobStatusRepositoryMock.Object,
                 _apiKeyResolverServiceMock.Object
                 );
         }
