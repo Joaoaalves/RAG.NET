@@ -1,4 +1,3 @@
-using Confluent.Kafka;
 using RAGNET.Domain.Services;
 using RAGNET.Domain.Services.Queue;
 using RAGNET.Infrastructure.Adapters.Queue;
