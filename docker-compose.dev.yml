@@ -8,6 +8,7 @@ services:
     depends_on:
       - postgres
       - qdrant
+      - redis
     environment:
       - CLIENT_URL=http://localhost:4200
       - PRODUCTION=false

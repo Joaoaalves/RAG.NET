@@ -1,7 +1,5 @@
 using StackExchange.Redis;
-using System.Text.Json;
 
-using RAGNET.Domain.Entities.Jobs;
 using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Enums;
 
@@ -12,10 +10,10 @@ namespace RAGNET.Infrastructure.Adapters.Queue
         private readonly IConnectionMultiplexer _redis = redis;
 
         public Task SetPendingAsync(Guid jobId) =>
-            _redis.GetDatabase().StringSetAsync($"job:{jobId}", "pending");
+            _redis.GetDatabase().StringSetAsync($"job:{jobId}", JobStatus.PENDING.ToString());
 
         public Task MarkAsCompletedAsync(Guid jobId) =>
-            _redis.GetDatabase().StringSetAsync($"job:{jobId}", "completed");
+            _redis.GetDatabase().StringSetAsync($"job:{jobId}", JobStatus.DONE.ToString());
 
         public async Task<JobStatus?> TryGetStatusAsync(Guid jobId)
         {
