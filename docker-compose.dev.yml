@@ -9,6 +9,7 @@ services:
       - postgres
       - qdrant
       - redis
+      - rabbitmq
     environment:
       - CLIENT_URL=http://localhost:4200
       - PRODUCTION=false

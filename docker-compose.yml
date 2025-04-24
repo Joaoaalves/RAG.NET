@@ -8,6 +8,8 @@ services:
     depends_on:
       - postgres
       - qdrant
+      - redis
+      - rabbitmq
     environment:
       - CLIENT_URL=http://localhost
       - PRODUCTION=true

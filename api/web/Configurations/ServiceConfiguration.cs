@@ -14,6 +14,11 @@ namespace web.Configurations
     {
         public static IServiceCollection AddServiceConfiguration(this IServiceCollection services)
         {
+            // Callback Service
+            services.AddHttpClient("CallbackClient")
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5));
+            services.AddSingleton<ICallbackNotificationService, CallbackNotificationService>();
+
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IEmbeddingProviderResolver, EmbeddingProviderResolver>();
             services.AddScoped<IConversationProviderResolver, ConversationProviderResolver>();
@@ -22,7 +27,6 @@ namespace web.Configurations
             services.AddScoped<IEmbeddingProcessingService, EmbeddingProcessingService>();
             services.AddScoped<IChunkRetrieverService, ChunkRetrieverService>();
             services.AddScoped<IScoreNormalizerService, ScoreNormalizerService>();
-            services.AddScoped<ICallbackNotificationService, CallbackNotificationService>();
 
             // ApiKey
             services.AddScoped<IApiKeyResolverService, ApiKeyResolverService>();
