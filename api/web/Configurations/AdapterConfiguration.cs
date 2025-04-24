@@ -1,5 +1,5 @@
+using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services;
-using RAGNET.Domain.Services.Queue;
 using RAGNET.Infrastructure.Adapters.Queue;
 using RAGNET.Infrastructure.Adapters.VectorDB;
 
@@ -11,7 +11,7 @@ namespace web.Configurations
         {
 
             services.AddScoped<IVectorDatabaseService, QDrantAdapter>();
-            services.AddScoped<IJobQueueService, RedisJobQueueService>();
+            services.AddScoped<IJobStatusRepository, RedisJobStatusRepository>();
             return services;
         }
     }
