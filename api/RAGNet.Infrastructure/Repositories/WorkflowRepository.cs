@@ -8,6 +8,21 @@ namespace RAGNET.Infrastructure.Repositories
 {
     public class WorkflowRepository(ApplicationDbContext context) : Repository<Workflow>(context), IWorkflowRepository
     {
+        public async Task<Workflow?> DangerousGetById(Guid id)
+        {
+            return await _context.Workflows
+                .Include(w => w.Chunker)
+                    .ThenInclude(c => c != null ? c.Metas : null)
+                .Include(w => w.QueryEnhancers)
+                    .ThenInclude(q => q.Metas)
+                .Include(w => w.Filter)
+                    .ThenInclude(f => f!.Metas)
+                .Include(w => w.Rankers)
+                    .ThenInclude(r => r.Metas)
+                .Include(w => w.ConversationProviderConfig)
+                .Include(w => w.EmbeddingProviderConfig)
+                .FirstOrDefaultAsync(w => w.Id == id);
+        }
         public async Task<Workflow?> GetWithRelationsAsync(Guid id, string userId)
         {
             return await _context.Workflows

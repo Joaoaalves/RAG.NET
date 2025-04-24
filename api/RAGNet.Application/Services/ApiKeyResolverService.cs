@@ -1,3 +1,4 @@
+using RAGNET.Application.Mappers;
 using RAGNET.Domain.Enums;
 using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services.ApiKey;
@@ -20,6 +21,16 @@ namespace RAGNET.Application.Services
             var apiKey = _cryptoService.Decrypt(userApiKey.ApiKey);
 
             return apiKey;
+        }
+
+        public Task<string> ResolveForUserAsync(string userId, ConversationProviderEnum provider)
+        {
+            return ResolveForUserAsync(userId, provider.ToSupportedProvider());
+        }
+
+        public Task<string> ResolveForUserAsync(string userId, EmbeddingProviderEnum provider)
+        {
+            return ResolveForUserAsync(userId, provider.ToSupportedProvider());
         }
     }
 }

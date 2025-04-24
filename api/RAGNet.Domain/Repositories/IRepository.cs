@@ -14,6 +14,11 @@ namespace RAGNET.Domain.Repositories
 
     public interface IWorkflowRepository : IRepository<Workflow>
     {
+        /// <summary>
+        /// <strong>USE WITH CAUTION.</strong> Incorrect implementation can lead to unintended exposure of other users' workflow data.
+        /// Ensure proper access control is in place before using this.
+        /// </summary>
+        Task<Workflow?> DangerousGetById(Guid id);
         Task<Workflow?> GetWithRelationsAsync(Guid id, string userId);
         Task<Workflow?> GetWithRelationsByApiKey(string apiKey);
         Task<IEnumerable<Workflow>> GetUserWorkflows(string id);

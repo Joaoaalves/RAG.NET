@@ -9,6 +9,8 @@ using RAGNET.Application.DTOs.Workflow;
 using RAGNET.Application.UseCases.WorkflowUseCases;
 using RAGNET.Application.UseCases.EmbeddingUseCases;
 using RAGNET.Application.Filters;
+using RAGNET.Domain.Services.Queue;
+using RAGNET.Domain.Entities.Jobs;
 
 namespace web.Controllers
 {
@@ -109,37 +111,31 @@ namespace web.Controllers
         [HttpPost("embedding")]
         [Consumes("multipart/form-data")]
         [ServiceFilter(typeof(ApiWorkflowFilter))]
-        public async Task ProcessEmbedding(IFormFile file, [FromQuery] bool stream = false)
+        public async Task ProcessEmbedding(IFormFile file, [FromServices] IEmbeddingJobQueue enqueuer, CancellationToken cancellationToken, [FromQuery] bool stream = false)
         {
             try
             {
                 var workflow = HttpContext.Items["Workflow"] as Workflow
-                    ?? throw new Exception("Workflow not found in context.");
+                    ?? throw new InvalidOperationException("Workflow não encontrado no contexto.");
 
-                if (stream)
+                var ms = new MemoryStream();
+                file.CopyTo(ms);
+                var job = new EmbeddingJob
                 {
-                    // Set the response type for SSE
-                    Response.ContentType = "text/event-stream";
+                    WorkflowId = workflow.Id,
+                    FileName = file.FileName,
+                    FileContent = ms.ToArray(),
+                    CallbackUrls = [.. workflow.CallbackUrls]
+                };
 
-                    // Get the progress stream from the use case.
-                    await foreach (var progress in _processEmbeddingUseCase.ExecuteStreaming(file, workflow))
-                    {
-                        // Write the current progress as JSON
-                        var json = System.Text.Json.JsonSerializer.Serialize(progress);
-                        await Response.WriteAsync($"data: {json}\n\n");
-                        await Response.Body.FlushAsync();
-                    }
-                }
-                else
+                await enqueuer.EnqueueAsync(job, cancellationToken);
+
+                Response.StatusCode = 202; // Accepted
+                await Response.WriteAsJsonAsync(new
                 {
-                    // Use the traditional synchronous method
-                    int processedChunks = await _processEmbeddingUseCase.Execute(file, workflow);
-                    await Response.WriteAsJsonAsync(new
-                    {
-                        Message = "Embedding done successfully.",
-                        ProcessedChunks = processedChunks
-                    });
-                }
+                    Message = "Job enfileirado com sucesso.",
+                    job.JobId
+                });
             }
             catch (Exception ex)
             {

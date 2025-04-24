@@ -1,18 +1,4 @@
 services:
-  api-dev:
-    build:
-      context: ./api
-      dockerfile: web/Dockerfile
-    ports:
-      - "5000:8080"
-    depends_on:
-      - postgres
-      - qdrant
-      - redis
-      - rabbitmq
-    environment:
-      - CLIENT_URL=http://localhost:4200
-      - PRODUCTION=false
   client-dev:
     container_name: client-dev
     build:
@@ -60,11 +46,13 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: rag_user
       RABBITMQ_DEFAULT_PASS: rag_password
-      RABBITMQ_SSL_CACERTFILE: /certs/ca_certificate.pem
-      RABBITMQ_SSL_CERTFILE: /certs/server_certificate.pem
-      RABBITMQ_SSL_KEYFILE: /certs/server_key.pem
     volumes:
       - ./certs:/certs:ro
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: bitnami/redis:latest
@@ -72,6 +60,25 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
       - "6379:6379"
+  api-dev:
+    build:
+      context: ./api
+      dockerfile: web/Dockerfile
+    ports:
+      - "5000:8080"
+    depends_on:
+      postgres:
+        condition: service_started
+      qdrant:
+        condition: service_started
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+        restart: true
+    environment:
+      - CLIENT_URL=http://localhost:4200
+      - PRODUCTION=false
 
 volumes:
   rabbitmq_data:

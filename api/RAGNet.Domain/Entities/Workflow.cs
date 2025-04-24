@@ -21,12 +21,12 @@ namespace RAGNET.Domain.Entities
 
         // Related configurations
         public ICollection<CallbackUrl> CallbackUrls { get; set; } = [];
-        public Chunker? Chunker { get; set; }
+        public Chunker Chunker { get; set; } = null!;
         public ICollection<Document> Documents { get; set; } = [];
         public ICollection<QueryEnhancer> QueryEnhancers { get; set; } = [];
         public ICollection<Ranker> Rankers { get; set; } = [];
-        public ConversationProviderConfig? ConversationProviderConfig { get; set; }
-        public EmbeddingProviderConfig? EmbeddingProviderConfig { get; set; }
+        public ConversationProviderConfig ConversationProviderConfig { get; set; } = null!;
+        public EmbeddingProviderConfig EmbeddingProviderConfig { get; set; } = null!;
         public Filter? Filter { get; set; }
     }
 }

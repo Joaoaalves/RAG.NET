@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using RAGNET.Domain.Entities.Jobs;
 using RAGNET.Domain.Services.Queue;
 
@@ -18,17 +19,19 @@ namespace RAGNET.Infrastructure.Adapters.Queue
             _channel = channel;
         }
 
-
-        public static async Task<RabbitMqEmbeddingJobQueue> CreateAsync(IConfiguration config)
+        public static async Task<RabbitMqEmbeddingJobQueue> CreateAsync(string host, string user, string password)
         {
+            Console.WriteLine(host);
+            Console.WriteLine(user);
+            Console.WriteLine(password);
+
             var factory = new ConnectionFactory
             {
-                HostName = config["RabbitMQ:Host"]
-                    ?? throw new Exception("RabbitMQ Host must be set."),
-                UserName = config["RabbitMQ:Username"]
-                    ?? throw new Exception("RabbitMQ Username must be set."),
-                Password = config["RabbitMQ:Password"]
-                    ?? throw new Exception("RabbitMQ Password must be set.")
+                HostName = host,
+                UserName = user,
+                Password = password,
+                NetworkRecoveryInterval = TimeSpan.FromSeconds(10),
+                RequestedConnectionTimeout = TimeSpan.FromSeconds(30)
             };
 
             var connection = await factory.CreateConnectionAsync();
@@ -64,6 +67,39 @@ namespace RAGNET.Infrastructure.Adapters.Queue
             );
         }
 
+        public Task SubscribeAsync(
+            Func<EmbeddingJob, CancellationToken, Task> handle,
+            bool autoAck = false,
+            CancellationToken cancellationToken = default
+        )
+        {
+            var consumer = new AsyncEventingBasicConsumer(_channel);
+
+            consumer.ReceivedAsync += async (sender, ea) =>
+            {
+                var job = JsonSerializer
+                          .Deserialize<EmbeddingJob>(ea.Body.ToArray())
+                          ?? throw new InvalidOperationException("Invalid payload");
+
+                await handle(job, cancellationToken)
+                      .ConfigureAwait(false);
+
+                if (!autoAck)
+                    await _channel.BasicAckAsync(
+                        deliveryTag: ea.DeliveryTag,
+                        multiple: false,
+                        cancellationToken
+                    ).ConfigureAwait(false);
+            };
+
+            // starts consuming
+            return _channel.BasicConsumeAsync(
+                queue: QueueName,
+                autoAck: autoAck,
+                consumer: consumer,
+                cancellationToken: cancellationToken
+            );
+        }
         public async ValueTask DisposeAsync()
         {
             if (_channel.IsOpen)

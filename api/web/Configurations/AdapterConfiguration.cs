@@ -3,6 +3,8 @@ using RAGNET.Domain.Services;
 using RAGNET.Domain.Services.Queue;
 using RAGNET.Infrastructure.Adapters.Queue;
 using RAGNET.Infrastructure.Adapters.VectorDB;
+using RAGNET.Infrastructure.Services;
+using RAGNET.Infrastructure.Workers;
 using StackExchange.Redis;
 
 namespace web.Configurations
@@ -18,12 +20,26 @@ namespace web.Configurations
                 return ConnectionMultiplexer.Connect(configurationOptions);
             });
 
+
+            string host = configuration["RabbitMQ:Host"]
+                ?? throw new Exception("RabbitMQ Host must be set.");
+            string userName = configuration["RabbitMQ:Username"]
+                ?? throw new Exception("RabbitMQ Username must be set.");
+            string password = configuration["RabbitMQ:Password"]
+                ?? throw new Exception("RabbitMQ Password must be set.");
+
             services.AddSingleton<IEmbeddingJobQueue>(sp =>
                 RabbitMqEmbeddingJobQueue
-                    .CreateAsync(sp.GetRequiredService<IConfiguration>())
+                    .CreateAsync(host, userName, password)
                     .GetAwaiter()
                     .GetResult()
             );
+
+            // Callback Service
+            services.AddHttpClient("CallbackClient")
+                .SetHandlerLifetime(TimeSpan.FromMinutes(5));
+            services.AddSingleton<ICallbackNotificationService, CallbackNotificationService>();
+            services.AddHostedService<EmbeddingJobWorker>();
 
             services.AddScoped<IVectorDatabaseService, QDrantAdapter>();
             services.AddScoped<IJobStatusRepository, RedisJobStatusRepository>();
