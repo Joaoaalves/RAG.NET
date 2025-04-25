@@ -1,11 +1,12 @@
 namespace RAGNET.Domain.Entities.Jobs
 {
-    public class Job
+    public class Job<TContext> where TContext : JobProcessingContext
     {
         public Guid JobId { get; set; } = Guid.NewGuid();
-        public Guid WorkflowId { get; set; }
-
+        public string ApiKey { get; set; } = String.Empty;
+        public string UserId { get; set; } = String.Empty;
         public List<CallbackUrl> CallbackUrls { get; set; } = [];
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public TContext Context { get; set; } = null!;
     }
 }

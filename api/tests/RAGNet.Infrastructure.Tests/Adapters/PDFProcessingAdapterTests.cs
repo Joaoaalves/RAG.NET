@@ -29,16 +29,16 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
             var workflowId = Guid.NewGuid();
             var pages = new List<string> { "Página 1", "Página 2", "Página 3" };
 
-            var documentoCriado = new Document { Id = Guid.NewGuid(), Title = title, WorkflowId = workflowId };
+            var createdDocument = new Document { Id = Guid.NewGuid(), Title = title, WorkflowId = workflowId };
             _documentRepositoryMock
                 .Setup(r => r.AddAsync(It.IsAny<Document>()))
-                .ReturnsAsync(documentoCriado);
+                .ReturnsAsync(createdDocument);
 
             // Act
             var document = await _adapter.CreateDocumentWithPagesAsync(title, workflowId, pages);
 
             // Assert
-            Assert.Equal(documentoCriado.Id, document.Id);
+            Assert.Equal(createdDocument.Id, document.Id);
             _documentRepositoryMock.Verify(r => r.AddAsync(It.Is<Document>(d =>
                 d.Title == title && d.WorkflowId == workflowId)), Times.Once);
 
@@ -57,11 +57,9 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
             Assert.True(File.Exists(pdfPath), "PDF test file not found.");
 
             using FileStream stream = File.OpenRead(pdfPath);
-            var formFileMock = new Mock<IFormFile>();
-            formFileMock.Setup(f => f.OpenReadStream()).Returns(stream);
 
             // Act
-            var result = await _adapter.ExtractTextAsync(formFileMock.Object);
+            var result = await _adapter.ExtractTextAsync(stream);
 
             // Assert
             Assert.NotEmpty(result.Pages);

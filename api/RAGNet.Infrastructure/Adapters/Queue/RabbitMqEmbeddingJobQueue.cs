@@ -21,9 +21,6 @@ namespace RAGNET.Infrastructure.Adapters.Queue
 
         public static async Task<RabbitMqEmbeddingJobQueue> CreateAsync(string host, string user, string password)
         {
-            Console.WriteLine(host);
-            Console.WriteLine(user);
-            Console.WriteLine(password);
 
             var factory = new ConnectionFactory
             {

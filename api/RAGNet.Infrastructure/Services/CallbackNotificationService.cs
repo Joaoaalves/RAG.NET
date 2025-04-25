@@ -11,15 +11,16 @@ using RAGNET.Domain.Services.Queue;
 
 namespace RAGNET.Infrastructure.Services
 {
-    public class CallbackNotificationService : ICallbackNotificationService
+    public class CallbackNotificationService<TContext> : ICallbackNotificationService<TContext>
+            where TContext : JobProcessingContext
     {
         private readonly IHttpClientFactory _httpClientFactory = null!;
-        private readonly ILogger<CallbackNotificationService> _logger;
+        private readonly ILogger<ICallbackNotificationService<TContext>> _logger;
         private readonly AsyncRetryPolicy _retryPolicy;
 
         public CallbackNotificationService(
             IHttpClientFactory httpClientFactory,
-            ILogger<CallbackNotificationService> logger)
+            ILogger<ICallbackNotificationService<TContext>> logger)
         {
             _httpClientFactory = httpClientFactory;
             _logger = logger;
@@ -49,14 +50,13 @@ namespace RAGNET.Infrastructure.Services
         }
 
         public async Task NotifySuccessAsync(
-            Job job,
+            Job<TContext> job,
             int processedChunks,
             CancellationToken cancellationToken = default)
         {
             var payload = new
             {
                 job.JobId,
-                job.WorkflowId,
                 Status = JobStatus.DONE,
                 ProcessedChunks = processedChunks,
                 Timestamp = DateTime.UtcNow
@@ -70,14 +70,13 @@ namespace RAGNET.Infrastructure.Services
         }
 
         public async Task NotifyFailureAsync(
-            Job job,
+            Job<TContext> job,
             string errorMessage,
             CancellationToken cancellationToken = default)
         {
             var payload = new
             {
                 job.JobId,
-                job.WorkflowId,
                 Status = JobStatus.FAILED,
                 Error = errorMessage,
                 Timestamp = DateTime.UtcNow
@@ -101,8 +100,10 @@ namespace RAGNET.Infrastructure.Services
             {
                 try
                 {
-                    var context = new Context();
-                    context["url"] = url;
+                    var context = new Context
+                    {
+                        ["url"] = url
+                    };
 
                     await _retryPolicy.ExecuteAsync(
                         (context, ct) => client.PostAsJsonAsync(url, payload, ct),

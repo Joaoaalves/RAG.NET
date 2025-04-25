@@ -11,6 +11,7 @@ using RAGNET.Application.UseCases.EmbeddingUseCases;
 using RAGNET.Application.Filters;
 using RAGNET.Domain.Services.Queue;
 using RAGNET.Domain.Entities.Jobs;
+using RAGNET.Application.Mappers;
 
 namespace web.Controllers
 {
@@ -120,9 +121,11 @@ namespace web.Controllers
 
                 var ms = new MemoryStream();
                 file.CopyTo(ms);
+
                 var job = new EmbeddingJob
                 {
-                    WorkflowId = workflow.Id,
+                    ApiKey = workflow.ApiKey,
+                    UserId = workflow.UserId,
                     FileName = file.FileName,
                     FileContent = ms.ToArray(),
                     CallbackUrls = [.. workflow.CallbackUrls]

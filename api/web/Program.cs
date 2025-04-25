@@ -22,6 +22,9 @@ builder.Services.AddAuthConfiguration();
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
+// Processing Handlers
+builder.Services.AddHandlerConfiguration();
+
 // Cors
 builder.Services.AddCors(opt =>
 {

@@ -48,7 +48,8 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
             var documentExtension = GetFileExtension(file.FileName);
             var documentProcessingAdapter = _documentProcessorFactory.CreateDocumentProcessor(documentExtension);
 
-            var pdfExtractResult = await documentProcessingAdapter.ExtractTextAsync(file);
+            var ms = file.OpenReadStream();
+            var pdfExtractResult = await documentProcessingAdapter.ExtractTextAsync(ms);
 
             return await documentProcessingAdapter.CreateDocumentWithPagesAsync(
                 file.FileName.Replace(documentExtension, ""),
@@ -80,7 +81,8 @@ namespace RAGNET.Application.UseCases.EmbeddingUseCases
 
             var job = new EmbeddingJob
             {
-                WorkflowId = workflow.Id,
+                ApiKey = workflow.ApiKey,
+                UserId = workflow.UserId,
                 FileName = file.FileName,
                 FileContent = ms.ToArray(),
                 CallbackUrls = [.. workflow.CallbackUrls]

@@ -2,15 +2,15 @@ using RAGNET.Domain.Entities.Jobs;
 
 namespace RAGNET.Domain.Services.Queue
 {
-    public interface ICallbackNotificationService
+    public interface ICallbackNotificationService<TContext> where TContext : JobProcessingContext
     {
         public Task NotifySuccessAsync(
-            Job job,
+            Job<TContext> job,
             int processedChunks,
             CancellationToken cancellationToken = default);
 
         public Task NotifyFailureAsync(
-            Job job,
+            Job<TContext> job,
             string errorMessage,
             CancellationToken cancellationToken = default);
     }

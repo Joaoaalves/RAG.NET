@@ -24,21 +24,29 @@ namespace RAGNET.Infrastructure.Adapters.VectorDB
 
         public async Task InsertAsync(string documentId, float[] vector, string collectionName, Dictionary<string, string> metadata)
         {
-            metadata["documentId"] = documentId;
-
-            var point = new PointStruct
+            try
             {
-                Id = Guid.NewGuid(),
-                Vectors = vector,
-                Payload = {
+                metadata["documentId"] = documentId;
+
+                var point = new PointStruct
+                {
+                    Id = Guid.NewGuid(),
+                    Vectors = vector,
+                    Payload = {
                         metadata.ToDictionary(
                             kvp => kvp.Key,
                             kvp => new Value { StringValue = kvp.Value }
                         )
                     }
-            };
+                };
 
-            await _client.UpsertAsync(collectionName, [point]);
+                await _client.UpsertAsync(collectionName, [point]);
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc.Message);
+            }
+
         }
         public async Task InsertManyAsync(List<(string VectorId, float[] Vector, Dictionary<string, string> Metadata)> batch, string collectionName)
         {

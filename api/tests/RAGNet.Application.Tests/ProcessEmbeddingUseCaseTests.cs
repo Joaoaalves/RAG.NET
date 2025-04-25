@@ -80,7 +80,7 @@ namespace tests.RAGNet.Application.Tests
 
             // Configures the extract method to return the simulated result
             _pdfProcessingServiceMock
-                .Setup(service => service.ExtractTextAsync(file))
+                .Setup(service => service.ExtractTextAsync(file.OpenReadStream()))
                 .ReturnsAsync(pdfResult);
 
             // Creates dummy Pages to compose the document
@@ -190,7 +190,7 @@ namespace tests.RAGNet.Application.Tests
                 .ReturnsAsync(workflow);
 
             _pdfProcessingServiceMock
-                .Setup(service => service.ExtractTextAsync(file))
+                .Setup(service => service.ExtractTextAsync(file.OpenReadStream()))
                 .ReturnsAsync(pdfResult);
 
             var dummyPage = new Page { Id = Guid.NewGuid(), Text = pages.First() };

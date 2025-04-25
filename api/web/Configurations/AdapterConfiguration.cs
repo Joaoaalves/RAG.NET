@@ -38,8 +38,7 @@ namespace web.Configurations
             // Callback Service
             services.AddHttpClient("CallbackClient")
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5));
-            services.AddSingleton<ICallbackNotificationService, CallbackNotificationService>();
-            services.AddHostedService<EmbeddingJobWorker>();
+            services.AddSingleton(typeof(ICallbackNotificationService<>), typeof(CallbackNotificationService<>)); services.AddHostedService<EmbeddingJobWorker>();
 
             services.AddScoped<IVectorDatabaseService, QDrantAdapter>();
             services.AddScoped<IJobStatusRepository, RedisJobStatusRepository>();

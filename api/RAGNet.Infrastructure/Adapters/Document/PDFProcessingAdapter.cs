@@ -33,14 +33,13 @@ namespace RAGNET.Infrastructure.Adapters.Document
             return document;
         }
 
-        public async Task<DocumentExtractResult> ExtractTextAsync(IFormFile file)
+        public async Task<DocumentExtractResult> ExtractTextAsync(Stream fileStream)
         {
             // Open the PDF stream
-            using var stream = file.OpenReadStream();
             var result = new DocumentExtractResult();
 
             // Wraps the result in Task.FromResult.
-            using (var pdf = PdfDocument.Open(stream))
+            using (var pdf = PdfDocument.Open(fileStream))
             {
                 foreach (var pageText in pdf.GetPages())
                 {

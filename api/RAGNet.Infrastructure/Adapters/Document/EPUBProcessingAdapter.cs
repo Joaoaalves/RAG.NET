@@ -15,11 +15,11 @@ namespace RAGNET.Infrastructure.Adapters.Document
         private readonly IDocumentRepository _documentRepository = documentRepository;
         private readonly IPageRepository _pageRepository = pageRepository;
 
-        public async Task<DocumentExtractResult> ExtractTextAsync(IFormFile file)
+        public async Task<DocumentExtractResult> ExtractTextAsync(Stream fileStream)
         {
             var result = new DocumentExtractResult();
-            using var stream = file.OpenReadStream();
-            EpubBook epubBook = await EpubReader.ReadBookAsync(stream);
+
+            EpubBook epubBook = await EpubReader.ReadBookAsync(fileStream);
 
             result.DocumentTitle = epubBook.Title ?? "Untitled";
 

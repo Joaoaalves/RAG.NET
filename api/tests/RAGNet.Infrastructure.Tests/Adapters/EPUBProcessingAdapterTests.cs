@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http;
 using Moq;
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Repositories;
@@ -55,13 +54,15 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
             // Arrange
             var epubFilePath = TestFileHelper.GetTestFilePath("sample.epub");
             Assert.True(File.Exists(epubFilePath), "EPUB test file not found.");
+
             var epubBytes = File.ReadAllBytes(epubFilePath);
 
-            var formFileMock = new Mock<IFormFile>();
-            formFileMock.Setup(f => f.OpenReadStream()).Returns(new MemoryStream(epubBytes));
+            // Create a memory stream instead of mocking IFormFile
+            await using var ms = new MemoryStream(epubBytes);
 
             // Act
-            var result = await _adapter.ExtractTextAsync(formFileMock.Object);
+            // Pass the stream and the file name to the new signature
+            var result = await _adapter.ExtractTextAsync(ms);
 
             // Assert
             Assert.NotEmpty(result.Pages);
@@ -73,34 +74,38 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
             // Arrange
             var epubFilePath = TestFileHelper.GetTestFilePath("sample.epub");
             Assert.True(File.Exists(epubFilePath), "EPUB test file not found.");
+
+            // Load bytes and wrap in MemoryStream
             var epubBytes = File.ReadAllBytes(epubFilePath);
+            await using var ms = new MemoryStream(epubBytes);
 
-            // Simulate uploaded file (IFormFile)
-            var stream = new MemoryStream(epubBytes);
-            var formFile = new FormFile(stream, 0, epubBytes.Length, "file", "sample.epub")
-            {
-                Headers = new HeaderDictionary(),
-                ContentType = "application/epub+zip"
-            };
-
+            // Create adapter (no need to mock IFormFile anymore)
             var adapter = new EpubProcessingAdapter(
                 Mock.Of<IDocumentRepository>(),
                 Mock.Of<IPageRepository>()
             );
 
             // Act
-            var result = await adapter.ExtractTextAsync(formFile);
+            // Call the new signature: (Stream, fileName)
+            var result = await adapter.ExtractTextAsync(
+                fileStream: ms
+            );
 
-            // Assert
+            // Assert basic contract
             Assert.NotNull(result);
-            Assert.False(string.IsNullOrWhiteSpace(result.DocumentTitle), "Document title should not be empty.");
-            Assert.NotEmpty(result.Pages); // At least one page should be returned
+            Assert.False(string.IsNullOrWhiteSpace(result.DocumentTitle),
+                "Document title should not be empty.");
+            Assert.NotEmpty(result.Pages);
 
+            // Ensure pages are cleaned up (no style/meta tags etc.)
             foreach (var page in result.Pages)
             {
-                Assert.False(string.IsNullOrWhiteSpace(page), "Page content should not be empty.");
-                Assert.DoesNotContain("<style", page); // Example: style tags should be removed
-                Assert.DoesNotContain("<meta", page);  // Example: meta tags should be removed
+                Assert.False(string.IsNullOrWhiteSpace(page),
+                    "Page content should not be empty.");
+                Assert.DoesNotContain("<style", page,
+                    StringComparison.OrdinalIgnoreCase);
+                Assert.DoesNotContain("<meta", page,
+                    StringComparison.OrdinalIgnoreCase);
             }
         }
     }
