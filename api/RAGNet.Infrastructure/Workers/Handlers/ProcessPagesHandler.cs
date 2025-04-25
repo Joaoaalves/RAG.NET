@@ -31,29 +31,39 @@ namespace RAGNET.Infrastructure.Workers.Handlers
             var chunksBag = new ConcurrentBag<Chunk>();
             var counts = await Task.WhenAll(document.Pages.Select(async page =>
             {
-                var chunks = (await _embeddingService.ChunkTextAsync(
-                                 page.Text,
-                                 workflow.Chunker,
-                                 workflow.ConversationProviderConfig,
-                                 convoKey
-                              )).ToList();
+                try
+                {
+                    var chunks = (await _embeddingService.ChunkTextAsync(
+                                                    page.Text,
+                                                    workflow.Chunker,
+                                                    workflow.ConversationProviderConfig,
+                                                    convoKey
+                                                 )).ToList();
+                    if (chunks.Count > 0)
+                    {
+                        var results = await _embeddingService.GetEmbeddingsAsync(
+                                          chunks,
+                                          workflow.EmbeddingProviderConfig,
+                                          embedKey
+                                      );
 
-                var results = await _embeddingService.GetEmbeddingsAsync(
-                                  chunks,
-                                  workflow.EmbeddingProviderConfig,
-                                  embedKey
-                              );
+                        var batch = results
+                            .Select(r => (r.VectorId, r.Embedding, new Dictionary<string, string>()))
+                            .ToList();
 
-                var batch = results
-                    .Select(r => (r.VectorId, r.Embedding, new Dictionary<string, string>()))
-                    .ToList();
+                        await _embeddingService.InsertEmbeddingBatchAsync(batch, workflow.CollectionId.ToString());
 
-                await _embeddingService.InsertEmbeddingBatchAsync(batch, workflow.CollectionId.ToString());
+                        foreach (var (ChunkText, VectorId, Embedding) in results)
+                            chunksBag.Add(new Chunk { PageId = page.Id, Text = ChunkText, VectorId = VectorId });
+                    }
 
-                foreach (var (ChunkText, VectorId, Embedding) in results)
-                    chunksBag.Add(new Chunk { PageId = page.Id, Text = ChunkText, VectorId = VectorId });
+                    return chunks.Count;
+                }
+                catch
+                {
+                    return 0;
+                }
 
-                return chunks.Count;
             }));
 
             await _embeddingService.AddChunksAsync([.. chunksBag]);

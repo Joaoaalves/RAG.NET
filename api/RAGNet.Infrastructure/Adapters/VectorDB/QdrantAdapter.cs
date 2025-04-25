@@ -1,3 +1,4 @@
+using Grpc.Core;
 using Qdrant.Client;
 using Qdrant.Client.Grpc;
 using RAGNET.Domain.Services;
