@@ -3,7 +3,9 @@ using Microsoft.Extensions.Logging;
 
 using Polly;
 using Polly.Retry;
-
+using RAGNET.Domain.Entities;
+using RAGNET.Domain.Entities.Jobs;
+using RAGNET.Domain.Enums;
 using RAGNET.Domain.Services.Queue;
 
 
@@ -41,44 +43,51 @@ namespace RAGNET.Infrastructure.Services
                 });
         }
 
+        private static IEnumerable<string> GetUrls(List<CallbackUrl> callbacks)
+        {
+            return callbacks.Select(c => c.Url);
+        }
+
         public async Task NotifySuccessAsync(
-            Guid jobId,
-            string workflowId,
-            IEnumerable<string> callbackUrls,
+            Job job,
             int processedChunks,
-            int totalChunks,
             CancellationToken cancellationToken = default)
         {
             var payload = new
             {
-                JobId = jobId,
-                WorkflowId = workflowId,
-                Status = "Completed",
+                job.JobId,
+                job.WorkflowId,
+                Status = JobStatus.DONE,
                 ProcessedChunks = processedChunks,
-                TotalChunks = totalChunks,
                 Timestamp = DateTime.UtcNow
             };
 
-            await SendToAllAsync(callbackUrls, payload, cancellationToken);
+            await SendToAllAsync(
+                GetUrls(job.CallbackUrls),
+                payload,
+                cancellationToken
+            );
         }
 
         public async Task NotifyFailureAsync(
-            Guid jobId,
-            string workflowId,
-            IEnumerable<string> callbackUrls,
+            Job job,
             string errorMessage,
             CancellationToken cancellationToken = default)
         {
             var payload = new
             {
-                JobId = jobId,
-                WorkflowId = workflowId,
-                Status = "Failed",
+                job.JobId,
+                job.WorkflowId,
+                Status = JobStatus.FAILED,
                 Error = errorMessage,
                 Timestamp = DateTime.UtcNow
             };
 
-            await SendToAllAsync(callbackUrls, payload, cancellationToken);
+            await SendToAllAsync(
+                GetUrls(job.CallbackUrls),
+                payload,
+                cancellationToken
+            );
         }
 
         private async Task SendToAllAsync(

@@ -1,42 +1,32 @@
-
-using System.Text.Json;
 using System.Collections.Concurrent;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Net.Http.Json;
-using Microsoft.AspNetCore.Http.Internal;
 
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
+using Microsoft.AspNetCore.Http.Internal;
 
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Entities.Jobs;
+
 using RAGNET.Domain.Repositories;
+
 using RAGNET.Domain.Factories;
+
 using RAGNET.Domain.Services;
 using RAGNET.Domain.Services.ApiKey;
 using RAGNET.Domain.Services.Queue;
 
 namespace RAGNET.Infrastructure.Workers
 {
-    public class EmbeddingJobWorker : BackgroundService
+    public class EmbeddingJobWorker(
+        IEmbeddingJobQueue jobQueue,
+        IServiceScopeFactory scopeFactory
+        ) : BackgroundService
     {
-        private readonly IEmbeddingJobQueue _jobQueue;
-        private readonly IServiceScopeFactory _scopeFactory;
-
-        public EmbeddingJobWorker(
-            IEmbeddingJobQueue jobQueue,
-            IServiceScopeFactory scopeFactory
-        )
-        {
-            _jobQueue = jobQueue;
-            _scopeFactory = scopeFactory;
-        }
+        private readonly IEmbeddingJobQueue _jobQueue = jobQueue;
+        private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            // subscribe once and return; the queue will drive incoming messages
             await _jobQueue.SubscribeAsync(
                 HandleJobAsync,
                 autoAck: false,
@@ -62,7 +52,7 @@ namespace RAGNET.Infrastructure.Workers
                 await jobStatusRepo.SetPendingAsync(job.JobId);
 
                 var tempFile = Path.Combine(Path.GetTempPath(), $"{job.JobId}_{job.FileName}");
-                await File.WriteAllBytesAsync(tempFile, job.FileContent);
+                await File.WriteAllBytesAsync(tempFile, job.FileContent, ct);
 
                 await using var fs = File.OpenRead(tempFile);
                 var formFile = new FormFile(fs, 0, fs.Length, "file", job.FileName);
@@ -116,38 +106,28 @@ namespace RAGNET.Infrastructure.Workers
 
                 await embeddingService.AddChunksAsync([.. chunksBag]);
 
+
+                // Update embedded documents count
                 workflow.DocumentsCount++;
                 await workflowRepo.UpdateByApiKey(workflow, workflow.ApiKey);
                 await jobStatusRepo.MarkAsCompletedAsync(job.JobId);
 
-                var totalProcessed = counts.Sum();
-                foreach (var callback in job.CallbackUrls)
-                    _ = httpClient.PostAsJsonAsync(
-                        callback.Url,
-                        new
-                        {
-                            job.JobId,
-                            ProcessedChunks = totalProcessed
-                        }
-                );
 
                 fs.Dispose();
                 File.Delete(tempFile);
 
-                var urls = job.CallbackUrls.Select(c => c.Url).ToList();
+                // Notify all callback Urls
+                var totalProcessed = counts.Sum();
 
                 await callbackNotifier.NotifySuccessAsync(
-                    job.JobId,
-                    job.WorkflowId.ToString(),
-                    urls,
-                    totalProcessed,
+                    job,
                     totalProcessed,
                     ct
                 );
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro no processamento do job: {ex}");
+                await callbackNotifier.NotifyFailureAsync(job, $"{ex.Message}", ct);
             }
         }
     }

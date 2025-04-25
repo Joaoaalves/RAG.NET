@@ -1,19 +1,16 @@
+using RAGNET.Domain.Entities.Jobs;
+
 namespace RAGNET.Domain.Services.Queue
 {
     public interface ICallbackNotificationService
     {
         public Task NotifySuccessAsync(
-            Guid jobId,
-            string workflowId,
-            IEnumerable<string> callbackUrls,
+            Job job,
             int processedChunks,
-            int totalChunks,
             CancellationToken cancellationToken = default);
 
         public Task NotifyFailureAsync(
-            Guid jobId,
-            string workflowId,
-            IEnumerable<string> callbackUrls,
+            Job job,
             string errorMessage,
             CancellationToken cancellationToken = default);
     }
