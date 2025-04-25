@@ -34,7 +34,6 @@ namespace RAGNET.Infrastructure.Workers
         {
             try
             {
-                Console.WriteLine("Running Worker");
                 using var scope = _scopeFactory.CreateScope();
 
                 var ctx = new EmbeddingJobContext(scope);
@@ -46,7 +45,6 @@ namespace RAGNET.Infrastructure.Workers
                 var updateWorkflowHanlder = scope.ServiceProvider.GetRequiredService<UpdateWorkflowHandler>();
                 var notifyHandler = scope.ServiceProvider.GetRequiredService<NotifyHandler>();
 
-
                 initializeJobHandler.SetNext(extractHandler);
                 extractHandler.SetNext(processPagesHandler);
                 processPagesHandler.SetNext(updateWorkflowHanlder);
@@ -56,9 +54,9 @@ namespace RAGNET.Infrastructure.Workers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Received Exception {ex}");
-
-                await _callbackNotificationService.NotifyFailureAsync(job, $"{ex.Message}", ct);
+                await _callbackNotificationService
+              .NotifyFailureAsync(job, ex.Message, ct);
+                throw;
             }
         }
     }

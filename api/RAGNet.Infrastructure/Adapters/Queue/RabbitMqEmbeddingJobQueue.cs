@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Microsoft.Extensions.Configuration;
+
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RAGNET.Domain.Entities.Jobs;
@@ -74,19 +74,35 @@ namespace RAGNET.Infrastructure.Adapters.Queue
 
             consumer.ReceivedAsync += async (sender, ea) =>
             {
-                var job = JsonSerializer
-                          .Deserialize<EmbeddingJob>(ea.Body.ToArray())
-                          ?? throw new InvalidOperationException("Invalid payload");
+                var deliveryTag = ea.DeliveryTag;
 
-                await handle(job, cancellationToken)
-                      .ConfigureAwait(false);
+                try
+                {
+                    var job = JsonSerializer.Deserialize<EmbeddingJob>(ea.Body.Span)
+                              ?? throw new InvalidOperationException("Invalid payload");
 
-                if (!autoAck)
-                    await _channel.BasicAckAsync(
-                        deliveryTag: ea.DeliveryTag,
-                        multiple: false,
-                        cancellationToken
-                    ).ConfigureAwait(false);
+                    await handle(job, cancellationToken)
+                          .ConfigureAwait(false);
+
+                    if (!autoAck)
+                        await _channel.BasicAckAsync(
+                            deliveryTag: deliveryTag,
+                            multiple: false,
+                            cancellationToken
+                        ).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Job failed, NACKing message: {ex.Message}");
+
+                    if (!autoAck)
+                        await _channel.BasicNackAsync(
+                            deliveryTag: deliveryTag,
+                            multiple: false,
+                            requeue: false,
+                            cancellationToken
+                        ).ConfigureAwait(false);
+                }
             };
 
             // starts consuming
@@ -108,4 +124,6 @@ namespace RAGNET.Infrastructure.Adapters.Queue
             _connection.Dispose();
         }
     }
+
+
 }
