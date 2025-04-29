@@ -1,10 +1,9 @@
 export interface EmbeddingRequest {
   file: File;
 }
-
 export interface EmbeddingResponse {
-  totalChunks: number;
-  processedChunks: number;
+  message: string;
+  jobId: string;
 }
 
 export interface EmbeddingModel {

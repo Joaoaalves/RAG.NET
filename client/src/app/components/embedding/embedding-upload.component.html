@@ -57,12 +57,29 @@
     </button>
   </div>
 
-  <div *ngIf="loading" class="mt-4 absolute bottom-0 left-0 w-full">
-    <div class="w-full bg-neutral-800 h-2 mt-2">
-      <div
-        class="bg-purple-500 h-2 transition-all duration-300"
-        [style.width.%]="uploadProgress"
-      ></div>
-    </div>
-  </div>
+
+  <ul class="w-100 my-8 space-y-4">
+    <li *ngFor="let job of jobs$ | async" class="p-2 border border-neutral-500 rounded-xl flex items-start justify-start gap-x-4">
+      <div  class="bg-neutral-800 min-w-11 min-h-11 grid place-items-center rounded-xl flex-1">
+        <div *ngIf="job.status == 'Pending'" class="rounded-xl animate-spin w-8 h-8 bg-neutral-700">
+        </div>
+        <div *ngIf="job.status == 'Done'" class="bg-green-500 rounded-full animate-pulse w-8 h-8">
+        </div>
+        <div *ngIf="job.status == 'Error'" class="bg-red-500 rounded-full animate-pulse w-8 h-8">
+        </div>
+      </div>
+
+      <div class="w-full">
+        <h3 class="text-neutral-300 text-lg">
+            Job: {{ job.jobId }}
+        </h3>
+        <span class="text-neutral-400 text-sm">
+            Status: {{ job.status }}
+        </span>
+        <span *ngIf="job.status === 'Error'" class="text-red-500 text-xs">
+          {{ job.error }}
+        </span>
+      </div>
+    </li>
+  </ul>
 </div>

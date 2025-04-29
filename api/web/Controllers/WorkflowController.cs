@@ -117,7 +117,7 @@ namespace web.Controllers
             try
             {
                 var workflow = HttpContext.Items["Workflow"] as Workflow
-                    ?? throw new InvalidOperationException("Workflow não encontrado no contexto.");
+                    ?? throw new InvalidOperationException("Workflow not found on context.");
 
                 var ms = new MemoryStream();
                 file.CopyTo(ms);
@@ -136,7 +136,7 @@ namespace web.Controllers
                 Response.StatusCode = 202; // Accepted
                 await Response.WriteAsJsonAsync(new
                 {
-                    Message = "Job enfileirado com sucesso.",
+                    Message = "Job queued.",
                     job.JobId
                 });
             }

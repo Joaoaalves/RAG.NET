@@ -2,6 +2,7 @@ using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services;
 using RAGNET.Domain.Services.Queue;
 using RAGNET.Infrastructure.Adapters.Queue;
+using RAGNET.Infrastructure.Adapters.SignalR;
 using RAGNET.Infrastructure.Adapters.VectorDB;
 using RAGNET.Infrastructure.Services;
 using RAGNET.Infrastructure.Workers;
@@ -39,6 +40,7 @@ namespace web.Configurations
             services.AddHttpClient("CallbackClient")
                 .SetHandlerLifetime(TimeSpan.FromMinutes(5));
             services.AddSingleton(typeof(ICallbackNotificationService<>), typeof(CallbackNotificationService<>)); services.AddHostedService<EmbeddingJobWorker>();
+            services.AddSingleton<IJobNotificationService, SignalRJobNotificationService>();
 
             services.AddScoped<IVectorDatabaseService, QDrantAdapter>();
             services.AddScoped<IJobStatusRepository, RedisJobStatusRepository>();

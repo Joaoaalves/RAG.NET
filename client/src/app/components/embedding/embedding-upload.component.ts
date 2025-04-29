@@ -13,6 +13,8 @@ import { Workflow } from 'src/app/models/workflow';
 // Services
 import { EmbeddingService } from 'src/app/services/embedding.service';
 import { WorkflowService } from 'src/app/services/workflow.service';
+import { Observable } from 'rxjs';
+import { JobItem } from 'src/app/models/job';
 
 @Component({
   imports: [CommonModule, NgIcon],
@@ -25,18 +27,22 @@ export class EmbeddingUploadComponent implements OnInit {
   workflowId!: string;
   workflow!: Workflow;
   selectedFile: File | null = null;
-  uploadProgress = 0;
+  jobs$: Observable<JobItem[]>;
+
   error: string = '';
   success: string = '';
   loading: boolean = false;
   isDragging = false;
+
   @ViewChild('fileInput') fileInput!: ElementRef;
 
   constructor(
     private route: ActivatedRoute,
     private workflowService: WorkflowService,
     private embeddingService: EmbeddingService
-  ) {}
+  ) {
+    this.jobs$ = this.embeddingService.jobs$;
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -106,28 +112,8 @@ export class EmbeddingUploadComponent implements OnInit {
       return;
     }
 
-    const requestData: EmbeddingRequest = { file: this.selectedFile };
-    this.loading = true;
-    this.embeddingService.embedd(requestData, this.workflow.apiKey).subscribe({
-      next: (progress: EmbeddingResponse) => {
-        if (progress.totalChunks > 0) {
-          this.uploadProgress = Math.max(
-            Math.round((progress.processedChunks / progress.totalChunks) * 100),
-            this.uploadProgress
-          );
-        }
-      },
-      error: (error) => {
-        this.loading = false;
-        this.error = error;
-      },
-      complete: () => {
-        this.error = '';
-        this.loading = false;
-        this.selectedFile = null;
-        this.uploadProgress = 0;
-        this.success = 'Document embedded!';
-      },
-    });
+    this.embeddingService.sendFile(this.selectedFile, this.workflow.apiKey);
+    this.fileInput.nativeElement.value = '';
+    this.selectedFile = null;
   }
 }

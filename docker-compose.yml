@@ -1,24 +1,4 @@
 services:
-  api:
-    build:
-      context: ./api
-      dockerfile: web/Dockerfile
-    ports:
-      - "5000:8080"
-    depends_on:
-      postgres:
-        condition: service_started
-      qdrant:
-        condition: service_started
-      redis:
-        condition: service_started
-      rabbitmq:
-        condition: service_healthy
-        restart: true
-    environment:
-      - CLIENT_URL=http://localhost
-      - PRODUCTION=true
-
   postgres:
     image: postgres:13
     environment:
@@ -61,12 +41,36 @@ services:
       RABBITMQ_DEFAULT_PASS: rag_password
     volumes:
       - ./certs:/certs:ro
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
   redis:
     image: bitnami/redis:latest
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
       - "6379:6379"
+  api:
+    build:
+      context: ./api
+      dockerfile: web/Dockerfile
+    ports:
+      - "5000:8080"
+    depends_on:
+      postgres:
+        condition: service_started
+      qdrant:
+        condition: service_started
+      redis:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+        restart: true
+    environment:
+      - CLIENT_URL=http://localhost
+      - PRODUCTION=true
 volumes:
   rabbitmq_data:
   postgres_data:

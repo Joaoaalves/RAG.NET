@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
 using RAGNET.Domain.Entities;
-
+using RAGNET.Infrastructure.Adapters.SignalR;
 using web.Configurations;
 using web.Extensions;
 
@@ -30,7 +30,7 @@ builder.Services.AddCors(opt =>
 {
     opt.AddPolicy("CorsPolicy", policyBuilder =>
     {
-        policyBuilder.AllowAnyHeader().AllowAnyMethod().WithOrigins(clientURL);
+        policyBuilder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins(clientURL);
     });
 });
 
@@ -44,6 +44,9 @@ builder.Services.AddFilterConfiguration();
 builder.Services.AddUseCaseConfiguration();
 builder.Services.AddFactoryConfiguration();
 
+// Hub
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 if (isDevelopment)
@@ -56,6 +59,9 @@ app.UseCors("CorsPolicy");
 app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Jobs (Just embedding ATM)
+app.MapHub<JobStatusHub>("/hubs/jobstatus");
 
 var identityApi = app.MapIdentityApi<User>();
 
