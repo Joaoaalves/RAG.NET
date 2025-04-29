@@ -2,12 +2,14 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
+// Components
+import { JobBarComponent } from 'src/app/shared/components/jobs/job-bar.component';
+
 // Icons
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroArrowUpOnSquare } from '@ng-icons/heroicons/outline';
 
 // Models
-import { EmbeddingRequest, EmbeddingResponse } from 'src/app/models/embedding';
 import { Workflow } from 'src/app/models/workflow';
 
 // Services
@@ -17,10 +19,11 @@ import { Observable } from 'rxjs';
 import { JobItem } from 'src/app/models/job';
 
 @Component({
-  imports: [CommonModule, NgIcon],
+  imports: [CommonModule, NgIcon, JobBarComponent],
   providers: [provideIcons({ heroArrowUpOnSquare })],
   selector: 'app-embedding-upload',
   templateUrl: './embedding-upload.component.html',
+  styleUrl: './embedding-upload.component.css',
   standalone: true,
 })
 export class EmbeddingUploadComponent implements OnInit {

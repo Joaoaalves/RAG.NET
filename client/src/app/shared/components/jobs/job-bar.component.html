@@ -1,0 +1,8 @@
+<aside class="h-full bg-neutral-900 w-120 flex flex-col items-center justify-start p-4 rounded-xl shadow-purple-500/20 shadow-2xl">
+  <h2 class="text-3xl text-neutral-200 text-center w-full">Embedding Queue</h2>
+  <ul *ngIf="jobs" class="w-100 grid grid-cols-1 gap-y-4 mt-8">
+    @for(job of jobs | async; track job.jobId){
+      <app-job [job]="job"/>
+    }
+  </ul>
+</aside>

@@ -1,85 +1,64 @@
-<div class="flex flex-col p-8 col-start-2 relative">
-  <h1 class="text-4xl text-neutral-200 font-bold">Upload your document</h1>
+<div class="grid grid-cols-[1fr_480px] col-start-2 relative grow">
+  <div>
+    <h1 class="text-4xl text-neutral-200 font-bold">Upload your document</h1>
 
-  <p class="text-neutral-300 text-sm text-left max-w-lg mt-4">
-    The embedding process in RAG (Retrieval-Augmented Generation) transforms
-    your document into a searchable vector format, enabling efficient
-    retrieval and contextual AI interactions.
-  </p>
+    <p class="text-neutral-300 text-sm text-left max-w-lg mt-4">
+      The embedding process in RAG (Retrieval-Augmented Generation) transforms
+      your document into a searchable vector format, enabling efficient
+      retrieval and contextual AI interactions.
+    </p>
 
-  <div class="max-w-2xl mt-8 space-y-4">
-    <span *ngIf="error" class="text-red-500 mb-4 block text-xl text-center">{{error}}</span>
-    <span *ngIf="success" class="text-green-500 mb-4 block text-xl text-center">{{success}}</span>
+    <div class="max-w-2xl mt-8 space-y-4">
+      <span *ngIf="error" class="text-red-500 mb-4 block text-xl text-center">{{error}}</span>
+      <span *ngIf="success" class="text-green-500 mb-4 block text-xl text-center">{{success}}</span>
 
-    <div
-      class="border-2 border-dashed border-neutral-500 p-6 rounded-lg flex flex-col items-center justify-center cursor-pointer transition-all duration-300"
-      (dragover)="onDragOver($event)"
-      (dragleave)="onDragLeave($event)"
-      (drop)="onDrop($event)"
-      (click)="triggerFileInput()"
-      [ngClass]="{ 'bg-neutral-800': isDragging }"
-    >
-      <ng-icon
-        *ngIf="isDragging"
-        name="heroArrowUpOnSquare"
-        class="invert text-4xl mb-2"
-      ></ng-icon>
-      <p
-        *ngIf="!isDragging && !selectedFile"
-        class="text-neutral-300 text-sm"
+      <div
+        class="border-2 border-dashed border-neutral-500 p-6 rounded-lg flex flex-col items-center justify-center cursor-pointer transition-all duration-300"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+        (click)="triggerFileInput()"
+        [ngClass]="{ 'bg-neutral-800': isDragging }"
       >
-        Drag and drop your document here
-      </p>
-      <p
-        *ngIf="!isDragging && !selectedFile"
-        class="text-neutral-500 text-xs"
+        <ng-icon
+          *ngIf="isDragging"
+          name="heroArrowUpOnSquare"
+          class="invert text-4xl mb-2"
+        ></ng-icon>
+        <p
+          *ngIf="!isDragging && !selectedFile"
+          class="text-neutral-300 text-sm"
+        >
+          Drag and drop your document here
+        </p>
+        <p
+          *ngIf="!isDragging && !selectedFile"
+          class="text-neutral-500 text-xs"
+        >
+          or click to select a file
+        </p>
+        <p *ngIf="selectedFile" class="text-lg text-white">
+          {{ selectedFile.name }}
+        </p>
+        <input
+          id="documentInput"
+          type="file"
+          (change)="onFileSelected($event)"
+          accept="application/pdf, application/epub+zip"
+          class="hidden"
+          #fileInput
+        />
+      </div>
+
+      <button
+        (click)="onUpload()"
+        class="w-full bg-white text-black py-2 px-4 rounded mt-4 hover:bg-gray-300 transition duration-300"
       >
-        or click to select a file
-      </p>
-      <p *ngIf="selectedFile" class="text-lg text-white">
-        {{ selectedFile.name }}
-      </p>
-      <input
-        id="documentInput"
-        type="file"
-        (change)="onFileSelected($event)"
-        accept="application/pdf, application/epub+zip"
-        class="hidden"
-        #fileInput
-      />
+        Upload Document
+      </button>
     </div>
-
-    <button
-      (click)="onUpload()"
-      class="w-full bg-white text-black py-2 px-4 rounded mt-4 hover:bg-gray-300 transition duration-300"
-    >
-      Upload Document
-    </button>
   </div>
 
 
-  <ul class="w-100 my-8 space-y-4">
-    <li *ngFor="let job of jobs$ | async" class="p-2 border border-neutral-500 rounded-xl flex items-start justify-start gap-x-4">
-      <div  class="bg-neutral-800 min-w-11 min-h-11 grid place-items-center rounded-xl flex-1">
-        <div *ngIf="job.status == 'Pending'" class="rounded-xl animate-spin w-8 h-8 bg-neutral-700">
-        </div>
-        <div *ngIf="job.status == 'Done'" class="bg-green-500 rounded-full animate-pulse w-8 h-8">
-        </div>
-        <div *ngIf="job.status == 'Error'" class="bg-red-500 rounded-full animate-pulse w-8 h-8">
-        </div>
-      </div>
-
-      <div class="w-full">
-        <h3 class="text-neutral-300 text-lg">
-            Job: {{ job.jobId }}
-        </h3>
-        <span class="text-neutral-400 text-sm">
-            Status: {{ job.status }}
-        </span>
-        <span *ngIf="job.status === 'Error'" class="text-red-500 text-xs">
-          {{ job.error }}
-        </span>
-      </div>
-    </li>
-  </ul>
+  <app-job-bar [jobs]="jobs$"></app-job-bar>
 </div>

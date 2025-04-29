@@ -1,1 +1,48 @@
 @import "tailwindcss";
+
+@theme {
+  --animate-ring-length: ring-length 1.5s ease-in-out infinite;
+  --animate-spin-ring: spin-ring 1.5s ease-in-out infinite;
+  --animate-check-draw: check-draw 1s ease-in-out forwards;
+  --animate-x-draw: x-draw .3s ease-in-out forwards;
+
+  @keyframes x-draw {
+    0% {
+      stroke-dasharray: 20;
+      stroke-dashoffset: 20;
+    }
+    100% {
+      stroke-dasharray: 20;
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes ring-length {
+    0%, 100% {
+      stroke-dasharray: 1 125;
+    }
+    50% {
+      stroke-dasharray: 35 125;
+    }
+  }
+
+  @keyframes spin-ring {
+    0% {
+      transform: rotate(-90deg);
+    }
+    100% {
+      transform: rotate(270deg);
+    }
+  }
+
+  @keyframes check-draw {
+    0% {
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+    }
+    100% {
+      stroke-dasharray: 100;
+      stroke-dashoffset: 0;
+    }
+  }
+}
