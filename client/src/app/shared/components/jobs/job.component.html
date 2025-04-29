@@ -8,7 +8,7 @@
 
   <div class="w-full">
     <h3 class="text-neutral-300 text-lg">
-        Job: {{ job.jobId }}
+        Job: <strong *ngIf="job.document">{{ job.document.title }}</strong>
     </h3>
     <span class="text-neutral-400 text-sm">
         Status: {{ job.status }}

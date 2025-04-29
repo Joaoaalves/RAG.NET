@@ -12,18 +12,56 @@ namespace RAGNET.Infrastructure.Adapters.SignalR
             _hub = hub;
         }
 
-        public Task NotifySuccessAsync(Guid jobId, string userId, CancellationToken ct = default)
+        public Task NotifyProgress(Guid jobId, string userId, Domain.Entities.Document document, CancellationToken ct = default)
         {
             var group = JobStatusHub.GetGroupName(jobId.ToString());
+
             return _hub.Clients.Group(group)
-                       .SendAsync("JobCompleted", new { jobId, userId }, ct);
+                        .SendAsync("JobProgress", new
+                        {
+                            jobId,
+                            userId,
+                            document = new
+                            {
+                                document.Id,
+                                document.Title,
+                                Pages = document.Pages.Count
+                            }
+                        }, ct);
         }
 
-        public Task NotifyFailureAsync(Guid jobId, string userId, string errorMessage, CancellationToken ct = default)
+        public Task NotifySuccessAsync(Guid jobId, string userId, Domain.Entities.Document document, CancellationToken ct = default)
         {
             var group = JobStatusHub.GetGroupName(jobId.ToString());
             return _hub.Clients.Group(group)
-                       .SendAsync("JobFailed", new { jobId, errorMessage }, ct);
+                       .SendAsync("JobCompleted", new
+                       {
+                           jobId,
+                           userId,
+                           document = new
+                           {
+                               document.Id,
+                               document.Title,
+                               Pages = document.Pages.Count
+                           }
+                       }, ct);
+        }
+
+        public Task NotifyFailureAsync(Guid jobId, Domain.Entities.Document document, string errorMessage, CancellationToken ct = default)
+        {
+            var group = JobStatusHub.GetGroupName(jobId.ToString());
+            return _hub.Clients.Group(group)
+                       .SendAsync("JobFailed", new
+                       {
+                           jobId,
+                           errorMessage,
+                           document = new
+                           {
+                               document.Id,
+                               document.Title,
+                               Pages = document.Pages.Count
+                           }
+                       }, ct);
         }
     }
 }

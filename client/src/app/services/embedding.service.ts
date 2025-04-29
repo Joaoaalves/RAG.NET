@@ -40,7 +40,9 @@ export class EmbeddingService {
     const updated = this.jobs
       .getValue()
       .map((job) =>
-        job.jobId === response.jobId ? { ...job, status, error } : job
+        job.jobId === response.jobId
+          ? { ...job, document: response.document, status, error }
+          : job
       );
     this.jobs.next(updated);
   }
@@ -57,8 +59,15 @@ export class EmbeddingService {
       )
       .pipe(
         tap((response) => {
+          const title = file.name.replace(/\.[^/.]+$/, '');
+
           const job: JobItem = {
             jobId: response.jobId,
+            document: {
+              id: '',
+              title: title,
+              pages: 0,
+            },
             status: 'Pending',
           };
           this.jobs.next([...this.jobs.getValue(), job]);
@@ -69,6 +78,7 @@ export class EmbeddingService {
         ),
 
         concatMap((jobId) => from(this.notifier.joinJobGroup(jobId))),
+
         catchError((err) => {
           console.error('Error while connecting to SignalR Hub', err);
           return [];

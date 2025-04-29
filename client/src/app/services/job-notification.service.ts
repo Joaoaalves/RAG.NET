@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import {
+  HubConnection,
+  HubConnectionBuilder,
+  LogLevel,
+} from '@microsoft/signalr';
 import { environment } from '../../environments/environment';
 import { JobNotificationResponse } from '../models/job';
 
@@ -12,6 +16,7 @@ export class JobNotificationService {
       .withUrl(`${environment.apiUrl}/hubs/jobstatus`, {
         accessTokenFactory: () => localStorage.getItem('accessToken')!,
       })
+      .configureLogging(LogLevel.None)
       .withAutomaticReconnect()
       .build();
   }
