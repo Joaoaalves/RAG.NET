@@ -21,3 +21,12 @@ export interface JobNotificationResponse {
   document: Document;
   process: JobProcess;
 }
+
+export interface PendingJob {
+  id: string;
+  workflowId: string;
+}
+
+export interface PendingJobsResponse {
+  pendingJobs: PendingJob[];
+}

@@ -1,8 +1,9 @@
-<aside class="h-full bg-neutral-900 w-120 flex flex-col items-center justify-start p-4 rounded-xl shadow-purple-500/20 shadow-2xl">
+<button class="text-white bg-black px-3 py-1 rounded-lg cursor-pointer hover:bg-neutral-200 hover:text-black transition-all duration-300" (click)="toggleJobsBar()">Jobs</button>
+<div *ngIf="isOpen" class="h-100 bg-neutral-900 w-120 flex flex-col items-center justify-start p-4 rounded-xl shadow-purple-500/20 shadow-2xl fixed top-20 right-8 z-10">
   <h2 class="text-3xl text-neutral-200 text-center w-full">Embedding Queue</h2>
   <ul *ngIf="jobs" class="w-100 grid grid-cols-1 gap-y-4 mt-8">
     @for(job of jobs | async; track job.jobId){
       <app-job [job]="job"/>
     }
   </ul>
-</aside>
+</div>
