@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Entities.Jobs;
+using RAGNET.Domain.Services.Queue;
 
 namespace RAGNET.Domain.Contexts
 {

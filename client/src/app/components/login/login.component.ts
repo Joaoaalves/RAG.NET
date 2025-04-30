@@ -52,7 +52,6 @@ export class LoginComponent implements OnInit {
     this.authService.login(credentials).subscribe(
       () => this.router.navigate(['/dashboard']),
       () => {
-        console.log('Error');
         this.error = 'Email and/or password invalid.';
       }
     );

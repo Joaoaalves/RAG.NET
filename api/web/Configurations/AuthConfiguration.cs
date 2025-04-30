@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.AspNetCore.Authorization;
 using RAGNET.Domain.Entities;
 using RAGNET.Infrastructure.Data;
 
-namespace web.Extensions
+namespace web.Configurations
 {
     public static class AuthConfiguration
     {

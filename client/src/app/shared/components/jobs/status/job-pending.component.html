@@ -1,4 +1,4 @@
-<svg class="w-8 h-8 animate-spin-ring" viewBox="0 0 50 50">
+<svg *ngIf="status === 'Pending'" class="w-8 h-8 animate-spin-ring" viewBox="0 0 50 50">
   <circle
     class="stroke-current text-purple-600 animate-ring-length"
     cx="25"
@@ -9,3 +9,34 @@
     stroke-linecap="round"
   />
 </svg>
+
+<div *ngIf="status === 'Processing'" class="relative w-10 h-10">
+  <svg class="absolute top-0 left-0 w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+    <circle
+      cx="50"
+      cy="50"
+      r="45"
+      stroke="#333"
+      stroke-width="10"
+      fill="none"
+    />
+    <circle
+      cx="50"
+      cy="50"
+      r="45"
+      stroke="#9333ea"
+      stroke-width="10"
+      stroke-linecap="round"
+      fill="none"
+      [attr.stroke-dasharray]="2 * Math.PI * 45"
+      [attr.stroke-dashoffset]="(1 - progress / 100) * 2 * Math.PI * 45"
+    />
+  </svg>
+
+  <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+    <span class="text-purple-600 font-bold text-sm">
+      {{ progress }}
+    </span>
+  </div>
+</div>
+

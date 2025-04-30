@@ -35,7 +35,6 @@ export class SidebarComponent implements OnInit {
 
     this.userService.getInfo().subscribe((user) => {
       localStorage.setItem(this.userInfoKey, JSON.stringify(user));
-      console.log(user);
       this.user = user;
     });
   }

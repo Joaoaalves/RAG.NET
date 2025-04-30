@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { EmbeddingResponse } from '../models/embedding';
-import { JobNotificationService } from './job-notification.service';
-import { environment } from '../../environments/environment';
 import { BehaviorSubject, from } from 'rxjs';
 import { tap, concatMap, mapTo, catchError } from 'rxjs/operators';
-import { JobItem, JobNotificationResponse } from '../models/job';
+
+import { EmbeddingResponse } from '../models/embedding';
+import { JobItem, JobNotificationResponse, JobStatus } from '../models/job';
+
+import { JobNotificationService } from './job-notification.service';
+
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class EmbeddingService {
@@ -34,16 +37,20 @@ export class EmbeddingService {
 
   private updateJobStatus(
     response: JobNotificationResponse,
-    status: JobItem['status'],
+    status: JobStatus,
     error?: string
   ) {
-    const updated = this.jobs
-      .getValue()
-      .map((job) =>
-        job.jobId === response.jobId
-          ? { ...job, document: response.document, status, error }
-          : job
-      );
+    const updated = this.jobs.getValue().map((job) =>
+      job.jobId === response.jobId
+        ? {
+            ...job,
+            document: response.document,
+            process: response.process,
+            status,
+            error,
+          }
+        : job
+    );
     this.jobs.next(updated);
   }
 
@@ -63,6 +70,10 @@ export class EmbeddingService {
 
           const job: JobItem = {
             jobId: response.jobId,
+            process: {
+              title: 'Uploading File',
+              progress: 0,
+            },
             document: {
               id: '',
               title: title,

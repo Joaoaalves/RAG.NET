@@ -1,17 +1,16 @@
 <li class="p-2 border border-neutral-500 rounded-xl flex items-start justify-start gap-x-4">
   <div  class="bg-neutral-800 min-w-11 min-h-11 grid place-items-center rounded-xl flex-1">
-    <app-job-pending *ngIf="job.status == 'Pending'" />
+    <app-job-pending *ngIf="['Processing','Pending'].includes(job.status) && job.process" [status]="job.status" [progress]="job.process.progress"/>
     <app-job-done *ngIf="job.status == 'Done'" />
     <app-job-error *ngIf="job.status == 'Error'" />
-
   </div>
 
   <div class="w-full">
     <h3 class="text-neutral-300 text-lg">
-        Job: <strong *ngIf="job.document">{{ job.document.title }}</strong>
+        Document: <strong *ngIf="job.document">{{ job.document.title }}</strong>
     </h3>
-    <span class="text-neutral-400 text-sm">
-        Status: {{ job.status }}
+    <span *ngIf="job.process" class="text-neutral-400 text-sm">
+        Process: {{ job.process.title }}
     </span>
     <span *ngIf="job.status === 'Error'" class="text-red-500 text-xs">
       {{ job.error }}

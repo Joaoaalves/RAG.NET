@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.SignalR;
 using RAGNET.Domain.Services.Queue;
+using RAGNET.Domain.Entities.Jobs;
 
 namespace RAGNET.Infrastructure.Adapters.SignalR
 {
@@ -12,56 +13,46 @@ namespace RAGNET.Infrastructure.Adapters.SignalR
             _hub = hub;
         }
 
-        public Task NotifyProgress(Guid jobId, string userId, Domain.Entities.Document document, CancellationToken ct = default)
+        private Task Notify(string method, Guid jobId, string userId, Domain.Entities.Document document, Process currentProcess, CancellationToken ct = default)
         {
             var group = JobStatusHub.GetGroupName(jobId.ToString());
-
             return _hub.Clients.Group(group)
-                        .SendAsync("JobProgress", new
-                        {
-                            jobId,
-                            userId,
-                            document = new
-                            {
-                                document.Id,
-                                document.Title,
-                                Pages = document.Pages.Count
-                            }
-                        }, ct);
+                           .SendAsync(method, new
+                           {
+                               jobId,
+                               userId,
+                               document = new
+                               {
+                                   document.Id,
+                                   document.Title,
+                                   Pages = document.Pages.Count
+                               },
+                               process = currentProcess
+                           }, ct);
+        }
+
+        public Task NotifyProgress(Guid jobId, string userId, Domain.Entities.Document document, Process currentProcess, CancellationToken ct = default)
+        {
+            return Notify("JobProgress", jobId, userId, document, currentProcess, ct);
         }
 
         public Task NotifySuccessAsync(Guid jobId, string userId, Domain.Entities.Document document, CancellationToken ct = default)
         {
-            var group = JobStatusHub.GetGroupName(jobId.ToString());
-            return _hub.Clients.Group(group)
-                       .SendAsync("JobCompleted", new
-                       {
-                           jobId,
-                           userId,
-                           document = new
-                           {
-                               document.Id,
-                               document.Title,
-                               Pages = document.Pages.Count
-                           }
-                       }, ct);
+            return Notify("JobCompleted", jobId, userId, document, new Process
+            {
+                Title = "Finished",
+                Progress = 100
+            }, ct);
         }
 
-        public Task NotifyFailureAsync(Guid jobId, Domain.Entities.Document document, string errorMessage, CancellationToken ct = default)
+        public Task NotifyFailureAsync(Guid jobId, string userId, Domain.Entities.Document document, CancellationToken ct = default)
         {
-            var group = JobStatusHub.GetGroupName(jobId.ToString());
-            return _hub.Clients.Group(group)
-                       .SendAsync("JobFailed", new
-                       {
-                           jobId,
-                           errorMessage,
-                           document = new
-                           {
-                               document.Id,
-                               document.Title,
-                               Pages = document.Pages.Count
-                           }
-                       }, ct);
+
+            return Notify("JobFailed", jobId, userId, document, new Process
+            {
+                Title = "Error",
+                Progress = 100
+            }, ct);
         }
     }
 }

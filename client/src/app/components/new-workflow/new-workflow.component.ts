@@ -128,7 +128,6 @@ export class NewWorkflowComponent implements OnInit {
 
     this.workflowService.getConversationModels().subscribe((response) => {
       this.conversationModelsResponse = response;
-      console.log(this.conversationModelsResponse);
 
       this.conversationProviders = mapValidProviders(response);
       this.conversationProviders.forEach((provider) => {

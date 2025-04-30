@@ -35,9 +35,7 @@ namespace RAGNET.Infrastructure.Workers
             try
             {
                 using var scope = _scopeFactory.CreateScope();
-
-                var ctx = new EmbeddingJobContext(scope);
-                job.Context = ctx;
+                job.Context = new EmbeddingJobContext(scope);
 
                 var initializeJobHandler = scope.ServiceProvider.GetRequiredService<InitializeJobHandler>();
                 var extractHandler = scope.ServiceProvider.GetRequiredService<ExtractTextHandler>();
