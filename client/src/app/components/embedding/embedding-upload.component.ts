@@ -20,21 +20,20 @@ import { JobItem } from 'src/app/models/job';
   providers: [provideIcons({ heroArrowUpOnSquare })],
   selector: 'app-embedding-upload',
   templateUrl: './embedding-upload.component.html',
-  styleUrl: './embedding-upload.component.css',
+  styleUrls: ['./embedding-upload.component.css'],
   standalone: true,
 })
 export class EmbeddingUploadComponent implements OnInit {
   workflowId!: string;
   workflow!: Workflow;
-  selectedFile: File | null = null;
+  selectedFiles: File[] = [];
   jobs$: Observable<JobItem[]>;
-
-  error: string = '';
-  success: string = '';
-  loading: boolean = false;
+  error = '';
+  success = '';
+  loading = false;
   isDragging = false;
 
-  @ViewChild('fileInput') fileInput!: ElementRef;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   constructor(
     private route: ActivatedRoute,
@@ -50,7 +49,7 @@ export class EmbeddingUploadComponent implements OnInit {
       if (this.workflowId) {
         this.workflowService
           .getWorkflow(this.workflowId)
-          .subscribe((workflow) => (this.workflow = workflow));
+          .subscribe((wf) => (this.workflow = wf));
       }
     });
   }
@@ -68,18 +67,7 @@ export class EmbeddingUploadComponent implements OnInit {
   onDrop(event: DragEvent) {
     event.preventDefault();
     this.isDragging = false;
-
-    if (event.dataTransfer?.files.length) {
-      const file = event.dataTransfer.files[0];
-      if (
-        file.type === 'application/pdf' ||
-        file.type === 'application/epub+zip'
-      ) {
-        this.selectedFile = file;
-      } else {
-        this.error = 'We only support PDF and Epub files.';
-      }
-    }
+    this.addFiles(event.dataTransfer?.files);
   }
 
   triggerFileInput(): void {
@@ -88,13 +76,19 @@ export class EmbeddingUploadComponent implements OnInit {
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files?.length) {
-      const file = input.files[0];
+    if (input.files) this.addFiles(input.files);
+  }
+
+  private addFiles(fileList?: FileList) {
+    if (!fileList) return;
+    this.error = '';
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList.item(i)!;
       if (
         file.type === 'application/pdf' ||
         file.type === 'application/epub+zip'
       ) {
-        this.selectedFile = file;
+        this.selectedFiles.push(file);
       } else {
         this.error = 'We only support PDF and Epub files.';
       }
@@ -102,18 +96,25 @@ export class EmbeddingUploadComponent implements OnInit {
   }
 
   onUpload(): void {
-    if (!this.selectedFile) {
-      this.error = 'No file selected.';
+    this.error = '';
+    if (this.selectedFiles.length === 0) {
+      this.error = 'No files selected.';
       return;
     }
-
-    if (!this.workflow || !this.workflow.apiKey) {
+    if (!this.workflow?.apiKey) {
       this.error = 'This workflow does not have an API Key.';
       return;
     }
 
-    this.embeddingService.sendFile(this.selectedFile, this.workflow.apiKey);
+    this.loading = true;
+    const apiKey = this.workflow.apiKey;
+    for (const file of this.selectedFiles) {
+      this.embeddingService.sendFile(file, apiKey);
+    }
+    // clear selection
+    this.selectedFiles = [];
     this.fileInput.nativeElement.value = '';
-    this.selectedFile = null;
+    this.loading = false;
+    this.success = 'Files uploaded successfully.';
   }
 }

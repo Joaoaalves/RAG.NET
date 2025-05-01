@@ -1,19 +1,26 @@
 <div class="grid grid-cols-[1fr_480px] col-start-2 relative grow">
   <div>
-    <h1 class="text-4xl text-neutral-200 font-bold">Upload your document</h1>
-
+    <h1 class="text-4xl text-neutral-200 font-bold">
+      Upload your documents
+    </h1>
     <p class="text-neutral-300 text-sm text-left max-w-lg mt-4">
-      The embedding process in RAG (Retrieval-Augmented Generation) transforms
-      your document into a searchable vector format, enabling efficient
-      retrieval and contextual AI interactions.
+      The embedding process in RAG ...
     </p>
 
     <div class="max-w-2xl mt-8 space-y-4">
-      <span *ngIf="error" class="text-red-500 mb-4 block text-xl text-center">{{error}}</span>
-      <span *ngIf="success" class="text-green-500 mb-4 block text-xl text-center">{{success}}</span>
+      <span
+        *ngIf="error"
+        class="text-red-500 block text-xl text-center"
+      >{{ error }}</span>
+      <span
+        *ngIf="success"
+        class="text-green-500 block text-xl text-center"
+      >{{ success }}</span>
 
       <div
-        class="border-2 border-dashed border-neutral-500 p-6 rounded-lg flex flex-col items-center justify-center cursor-pointer transition-all duration-300"
+        class="border-2 border-dashed border-neutral-500 p-6 rounded-lg
+               flex flex-col items-center justify-center cursor-pointer
+               transition-all duration-300"
         (dragover)="onDragOver($event)"
         (dragleave)="onDragLeave($event)"
         (drop)="onDrop($event)"
@@ -26,37 +33,41 @@
           class="invert text-4xl mb-2"
         ></ng-icon>
         <p
-          *ngIf="!isDragging && !selectedFile"
+          *ngIf="!isDragging && selectedFiles.length === 0"
           class="text-neutral-300 text-sm"
         >
-          Drag and drop your document here
+          Drag and drop your documents here
         </p>
         <p
-          *ngIf="!isDragging && !selectedFile"
+          *ngIf="!isDragging && selectedFiles.length === 0"
           class="text-neutral-500 text-xs"
         >
-          or click to select a file
+          or click to select files
         </p>
-        <p *ngIf="selectedFile" class="text-lg text-white">
-          {{ selectedFile.name }}
-        </p>
+
+        <ul *ngIf="selectedFiles.length" class="mt-2 text-white text-sm">
+          <li *ngFor="let f of selectedFiles">{{ f.name }}</li>
+        </ul>
+
         <input
+          #fileInput
           id="documentInput"
           type="file"
+          multiple
           (change)="onFileSelected($event)"
           accept="application/pdf, application/epub+zip"
           class="hidden"
-          #fileInput
         />
       </div>
 
       <button
         (click)="onUpload()"
-        class="w-full bg-white text-black py-2 px-4 rounded mt- 4 hover:bg-gray-300 transition duration-300"
+        [disabled]="loading"
+        class="w-full bg-white text-black py-2 px-4 rounded mt-4
+               hover:bg-gray-300 transition duration-300 disabled:opacity-50"
       >
-        Upload Document
+        {{ loading ? 'Uploading…' : 'Upload Documents' }}
       </button>
     </div>
   </div>
-
 </div>
