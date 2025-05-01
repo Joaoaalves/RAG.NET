@@ -18,7 +18,7 @@
 
   <div
     *ngIf="isOpen"
-    class="h-100 bg-neutral-900 w-120 flex flex-col items-center
+    class="h-120 bg-neutral-900 w-120 flex flex-col items-center
            justify-start p-4 rounded-xl shadow-purple-500/20 shadow-2xl
            fixed top-20 right-8 z-10"
   >
@@ -28,7 +28,7 @@
 
     <ul
       *ngIf="jobs.length > 0"
-      class="w-100 grid grid-cols-1 gap-y-4 mt-8"
+      class="w-100 grid grid-cols-1 gap-y-4 mt-8 job-scroll-container py-4"
     >
       <li *ngFor="let job of jobs; trackBy: trackByJobId">
         <app-job [job]="job"></app-job>
