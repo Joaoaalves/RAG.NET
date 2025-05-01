@@ -1,26 +1,38 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using System.Security.Claims;
 
 namespace RAGNET.Infrastructure.Adapters.SignalR
 {
-    public class JobStatusHub : Hub
+    [Authorize]
+    public class JobStatusHub() : Hub
     {
-        public override Task OnConnectedAsync()
+        public override async Task OnConnectedAsync()
         {
-            return base.OnConnectedAsync();
+            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var groupName = GetGroupName(userId);
+                await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            }
+            await base.OnConnectedAsync();
         }
 
-        public Task JoinJobGroup(string jobId)
+        public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            var groupName = GetGroupName(jobId);
-            return Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var groupName = GetGroupName(userId);
+                await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+            }
+
+            await base.OnDisconnectedAsync(exception);
         }
 
-        public Task LeaveJobGroup(string jobId)
-        {
-            var groupName = GetGroupName(jobId);
-            return Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
-        }
-
-        public static string GetGroupName(string jobId) => $"job:{jobId}";
+        public static string GetGroupName(string userId) => $"job:{userId}";
     }
+
 }

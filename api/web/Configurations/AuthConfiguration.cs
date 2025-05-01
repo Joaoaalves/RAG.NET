@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authentication.BearerToken;
-using Microsoft.AspNetCore.Authorization;
 using RAGNET.Domain.Entities;
 using RAGNET.Infrastructure.Data;
 
@@ -10,11 +9,25 @@ namespace web.Configurations
         public static IServiceCollection AddAuthConfiguration(this IServiceCollection services)
         {
             services.AddIdentityApiEndpoints<User>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+                    .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.ConfigureAll<BearerTokenOptions>(option =>
+            services.ConfigureAll<BearerTokenOptions>(options =>
             {
-                option.BearerTokenExpiration = TimeSpan.FromMinutes(60);
+                options.BearerTokenExpiration = TimeSpan.FromMinutes(60);
+
+                options.Events.OnMessageReceived = context =>
+                {
+                    var accessToken = context.Request.Query["access_token"];
+                    var path = context.HttpContext.Request.Path;
+
+                    if (!string.IsNullOrEmpty(accessToken) &&
+                        path.StartsWithSegments("/hubs/jobstatus"))
+                    {
+                        context.Token = accessToken;
+                    }
+
+                    return Task.CompletedTask;
+                };
             });
 
             return services;

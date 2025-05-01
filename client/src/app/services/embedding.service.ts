@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, from } from 'rxjs';
-import { tap, concatMap, mapTo, catchError } from 'rxjs/operators';
+import { tap, concatMap, mapTo, catchError, map } from 'rxjs/operators';
 
 import { EmbeddingResponse } from '../models/embedding';
 import { JobItem, JobNotificationResponse, JobStatus } from '../models/job';
@@ -35,23 +35,60 @@ export class EmbeddingService {
     });
   }
 
+  private createNewJobItem(jobId: string, title: string): JobItem {
+    return {
+      jobId: jobId,
+      process: {
+        title: 'Uploading File',
+        progress: 0,
+      },
+      document: {
+        id: '',
+        title: title,
+        pages: 0,
+      },
+      status: 'Pending',
+    };
+  }
+
   private updateJobStatus(
     response: JobNotificationResponse,
     status: JobStatus,
     error?: string
   ) {
-    const updated = this.jobs.getValue().map((job) =>
-      job.jobId === response.jobId
-        ? {
-            ...job,
-            document: response.document,
-            process: response.process,
-            status,
-            error,
-          }
-        : job
-    );
-    this.jobs.next(updated);
+    const currentJobs = this.jobs.getValue();
+    const jobIndex = currentJobs.findIndex((j) => j.jobId === response.jobId);
+
+    let updatedJobs: JobItem[];
+
+    if (jobIndex > -1) {
+      updatedJobs = currentJobs.map((job) =>
+        job.jobId === response.jobId
+          ? {
+              ...job,
+              document: response.document,
+              process: response.process,
+              status,
+              error,
+            }
+          : job
+      );
+    } else {
+      const newJob: JobItem = {
+        jobId: response.jobId,
+        process: response.process,
+        document: response.document,
+        status,
+        error,
+      };
+      updatedJobs = [...currentJobs, newJob];
+    }
+
+    this.jobs.next(updatedJobs);
+  }
+
+  private getFileName(file: File): string {
+    return file.name.replace(/\.[^/.]+$/, '');
   }
 
   sendFile(file: File, apiKey: string): void {
@@ -66,30 +103,16 @@ export class EmbeddingService {
       )
       .pipe(
         tap((response) => {
-          const title = file.name.replace(/\.[^/.]+$/, '');
+          const filename = this.getFileName(file);
 
-          const job: JobItem = {
-            jobId: response.jobId,
-            process: {
-              title: 'Uploading File',
-              progress: 0,
-            },
-            document: {
-              id: '',
-              title: title,
-              pages: 0,
-            },
-            status: 'Pending',
-          };
+          const job: JobItem = this.createNewJobItem(response.jobId, filename);
+
           this.jobs.next([...this.jobs.getValue(), job]);
         }),
 
         concatMap((response) =>
-          from(this.notifier.start()).pipe(mapTo(response.jobId))
+          from(this.notifier.start()).pipe(map(() => response.jobId))
         ),
-
-        concatMap((jobId) => from(this.notifier.joinJobGroup(jobId))),
-
         catchError((err) => {
           console.error('Error while connecting to SignalR Hub', err);
           return [];

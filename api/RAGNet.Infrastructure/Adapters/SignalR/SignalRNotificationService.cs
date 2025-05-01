@@ -4,18 +4,14 @@ using RAGNET.Domain.Entities.Jobs;
 
 namespace RAGNET.Infrastructure.Adapters.SignalR
 {
-    public class SignalRJobNotificationService : IJobNotificationService
+    public class SignalRJobNotificationService(IHubContext<JobStatusHub> hub) : IJobNotificationService
     {
-        private readonly IHubContext<JobStatusHub> _hub;
-
-        public SignalRJobNotificationService(IHubContext<JobStatusHub> hub)
-        {
-            _hub = hub;
-        }
+        private readonly IHubContext<JobStatusHub> _hub = hub;
 
         private Task Notify(string method, Guid jobId, string userId, Domain.Entities.Document document, Process currentProcess, CancellationToken ct = default)
         {
-            var group = JobStatusHub.GetGroupName(jobId.ToString());
+            var group = JobStatusHub.GetGroupName(userId);
+
             return _hub.Clients.Group(group)
                            .SendAsync(method, new
                            {
