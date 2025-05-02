@@ -1,0 +1,76 @@
+<!-- callback-urls-form.component.html -->
+<div class="grid grid-cols-1 w-full gap-4">
+  <!-- EXISTING CALLBACK URLS -->
+  <form [formGroup]="parentForm">
+    <div formArrayName="urls">
+      <div
+        *ngFor="let urlGroup of urlsFormArray.controls; let i = index"
+        [formGroupName]="i"
+        class="flex items-end gap-2 mb-2"
+      >
+        <app-input
+          label="Callback URL"
+          type="text"
+          [name]="'url' + i"
+          description="Enter a valid callback URL for this workflow."
+          formControlName="url"
+          class="flex-grow"
+        ></app-input>
+
+        <button
+          *ngIf="!editing[i]"
+          type="button"
+          (click)="startEditing(i)"
+          class="p-2 bg-purple-500 text-white rounded"
+        >
+          Edit
+        </button>
+        <button
+          *ngIf="editing[i]"
+          type="button"
+          (click)="saveUrl(i)"
+          class="p-2 bg-green-500 text-white rounded cursor-pointer"
+        >
+          Save
+        </button>
+
+        <div class="p-1.5 bg-red-500 hover:bg-white cursor-pointer transition-all duration-300 group rounded">
+          <app-alert
+          [id]="'deleteCallbackUrl' + i"
+          [title]="'Delete Callback URL'"
+          description="Are you sure you want to delete this callback URL?"
+          (actionConfirmed)="deleteUrl(i)"
+        >
+          <div
+            class="w-7 h-7 flex items-center justify-center cursor-pointer text-white group-hover:text-red-500"
+            (click)="$event.stopPropagation()"
+          >
+            <ng-icon name="heroTrash" class="w-3"></ng-icon>
+          </div>
+        </app-alert>
+        </div>
+
+      </div>
+    </div>
+  </form>
+
+  <!-- ADD NEW CALLBACK URL -->
+  <form [formGroup]="newUrlForm" class="flex items-end gap-2">
+    <app-input
+      label="New Callback URL"
+      type="text"
+      name="newUrl"
+      description="Add a new callback URL for this workflow."
+      formControlName="url"
+      placeholder="Add new callback URL"
+      class="flex-grow"
+    ></app-input>
+    <button
+      type="button"
+      (click)="addUrl()"
+      class="p-2 bg-purple-500 text-white rounded cursor-pointer"
+    >
+      Add
+    </button>
+  </form>
+</div>

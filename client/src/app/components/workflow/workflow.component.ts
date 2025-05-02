@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 
 // Components
 import { QueryEnhancerConfigComponent } from 'src/app/shared/components/query-enhancer-config/query-enhancer-config.component';
+import { CallbackUrlsFormComponent } from 'src/app/shared/components/callback-urls-form/callback-urls-form.component';
 
 // Services
 import { WorkflowService } from 'src/app/services/workflow.service';
@@ -14,7 +15,12 @@ import { Filter } from 'src/app/models/filter';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, QueryEnhancerConfigComponent, FilterConfigComponent],
+  imports: [
+    CommonModule,
+    QueryEnhancerConfigComponent,
+    FilterConfigComponent,
+    CallbackUrlsFormComponent,
+  ],
   templateUrl: 'workflow.component.html',
 })
 export class WorkflowComponent implements OnInit {

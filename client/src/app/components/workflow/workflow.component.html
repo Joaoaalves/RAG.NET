@@ -38,4 +38,12 @@
     strategy="rse">
   </app-filter-config>
   </div>
+  <div class="border-t-2 border-neutral-600 py-4 space-y-4">
+    <h2 class="text-3xl text-neutral-300">Callback URLs</h2>
+    <p>
+      <!-- Here i should add the description telling the user that he can add the callback urls that api should send a request after finishing embedding process -->
+    </p>
+
+    <app-callback-urls-form [urls]="[]" [workflowId]="workflowId"></app-callback-urls-form>
+  </div>
 </div>
