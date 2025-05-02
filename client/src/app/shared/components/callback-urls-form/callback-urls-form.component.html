@@ -12,7 +12,7 @@
           label="Callback URL"
           type="text"
           [name]="'url' + i"
-          description="Enter a valid callback URL for this workflow."
+          description=""
           formControlName="url"
           class="flex-grow"
         ></app-input>
@@ -43,7 +43,6 @@
         >
           <div
             class="w-7 h-7 flex items-center justify-center cursor-pointer text-white group-hover:text-red-500"
-            (click)="$event.stopPropagation()"
           >
             <ng-icon name="heroTrash" class="w-3"></ng-icon>
           </div>
@@ -66,7 +65,7 @@
       class="flex-grow"
     ></app-input>
     <button
-      type="button"
+      type="submit"
       (click)="addUrl()"
       class="p-2 bg-purple-500 text-white rounded cursor-pointer"
     >
