@@ -44,10 +44,6 @@ namespace RAGNET.Infrastructure.Services
                 });
         }
 
-        private static IEnumerable<string> GetUrls(List<CallbackUrl> callbacks)
-        {
-            return callbacks.Select(c => c.Url);
-        }
 
         public async Task NotifySuccessAsync(
             Job<TContext> job,
@@ -63,7 +59,7 @@ namespace RAGNET.Infrastructure.Services
             };
 
             await SendToAllAsync(
-                GetUrls(job.CallbackUrls),
+                job.CallbackUrls,
                 payload,
                 cancellationToken
             );
@@ -83,14 +79,14 @@ namespace RAGNET.Infrastructure.Services
             };
 
             await SendToAllAsync(
-                GetUrls(job.CallbackUrls),
+                job.CallbackUrls,
                 payload,
                 cancellationToken
             );
         }
 
         private async Task SendToAllAsync(
-            IEnumerable<string> urls,
+            List<string> urls,
             object payload,
             CancellationToken cancellationToken)
         {

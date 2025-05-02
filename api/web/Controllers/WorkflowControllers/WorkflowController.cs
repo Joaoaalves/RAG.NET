@@ -7,7 +7,6 @@ using RAGNET.Domain.Exceptions;
 
 using RAGNET.Application.DTOs.Workflow;
 using RAGNET.Application.UseCases.WorkflowUseCases;
-using RAGNET.Application.UseCases.EmbeddingUseCases;
 using RAGNET.Application.Filters;
 using RAGNET.Domain.Services.Queue;
 using RAGNET.Domain.Entities.Jobs;
@@ -21,14 +20,12 @@ namespace web.Controllers.WorkflowControllers
         ICreateWorkflowUseCase createWorkflowUseCase,
         IDeleteWorkflowUseCase deleteWorkflowUseCase,
         IGetWorkflowUseCase getWorkflowUseCase,
-        IProcessEmbeddingUseCase processEmbeddingUseCase,
         UserManager<User> userManager) : ControllerBase
     {
         private readonly IGetUserWorkflowsUseCase _getUserWorkflowsUseCase = getUserWorkflowsUseCase;
         private readonly ICreateWorkflowUseCase _createWorkflowUseCase = createWorkflowUseCase;
         private readonly IDeleteWorkflowUseCase _deleteWorkflowUseCase = deleteWorkflowUseCase;
         private readonly IGetWorkflowUseCase _getWorkflowUseCase = getWorkflowUseCase;
-        private readonly IProcessEmbeddingUseCase _processEmbeddingUseCase = processEmbeddingUseCase;
         private readonly UserManager<User> _userManager = userManager;
 
         [HttpPost]
@@ -121,13 +118,14 @@ namespace web.Controllers.WorkflowControllers
                 var ms = new MemoryStream();
                 file.CopyTo(ms);
 
+                var urls = workflow.CallbackUrls.Select(curl => curl.Url).ToList();
                 var job = new EmbeddingJob
                 {
                     ApiKey = workflow.ApiKey,
                     UserId = workflow.UserId,
                     FileName = file.FileName,
                     FileContent = ms.ToArray(),
-                    CallbackUrls = [.. workflow.CallbackUrls]
+                    CallbackUrls = urls
                 };
 
                 await enqueuer.EnqueueAsync(job, cancellationToken);

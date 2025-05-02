@@ -1,6 +1,5 @@
 using RAGNET.Application.UseCases.CallbackUrlUseCases;
 using RAGNET.Application.UseCases.ContentFilterUseCases;
-using RAGNET.Application.UseCases.EmbeddingUseCases;
 using RAGNET.Application.UseCases.Query;
 using RAGNET.Application.UseCases.QueryEnhancerUseCases;
 using RAGNET.Application.UseCases.UserApiKey;
@@ -23,9 +22,6 @@ namespace web.Configurations
             services.AddScoped<ICreateWorkflowUseCase, CreateWorkflowUseCase>();
             services.AddScoped<IGetUserWorkflowsUseCase, GetUserWorkflowsUseCase>();
             services.AddScoped<IDeleteWorkflowUseCase, DeleteWorkflowUseCase>();
-
-            // Embedding
-            services.AddScoped<IProcessEmbeddingUseCase, ProcessEmbeddingUseCase>();
 
             // Query Enhancer
             services.AddScoped<ICreateQueryEnhancerUseCase, CreateQueryEnhancerUseCase>();
