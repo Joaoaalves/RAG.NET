@@ -12,7 +12,7 @@ using RAGNET.Application.Filters;
 using RAGNET.Domain.Services.Queue;
 using RAGNET.Domain.Entities.Jobs;
 
-namespace web.Controllers
+namespace web.Controllers.WorkflowControllers
 {
     [Route("api/workflows")]
     [ApiController]

@@ -6,7 +6,7 @@ using RAGNET.Application.Mappers;
 using RAGNET.Application.UseCases.ContentFilterUseCases;
 using RAGNET.Domain.Entities;
 
-namespace web.Controllers
+namespace web.Controllers.WorkflowControllers
 {
     [Route("api/workflows")]
     [ApiController]

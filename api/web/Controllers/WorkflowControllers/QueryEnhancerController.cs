@@ -12,7 +12,7 @@ using RAGNET.Application.UseCases.QueryEnhancerUseCases;
 using RAGNET.Application.UseCases.WorkflowUseCases;
 using RAGNET.Domain.Enums;
 
-namespace web.Controllers
+namespace web.Controllers.WorkflowControllers
 {
     [Route("api/workflows")]
     [ApiController]
