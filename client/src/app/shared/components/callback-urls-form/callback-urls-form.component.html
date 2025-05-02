@@ -34,20 +34,19 @@
           Save
         </button>
 
-        <div class="h-10 bg-red-500 hover:bg-white cursor-pointer transition-all duration-300 group rounded grid place-items-center">
           <app-alert
-          [id]="'deleteCallbackUrl' + i"
-          [title]="'Delete Callback URL'"
-          description="Are you sure you want to delete this callback URL?"
-          (actionConfirmed)="deleteUrl(i)"
-        >
+            [id]="'deleteCallbackUrl' + i"
+            [title]="'Delete Callback URL'"
+            description="Are you sure you want to delete this callback URL?"
+            (actionConfirmed)="deleteUrl(i)"
+          >
           <div
-            class="cursor-pointer h-5 pt-1 w-4 text-white group-hover:text-red-500"
+            class="h-10 w-12 text-white hover:text-red-500 bg-red-500 hover:bg-white cursor-pointer transition-all duration-300 group rounded grid place-items-center"
           >
             <ng-icon name="heroTrash"></ng-icon>
           </div>
         </app-alert>
-        </div>
+
 
       </div>
     </div>

@@ -11,9 +11,13 @@ namespace web.Controllers.WorkflowControllers
     [ApiController]
     public class CallbackUrlController(
         IAddCallbackUrlUseCase addCallbackUrlUseCase,
+        IUpdateCallbackUrlUseCase updateCallbackUrlUseCase,
+        IDeleteCallbackUrlUseCase deleteCallbackUrlUseCase,
         UserManager<User> userManager) : ControllerBase
     {
         private readonly IAddCallbackUrlUseCase _addCallbackUrlUseCase = addCallbackUrlUseCase;
+        private readonly IUpdateCallbackUrlUseCase _updateCallbackUrlUseCase = updateCallbackUrlUseCase;
+        private readonly IDeleteCallbackUrlUseCase _deleteCallbackUrlUseCase = deleteCallbackUrlUseCase;
         private readonly UserManager<User> _userManager = userManager;
 
         [HttpPost]
@@ -35,12 +39,19 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpPut("{callbackId}")]
         [Authorize]
-        public async Task<IActionResult> UpdateCallbackUrls(Guid callbackId, Guid workflowId)
+        public async Task<IActionResult> UpdateCallbackUrls([FromBody] CallbackUrlDTO dto, Guid callbackId, Guid workflowId)
         {
             try
             {
                 var user = await _userManager.GetUserAsync(User) ?? throw new Exception();
-                return Ok();
+
+                await _updateCallbackUrlUseCase.Execute(dto, callbackId, workflowId, user.Id);
+
+                return Ok(new
+                {
+                    Message = "Callback URL Updated Successfully",
+                    Url = dto
+                });
             }
             catch (Exception exc)
             {
@@ -50,11 +61,13 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpDelete("{callbackId}")]
         [Authorize]
-        public async Task<IActionResult> DeleteCallbackUrls(Guid callbackId, Guid workflowId)
+        public async Task<IActionResult> DeleteCallbackUrls(Guid callbackId)
         {
             try
             {
                 var user = await _userManager.GetUserAsync(User) ?? throw new Exception();
+
+                var id = await _deleteCallbackUrlUseCase.Execute(callbackId, user.Id);
                 return Ok(new { Message = "Deleted successfully", Id = callbackId });
             }
             catch (Exception exc)

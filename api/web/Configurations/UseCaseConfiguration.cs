@@ -47,6 +47,8 @@ namespace web.Configurations
 
             // Callback URL
             services.AddScoped<IAddCallbackUrlUseCase, AddCallbackUrlUseCase>();
+            services.AddScoped<IUpdateCallbackUrlUseCase, UpdateCallbackUrlUseCase>();
+            services.AddScoped<IDeleteCallbackUrlUseCase, DeleteCallbackUrlUseCase>();
 
             return services;
         }
