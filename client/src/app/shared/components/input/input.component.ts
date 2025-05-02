@@ -26,9 +26,8 @@ export class InputComponent implements ControlValueAccessor {
   @Input() step?: number = 1;
   @Input() min?: number = 0;
   @Input() max?: number = 1;
-  @Input() disabled?: boolean = false;
   @Input() required?: boolean = true;
-
+  disabled = false;
   value: any;
 
   onChange = (value: any) => {};
@@ -43,7 +42,10 @@ export class InputComponent implements ControlValueAccessor {
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
-  setDisabledState?(isDisabled: boolean): void {}
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
 
   onInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;

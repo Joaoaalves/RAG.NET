@@ -3,5 +3,6 @@ export interface CallbackUrl {
   url: string;
 }
 export interface AddCallbackUrlResponse {
+  message?: string;
   url: CallbackUrl;
 }

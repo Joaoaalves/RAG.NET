@@ -20,7 +20,7 @@ import { InputComponent } from '../input/input.component';
 // Services
 import { CallbackUrlService } from 'src/app/services/callback-url.service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroTrash } from '@ng-icons/heroicons/outline';
+import { heroTrash, heroPencilSquare } from '@ng-icons/heroicons/outline';
 
 @Component({
   selector: 'app-callback-urls-form',
@@ -32,7 +32,7 @@ import { heroTrash } from '@ng-icons/heroicons/outline';
     InputComponent,
     NgIcon,
   ],
-  providers: [provideIcons({ heroTrash })],
+  providers: [provideIcons({ heroTrash, heroPencilSquare })],
   templateUrl: './callback-urls-form.component.html',
 })
 export class CallbackUrlsFormComponent implements OnInit {
@@ -103,6 +103,7 @@ export class CallbackUrlsFormComponent implements OnInit {
       .subscribe(
         (cb) => {
           this.urls[index] = cb;
+          console.log(cb);
           ctrl.setValue(cb.url, { emitEvent: false });
           ctrl.disable();
           this.editing[index] = false;

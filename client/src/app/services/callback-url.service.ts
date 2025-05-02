@@ -29,11 +29,11 @@ export class CallbackUrlService {
     callbackUrl: CallbackUrl
   ): Observable<CallbackUrl> {
     return this.httpClient
-      .put<CallbackUrl>(
+      .put<AddCallbackUrlResponse>(
         `${this.getEndpoint(workflowId)}/${callbackUrl.id}`,
         callbackUrl
       )
-      .pipe(map((response) => response));
+      .pipe(map((response) => response.url));
   }
 
   deleteCallbackUrl(

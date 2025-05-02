@@ -6,7 +6,7 @@
       <div
         *ngFor="let urlGroup of urlsFormArray.controls; let i = index"
         [formGroupName]="i"
-        class="flex items-end gap-2 mb-2"
+        class="grid grid-cols-[1fr_48px_48px] items-end min-w-100 w-2/3 gap-2 mb-2"
       >
         <app-input
           label="Callback URL"
@@ -21,9 +21,9 @@
           *ngIf="!editing[i]"
           type="button"
           (click)="startEditing(i)"
-          class="p-2 bg-purple-500 text-white rounded"
+          class="p-2 bg-purple-500 text-white rounded cursor-pointer grid place-items-center h-10"
         >
-          Edit
+          <ng-icon name="heroPencilSquare"></ng-icon>
         </button>
         <button
           *ngIf="editing[i]"
@@ -34,7 +34,7 @@
           Save
         </button>
 
-        <div class="p-1.5 bg-red-500 hover:bg-white cursor-pointer transition-all duration-300 group rounded">
+        <div class="h-10 bg-red-500 hover:bg-white cursor-pointer transition-all duration-300 group rounded grid place-items-center">
           <app-alert
           [id]="'deleteCallbackUrl' + i"
           [title]="'Delete Callback URL'"
@@ -42,9 +42,9 @@
           (actionConfirmed)="deleteUrl(i)"
         >
           <div
-            class="w-7 h-7 flex items-center justify-center cursor-pointer text-white group-hover:text-red-500"
+            class="cursor-pointer h-5 pt-1 w-4 text-white group-hover:text-red-500"
           >
-            <ng-icon name="heroTrash" class="w-3"></ng-icon>
+            <ng-icon name="heroTrash"></ng-icon>
           </div>
         </app-alert>
         </div>
@@ -54,7 +54,8 @@
   </form>
 
   <!-- ADD NEW CALLBACK URL -->
-  <form [formGroup]="newUrlForm" class="flex items-end gap-2">
+  <form [formGroup]="newUrlForm"
+  class="grid grid-cols-[1fr_48px] items-end min-w-100 w-2/3 gap-2 mb-2">
     <app-input
       label="New Callback URL"
       type="text"

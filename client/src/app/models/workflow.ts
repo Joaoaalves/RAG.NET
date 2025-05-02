@@ -1,3 +1,4 @@
+import { CallbackUrl } from './callback-url';
 import { ConversationProvider } from './chat';
 import { ChunkerSettings, ChunkerStrategy } from './chunker';
 import { EmbeddingProvider } from './embedding';
@@ -15,6 +16,7 @@ export interface Workflow {
   embeddingProvider: EmbeddingProvider;
   queryEnhancers: QueryEnhancer[];
   filter?: Filter;
+  callbackUrls?: CallbackUrl[];
 }
 
 export interface WorkflowsInfoResponse {

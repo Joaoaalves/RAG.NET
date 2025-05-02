@@ -44,6 +44,6 @@
       <!-- Here i should add the description telling the user that he can add the callback urls that api should send a request after finishing embedding process -->
     </p>
 
-    <app-callback-urls-form [urls]="[]" [workflowId]="workflowId"></app-callback-urls-form>
+    <app-callback-urls-form *ngIf="workflow" [urls]="workflow.callbackUrls ?? []" [workflowId]="workflowId"></app-callback-urls-form>
   </div>
 </div>
