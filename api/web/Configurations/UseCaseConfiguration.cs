@@ -1,3 +1,4 @@
+using RAGNET.Application.UseCases.CallbackUrlUseCases;
 using RAGNET.Application.UseCases.ContentFilterUseCases;
 using RAGNET.Application.UseCases.EmbeddingUseCases;
 using RAGNET.Application.UseCases.Query;
@@ -43,6 +44,10 @@ namespace web.Configurations
             services.AddScoped<ICreateContentFilterUseCase, CreateContentFilterUseCase>();
             services.AddScoped<IUpdateContentFilterUseCase, UpdateContentFilterUseCase>();
             services.AddScoped<IDeleteContentFilterUseCase, DeleteContentFilterUseCase>();
+
+            // Callback URL
+            services.AddScoped<IAddCallbackUrlUseCase, AddCallbackUrlUseCase>();
+
             return services;
         }
     }

@@ -19,6 +19,7 @@ namespace web.Configurations
             services.AddScoped<IConversationProviderConfigRepository, ConversationProviderConfigRepository>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();
             services.AddScoped<IPageRepository, PageRepository>();
+            services.AddScoped<ICallbackUrlRepository, CallbackUrlRepository>();
             return services;
         }
     }

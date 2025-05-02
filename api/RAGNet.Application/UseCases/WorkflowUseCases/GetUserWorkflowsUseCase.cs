@@ -29,20 +29,14 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
 
                 var conversationProvider = workflow.ConversationProviderConfig ?? throw new Exception("Conversation Provider not set.");
 
-                List<QueryEnhancerDTO> queryEnhancers = [];
-
-                foreach (var qe in workflow.QueryEnhancers)
-                {
-                    queryEnhancers.Add(qe.ToQueryEnhancerDTO());
-                }
-
                 workflowsDTO.Add(
                     workflow.ToWorkflowDetailsDTOFromWorkflow(
                         chunker.StrategyType,
                         settings.ToChunkerSettingsDTOfromDictionary(),
                         embeddingProvider.ToDTOFromEmbeddingProviderConfig(),
                         conversationProvider.ToDTOFromConversationProviderConfig(),
-                        queryEnhancers
+                        workflow.QueryEnhancers.ToDTOList(),
+                        workflow.CallbackUrls.ToDTOList()
                     ));
 
             }

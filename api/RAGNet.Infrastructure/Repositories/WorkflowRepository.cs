@@ -21,6 +21,7 @@ namespace RAGNET.Infrastructure.Repositories
                     .ThenInclude(r => r.Metas)
                 .Include(w => w.ConversationProviderConfig)
                 .Include(w => w.EmbeddingProviderConfig)
+                .Include(w => w.CallbackUrls)
                 .FirstOrDefaultAsync(w => w.Id == id);
         }
         public async Task<Workflow?> GetWithRelationsAsync(Guid id, string userId)
@@ -36,6 +37,7 @@ namespace RAGNET.Infrastructure.Repositories
                     .ThenInclude(r => r.Metas)
                 .Include(w => w.ConversationProviderConfig)
                 .Include(w => w.EmbeddingProviderConfig)
+                .Include(w => w.CallbackUrls)
                 .FirstOrDefaultAsync(w => w.Id == id && w.UserId == userId);
         }
 
@@ -52,6 +54,7 @@ namespace RAGNET.Infrastructure.Repositories
                     .ThenInclude(r => r.Metas)
                 .Include(w => w.ConversationProviderConfig)
                 .Include(w => w.EmbeddingProviderConfig)
+                .Include(w => w.CallbackUrls)
                 .FirstOrDefaultAsync(w => w.ApiKey == apiKey);
         }
 
@@ -67,6 +70,7 @@ namespace RAGNET.Infrastructure.Repositories
                     .ThenInclude(r => r.Metas).Where(w => w.UserId == userId)
                 .Include(w => w.ConversationProviderConfig)
                 .Include(w => w.EmbeddingProviderConfig)
+                .Include(w => w.CallbackUrls)
                     .ToListAsync();
         }
 

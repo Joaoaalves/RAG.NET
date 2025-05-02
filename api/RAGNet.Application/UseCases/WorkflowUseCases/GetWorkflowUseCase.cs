@@ -24,20 +24,14 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
             var embeddingProvider = workflow.EmbeddingProviderConfig ?? throw new Exception("Embedding Provider não setado");
 
             var conversationProvider = workflow.ConversationProviderConfig ?? throw new Exception("Conversation Provider not set.");
-            List<QueryEnhancerDTO> queryEnhancers = [];
-
-            foreach (var qe in workflow.QueryEnhancers)
-            {
-                var dto = qe.ToQueryEnhancerDTO();
-                queryEnhancers.Add(dto);
-            }
 
             return workflow.ToWorkflowDetailsDTOFromWorkflow(
                 chunker.StrategyType,
                 settings.ToChunkerSettingsDTOfromDictionary(),
                 embeddingProvider.ToDTOFromEmbeddingProviderConfig(),
                 conversationProvider.ToDTOFromConversationProviderConfig(),
-                queryEnhancers
+                workflow.QueryEnhancers.ToDTOList(),
+                workflow.CallbackUrls.ToDTOList()
                 );
 
         }
