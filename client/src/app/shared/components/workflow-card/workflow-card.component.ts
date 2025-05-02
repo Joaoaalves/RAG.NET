@@ -1,14 +1,16 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  HostListener,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
 import { Router } from '@angular/router';
 // Icons
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import {
-  heroTrash,
-  heroClipboard,
-  heroCog8Tooth,
-} from '@ng-icons/heroicons/outline';
+import { heroTrash, heroClipboard } from '@ng-icons/heroicons/outline';
 
 // Components
 import { AlertComponent } from '../alert/alert.component';
@@ -22,7 +24,7 @@ import { WorkflowService } from 'src/app/services/workflow.service';
 @Component({
   selector: 'app-workflow-card',
   imports: [CommonModule, NgIcon, AlertComponent],
-  providers: [provideIcons({ heroTrash, heroClipboard, heroCog8Tooth })],
+  providers: [provideIcons({ heroTrash, heroClipboard })],
   templateUrl: './workflow-card.component.html',
   host: {
     style: 'display: block',
@@ -68,5 +70,25 @@ export class WorkflowCardComponent {
       .catch((err) => {
         toast('Failed to copy text: ' + err);
       });
+  }
+
+  @HostListener('mousemove', ['$event'])
+  handleMouseMove(event: MouseEvent) {
+    const element = event.currentTarget as HTMLElement;
+    const rect = element.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width;
+    const rotateX = (event.clientY - rect.top) / rect.height - 0.5;
+    const rotateY = x - 0.5;
+    element.style.transform = `perspective(1000px) rotateX(${
+      rotateX * -5
+    }deg) rotateY(${rotateY * 5}deg)`;
+    element.style.setProperty('--mouse-x', `${(x - 0.5) * 200}%`);
+  }
+
+  @HostListener('mouseleave', ['$event'])
+  handleMouseLeave(event: MouseEvent) {
+    const element = event.currentTarget as HTMLElement;
+    element.style.setProperty('--mouse-x', '0%');
+    element.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
   }
 }
