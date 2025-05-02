@@ -84,5 +84,16 @@ namespace RAGNET.Application.Mappers
             };
         }
 
+        public static List<QueryEnhancerDTO> ToDTOList(this ICollection<QueryEnhancer> queryEnhancers)
+        {
+            List<QueryEnhancerDTO> dtoList = [];
+
+            foreach (var qe in queryEnhancers)
+            {
+                dtoList.Add(qe.ToQueryEnhancerDTO());
+            }
+            return dtoList;
+        }
+
     }
 }

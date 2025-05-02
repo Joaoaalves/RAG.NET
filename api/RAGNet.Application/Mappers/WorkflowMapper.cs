@@ -1,3 +1,4 @@
+using RAGNET.Application.DTOs.CallbackUrl;
 using RAGNET.Application.DTOs.Chunker;
 using RAGNET.Application.DTOs.Embedder;
 using RAGNET.Application.DTOs.QueryEnhancer;
@@ -30,7 +31,8 @@ namespace RAGNET.Application.Mappers
             ChunkerSettingsDTO settings,
             EmbeddingProviderConfigDTO embedding,
             ConversationProviderConfigDTO conversationProvider,
-            List<QueryEnhancerDTO>? queryEnhancers)
+            List<QueryEnhancerDTO>? queryEnhancers,
+            List<CallbackUrlDTO>? callbackUrls)
         {
             return new WorkflowDetailsDTO
             {
@@ -45,6 +47,7 @@ namespace RAGNET.Application.Mappers
                 EmbeddingProvider = embedding,
                 ConversationProvider = conversationProvider,
                 Filter = workflow.Filter?.ToDTO(),
+                CallbackUrls = callbackUrls ?? [],
                 QueryEnhancers = queryEnhancers ?? []
             };
         }
