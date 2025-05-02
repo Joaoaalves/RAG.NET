@@ -43,7 +43,7 @@ services:
       - ./certs:/certs:ro
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "ping"]
-      interval: 15s
+      interval: 5s
       timeout: 5s
       retries: 5
   redis:

@@ -49,8 +49,8 @@ services:
     volumes:
       - ./certs:/certs:ro
     healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "ping"]
-      interval: 15s
+      test: ["CMD", "rabbitmq-diagnostics", "status"]
+      interval: 5s
       timeout: 5s
       retries: 5
 
