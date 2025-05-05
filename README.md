@@ -47,16 +47,10 @@ docker-compose up --build
 ### Features to Implement
 
 - Front-End
-- Embedding
-  - Callback
-    - Queue
 - Context Enrichers
   - SERP
 - Query Enhancers
   - Self Querying Retrieval
-- Filters
-  - Relevant Segment Extraction
-  - Multiple Score Filter
 - Rankers
   - Cohere Reranker
 - Tokenizer
@@ -74,6 +68,9 @@ docker-compose up --build
 - Authentication
 - Embedding
   - Embedding Service Factory
+- Embedding
+  - Callback
+    - Queue
 - Chunkers
   - Chunker Factory
   - Paragraph Chunker (Default)
@@ -96,6 +93,7 @@ docker-compose up --build
   - API Key Generation
 - Filters
   - Relevant Segment Extraction
+  - Multiple Score Filter
 - Adapters
   - OpenAI (Embedding and Chat Completion)
   - Gemini (Chat Completion, Embedding)
