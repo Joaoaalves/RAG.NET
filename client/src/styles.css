@@ -77,7 +77,7 @@
 }
 
 .job-scroll-container {
-  padding-right: calc(var(--sb-size) + 4px);
+  padding-right: calc(var(--sb-size) + 12px);
 
   scrollbar-gutter: stable both-edges;
 

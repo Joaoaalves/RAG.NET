@@ -18,21 +18,28 @@
 
   <div
     *ngIf="isOpen"
-    class="h-120 bg-neutral-900 w-120 flex flex-col items-center
-           justify-start p-4 rounded-xl shadow-purple-500/20 shadow-2xl
+    class="max-h-120 bg-neutral-900 w-120 flex flex-col items-center
+           justify-start p-4 rounded-xl shadow-purple-600/10 shadow-lg
            fixed top-20 right-8 z-10"
   >
     <h2 class="text-3xl text-neutral-200 text-center w-full">
       Embedding Queue
     </h2>
 
-    <ul
-      *ngIf="jobs.length > 0"
-      class="w-100 grid grid-cols-1 gap-y-4 mt-8 job-scroll-container py-4"
-    >
-      <li *ngFor="let job of jobs; trackBy: trackByJobId">
-        <app-job [job]="job"></app-job>
-      </li>
-    </ul>
+    <div class="w-110 job-scroll-container p-4 mt-8 bg-neutral-950">
+        <ul
+          *ngIf="jobs.length > 0"
+          class="grid grid-cols-1 gap-y-4 w-full place-items-center"
+        >
+          <li *ngFor="let job of jobs; trackBy: trackByJobId" class="w-full">
+            <app-job [job]="job"></app-job>
+          </li>
+        </ul>
+        <p *ngIf="jobs.length == 0" class="text-neutral-200 text-center">
+          Your Embedding Queue is empty.
+        </p>
+    </div>
+
+
   </div>
 </ng-container>
