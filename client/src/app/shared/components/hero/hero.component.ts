@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { gsap } from 'gsap';
 import { SplitText } from 'gsap/all';
 
@@ -36,13 +29,10 @@ export class HeroComponent implements AfterViewInit {
 
     title.chars.forEach((char: Element) => {
       char.classList.add(
-        'text-transparent',
-        'bg-gradient-to-br',
-        'from-white',
-        'via-neutral-50',
-        'to-neutral-500',
-        'bg-clip-text',
-        'drop-shadow-[2px_0px_4px_#00000050]'
+        'text-white',
+        'font-bold',
+        'drop-shadow-[2px_0px_4px_#00000060]',
+        'overflow-visible'
       );
     });
     paragraph.chars.forEach((char: Element) => {
@@ -72,5 +62,35 @@ export class HeroComponent implements AfterViewInit {
       duration: 1,
       delay: 1,
     });
+
+    gsap.fromTo(
+      '#register-btn',
+      {
+        opacity: 0,
+        filter: 'blur(20px)',
+      },
+      {
+        opacity: 1,
+        filter: 'blur(0px)',
+        delay: 1.3,
+        duration: 0.6,
+        ease: 'power1.inOut',
+      }
+    );
+
+    gsap.fromTo(
+      '#docs-btn',
+      {
+        opacity: 0,
+        filter: 'blur(20px)',
+      },
+      {
+        opacity: 1,
+        filter: 'blur(0px)',
+        delay: 1.5,
+        duration: 0.6,
+        ease: 'power1.inOut',
+      }
+    );
   }
 }
