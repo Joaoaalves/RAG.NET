@@ -29,12 +29,20 @@ export class HeroComponent implements AfterViewInit {
 
     title.chars.forEach((char: Element) => {
       char.classList.add(
-        'text-white',
+        'text-transparent',
+        'bg-gradient-to-b',
+        'from-[#ffffff]',
+        'via-[29%]',
+        'via-[#ffffff]',
+        'to-[#999999]',
+        'bg-clip-text',
+        'pb-3',
         'font-bold',
         'drop-shadow-[2px_0px_4px_#00000060]',
-        'overflow-visible'
+        '-tracking-4'
       );
     });
+
     paragraph.chars.forEach((char: Element) => {
       char.classList.add('text-neutral-200');
     });
