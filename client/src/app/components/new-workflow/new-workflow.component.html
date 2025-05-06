@@ -4,7 +4,7 @@
     Here you can add a new workflow to your collection.
   </p>
   <form class="mt-8 pb-8 rounded-2xl grid grid-cols-1 gap-y-8 w-1/2" [formGroup]="form" (ngSubmit)="createWorkflow()">
-    <span *ngIf="error" class="text-purple-500 inline-block w-full text-lg text-center mt-8">{{ error }}</span>
+    <span *ngIf="error" class="text-violet-500 inline-block w-full text-lg text-center mt-8">{{ error }}</span>
 
     <div class="grid grid-cols-1 w-full p-4 ps-0 gap-y-4">
       <h2 class="text-neutral-300 text-2xl">Details</h2>
@@ -37,11 +37,11 @@
       <h2 class="text-2xl text-neutral-300">Embedding Provider</h2>
       <p class="mb-4 text-neutral-300 font-medium underline  text-sm">
         Only providers with API keys added in the
-        <a class="text-purple-600" href="/dashboard/providers">Providers tab</a>
+        <a class="text-violet-600" href="/dashboard/providers">Providers tab</a>
         will be displayed here, along with the models available for your account.
         Make sure you’ve configured them correctly before creating a workflow.
         If you want to explore the top-ranked models, visit
-        <a class="text-purple-600" href="https://huggingface.co/spaces/mteb/leaderboard" target="_blank">MTEB Leaderboard</a>.
+        <a class="text-violet-600" href="https://huggingface.co/spaces/mteb/leaderboard" target="_blank">MTEB Leaderboard</a>.
       </p>
 
       <app-select label="Provider *" name="provider" [options]="embeddingOptions" formControlName="provider"
@@ -57,11 +57,11 @@
 
       <p class="mb-4 text-neutral-300 font-medium underline text-sm">
         Only providers with valid API keys set in the
-        <a class="text-purple-600" href="/dashboard/providers">Providers tab</a>
+        <a class="text-violet-600" href="/dashboard/providers">Providers tab</a>
         will appear here, along with the models available under your account.
         If no API key is configured, the provider will not show up.
         To compare top models, visit
-        <a class="text-purple-600" href="https://llm-stats.com/" target="_blank">LLM stats</a>.
+        <a class="text-violet-600" href="https://llm-stats.com/" target="_blank">LLM stats</a>.
       </p>
 
       <app-select label="Provider *" name="provider" [options]="conversationOptions" formControlName="provider"
@@ -72,7 +72,7 @@
     </div>
 
     <button
-      class="w-3/4 place-self-center mx-8 col-start-1 bg-purple-500 p-2 rounded-xl hover:scale-105 hover:bg-white hover:text-black cursor-pointer transition-all duration-300 text-white mt-8"
+      class="w-3/4 place-self-center mx-8 col-start-1 bg-violet-500 p-2 rounded-xl hover:scale-105 hover:bg-white hover:text-black cursor-pointer transition-all duration-300 text-white mt-8"
       type="submit">
       Create
     </button>

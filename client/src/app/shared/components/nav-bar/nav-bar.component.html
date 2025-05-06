@@ -1,0 +1,11 @@
+<nav class="w-screen flex items-center justify-between px-8 h-20 backdrop-blur-md bg-black/70 fixed top-0 left-0 z-100">
+  <img src="/img/logo.svg" alt="Logo" class="h-8 w-52 animate-fade-in cursor-pointer" (click)="navigateHome()">
+
+  <app-nav-links></app-nav-links>
+
+  <div class="hidden lg:flex items-center justify-center gap-x-4">
+    <a class="bg-violet-600 text-white hover:bg-violet-700 cursor-pointer transition-all duration-300 text-center py-2 rounded-xl px-4" href="/register">Get Started</a>
+    <a class="bg-rose-500 text-white hover:bg-rose-600 cursor-pointer transition-all duration-300 text-center py-2 px-4 rounded-xl" href="/login">Login</a>
+  </div>
+  <app-hamburger-menu class="md:hidden"></app-hamburger-menu>
+</nav>

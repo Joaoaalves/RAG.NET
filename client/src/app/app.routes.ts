@@ -9,8 +9,10 @@ import { WorkflowsComponent } from './components/workflows/workflows.component';
 import { WorkflowComponent } from './components/workflow/workflow.component';
 import { QueryComponent } from './components/workflow/query/query.component';
 import { ProvidersComponent } from './components/providers/providers.component';
+import { HomeComponent } from './components/home/home.component';
 
 export const routes: Routes = [
+  { path: '', component: HomeComponent, title: 'RAG.NET' },
   { path: 'login', component: LoginComponent, title: 'Login - RAG.NET' },
   {
     path: 'register',

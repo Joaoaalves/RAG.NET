@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="212.1991 -120.21 209.1399 252.896" width="209.14px" height="252.896px" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="33.258" y1="26.84" x2="33.258" y2="29.808" id="gradient-4" gradientTransform="matrix(1, 0, 0, 1, -67.692262, -65.526559)">
+      <stop offset="0" style="stop-color: #bada55"/>
+      <stop offset="1" style="stop-color: #758d29"/>
+    </linearGradient>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="45.571" y1="36.73" x2="45.571" y2="39.698" id="gradient-6" gradientTransform="matrix(1, 0, 0, 1, -67.69198, -68.225959)">
+      <stop offset="0" style="stop-color: #bada55"/>
+      <stop offset="1" style="stop-color: #758d29"/>
+    </linearGradient>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="45.571" y1="36.73" x2="45.571" y2="39.698" id="gradient-7" gradientTransform="matrix(1, 0, 0, 1, -67.695189, -61.035457)">
+      <stop offset="0" style="stop-color: #bada55"/>
+      <stop offset="1" style="stop-color: #758d29"/>
+    </linearGradient>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="-21.106" y1="-16.938" x2="-21.106" y2="3.437" id="gradient-1" gradientTransform="matrix(0.822004, -0.569484, 4.603696, 6.645115, 43.344075, 37.757726)">
+      <stop offset="0" style="stop-color: rgb(152, 16, 250);"/>
+      <stop offset="1" style="stop-color: rgb(49, 5, 80);"/>
+    </linearGradient>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="316.769" y1="-120.21" x2="316.769" y2="132.686" id="gradient-0" gradientTransform="matrix(0.804065, -0.594546, 1.195082, 1.616241, 115.67472, 266.524045)">
+      <stop offset="0" style="stop-color: rgb(100% 12.549% 33.725%)"/>
+      <stop offset="1" style="stop-color: rgb(152, 16, 250);"/>
+    </linearGradient>
+    <style bx:fonts="Fira Code">@import url(https://fonts.googleapis.com/css2?family=Fira+Code%3Aital%2Cwght%400%2C300..700&amp;display=swap);</style>
+  </defs>
+  <g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="matrix(2.8099999427795415, 0, 0, 2.8099999427795415, 376.0783160756066, 59.39070636729565)">
+    <path d="M -45.768 -35.719 L -23.1 -35.719 C -22.281 -35.719 -21.616 -36.383 -21.616 -37.203 C -21.616 -38.023 -22.28 -38.687 -23.1 -38.687 L -45.768 -38.687 C -46.588 -38.687 -47.252 -38.023 -47.252 -37.203 C -47.251 -36.383 -46.587 -35.719 -45.768 -35.719 Z" style="stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill-rule: nonzero; opacity: 1; fill-opacity: 0; fill: url(&quot;#gradient-4&quot;); stroke: rgb(255, 32, 86);" stroke-linecap="round"/>
+    <path d="M -45.768 -28.529 L 1.526 -28.529 C 2.345 -28.529 3.01 -29.193 3.01 -30.013 C 3.01 -30.833 2.346 -31.497 1.526 -31.497 L -45.768 -31.497 C -46.588 -31.497 -47.252 -30.833 -47.252 -30.013 C -47.252 -29.193 -46.587 -28.529 -45.768 -28.529 Z" style="stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill-rule: nonzero; opacity: 1; fill-opacity: 0; fill: url(&quot;#gradient-6&quot;); stroke: rgb(255, 32, 86);" stroke-linecap="round"/>
+    <path d="M -45.771 -21.338 L 1.523 -21.338 C 2.342 -21.338 3.007 -22.002 3.007 -22.822 C 3.007 -23.642 2.343 -24.306 1.523 -24.306 L -45.771 -24.306 C -46.591 -24.306 -47.255 -23.642 -47.255 -22.822 C -47.255 -22.002 -46.59 -21.338 -45.771 -21.338 Z" style="stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill-rule: nonzero; opacity: 1; fill-opacity: 0; fill: url(&quot;#gradient-7&quot;); stroke: rgb(255, 32, 86);" stroke-linecap="round"/>
+    <rect x="-58.32" y="-17.268" width="74.427" height="20.375" style="stroke-width: 1px; fill: rgba(216, 216, 216, 0); stroke: url(&quot;#gradient-1&quot;);"/>
+    <text style="fill: rgb(255, 255, 255); font-family: &quot;Fira Code&quot;; font-size: 17.8px; font-weight: 247.5; white-space: pre;" x="-37.864" y="-0.934">PDF</text>
+  </g>
+  <path d="M 402.667 114.921 L 402.667 120.628 C 402.667 122.677 400.998 124.346 398.947 124.346 L 234.59 124.346 C 232.539 124.346 230.869 122.677 230.869 120.628 L 230.869 -108.16 C 230.869 -110.21 232.539 -111.88 234.59 -111.88 L 363.431 -111.88 L 363.431 -86.157 C 363.431 -79.508 368.84 -74.099 375.486 -74.099 L 402.667 -74.099 L 402.667 114.921 C 405.536 115.185 407.166 119.285 411.005 113.331 L 411.005 -78.233 C 411.007 -78.469 410.988 -78.699 410.954 -78.929 C 410.954 -78.929 410.951 -78.929 410.951 -78.932 C 410.951 -78.935 410.951 -78.935 410.951 -78.941 C 410.951 -78.943 410.948 -78.946 410.948 -78.949 C 410.929 -79.067 410.906 -79.179 410.875 -79.295 C 410.872 -79.298 410.881 -79.303 410.872 -79.303 C 410.872 -79.309 410.872 -79.312 410.87 -79.314 C 410.684 -80.025 410.31 -80.688 409.768 -81.225 L 409.765 -81.225 C 409.765 -81.225 409.762 -81.228 409.762 -81.228 C 409.743 -81.231 409.757 -81.231 409.754 -81.234 C 409.762 -81.248 409.748 -81.239 409.748 -81.239 C 409.743 -81.242 409.751 -81.242 409.74 -81.245 C 409.743 -81.248 409.734 -81.248 409.734 -81.25 C 409.732 -81.253 409.729 -81.253 409.726 -81.256 L 370.49 -119.05 C 370.487 -119.05 370.484 -119.05 370.481 -119.06 C 370.479 -119.06 370.476 -119.06 370.473 -119.06 C 369.908 -119.6 369.225 -119.95 368.498 -120.12 C 368.391 -120.14 368.287 -120.16 368.18 -120.17 C 368.177 -120.17 368.177 -120.17 368.177 -120.17 C 368.172 -120.17 368.169 -120.17 368.163 -120.17 C 368.158 -120.17 368.152 -120.18 368.152 -120.17 C 368.149 -120.17 368.144 -120.17 368.138 -120.17 C 368.132 -120.17 368.13 -120.18 368.124 -120.17 C 368.124 -120.17 368.121 -120.17 368.11 -120.18 C 367.93 -120.2 367.716 -120.2 367.57 -120.21 L 234.59 -120.21 C 227.941 -120.21 222.532 -114.81 222.532 -108.16 L 222.532 120.631 C 222.532 127.277 227.941 132.686 234.59 132.686 L 398.947 132.686 C 405.595 132.686 411.005 127.277 411.005 120.631 L 411.005 113.331 C 408.318 114.112 405.536 114.657 402.667 114.921 Z M 371.768 -106.25 L 396.496 -82.436 L 375.486 -82.436 C 373.438 -82.436 371.768 -84.105 371.768 -86.157 L 371.768 -106.25 Z" style="stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill-rule: nonzero; opacity: 1; stroke: rgb(152, 16, 250); stroke-width: 0px; fill: url(&quot;#gradient-0&quot;);" stroke-linecap="round" transform="matrix(1, 0, 0, 1, 7.105427357601002e-15, 2.842170943040401e-14)"/>
+</svg>

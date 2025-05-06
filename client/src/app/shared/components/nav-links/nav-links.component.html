@@ -1,0 +1,10 @@
+<ul class="hidden lg:flex items-center justify-center gap-x-8 text-white text-xl">
+  <li *ngFor="let section of sections"
+      [ngClass]="{
+        'text-rose-600': activeSection === section.id,
+        'hover:text-rose-500': true,
+        'transition-all duration-300 cursor-pointer': true
+      }">
+    <a [href]="'/#' + section.id">{{ section.label }}</a>
+  </li>
+</ul>

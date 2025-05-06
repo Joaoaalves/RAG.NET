@@ -5,6 +5,7 @@
   --animate-spin-ring: spin-ring 1.5s ease-in-out infinite;
   --animate-check-draw: check-draw 1s ease-in-out forwards;
   --animate-x-draw: x-draw .3s ease-in-out forwards;
+  --animate-fade-in: fade-in 1s ease-in-out forwards;
 
   @keyframes x-draw {
     0% {
@@ -45,8 +46,18 @@
       stroke-dashoffset: 0;
     }
   }
-}
 
+  @keyframes fade-in {
+    0%{
+      opacity: 0;
+      filter: blur(10px);
+    }
+    100%{
+      opacity: 1;
+      filter: blur(0px);
+    }
+  }
+}
 
 * {
   --sb-track-color: #262626;
