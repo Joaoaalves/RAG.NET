@@ -23,8 +23,16 @@ export class HeroComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     // Split text for staggered reveal
-    const title = new SplitText('#hero-title', { type: 'chars' });
-    const paragraph = new SplitText('#hero-paragraph', { type: 'chars' });
+    const title = new SplitText('#hero-title', {
+      type: 'words,chars',
+      wordsClass: 'word',
+      charsClass: 'char',
+    });
+    const paragraph = new SplitText('#hero-paragraph', {
+      type: 'words,chars',
+      wordsClass: 'word',
+      charsClass: 'char',
+    });
 
     title.chars.forEach((char: Element) => {
       char.classList.add(
@@ -38,7 +46,7 @@ export class HeroComponent implements AfterViewInit {
       );
     });
     paragraph.chars.forEach((char: Element) => {
-      char.classList.add('text-neutral-300');
+      char.classList.add('text-neutral-200');
     });
 
     gsap.from(title.chars, {
@@ -47,6 +55,7 @@ export class HeroComponent implements AfterViewInit {
       stagger: 0.04,
       ease: 'power1.in',
     });
+
     gsap.from(paragraph.chars, {
       filter: 'blur(10px)',
       opacity: 0,
