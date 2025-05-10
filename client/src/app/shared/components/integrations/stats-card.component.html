@@ -1,0 +1,43 @@
+<div
+  #card
+  class="flex items-end relative justify-between gap-x-12
+        bg-gradient-to-br from-neutral-800
+        to-[60%] to-neutral-950 shadow-[4px_4px_12px_-2px_#ffffff60]
+        rounded-3xl p-8 overflow-visible h-full group
+        hover:via-neutral-900"
+>
+  <div class="relative z-10 flex justify-between items-start w-full h-full">
+    <div>
+      <div class="w-12 h-12 rounded-2xl bg-black text-white text-3xl
+                  grid place-items-center mb-4 group-hover:shadow-lg shadow-rose-500/40 transition-all duration-500">
+        <ng-icon [name]="stat.icon"></ng-icon>
+      </div>
+      <span class="text-neutral-300 text-lg font-medium">
+        {{ stat.label }}
+      </span>
+
+      <p
+        class="text-neutral-400 w-full mt-8 relative z-20"
+      >
+        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia,
+        iusto dicta? Sunt quod obcaecati, quisquam, accusamus
+        repellendus necessitatibus accusantium voluptate molestias
+        ducimus neque, mollitia beatae provident commodi facilis impedit
+        laborum?
+      </p>
+    </div>
+  </div>
+
+  <span
+    #counter
+    class="text-[10rem]/[9rem] font-bold
+           pointer-events-none select-none
+           z-10 text-stroke-neutral
+           group-hover:[-webkit-text-stroke-color:#ff2056!important]
+          transition-all duration-500"
+  >
+
+    0
+  </span>
+
+</div>

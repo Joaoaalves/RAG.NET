@@ -1,0 +1,21 @@
+<h3 class="text-5xl -tracking-4 overflow-visible sm:text-6xl font-bold text-transparent bg-gradient-to-b from-[#f5f5f5] via-[29%] via-[#f5f5f5] to-[#999999] bg-clip-text z-10 drop-shadow-[2px_0px_4px_#00000060] text-center">Our Integrations</h3>
+<div class="w-screen py-6 bg-neutral-900 mt-12">
+  <div class="flex mx-40 overflow-hidden h-28">
+    <div id="logo-scroll" class="flex animate-scroll whitespace-nowrap gap-x-8">
+      <div class="flex gap-x-8 h-full">
+        <app-logo *ngFor="let provider of providers"
+          [src]="provider.src"
+          [implemented]="provider.implemented"
+          [title]="provider.title"
+        ></app-logo>
+      </div>
+      <div class="flex gap-x-8 h-full">
+        <app-logo *ngFor="let provider of providers"
+          [src]="provider.src"
+          [implemented]="provider.implemented"
+          [title]="provider.title"
+        ></app-logo>
+      </div>
+    </div>
+  </div>
+</div>

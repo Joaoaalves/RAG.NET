@@ -6,6 +6,7 @@
   --animate-check-draw: check-draw 1s ease-in-out forwards;
   --animate-x-draw: x-draw .3s ease-in-out forwards;
   --animate-fade-in: fade-in 1s ease-in-out forwards;
+  --animate-scroll: scroll 20s linear infinite;
 
   @keyframes x-draw {
     0% {
@@ -57,8 +58,27 @@
       filter: blur(0px);
     }
   }
+
+    @keyframes scroll {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(calc(-50% - 16px));
+    }
+  }
+
 }
 
+.text-stroke-neutral {
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: 4px;
+  -webkit-text-stroke-color: #444;
+}
+
+span{
+  margin: 0px!important;
+}
 * {
   --sb-track-color: #262626;
   --sb-thumb-color: #ad46ff;

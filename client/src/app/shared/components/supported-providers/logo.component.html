@@ -1,0 +1,20 @@
+  <div
+    class="flex flex-col items-center justify-between w-32 h-full grayscale opacity-80"
+    [class.grayscale-0]="implemented"
+  >
+  <div class="w-16 h-16 relative">
+    <img
+      [src]="src"
+      alt="provider logo"
+      class="h-full w-full object-contain transition-all duration-300"
+    />
+    <div
+      *ngIf="!implemented"
+      class="absolute bottom-0 translate-y-1/2 right-1/2 translate-x-1/2 px-2 py-0.5 text-xs font-semibold rounded bg-neutral-800 text-white border border-neutral-700"
+    >
+      UPCOMING
+    </div>
+  </div>
+
+  <span class="text-neutral-200 text-xl">{{title}}</span>
+  </div>
