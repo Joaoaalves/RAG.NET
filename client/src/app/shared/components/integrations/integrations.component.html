@@ -1,14 +1,18 @@
 <section
-  class="w-screen flex flex-col items-center justify-center p-4 sm:p-10 lg:p-40"
+  class="w-screen overflow-y-visible flex flex-col items-center justify-center p-4 sm:p-10 lg:p-40"
   id="integrations"
 >
   <app-supported-providers></app-supported-providers>
 
-  <div class="w-full grid grid-cols-1 lg:grid-cols-2 mt-12 gap-12">
-    <app-stats-card
-      *ngFor="let stat of stats; let i = index"
-      [stat]="stat"
-      [index]="i"
-    ></app-stats-card>
+  <div class="relative w-full mt-12">
+    <app-glow-background></app-glow-background>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 relative z-10">
+      <app-stats-card
+        *ngFor="let stat of stats; let i = index"
+        [stat]="stat"
+        [index]="i"
+      ></app-stats-card>
+    </div>
   </div>
 </section>

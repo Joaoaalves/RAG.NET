@@ -12,7 +12,6 @@ import { CommonModule } from '@angular/common';
 import {
   heroChatBubbleOvalLeft,
   heroArrowUpCircle,
-  heroUsers,
   heroCodeBracket,
 } from '@ng-icons/heroicons/outline';
 
@@ -46,8 +45,12 @@ export class StatsCardComponent implements AfterViewInit {
         trigger: this.cardRef.nativeElement,
         start: 'top 80%',
         once: true,
+        toggleActions: 'play reverse play reverse',
       },
       delay: this.index * 0.4,
+      onComplete: () => {
+        gsap.set(this.cardRef.nativeElement, { clearProps: 'all' });
+      },
     });
 
     tl.from(this.cardRef.nativeElement, {
