@@ -30,6 +30,10 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {}
 
+  navigateHome() {
+    this.router.navigate(['/']);
+  }
+
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/dashboard']);

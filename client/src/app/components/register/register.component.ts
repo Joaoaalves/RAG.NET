@@ -29,6 +29,10 @@ export class RegisterComponent implements OnInit {
     private router: Router
   ) {}
 
+  navigateHome() {
+    this.router.navigate(['/']);
+  }
+
   ngOnInit(): void {
     this.form = this.fb.group(
       {
