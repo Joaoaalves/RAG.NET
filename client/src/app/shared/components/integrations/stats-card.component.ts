@@ -45,7 +45,6 @@ export class StatsCardComponent implements AfterViewInit {
         trigger: this.cardRef.nativeElement,
         start: 'top 80%',
         once: true,
-        toggleActions: 'play reverse play reverse',
       },
       delay: this.index * 0.4,
       onComplete: () => {
