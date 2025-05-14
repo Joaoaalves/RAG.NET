@@ -1,11 +1,35 @@
-    <li class="relative pl-6 mb-3">
-      <div
-        class="w-4 h-4 rounded-full absolute left-[-31px] translate-x-1/2 top-1 border-2"
-        [ngStyle]="{
-          'background-color': '#000',
-          'border-color': colorHex
-        }"
-      ></div>
-      <h5 class="text-lg text-white font-bold">{{ title }}</h5>
-      <p class="text-neutral-400 text-sm">{{ description }}</p>
-    </li>
+<div
+  class="timeline-item"
+  [class.even]="isEven"
+  [class.odd]="isOdd"
+>
+  <div
+    class="timeline-dot"
+    [style.boxShadow]="dotBoxShadow"
+  ></div>
+
+  <div
+    class="timeline-card"
+    [class.even]="isEven"
+    [class.odd]="isOdd"
+    [style.boxShadow]="cardBoxShadow"
+    [style.borderRight]="borderRightStyle"
+    [style.borderLeft]="borderLeftStyle"
+    (mouseenter)="active = true"
+    (mouseleave)="active = false"
+  >
+    <h5 class="text-white font-bold text-lg mb-2">{{ title }}</h5>
+    <p class="text-neutral-400 text-sm">{{ description }}</p>
+
+    <span
+      class="status-badge"
+      [ngClass]="{
+        'status-completed':   status === 'completed',
+        'status-in-progress': status === 'in-progress',
+        'status-upcoming':    status === 'upcoming'
+      }"
+    >
+      {{ statusText }}
+    </span>
+  </div>
+</div>

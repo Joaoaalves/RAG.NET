@@ -1,0 +1,74 @@
+<div class="relative flex items-center justify-center min-w-2xl mb-12">
+  <div
+    class="absolute left-1/2 -translate-x-1/2 h-4 w-4 rounded-full border-2 border-white bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 transition-shadow"
+    style="box-shadow: 0 0 10px rgba(244,114,182,0.5);"
+  ></div>
+
+  <div
+    class="w-full md:w-2xl bg-black/60 p-8 rounded-lg backdrop-blur-sm border-4 border-transparent"
+    style="
+      background:
+        linear-gradient(to bottom right, rgba(0,0,0,0.9), rgba(0,0,0,0.93)),
+        linear-gradient(to bottom right, #f43f5e, #d946ef, #0ea5e9);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    "
+  >
+    <h3 class="mb-6 text-2xl font-bold tracking-tight text-white">
+      Share Your Feedback
+    </h3>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4 w-full">
+      <div class="space-y-2">
+        <label for="name" class="text-sm font-medium text-neutral-300">
+          Name
+        </label>
+        <input
+          id="name"
+          formControlName="name"
+          type="text"
+          placeholder="Your Name"
+          class="w-full p-2 bg-black/50 border border-neutral-800 text-white rounded focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
+          [ngStyle]="{ 'box-shadow': '0 0 5px rgba(217,70,239,0.2)' }"
+        />
+      </div>
+
+      <div class="space-y-2">
+        <label for="email" class="text-sm font-medium text-neutral-300">
+          Email
+        </label>
+        <input
+          id="email"
+          formControlName="email"
+          type="email"
+          placeholder="Your Email"
+          class="w-full p-2 bg-black/50 border border-neutral-800 text-white rounded focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
+          [ngStyle]="{ 'box-shadow': '0 0 5px rgba(217,70,239,0.2)' }"
+        />
+      </div>
+
+      <div class="space-y-2">
+        <label for="message" class="text-sm font-medium text-neutral-300">
+          Message
+        </label>
+        <textarea
+          id="message"
+          formControlName="message"
+          rows="5"
+          placeholder="Your Message"
+          class="w-full p-2 bg-black/50 border border-neutral-800 text-white rounded focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
+          [ngStyle]="{ 'box-shadow': '0 0 5px rgba(217,70,239,0.2)' }"
+        ></textarea>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="form.invalid"
+        class="w-full py-2 rounded-xl bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(244,114,182,0.5)] disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+      >
+        Submit Feedback
+      </button>
+    </form>
+  </div>
+</div>

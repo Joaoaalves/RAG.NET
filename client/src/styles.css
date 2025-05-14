@@ -1,10 +1,10 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   --animate-ring-length: ring-length 1.5s ease-in-out infinite;
   --animate-spin-ring: spin-ring 1.5s ease-in-out infinite;
   --animate-check-draw: check-draw 1s ease-in-out forwards;
-  --animate-x-draw: x-draw .3s ease-in-out forwards;
+  --animate-x-draw: x-draw 0.3s ease-in-out forwards;
   --animate-fade-in: fade-in 1s ease-in-out forwards;
   --animate-scroll: scroll 20s linear infinite;
 
@@ -20,7 +20,8 @@
   }
 
   @keyframes ring-length {
-    0%, 100% {
+    0%,
+    100% {
       stroke-dasharray: 1 125;
     }
     50% {
@@ -49,17 +50,17 @@
   }
 
   @keyframes fade-in {
-    0%{
+    0% {
       opacity: 0;
       filter: blur(10px);
     }
-    100%{
+    100% {
       opacity: 1;
       filter: blur(0px);
     }
   }
 
-    @keyframes scroll {
+  @keyframes scroll {
     0% {
       transform: translateX(0%);
     }
@@ -67,7 +68,49 @@
       transform: translateX(calc(-50% - 16px));
     }
   }
+}
 
+.timeline-item {
+  @apply relative flex items-start md:items-center w-full mb-12;
+}
+.timeline-item.even {
+  @apply justify-start mr-8;
+}
+.timeline-item.odd {
+  @apply justify-end;
+}
+
+.timeline-dot {
+  @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+           h-4 w-4 rounded-full border-2 border-white transition-shadow;
+  background: linear-gradient(to right, #f43f5e, #d946ef, #0ea5e9);
+}
+
+.timeline-card {
+  @apply w-full md:w-[calc(50%-2rem)] bg-black/60 border border-neutral-800
+           p-6 rounded-lg backdrop-blur-sm transition-shadow;
+}
+.timeline-card.even {
+  @apply mr-8;
+}
+.timeline-card.odd {
+  @apply ml-8;
+}
+
+.status-badge {
+  @apply !mt-4 inline-block rounded-full px-3 py-1 text-xs font-medium;
+}
+.status-completed {
+  background-color: rgba(255, 32, 86, 0.2);
+  color: #ff2056;
+}
+.status-in-progress {
+  background-color: rgba(225, 42, 251, 0.2);
+  color: #e12afb;
+}
+.status-upcoming {
+  background-color: rgba(0, 166, 244, 0.2);
+  color: #00a6f4;
 }
 
 .text-stroke-neutral {
@@ -76,8 +119,8 @@
   -webkit-text-stroke-color: #444;
 }
 
-span{
-  margin: 0px!important;
+span {
+  margin: 0px !important;
 }
 * {
   --sb-track-color: #262626;
@@ -102,8 +145,7 @@ span{
 
 @supports not selector(::-webkit-scrollbar) {
   * {
-    scrollbar-color: var(--sb-thumb-color)
-                     var(--sb-track-color);
+    scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
   }
 }
 
@@ -114,5 +156,5 @@ span{
 
   overflow-y: auto;
 
-  border-radius: .75rem;
+  border-radius: 0.75rem;
 }
