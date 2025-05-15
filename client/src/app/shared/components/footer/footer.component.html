@@ -1,0 +1,27 @@
+<footer class="w-screen bg-neutral-950 text-neutral-200">
+  <div class="container mx-auto px-4 py-6 border-t border-neutral-800">
+    <div class="flex flex-col md:flex-row justify-between gap-y-8 items-center">
+      <div class="text-center md:text-left">
+        <div class="h-10 flex items-center justify-center gap-x-4 mb-6">
+          <img src="/img/logo.svg" alt="Logo of RAG.NET" class="h-10">
+        </div>
+      </div>
+      <div class="flex flex-col items-center gap-4 text-lg">
+        <div class="mt-4 md:mt-0">
+          <a href="#" class="text-sm hover:underline">Privacy Policy</a>
+          <span class="!mx-4">|</span>
+          <a href="#" class="text-sm hover:underline">Terms of Service</a>
+        </div>
+      </div>
+      <div (click)="handleNavigate()" class="flex items-center gap-x-2 bg-gradient-to-br from-rose-500 via-pink-500 to-fuchsia-600 text-2xl px-2 py-1 rounded-lg cursor-pointer hover:scale-105 transition-all duration-300">
+        <ng-icon name="ionLogoGithub"></ng-icon>
+        <span class="text-lg">Star Us</span>
+        <div class="p-1 border-white border rounded text-base flex items-center gap-x-1">
+          <ng-icon name="heroStar"></ng-icon>
+          {{ starsCount }}
+        </div>
+       </div>
+    </div>
+  </div>
+
+</footer>
