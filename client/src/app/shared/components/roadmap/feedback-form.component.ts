@@ -28,8 +28,6 @@ export class FeedbackFormComponent implements OnInit {
 
   onSubmit() {
     if (this.form.invalid) return;
-    console.log('Enviando feedback:', this.form.value);
-    // aqui você dispara seu service de envio…
     this.form.reset();
   }
 }

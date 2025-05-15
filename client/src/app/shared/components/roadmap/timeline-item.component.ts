@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  Input,
+  ChangeDetectionStrategy,
+  AfterViewInit,
+} from '@angular/core';
+import { gsap } from 'gsap';
 
 @Component({
   selector: 'app-timeline-item',
@@ -7,7 +13,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TimelineItemComponent {
+export class TimelineItemComponent implements AfterViewInit {
   @Input() index!: number;
   @Input() title!: string;
   @Input() description!: string;
@@ -16,6 +22,21 @@ export class TimelineItemComponent {
   @Input() status!: 'completed' | 'in-progress' | 'upcoming';
   @Input() active = false;
 
+  ngAfterViewInit(): void {
+    gsap.from(`#timeline-item-${this.index}`, {
+      opacity: 0,
+      y: 20,
+      duration: 0.6,
+      delay: 0.2,
+      ease: 'sine.inOut',
+      scrollTrigger: {
+        trigger: `#timeline-item-${this.index}`,
+        start: 'top 80%',
+        end: 'center center',
+        toggleActions: 'play none none reverse',
+      },
+    });
+  }
   get isEven() {
     return this.index % 2 === 0;
   }
