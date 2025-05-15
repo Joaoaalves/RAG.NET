@@ -25,6 +25,7 @@ namespace web.Configurations
             // ApiKey
             services.AddScoped<IApiKeyResolverService, ApiKeyResolverService>();
             services.AddScoped<ICryptoService, CryptoService>();
+
             return services;
         }
     }

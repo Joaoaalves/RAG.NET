@@ -3,6 +3,7 @@ using RAGNET.Domain.Services;
 using RAGNET.Domain.Services.Queue;
 using RAGNET.Infrastructure.Adapters.Queue;
 using RAGNET.Infrastructure.Adapters.SignalR;
+using RAGNET.Infrastructure.Adapters.Trello;
 using RAGNET.Infrastructure.Adapters.VectorDB;
 using RAGNET.Infrastructure.Services;
 using RAGNET.Infrastructure.Workers;
@@ -44,6 +45,10 @@ namespace web.Configurations
 
             services.AddScoped<IVectorDatabaseService, QDrantAdapter>();
             services.AddScoped<IJobStatusRepository, RedisJobStatusRepository>();
+
+
+            // Trello
+            services.AddScoped<ICardCreatorService, TrelloCardCreator>();
 
             return services;
         }
