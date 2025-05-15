@@ -27,8 +27,8 @@ bld/
 project.lock.json
 project.fragment.lock.json
 artifacts/
-./api/web/appsettings.json
-./api/web/appsettings.Development.json
+**/appsettings.json
+**/appsettings.Development.json
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
