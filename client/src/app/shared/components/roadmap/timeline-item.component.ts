@@ -11,6 +11,7 @@ export class TimelineItemComponent {
   @Input() index!: number;
   @Input() title!: string;
   @Input() description!: string;
+  @Input() icon!: string;
   @Input() colorHex!: string;
   @Input() status!: 'completed' | 'in-progress' | 'upcoming';
   @Input() active = false;

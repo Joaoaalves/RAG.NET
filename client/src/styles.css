@@ -71,7 +71,7 @@
 }
 
 .timeline-item {
-  @apply relative flex items-start md:items-center w-full mb-12;
+  @apply relative flex items-start md:items-center w-full mb-12 hover:scale-105 transition-transform duration-300;
 }
 .timeline-item.even {
   @apply justify-start mr-8;

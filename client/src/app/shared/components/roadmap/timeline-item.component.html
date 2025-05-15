@@ -18,7 +18,15 @@
     (mouseenter)="active = true"
     (mouseleave)="active = false"
   >
+  <div class="flex items-center justify-start gap-2 mb-2">
+      <div
+    class='flex h-8 w-8 items-center justify-center rounded-full'
+    [ngClass]="
+      status === 'completed' ? 'status-completed' : status === 'in-progress' ? 'status-in-progress' : 'status-upcoming'">
+        <span className="text-lg">{{icon}}</span>
+      </div>
     <h5 class="text-white font-bold text-lg mb-2">{{ title }}</h5>
+  </div>
     <p class="text-neutral-400 text-sm">{{ description }}</p>
 
     <span
