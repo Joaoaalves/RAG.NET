@@ -14,5 +14,14 @@ export class IntegrationsComponent {
     { label: 'Conversation Models', value: 20, icon: 'heroChatBubbleOvalLeft' },
     { label: 'Embedding Models', value: 8, icon: 'heroArrowUpCircle' },
     { label: 'Providers', value: 5, icon: 'heroCodeBracket' },
+    {
+      label: 'Supported Document Extensions',
+      value: 3,
+      icon: 'heroCodeBracket',
+    },
+    { label: 'Chunking Strategies', value: 3, icon: 'heroCodeBracket' },
+    { label: 'Query Enhancers', value: 3, icon: 'heroCodeBracket' },
+    { label: 'Re-ranking', value: 1, icon: 'heroCodeBracket' },
+    { label: 'Result Filters', value: 3, icon: 'heroCodeBracket' },
   ];
 }

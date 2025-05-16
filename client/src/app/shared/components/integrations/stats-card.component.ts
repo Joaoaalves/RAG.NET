@@ -46,7 +46,6 @@ export class StatsCardComponent implements AfterViewInit {
         start: 'top 80%',
         once: true,
       },
-      delay: this.index * 0.4,
       onComplete: () => {
         gsap.set(this.cardRef.nativeElement, { clearProps: 'all' });
       },

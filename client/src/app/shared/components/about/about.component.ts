@@ -27,7 +27,6 @@ export class AboutComponent implements AfterViewInit {
         trigger: '#about-card',
         start: 'top center',
         end: 'bottom center',
-        scrub: true,
       },
     });
   }
