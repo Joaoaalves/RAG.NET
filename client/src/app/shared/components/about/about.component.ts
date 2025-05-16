@@ -25,8 +25,8 @@ export class AboutComponent implements AfterViewInit {
       z: 0,
       scrollTrigger: {
         trigger: '#about-card',
-        start: 'top bottom',
-        end: 'center center',
+        start: 'top center',
+        end: 'bottom center',
         scrub: true,
       },
     });
