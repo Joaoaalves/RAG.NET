@@ -9,6 +9,12 @@
       class="h-full w-full object-contain transition-all duration-300"
     />
     <div
+      *ngIf="implemented"
+      class="absolute bottom-0 translate-y-1/2 right-1/2 translate-x-1/2 px-2 py-0.5 text-xs font-semibold rounded bg-gradient-to-br from-fuchsia-500 to-sky-700 text-white"
+    >
+      SUPPORTED
+    </div>
+    <div
       *ngIf="!implemented"
       class="absolute bottom-0 translate-y-1/2 right-1/2 translate-x-1/2 px-2 py-0.5 text-xs font-semibold rounded bg-neutral-800 text-white border border-neutral-700"
     >

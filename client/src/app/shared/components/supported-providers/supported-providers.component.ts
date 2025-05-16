@@ -12,11 +12,6 @@ export class SupportedProvidersComponent {
   readonly providers = [
     { title: 'OpenAI', src: '/img/providers/openai.svg', implemented: true },
     { title: 'Qdrant', src: '/img/providers/qdrant.svg', implemented: true },
-    {
-      title: 'Pinecone',
-      src: '/img/providers/pinecone.svg',
-      implemented: false,
-    },
     { title: 'Gemini', src: '/img/providers/gemini.svg', implemented: true },
     {
       title: 'Anthropic',
@@ -24,6 +19,11 @@ export class SupportedProvidersComponent {
       implemented: true,
     },
     { title: 'Voyage', src: '/img/providers/voyage.svg', implemented: true },
+    {
+      title: 'Pinecone',
+      src: '/img/providers/pinecone.svg',
+      implemented: false,
+    },
     {
       title: 'Deepseek',
       src: '/img/providers/deepseek.svg',

@@ -1,10 +1,12 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SupportedProvidersComponent } from '../supported-providers/supported-providers.component';
 
 @Component({
   selector: 'app-about',
   templateUrl: './about.component.html',
+  imports: [SupportedProvidersComponent],
   standalone: true,
 })
 export class AboutComponent implements AfterViewInit {
