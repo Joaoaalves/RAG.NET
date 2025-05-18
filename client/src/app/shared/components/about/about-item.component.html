@@ -1,13 +1,13 @@
 <div>
   <h2
-    class="text-5xl -tracking-4 overflow-visible sm:text-6xl font-bold text-transparent bg-gradient-to-b from-[#f5f5f5] via-[29%] via-[#f5f5f5] to-[#999999] bg-clip-text z-10 drop-shadow-[2px_0px_4px_#00000060] mt-12"
+    class="text-5xl -tracking-4 overflow-visible 2xl:text-6xl font-bold text-transparent bg-gradient-to-b from-[#f5f5f5] via-[29%] via-[#f5f5f5] to-[#999999] bg-clip-text z-10 drop-shadow-[2px_0px_4px_#00000060] mt-12 max-w-[80vw]"
   >
     {{title}}
   </h2>
-  <p class="text-sm xl:text-lg text-neutral-200 mt-4 max-w-4xl" [innerHTML]="subtitle | highlightText">
+  <p class="text-sm 2xl:text-lg text-neutral-200 mt-4 max-w-4xl" [innerHTML]="subtitle | highlightText">
   </p>
   <div
-    class="relative w-[80vw] h-192 object-scale-down mt-12 z-10"
+    class="relative w-[80vw] h-96 md:h-120 xl:h-192 object-scale-down mt-12 z-10"
     style="perspective: 1000px"
   >
     <img
@@ -17,7 +17,7 @@
     />
     <div
       [id]="'about-card-' + index"
-      class="gray-box w-9/10 h-full absolute top-2/10 right-1/2 translate-x-1/2 bg-neutral-900 rounded-4xl"
+      class="w-9/10 min-w-90 h-full absolute top-1/10 2xl:top-2/10 right-1/2 translate-x-1/2 bg-neutral-900 rounded-4xl"
     ></div>
   </div>
 </div>
