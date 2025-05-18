@@ -31,7 +31,7 @@ gsap.registerPlugin(ScrollTrigger);
   templateUrl: './stats-card.component.html',
 })
 export class StatsCardComponent implements AfterViewInit {
-  @Input() stat!: { label: string; value: number; icon: string };
+  @Input() stat!: { label: string; text: string; value: number; icon: string };
   @Input() index = 0;
 
   @ViewChild('card', { static: true }) cardRef!: ElementRef<HTMLElement>;
