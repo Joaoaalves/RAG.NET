@@ -68,5 +68,12 @@
         {{ loading ? 'Uploading…' : 'Upload Documents' }}
       </button>
     </div>
+      <app-wave-progress
+      [progress]="100"
+      [strandCount]="12"
+      [waveAmplitude]="4"
+      [glowIntensity]="3"
+      className="w-screen"
+    ></app-wave-progress>
   </div>
 </div>

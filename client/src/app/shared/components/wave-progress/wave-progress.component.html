@@ -18,13 +18,22 @@
         />
         <feComposite in="SourceGraphic" in2="blur" operator="over" />
       </filter>
+
+      <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+
+        <stop offset="0%" stop-color="#f43f5e" />
+
+        <stop offset="50%" stop-color="#d946ef" />
+
+        <stop offset="100%" stop-color="#0ea5e9" />
+      </linearGradient>
     </defs>
 
     <ng-container *ngFor="let _ of [].constructor(responsiveStrandCount); let i = index">
       <path
         [attr.d]="wavePath(i)"
         fill="none"
-        stroke="#d946ef"
+        stroke="url(#waveGradient)"
         [attr.strokeWidth]="strandThickness"
         stroke-linecap="round"
         filter="url(#glow)"
