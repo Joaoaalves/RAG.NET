@@ -1,3 +1,4 @@
+import { WaveProgressComponent } from './../../shared/components/wave-progress/wave-progress.component';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -16,7 +17,7 @@ import { Observable } from 'rxjs';
 import { JobItem } from 'src/app/models/job';
 
 @Component({
-  imports: [CommonModule, NgIcon],
+  imports: [CommonModule, WaveProgressComponent, NgIcon],
   providers: [provideIcons({ heroArrowUpOnSquare })],
   selector: 'app-embedding-upload',
   templateUrl: './embedding-upload.component.html',
