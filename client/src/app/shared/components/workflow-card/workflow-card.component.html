@@ -47,15 +47,16 @@
       </span>
     </a>
 
-    <button
+    <a
+      [href]="'/dashboard/workflows/' + workflow.id + '/query'"
       class="rounded-lg px-3 py-2 text-sm font-medium border border-white/10 bg-white/5 hover:border-fuchsia-500/50 hover:bg-black transition-all hover:shadow-[0_0_10px_rgba(217,70,239,0.3)] flex items-center justify-center gap-1 text-white cursor-pointer"
-      (click)="handleNavigateWorkflow(); $event.stopPropagation()"
+      (click)="$event.stopPropagation()"
     >
       <div class="text-lg/tight text-white">
         <ng-icon name="lucideSearch" class="mt-1"></ng-icon>
       </div>
       Query Collection
-    </button>
+    </a>
   </div>
 
   <div class="absolute top-4 right-4 flex items-center gap-2 z-30">

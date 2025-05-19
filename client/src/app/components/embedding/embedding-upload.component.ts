@@ -21,8 +21,8 @@ import { JobItem } from 'src/app/models/job';
 import { FileSizePipe } from './file-size.pipe';
 
 @Component({
-  imports: [CommonModule, WaveProgressComponent, NgIcon, FileSizePipe],
-  providers: [provideIcons({ heroArrowUpOnSquare, lucideFileText })],
+  imports: [CommonModule, NgIcon, FileSizePipe],
+  providers: [provideIcons({ heroArrowUpOnSquare, lucideFileText, lucideX })],
   selector: 'app-embedding-upload',
   templateUrl: './embedding-upload.component.html',
   styleUrls: ['./embedding-upload.component.css'],
@@ -87,6 +87,10 @@ export class EmbeddingUploadComponent implements OnInit {
   clearFiles(): void {
     this.selectedFiles = [];
     this.fileInput.nativeElement.value = '';
+  }
+
+  removeFile(file: File): void {
+    this.selectedFiles = this.selectedFiles.filter((f) => f != file);
   }
 
   private addFiles(fileList?: FileList) {
