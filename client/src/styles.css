@@ -108,6 +108,8 @@
 .status-badge {
   @apply !mt-4 inline-block rounded-full px-3 py-1 text-xs font-medium;
 }
+
+
 .status-completed {
   background-color: rgba(255, 32, 86, 0.2);
   color: #ff2056;

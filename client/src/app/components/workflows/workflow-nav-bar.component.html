@@ -1,0 +1,52 @@
+<header
+  class="flex flex-col lg:flex-row md:items-center justify-between gap-4 mb-8 w-full"
+>
+  <div>
+    <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white">
+      Welcome back, Alex
+    </h1>
+    <p class="text-white/60 mt-1">Here's your workflows list.</p>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <div
+      class="relative flex items-center justify-start gap-x-3 px-3 py-2 rounded-lg border
+             md:w-64 text-neutral-200 bg-white/5 border-white/10
+             focus-within:border-fuchsia-500 focus-within:shadow-fuchsia-500/30
+             shadow-lg w-full transition-all duration-500"
+    >
+      <div class="text-lg/tight text-neutral-200">
+        <ng-icon name="lucideSearch" class="mt-1"></ng-icon>
+      </div>
+      <input placeholder="Search..." class="outline-0 bg-transparent w-full" />
+    </div>
+
+    <button
+      (click)="navigateNewWorkflow()"
+      class="relative overflow-hidden group text-white px-4 py-2 rounded-lg font-bold cursor-pointer"
+    >
+      <span
+        class="absolute inset-0 bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500
+               opacity-80 group-hover:opacity-100 transition-opacity"
+      ></span>
+      <span class="relative flex items-center gap-2">
+        <div class="text-lg/tight text-white">
+          <ng-icon name="lucidePlus" class="mt-1"></ng-icon>
+        </div>
+        New Project
+      </span>
+    </button>
+
+    <button
+      class="relative border-white/10 hover:bg-white/5 hover:border-white/20
+             bg-neutral-900 border px-3 py-2 h-full rounded-lg cursor-pointer"
+    >
+      <div class="text-lg/tight text-white">
+        <ng-icon name="lucideBell" class="mt-1.5"></ng-icon>
+      </div>
+      <span
+        class="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full"
+      ></span>
+    </button>
+  </div>
+</header>

@@ -2,14 +2,20 @@
   <div>
     <app-sidebar></app-sidebar>
   </div>
-  <section class="grid grid-cols-1 grid-rows-[60px_1fr] h-screen">
-      <div class="w-full">
-        <nav class="bg-neutral-900 flex items-center justify-end h-full mx-8 rounded-2xl mt-4 p-4 relative">
-          <app-job-bar [jobs$]="jobs$"/>
-        </nav>
+  <section class="grid grid-cols-1 grid-rows-1 h-screen">
+    <div class="flex flex-col h-full p-8 relative">
+      <div class="absolute inset-0 z-0">
+        <div
+          class="absolute top-0 -left-4 w-72 h-72 bg-fuchsia-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob"
+        ></div>
+        <div
+          class="absolute top-0 -right-4 w-72 h-72 bg-sky-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob animation-delay-2000"
+        ></div>
+        <div
+          class="absolute -bottom-8 left-20 w-72 h-72 bg-rose-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob animation-delay-4000"
+        ></div>
       </div>
-      <div class="flex flex-col h-full p-8 relative">
-        <router-outlet></router-outlet>
-      </div>
+      <router-outlet></router-outlet>
+    </div>
   </section>
 </div>

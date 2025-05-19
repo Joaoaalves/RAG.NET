@@ -10,10 +10,16 @@ import { Workflow } from 'src/app/models/workflow';
 
 // Services
 import { WorkflowService } from '../../services/workflow.service';
+import { WorkflowNavBarComponent } from './workflow-nav-bar.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [WorkflowCardComponent, CommonModule, HlmToasterComponent],
+  imports: [
+    WorkflowCardComponent,
+    WorkflowNavBarComponent,
+    CommonModule,
+    HlmToasterComponent,
+  ],
   templateUrl: './workflows.component.html',
   standalone: true,
 })
