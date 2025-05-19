@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 // Icons
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroArrowUpOnSquare } from '@ng-icons/heroicons/outline';
+import { lucideFileText, lucideX } from '@ng-icons/lucide';
 
 // Models
 import { Workflow } from 'src/app/models/workflow';
@@ -16,9 +17,12 @@ import { WorkflowService } from 'src/app/services/workflow.service';
 import { Observable } from 'rxjs';
 import { JobItem } from 'src/app/models/job';
 
+// Pipes
+import { FileSizePipe } from './file-size.pipe';
+
 @Component({
-  imports: [CommonModule, WaveProgressComponent, NgIcon],
-  providers: [provideIcons({ heroArrowUpOnSquare })],
+  imports: [CommonModule, WaveProgressComponent, NgIcon, FileSizePipe],
+  providers: [provideIcons({ heroArrowUpOnSquare, lucideFileText })],
   selector: 'app-embedding-upload',
   templateUrl: './embedding-upload.component.html',
   styleUrls: ['./embedding-upload.component.css'],
@@ -78,6 +82,11 @@ export class EmbeddingUploadComponent implements OnInit {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files) this.addFiles(input.files);
+  }
+
+  clearFiles(): void {
+    this.selectedFiles = [];
+    this.fileInput.nativeElement.value = '';
   }
 
   private addFiles(fileList?: FileList) {

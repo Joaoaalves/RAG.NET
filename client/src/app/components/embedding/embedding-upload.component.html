@@ -1,79 +1,177 @@
-<div class="grow">
-  <div class="w-full">
-    <h1 class="text-4xl text-neutral-200 font-bold">
-      Upload your documents
-    </h1>
+<div class="grow max-w-7xl max-h-screen mx-auto z-10 relative">
+  <header>
+    <h1 class="text-4xl text-neutral-200 font-bold">Document Embedding</h1>
+    <p class="text-white/60 mt-1">
+      Upload and embed documents for your workflows
+    </p>
+  </header>
 
-    <div class="max-w-4xl mt-8 space-y-4">
-      <span
-        *ngIf="error"
-        class="text-red-500 block text-xl text-center"
-      >{{ error }}</span>
-      <span
-        *ngIf="success"
-        class="text-green-500 block text-xl text-center"
-      >{{ success }}</span>
-
+  <div
+    class="w-full bg-black grid place-items-center rounded-lg mt-8 p-6 border-2 border-white/5"
+  >
+    <div
+      class="group relative p-0.5 rounded-lg overflow-hidden w-full max-w-3xl"
+    >
       <div
-        class="border-2 border-dashed border-neutral-500 p-6 rounded-lg
-               flex flex-col items-center justify-center cursor-pointer
-               transition-all duration-300"
-        (dragover)="onDragOver($event)"
-        (dragleave)="onDragLeave($event)"
-        (drop)="onDrop($event)"
-        (click)="triggerFileInput()"
-        [ngClass]="{ 'bg-neutral-800': isDragging }"
-      >
-        <ng-icon
-          *ngIf="isDragging"
-          name="heroArrowUpOnSquare"
-          class="invert text-4xl mb-2"
-        ></ng-icon>
-        <p
-          *ngIf="!isDragging && selectedFiles.length === 0"
-          class="text-neutral-300 text-sm"
+        class="absolute inset-0 bg-gradient-to-r from-rose-500/30 via-fuchsia-500/30 to-sky-500/30"
+      ></div>
+      <div class="bg-black relative space-y-4 p-4 rounded-lg">
+        <span *ngIf="error" class="text-red-500 block text-xl text-center">{{
+          error
+        }}</span>
+        <span
+          *ngIf="success"
+          class="text-green-500 block text-xl text-center"
+          >{{ success }}</span
         >
-          Drag and drop your documents here
-        </p>
-        <p
-          *ngIf="!isDragging && selectedFiles.length === 0"
-          class="text-neutral-500 text-xs"
+
+        <div
+          class="hover:bg-neutral-900 p-6 rounded-lg flex flex-col items-center justify-center cursor-pointer transition-all duration-300"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)"
+          (click)="triggerFileInput()"
+          [ngClass]="{ 'bg-neutral-800': isDragging }"
         >
-          or click to select files
-        </p>
+          <div class="text-fuchsia-500 text-4xl mb-2">
+            <ng-icon name="heroArrowUpOnSquare"></ng-icon>
+          </div>
 
-        <h3 *ngIf="selectedFiles.length" class="mt-2 text-white text-sm">
-          Embedd Your Documents
-        </h3>
+          <p
+            *ngIf="!isDragging && selectedFiles.length === 0"
+            class="text-neutral-300 text-sm"
+          >
+            Drag and drop your documents here
+          </p>
+          <p
+            *ngIf="!isDragging && selectedFiles.length === 0"
+            class="text-neutral-500 text-xs"
+          >
+            or click to select files
+          </p>
 
-        <input
-          #fileInput
-          id="documentInput"
-          type="file"
-          multiple
-          (change)="onFileSelected($event)"
-          accept="application/pdf, application/epub+zip"
-          class="hidden"
-        />
+          <h3 *ngIf="selectedFiles.length > 0" class="mt-2 text-white text-sm">
+            Selected {{ selectedFiles.length }} files
+          </h3>
+
+          <p
+            *ngIf="selectedFiles.length > 0"
+            class="text-xs mt-2 text-neutral-400"
+          >
+            Submit to embedd your documents
+          </p>
+
+          <input
+            #fileInput
+            id="documentInput"
+            type="file"
+            multiple
+            (change)="onFileSelected($event)"
+            accept="application/pdf, application/epub+zip"
+            class="hidden"
+          />
+        </div>
+        <div
+          *ngIf="selectedFiles.length"
+          class="grid grid-cols-1 grid-rows-[30px_1fr]"
+        >
+          <div class="flex gap-4 w-full items-center justify-between">
+            <span class="text-neutral-300">Selected Files</span>
+
+            <button
+              class="text-neutral-400 text-sm hover:text-white transition-colors duration-300 cursor-pointer"
+              (click)="clearFiles()"
+            >
+              Clear All
+            </button>
+          </div>
+          <div
+            class="max-h-[200px] overflow-y-auto pr-2 space-y-2 custom-scrollbar"
+          >
+            <div
+              *ngFor="let doc of selectedFiles"
+              class="relative bg-gradient-to-r from-neutral-900 via-neutral-950 to-neutral-900 rounded-lg p-3 group hover:shadow-[0_0_10px_rgba(244,63,94,0.1)] transition-all duration-300"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  class="flex-shrink-0 w-8 h-8 rounded-md bg-neutral-800 flex items-center justify-center text-neutral-400 text-base"
+                >
+                  <ng-icon name="lucideFileText"></ng-icon>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-white text-sm font-medium truncate">
+                    {{ doc.name }}
+                  </p>
+                  <p class="text-neutral-500 text-xs">
+                    {{ doc.size | fileSize }}
+                  </p>
+                </div>
+
+                <div class="text-neutral-400 text-base">
+                  <ng-icon name="lucideX"></ng-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button
+          (click)="onUpload()"
+          [disabled]="loading"
+          *ngIf="selectedFiles.length"
+          class="mt-4 w-full py-3 rounded-full bg-gradient-to-r from-rose-500 to-fuchsia-500 text-white font-medium transition-all duration-300 hover:shadow-[0_0_20px_rgba(217,70,239,0.3)] hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none relative overflow-hidden group cursor-pointer"
+        >
+          {{ loading ? 'Uploading…' : 'Upload Documents' }}
+        </button>
       </div>
-      <ul *ngIf="selectedFiles.length" class="flex items-center justify-start gap-x-4">
-        <li *ngFor="let f of selectedFiles" class="text-white border border-neutral-600 rounded-lg bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 text-center p-3">{{ f.name }}</li>
-      </ul>
-      <button
-        (click)="onUpload()"
-        [disabled]="loading"
-        class="w-full bg-white text-black py-2 px-4 rounded mt-4
-               hover:bg-gray-300 transition duration-300 disabled:opacity-50"
-      >
-        {{ loading ? 'Uploading…' : 'Upload Documents' }}
-      </button>
     </div>
-      <app-wave-progress
-      [progress]="100"
-      [strandCount]="12"
-      [waveAmplitude]="4"
-      [glowIntensity]="3"
-      className="w-screen"
-    ></app-wave-progress>
+  </div>
+
+  <div class="grid grid-cols-3 w-full mt-8 gap-4">
+    <div
+      class="flex flex-col items-start gap-4 p-4 border-2 border-white/5 rounded-lg"
+    >
+      <h3 class="text-xl text-white font-medium">Document Processing</h3>
+      <p class="text-neutral-400 text-sm">
+        This workflow processes documents and extracts key information using AI.
+      </p>
+      <div class="flex items-center justify-between text-sm w-full">
+        <p class="text-neutral-400">Status</p>
+        <span class="text-green-500">Active</span>
+      </div>
+    </div>
+    <div
+      class="flex flex-col items-start gap-4 p-4 border-2 border-white/5 rou5ed-lg"
+    >
+      <h3 class="text-xl text-white font-medium">Embedding Stats</h3>
+      <div class="flex items-center justify-between text-sm w-full">
+        <p class="text-neutral-400">Total Documents:</p>
+        <span class="text-white">42</span>
+      </div>
+      <div class="flex items-center justify-between text-sm w-full">
+        <p class="text-neutral-400">Embedded Today:</p>
+        <span class="text-white">7</span>
+      </div>
+      <div class="flex items-center justify-between text-sm w-full">
+        <p class="text-neutral-400">Average Size</p>
+        <span class="text-white">2.4 MB</span>
+      </div>
+    </div>
+    <div
+      class="flex flex-col items-start gap-4 p-4 border-2 border-white/5 rou5ed-lg"
+    >
+      <h3 class="text-xl text-white font-medium">Api Usage</h3>
+      <div class="flex items-center justify-between text-sm w-full">
+        <p class="text-neutral-400">Credits Used:</p>
+        <span class="text-white">1,245</span>
+      </div>
+      <div class="flex items-center justify-between text-sm w-full">
+        <p class="text-neutral-400">Credits Remaining:</p>
+        <span class="text-white">8,755</span>
+      </div>
+      <div class="flex items-center justify-between text-sm w-full">
+        <p class="text-neutral-400">Plan:</p>
+        <span class="text-white">Professional</span>
+      </div>
+    </div>
   </div>
 </div>
