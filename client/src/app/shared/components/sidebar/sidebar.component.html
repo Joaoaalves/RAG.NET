@@ -3,24 +3,19 @@
   (click)="toggleSidebar()"
 >
   <ng-icon
-    [name]=" sidebarOpen ? 'lucideX' : 'lucideMenu' "
+    [name]="sidebarOpen ? 'lucideX' : 'lucideMenu'"
     size="20"
     class="text-white"
   ></ng-icon>
 </button>
 
 <aside
-  class="
-    fixed inset-y-0 left-0 z-40 w-64 bg-black/80 backdrop-blur-md
-    border-r border-white/5 flex flex-col p-4
-    transform transition-transform duration-300 ease-in-out
-    md:translate-x-0
-  "
+  class="fixed inset-y-0 left-0 z-40 w-64 bg-black/80 backdrop-blur-md border-r border-white/5 flex flex-col p-4 transform transition-transform duration-300 ease-in-out md:translate-x-0"
   [class.translate-x-0]="sidebarOpen"
   [class.-translate-x-full]="!sidebarOpen"
 >
   <div class="mt-5 px-4 flex items-center justify-start gap-x-4">
-    <img src="/img/symbol-logo.png" alt="RAG.NET Symbol" class="h-8"/>
+    <img src="/img/symbol-logo.png" alt="RAG.NET Symbol" class="h-8" />
     <img src="./img/logo.svg" alt="RAG.NET logo" class="h-4" />
   </div>
 
@@ -35,8 +30,8 @@
 
   <app-user-card
     avatarUrl="/placeholder.svg?height=40&width=40"
-    initials="JD"
-    name="John Doe"
-    email="john@doe.com"
+    [initials]="(initials$ | async) ?? ''"
+    [name]="(user$ | async)?.firstName ?? ''"
+    [email]="(user$ | async)?.email ?? ''"
   ></app-user-card>
 </aside>

@@ -1,12 +1,6 @@
 <div class="grid grid-cols-1 grid-rows-[80px_1fr] p-8 col-start-2">
-  <!-- <div class="flex items-start justify-between">
-    <div class="flex items-center justify-center gap-x-8">
-      <h1 class="text-4xl text-neutral-200 font-bold">Workflows</h1>
-      <a href="/dashboard/workflows/new" class="text-white bg-neutral-800 rounded-full w-8 h-8 flex items-center justify-center text-xl pb-1 cursor-pointer hover:bg-white hover:text-black transition-all duration-300">+</a>
-    </div>
-  </div> -->
   <app-workflows-nav-bar></app-workflows-nav-bar>
-  <div class="flex flex-wrap items-start justify-start gap-8">
+  <div class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8">
     <app-workflow-card
     *ngFor="let workflow of workflows"
     [workflow]="workflow"

@@ -4,6 +4,7 @@ import {
   Input,
   Output,
   HostListener,
+  ElementRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
@@ -11,6 +12,7 @@ import { Router } from '@angular/router';
 // Icons
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { heroTrash, heroClipboard } from '@ng-icons/heroicons/outline';
+import { lucidePlus, lucideSearch } from '@ng-icons/lucide';
 
 // Components
 import { AlertComponent } from '../alert/alert.component';
@@ -23,35 +25,33 @@ import { WorkflowService } from 'src/app/services/workflow.service';
 
 @Component({
   selector: 'app-workflow-card',
+  standalone: true,
   imports: [CommonModule, NgIcon, AlertComponent],
-  providers: [provideIcons({ heroTrash, heroClipboard })],
+  providers: [
+    provideIcons({ heroTrash, heroClipboard, lucidePlus, lucideSearch }),
+  ],
   templateUrl: './workflow-card.component.html',
   host: {
-    style: 'display: block',
+    class:
+      'relative group overflow-hidden cursor-pointer rounded-xl transition-all duration-200',
   },
-  standalone: true,
 })
 export class WorkflowCardComponent {
-  constructor(
-    private workflowService: WorkflowService,
-    private route: Router
-  ) {}
-
   @Input() workflow!: Workflow;
   @Output() workflowDeleted = new EventEmitter<string>();
 
-  handleNavigateWorkflow() {
-    return this.route.navigate([`/dashboard/workflows/${this.workflow.id}`]);
-  }
+  constructor(
+    private workflowService: WorkflowService,
+    private router: Router,
+    private el: ElementRef<HTMLElement>
+  ) {}
 
-  handleNavigateQuery() {
-    return this.route.navigate([
-      `/dashboard/workflows/${this.workflow.id}/query`,
-    ]);
+  handleNavigateWorkflow() {
+    this.router.navigate([`/dashboard/workflows/${this.workflow.id}`]);
   }
 
   deleteWorkflow() {
-    return this.workflowService
+    this.workflowService
       .deleteWorkflow(this.workflow.id)
       .subscribe((success) => {
         if (success) {
@@ -64,31 +64,22 @@ export class WorkflowCardComponent {
     const textToCopy = this.workflow.apiKey;
     navigator.clipboard
       .writeText(textToCopy)
-      .then(() => {
-        toast('Workflow API Key copied to clipboard!');
-      })
-      .catch((err) => {
-        toast('Failed to copy text: ' + err);
-      });
+      .then(() => toast('Workflow API Key copied to clipboard!'))
+      .catch((err) => toast('Failed to copy text: ' + err));
   }
 
   @HostListener('mousemove', ['$event'])
-  handleMouseMove(event: MouseEvent) {
-    const element = event.currentTarget as HTMLElement;
-    const rect = element.getBoundingClientRect();
-    const x = (event.clientX - rect.left) / rect.width;
-    const rotateX = (event.clientY - rect.top) / rect.height - 0.5;
-    const rotateY = x - 0.5;
-    element.style.transform = `perspective(1000px) rotateX(${
-      rotateX * -5
-    }deg) rotateY(${rotateY * 5}deg)`;
-    element.style.setProperty('--mouse-x', `${(x - 0.5) * 200}%`);
+  onMouseMove(event: MouseEvent) {
+    const rect = this.el.nativeElement.getBoundingClientRect();
+    const x = event.clientX - rect.left + 'px';
+    const y = event.clientY - rect.top + 'px';
+    this.el.nativeElement.style.setProperty('--mouse-x', x);
+    this.el.nativeElement.style.setProperty('--mouse-y', y);
   }
 
-  @HostListener('mouseleave', ['$event'])
-  handleMouseLeave(event: MouseEvent) {
-    const element = event.currentTarget as HTMLElement;
-    element.style.setProperty('--mouse-x', '0%');
-    element.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+  @HostListener('mouseleave')
+  onMouseLeave() {
+    this.el.nativeElement.style.setProperty('--mouse-x', '-100%');
+    this.el.nativeElement.style.setProperty('--mouse-y', '-100%');
   }
 }
