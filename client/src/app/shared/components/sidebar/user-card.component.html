@@ -1,0 +1,29 @@
+<div class="p-4 border-t border-white/5">
+  <div class="group relative p-0.5 rounded-lg overflow-hidden">
+    <div
+      class="absolute inset-0 bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+    ></div>
+
+    <div
+      class="relative flex items-center gap-3 p-3 bg-black rounded-lg hover:bg-black/90 transition-all cursor-pointer"
+    >
+      <div class="relative">
+        <div
+          class="absolute h-11 w-11 -inset-0.5 rounded-full bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 opacity-70 blur-[1px]"
+        >
+      </div>
+      <app-avatar [src]="avatarUrl" [fallback]="initials"></app-avatar>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-medium truncate text-white/90">{{ name }}</p>
+        <p class="text-xs text-white/60 truncate">{{ email }}</p>
+      </div>
+
+      <div
+        class="text-white/60 group-hover:text-white transition-colors text-lg"
+      >
+        <ng-icon name="lucideChevronRight"></ng-icon>
+      </div>
+    </div>
+  </div>
+</div>

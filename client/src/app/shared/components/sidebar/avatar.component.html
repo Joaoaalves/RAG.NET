@@ -1,0 +1,15 @@
+<div class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-black">
+  <img
+    *ngIf="!showFallback && src"
+    [src]="src"
+    class="aspect-square h-full w-full"
+    (error)="onError()"
+    alt="Avatar"
+  />
+  <div
+    *ngIf="showFallback || !src"
+    class="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-600 text-white font-bold"
+  >
+    {{ fallback }}
+  </div>
+</div>

@@ -1,19 +1,42 @@
-<aside class="fixed top-0 left-0 w-70 h-screen flex flex-col border-r border-neutral-800 bg-neutral-950 p-4">
-  <img src="./img/logo.svg" alt="RAG.NET logo" class="h-6 mt-5">
+<button
+  class="fixed top-4 right-4 z-50 p-2 rounded-full bg-black/50 backdrop-blur-md border border-white/10 md:hidden"
+  (click)="toggleSidebar()"
+>
+  <ng-icon
+    [name]=" sidebarOpen ? 'lucideX' : 'lucideMenu' "
+    size="20"
+    class="text-white"
+  ></ng-icon>
+</button>
 
-  <nav class="my-auto w-full grid grid-cols-1 grid-rows-auto place-items-center">
-    <a class="w-full mx-8 rounded-2xl text-white hover:bg-black transition-all duration-300 cursor-pointer py-2 text-center text-xl" href="/dashboard/workflows">Workflows</a>
-    <a class="w-full mx-8 rounded-2xl text-white hover:bg-black transition-all duration-300 cursor-pointer py-2 text-center text-xl" href="/dashboard/providers">Providers</a>
-    <button class="w-full mx-8 rounded-2xl text-white hover:bg-black transition-all duration-300 cursor-pointer py-2 text-center text-xl" (click)="logout()">Logout</button>
+<aside
+  class="
+    fixed inset-y-0 left-0 z-40 w-64 bg-black/80 backdrop-blur-md
+    border-r border-white/5 flex flex-col p-4
+    transform transition-transform duration-300 ease-in-out
+    md:translate-x-0
+  "
+  [class.translate-x-0]="sidebarOpen"
+  [class.-translate-x-full]="!sidebarOpen"
+>
+  <div class="mt-5 px-4 flex items-center justify-start gap-x-4">
+    <img src="/img/symbol-logo.png" alt="RAG.NET Symbol" class="h-8"/>
+    <img src="./img/logo.svg" alt="RAG.NET logo" class="h-4" />
+  </div>
+
+  <nav class="mt-8 mb-auto w-full grid grid-cols-1 gap-y-4 place-items-center">
+    <app-nav-item
+      *ngFor="let item of navItems"
+      [icon]="item.icon"
+      [label]="item.label"
+      [url]="item.url"
+    ></app-nav-item>
   </nav>
 
-  <hr class="bg-white h-0.5 mb-2">
-  <div class="grid grid-cols-[48px_1fr] gap-x-4 p-2 hover:bg-neutral-800 transition-all duration-300 group cursor-pointer rounded-2xl">
-    <div class="rounded-full w-12 h-12 bg-neutral-800 group-hover:bg-black transition-all duration-300"></div>
-    <div class="flex flex-col items-start justify-start">
-      <h4 class="text-neutral-300">{{user.firstName}} {{user.lastName}}</h4>
-      <span *ngIf="user" class="text-neutral-500">{{user.email}}</span>
-      <div *ngIf="!user" class="bg-neutral-500 animate-pulse w-40 h-2.5 rounded-3xl mt-2"></div>
-    </div>
-  </div>
+  <app-user-card
+    avatarUrl="/placeholder.svg?height=40&width=40"
+    initials="JD"
+    name="John Doe"
+    email="john@doe.com"
+  ></app-user-card>
 </aside>

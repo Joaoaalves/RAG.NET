@@ -97,6 +97,14 @@
   @apply ml-8;
 }
 
+.nav-item-active{
+  @apply bg-gradient-to-r from-rose-500/20 via-fuchsia-500/20 to-sky-500/20 text-white;
+}
+
+.nav-item-inactive{
+  @apply text-white/70 hover:bg-white/5 hover:text-white
+}
+
 .status-badge {
   @apply !mt-4 inline-block rounded-full px-3 py-1 text-xs font-medium;
 }
