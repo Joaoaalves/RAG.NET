@@ -5,8 +5,8 @@ import {
   ChangeDetectionStrategy,
   Input,
 } from '@angular/core';
-import { BaseChartDirective, provideCharts } from 'ng2-charts';
-import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
+import { ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
 import {
   RadarDataService,
   RadarAxis,
@@ -27,16 +27,19 @@ export class RadarChartComponent implements AfterViewInit {
     if (value) this.dataService.setAxes(value);
   }
 
+  public chartType: ChartType = 'radar';
+
   public chartData: ChartConfiguration<'radar'>['data'] = {
     labels: [],
     datasets: [
       {
         data: [],
-        borderColor: 'transparent',
-        pointBackgroundColor: '#d946ef',
-        pointBorderColor: '#d946ef',
+        borderColor: '#e12afb00',
+        borderWidth: 1,
+        pointBackgroundColor: '#e12afb',
+        pointBorderColor: '#e12afb',
         pointRadius: 5,
-        backgroundColor: [],
+        backgroundColor: [] as any,
       },
     ],
   };
@@ -47,6 +50,8 @@ export class RadarChartComponent implements AfterViewInit {
     scales: {
       r: {
         angleLines: { display: false },
+        min: 0,
+        max: 100,
         grid: { color: '#444' },
         pointLabels: {
           color: '#999',
@@ -54,11 +59,7 @@ export class RadarChartComponent implements AfterViewInit {
         },
         ticks: {
           display: false,
-          stepSize: 25,
-          z: 1,
         },
-        suggestedMin: 0,
-        suggestedMax: 100,
       },
     },
     plugins: { legend: { display: false } },
@@ -68,7 +69,10 @@ export class RadarChartComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.dataService.axes$.subscribe((axes) => {
-      if (!this.chart || !this.chart.chart) return;
+      if (!this.chart || !this.chart.chart) {
+        return;
+      }
+
       const chartRef = this.chart.chart;
 
       this.chartData.labels = axes.map((ax) => ax.name);
@@ -79,14 +83,30 @@ export class RadarChartComponent implements AfterViewInit {
       this.chartData.datasets[0].data = normalized;
 
       const ctx = chartRef.ctx;
-      const gradient = ctx.createLinearGradient(0, 0, chartRef.width!, 0);
-      gradient.addColorStop(0, '#f43f5e');
-      gradient.addColorStop(0.5, '#d946ef');
-      gradient.addColorStop(1, '#0ea5e9');
+      const gradientBackground = ctx.createLinearGradient(
+        0,
+        0,
+        chartRef.width,
+        chartRef.height
+      );
+      const gradientBorder = ctx.createLinearGradient(
+        0,
+        0,
+        chartRef.width,
+        chartRef.height
+      );
+      console.log(chartRef.width, chartRef.height);
 
-      this.chartData.datasets[0].backgroundColor = gradient as any;
+      gradientBackground.addColorStop(0, '#ff205650');
+      gradientBackground.addColorStop(0.5, '#e12afb50');
+      gradientBackground.addColorStop(0.8, '#00a6f450');
 
-      // Trigger update
+      gradientBorder.addColorStop(0, '#ff2056');
+      gradientBorder.addColorStop(0.5, '#e12afb');
+      gradientBorder.addColorStop(0.8, '#00a6f4');
+
+      this.chartData.datasets[0].backgroundColor = gradientBackground;
+      this.chartData.datasets[0].borderColor = gradientBorder;
       this.chart.update();
     });
   }
