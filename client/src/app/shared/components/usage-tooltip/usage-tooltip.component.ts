@@ -13,5 +13,10 @@ import { lucideCircleHelp } from '@ng-icons/lucide';
     }),
   ],
   standalone: true,
+  styles: `
+  :host{
+    display: contents;
+  }
+  `,
 })
 export class UsageTooltipComponent {}

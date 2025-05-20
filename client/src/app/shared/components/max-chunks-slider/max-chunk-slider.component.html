@@ -1,0 +1,54 @@
+<div class="p-4 rounded-lg bg-black/40 border border-[#333333]">
+  <div class="space-y-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <label for="maxChunkSize" class="text-sm text-[#BFA3B5]">
+          Max Chunk Size
+        </label>
+        <app-usage-tooltip>
+          <span>Smaller chunks improve relevance but raise cost/time.</span>
+        </app-usage-tooltip>
+      </div>
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          class="w-6 h-6 rounded-full bg-neutral-800 text-[#BFA3B5] flex items-center justify-center hover:bg-white hover:text-black transition-colors duration-300 cursor-pointer"
+          (click)="decrement()"
+        >−</button>
+        <span class="text-sm text-[#BFA3B5] w-16 text-center">{{ value }}</span>
+        <button
+          type="button"
+          class="w-6 h-6 rounded-full bg-neutral-800 text-[#BFA3B5] flex items-center justify-center hover:bg-white hover:text-black transition-colors duration-300 cursor-pointer"
+          (click)="increment()"
+        >+</button>
+      </div>
+    </div>
+
+    <div class="relative w-full h-1 rounded-full bg-neutral-800 overflow-hidden">
+      <div
+        class="h-full bg-gradient-to-r from-sky-500 to-fuchsia-500 transition-all duration-150"
+        [style.width.%]="percent"
+      ></div>
+
+      <input
+        id="maxChunkSize"
+        type="range"
+        [min]="min"
+        [max]="max"
+        [step]="step"
+        [value]="value"
+        (input)="onInput($event)"
+        (blur)="onTouched()"
+        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer pointer-events-auto"
+      />
+    </div>
+
+    <div class="flex justify-between text-xs text-[#8A6E7D]">
+      <span>{{ min }}</span>
+      <span>{{ max }}</span>
+    </div>
+    <p class="text-[#BFA3B5] text-xs">
+      Smaller chunks improve relevance but raise cost/time.
+    </p>
+  </div>
+</div>

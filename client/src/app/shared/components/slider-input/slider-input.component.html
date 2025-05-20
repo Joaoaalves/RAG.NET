@@ -1,0 +1,34 @@
+<div class="p-4 rounded-lg bg-black/40 border border-[#333333]">
+  <div class="space-y-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <label for="threshold" class="text-sm text-[#BFA3B5]">Threshold</label>
+        <app-usage-tooltip>
+          <span>
+            Higher values create more precise chunks but may split
+            content too finely.
+          </span>
+        </app-usage-tooltip>
+      </div>
+      <span class="text-sm text-[#BFA3B5]">{{ value.toFixed(2) }}</span>
+    </div>
+
+    <input
+      id="threshold"
+      type="range"
+      [min]="min"
+      [max]="max"
+      [step]="step"
+      [value]="value"
+      (input)="onInput($event)"
+      (blur)="onTouched()"
+      class="w-full h-2 rounded-full appearance-none"
+      [style.background]="getBackground()"
+    />
+
+    <div class="flex justify-between text-xs text-pink-200">
+      <span>{{ min }}</span>
+      <span>{{ max.toFixed(1) }}</span>
+    </div>
+  </div>
+</div>

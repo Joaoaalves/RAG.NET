@@ -1,13 +1,13 @@
-<div class="flex flex-col w-full">
+<div class="flex flex-col min-w-full">
   <label [for]="name" class="text-white">{{ label }}</label>
   <p *ngIf="description.length"class="text-sm text-neutral-400 w-full">{{description}}</p>
   <brn-select
-    class="inline-block w-full mt-2"
-    placeholder="Select an option"
+    class="inline-block min-w-full mt-2"
+    [placeholder]="placeholder"
     (valueChange)="onModelChange($event)"
     (blur)="onTouched()"
   >
-      <hlm-select-trigger class="bg-black/50 text-white w-full border-[#333333] hover:border-rose-500/40 rounded-full transition-colors duration-">
+      <hlm-select-trigger class="bg-black/50 text-white min-w-full border-[#333333] hover:border-rose-500/40 rounded-full transition-colors duration-">
           <hlm-select-value>
               <div class="flex items-center gap-x-2" *brnSelectValue="let value">
                   {{ value.label }}

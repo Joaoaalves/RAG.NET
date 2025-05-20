@@ -34,6 +34,12 @@ import {
   mapValidProviders,
 } from 'src/app/shared/utils/providers-utils';
 import { mapChunkerStrategies } from 'src/app/shared/utils/chunker-utils';
+import { ModelSpeedPipe } from './model-speed.pipe';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { ionStar, ionStarHalf, ionStarOutline } from '@ng-icons/ionicons';
+import { UsageTooltipComponent } from 'src/app/shared/components/usage-tooltip/usage-tooltip.component';
+import { SliderInputComponent } from 'src/app/shared/components/slider-input/slider-input.component';
+import { MaxChunkSliderComponent } from 'src/app/shared/components/max-chunks-slider/max-chunk-slider.component';
 
 @Component({
   imports: [
@@ -43,7 +49,13 @@ import { mapChunkerStrategies } from 'src/app/shared/utils/chunker-utils';
     InputComponent,
     SelectComponent,
     TextAreaComponent,
+    ModelSpeedPipe,
+    UsageTooltipComponent,
+    SliderInputComponent,
+    MaxChunkSliderComponent,
+    NgIcon,
   ],
+  providers: [provideIcons({ ionStar, ionStarHalf, ionStarOutline })],
   templateUrl: './new-workflow.component.html',
   standalone: true,
 })
@@ -62,6 +74,9 @@ export class NewWorkflowComponent implements OnInit {
   conversationModelsResponse!: ProvidersResponse<ConversationModel>;
   embeddingModelOptions: EmbeddingModel[] = [];
   conversationModelOptions: ConversationModel[] = [];
+
+  selectedEmbeddingModel: EmbeddingModel | null = null;
+  selectedConversationModel: ConversationModel | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -108,6 +123,12 @@ export class NewWorkflowComponent implements OnInit {
     return this.form.get('strategy')?.value;
   }
 
+  public setChunkerStrategy(value: number) {
+    this.form.patchValue({
+      strategy: value,
+    });
+  }
+
   private loadModels(): void {
     this.workflowService.getEmbeddingModels().subscribe((response) => {
       this.embeddingModelsResponse = response;
@@ -148,6 +169,7 @@ export class NewWorkflowComponent implements OnInit {
     this.subscribeEmbeddingProviderChanges();
     this.subscribeConversationProviderChanges();
     this.subscribeEmbeddingModelChanges();
+    this.subscribeConversationModelChanges();
   }
 
   private subscribeEmbeddingProviderChanges(): void {
@@ -169,18 +191,36 @@ export class NewWorkflowComponent implements OnInit {
       });
   }
 
+  private subscribeConversationModelChanges(): void {
+    this.form
+      .get('conversationProvider.model')
+      ?.valueChanges.subscribe((modelValue: string) => {
+        const selectedModel = this.conversationModelOptions.find(
+          (m) => m.value === modelValue
+        );
+
+        if (selectedModel) {
+          this.selectedConversationModel = selectedModel;
+        }
+      });
+  }
+
   private subscribeEmbeddingModelChanges(): void {
     this.form
       .get('embeddingProvider.model')
-      ?.valueChanges.subscribe((modelValue: any) => {
-        const selectedModel =
-          typeof modelValue === 'object'
-            ? modelValue
-            : this.embeddingModelOptions.find((m) => m.value === modelValue);
+      ?.valueChanges.subscribe((modelValue: string) => {
+        const selectedModel = this.embeddingModelOptions.find(
+          (m) => m.value === modelValue
+        );
+
         if (selectedModel) {
+          this.selectedEmbeddingModel = selectedModel;
+          console.log(this.selectedEmbeddingModel);
           this.form
             .get('embeddingProvider.vectorSize')
             ?.setValue(selectedModel.vectorSize);
+        } else {
+          this.selectedEmbeddingModel = null;
         }
       });
   }

@@ -71,7 +71,8 @@
   }
 }
 
-.timeline-item {
+@layer components {
+  .timeline-item {
   @apply relative flex items-start md:items-center w-full mb-12 hover:scale-105 transition-transform duration-300;
 }
 .timeline-item.even {
@@ -108,6 +109,8 @@
 
 .status-badge {
   @apply !mt-4 inline-block rounded-full px-3 py-1 text-xs font-medium;
+}
+
 }
 
 .status-completed {

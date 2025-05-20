@@ -1,79 +1,215 @@
 <div class="p-8 relative z-10">
-    <h1 class="text-neutral-200 text-4xl">Create Workflow</h1>
+  <h1 class="text-neutral-200 text-4xl">Create Workflow</h1>
   <p class="text-sm text-neutral-400 mt-2">
     Here you can add a new workflow to your collection.
   </p>
-  <form class="mt-8 pb-8 rounded-2xl grid grid-cols-1 gap-y-8 w-1/2" [formGroup]="form" (ngSubmit)="createWorkflow()">
-    <span *ngIf="error" class="text-violet-500 inline-block w-full text-lg text-center mt-8">{{ error }}</span>
+  <form
+    class="mt-8 pb-8 rounded-2xl grid grid-cols-1 gap-y-8"
+    [formGroup]="form"
+    (ngSubmit)="createWorkflow()"
+  >
+    <span
+      *ngIf="error"
+      class="text-violet-500 inline-block w-full text-lg text-center mt-8"
+      >{{ error }}</span
+    >
 
     <div class="grid grid-cols-1 w-full p-4 ps-0 gap-y-4">
       <h2 class="text-neutral-300 text-2xl">Details</h2>
-      <app-input label="Workflow Name *" type="text" name="name" formControlName="name"></app-input>
-      <app-text-area label="Description *" type="text" name="description" formControlName="description"
-        description="Here you can categorize your workflow, saving things like the category of the documents contained in it or the RAG strategies adopted for it."></app-text-area>
+      <app-input
+        label="Workflow Name *"
+        type="text"
+        name="name"
+        formControlName="name"
+      ></app-input>
+      <app-text-area
+        label="Description *"
+        type="text"
+        name="description"
+        formControlName="description"
+        description="Here you can categorize your workflow, saving things like the category of the documents contained in it or the RAG strategies adopted for it."
+      ></app-text-area>
     </div>
 
+    <!-- Chunker -->
     <div class="grid grid-cols-1 gap-y-4 w-full">
-      <h2 class="text-2xl text-neutral-300">Chunker</h2>
-      <app-select label="Chunking Strategy *" name="strategy" [options]="chunkerStrategies" formControlName="strategy"
-        description="
-          This is one of the most important parts of RAG, however, strategies that use conversational models for chunking (Proposition and Semantic) exponentially increase the time and price costs. If you just need a simple RAG, you can take the PARAGRAPH strategy."></app-select>
+      <label class="block text-fuchsia-200 text-xs uppercase tracking-wider"
+        >CHUNKER STRATEGY</label
+      >
+      <div class="flex gap-3">
+        <button
+          type="button"
+          class="flex-1 py-3 px-4 rounded-full text-sm transition-all transform bg-[#331A24] text-[#BFA3B5] hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
+          (click)="setChunkerStrategy(2)"
+          [ngClass]="{
+            'bg-sky-500/20 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
+              strategyValue == 2
+          }"
+        >
+          Paragraph
+        </button>
 
+        <button
+          type="button"
+          class="flex-1 py-3 px-4 rounded-full text-sm transition-all transform bg-[#331A24] text-[#BFA3B5] hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
+          (click)="setChunkerStrategy(1)"
+          [ngClass]="{
+            'bg-sky-500/20 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
+              strategyValue == 1
+          }"
+        >
+          Semantic
+        </button>
+
+        <button
+          type="button"
+          class="flex-1 py-3 px-4 rounded-full text-sm transition-all transform bg-[#331A24] text-[#BFA3B5] hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
+          (click)="setChunkerStrategy(0)"
+          [ngClass]="{
+            'bg-sky-500/20 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
+              strategyValue == 0
+          }"
+        >
+          Proposition
+        </button>
+      </div>
       <div class="grid grid-cols-1 w-full gap-4" formGroupName="settings">
-        <app-input *ngIf="strategyValue !== 2" label="Threshold *" type="number" name="threshold" [step]="0.01"
-          [min]="0" [max]="1"
-          description="This threshold will define which generated chunkings will actually be embedded or discarded. Since this process happens via LLM and they are very lenient in the evaluation, values ​​between 0.85 and 1.0 are better."
-          formControlName="threshold"></app-input>
-
-        <app-input *ngIf="strategyValue === 2" label="Maximum size of chunk *" type="number" name="maxChunkSize"
-          [min]="100" [max]="2000"
-          description="Most embedding models are limited to 4096 to 8192 tokens, but this range is not recommended for Queries. Chunks with fewer than 1000 tokens are more recommended. Remember, smaller chunks improve your results but will increase the cost and time required to perform the embedding."
-          formControlName="maxChunkSize"></app-input>
+        <app-slider-input *ngIf="strategyValue != 2" formControlName="threshold"></app-slider-input>
+        <app-max-chunk-slider *ngIf="strategyValue === 2" formControlName="maxChunkSize"></app-max-chunk-slider>
       </div>
     </div>
 
+    <!-- PROVIDERS -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-4 gap-y-8 w-full">
+      <div class="space-y-5 w-full">
+        <span class="block text-fuchsia-200 text-xs uppercase tracking-wider"
+          >EMBEDDING PROVIDER</span
+        >
+        <div class="mt-4" formGroupName="embeddingProvider">
+          <app-select
+            label=""
+            name="provider"
+            [options]="embeddingOptions"
+            formControlName="provider"
+            description=""
+            placeholder="Select Provider"
+          ></app-select>
 
-    <div class="grid grid-cols-1 gap-y-4 w-full" formGroupName="embeddingProvider">
-      <h2 class="text-2xl text-neutral-300">Embedding Provider</h2>
-      <p class="mb-4 text-neutral-300 font-medium underline  text-sm">
-        Only providers with API keys added in the
-        <a class="text-violet-600" href="/dashboard/providers">Providers tab</a>
-        will be displayed here, along with the models available for your account.
-        Make sure you’ve configured them correctly before creating a workflow.
-        If you want to explore the top-ranked models, visit
-        <a class="text-violet-600" href="https://huggingface.co/spaces/mteb/leaderboard" target="_blank">MTEB Leaderboard</a>.
-      </p>
+          <app-select
+            label=""
+            name="model"
+            [options]="embeddingModelOptions"
+            formControlName="model"
+            description=""
+            placeholder="Select Model"
+          ></app-select>
+        </div>
 
-      <app-select label="Provider *" name="provider" [options]="embeddingOptions" formControlName="provider"
-        description="Select the embedding model provider for your service. Keep in mind that you will need an API key to use the provider, and depending on the selected chunking strategy, the embedding cost may increase. Therefore, make sure to review the costs on the provider's website before choosing your embedding model and provider."></app-select>
+        <div *ngIf="selectedEmbeddingModel" class="flex flex-wrap gap-2 mt-2">
+          <div
+            class="px-3 py-1 rounded-full bg-black border border-rose-500/30 text-rose-500 text-xs flex items-center gap-1"
+          >
+            <span>Speed:</span>
+            <ng-container
+              *ngFor="let icon of selectedEmbeddingModel.speed | modelSpeed"
+            >
+              <ng-icon [name]="icon"></ng-icon>
+            </ng-container>
+          </div>
+          <div
+            class="px-3 py-1 rounded-full bg-black border border-fuchsia-500/30 text-fuchsia-500 text-xs flex items-center gap-1"
+          >
+            <span
+              >Max Context:
+              {{ selectedEmbeddingModel.maxContext }}
+              tokens
+            </span>
+          </div>
+          <div
+            class="px-3 py-1 rounded-full bg-black border border-sky-500/30 text-sky-500 text-xs flex items-center gap-1"
+          >
+            <span>Vector Size: {{ selectedEmbeddingModel.vectorSize }}</span>
+          </div>
+          <div
+            class="px-3 py-1 rounded-full bg-black border border-emerald-500/30 text-emerald-500 text-xs flex items-center gap-1"
+          >
+            <span
+              >Price: U$ {{ selectedEmbeddingModel.price }} / 1M Tokens</span
+            >
+          </div>
+        </div>
+      </div>
+      <div class="space-y-6 w-full">
+        <span class="block text-fuchsia-200 text-xs uppercase tracking-wider"
+          >Conversation PROVIDER</span
+        >
+        <div class="mt-4" formGroupName="conversationProvider">
+          <app-select
+            label=""
+            name="provider"
+            [options]="conversationOptions"
+            formControlName="provider"
+            placeholder="Select Provider"
+            description=""
+          ></app-select>
 
-      <app-select label="Model *" name="model" [options]="embeddingModelOptions" formControlName="model"
-        description="Select the model for this provider. It’s important to note that some models are faster than others, but less efficient."></app-select>
-    </div>
+          <app-select
+            label=""
+            name="model"
+            [options]="conversationModelOptions"
+            formControlName="model"
+            placeholder="Select Model"
+            description=""
+          ></app-select>
+        </div>
 
-
-    <div class="grid grid-cols-1 gap-y-4 w-full" formGroupName="conversationProvider">
-      <h2 class="text-2xl text-neutral-300">Conversation Provider</h2>
-
-      <p class="mb-4 text-neutral-300 font-medium underline text-sm">
-        Only providers with valid API keys set in the
-        <a class="text-violet-600" href="/dashboard/providers">Providers tab</a>
-        will appear here, along with the models available under your account.
-        If no API key is configured, the provider will not show up.
-        To compare top models, visit
-        <a class="text-violet-600" href="https://llm-stats.com/" target="_blank">LLM stats</a>.
-      </p>
-
-      <app-select label="Provider *" name="provider" [options]="conversationOptions" formControlName="provider"
-        description="Select the Conversation model provider for your service. Keep in mind that you will need an API key to use the provider, and depending on the selected chunking strategy, the embedding cost may increase. Therefore, make sure to review the costs on the provider's website before choosing your embedding model and provider."></app-select>
-
-      <app-select label="Model *" name="model" [options]="conversationModelOptions" formControlName="model"
-        description="Select the model for this provider. It’s important to note that some models are faster than others, but less efficient."></app-select>
+        <div
+          *ngIf="selectedConversationModel"
+          class="flex flex-wrap gap-2 mt-2"
+        >
+          <div
+            class="px-3 py-1 rounded-full bg-black border border-rose-500/30 text-rose-500 text-xs flex items-center gap-1"
+          >
+            <span>Speed:</span>
+            <ng-container
+              *ngFor="let icon of selectedConversationModel.speed | modelSpeed"
+            >
+              <ng-icon [name]="icon"></ng-icon>
+            </ng-container>
+          </div>
+          <div
+            class="px-3 py-1 rounded-full bg-black border border-fuchsia-500/30 text-fuchsia-500 text-xs flex items-center gap-1"
+          >
+            <span
+              >Context Window:
+              {{ selectedConversationModel.contextWindow }}
+              tokens
+            </span>
+          </div>
+          <div
+            class="px-3 py-1 rounded-full bg-black border border-sky-500/30 text-sky-500 text-xs flex items-center gap-1"
+          >
+            <span
+              >Input Price: U$ {{ selectedConversationModel.inputPrice }} / 1M
+              Tokens</span
+            >
+          </div>
+          <div
+            class="px-3 py-1 rounded-full bg-black border border-emerald-500/30 text-emerald-500 text-xs flex items-center gap-1"
+          >
+            <span
+              >Output Price: U$ {{ selectedConversationModel.outputPrice }} / 1M
+              Tokens</span
+            >
+          </div>
+        </div>
+      </div>
     </div>
 
     <button
       class="w-3/4 place-self-center mx-8 col-start-1 bg-violet-500 p-2 rounded-xl hover:scale-105 hover:bg-white hover:text-black cursor-pointer transition-all duration-300 text-white mt-8"
-      type="submit">
+      type="submit"
+    >
       Create
     </button>
   </form>

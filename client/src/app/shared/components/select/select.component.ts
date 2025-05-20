@@ -34,6 +34,7 @@ export class SelectComponent
   @Input() name: string = '';
   @Input() description: string = '';
   @Input() value?: string | number = '';
+  @Input() placeholder: string = '';
 
   @Input() options: { value: string | number; label: string }[] = [];
 

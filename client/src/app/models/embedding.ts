@@ -12,7 +12,7 @@ export interface EmbeddingModel {
   speed: number;
   price: number;
   vectorSize: number;
-  maxContent: number;
+  maxContext: number;
 }
 
 export enum EmbeddingProviderEnum {
