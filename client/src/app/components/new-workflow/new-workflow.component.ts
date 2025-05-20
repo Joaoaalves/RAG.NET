@@ -35,6 +35,7 @@ import {
 } from 'src/app/shared/utils/providers-utils';
 import { mapChunkerStrategies } from 'src/app/shared/utils/chunker-utils';
 import { UsageTooltipComponent } from 'src/app/shared/components/usage-tooltip/usage-tooltip.component';
+import { RadarChartComponent } from 'src/app/shared/components/radar-chart/radar-chart.component';
 
 @Component({
   imports: [
@@ -45,6 +46,7 @@ import { UsageTooltipComponent } from 'src/app/shared/components/usage-tooltip/u
     SelectComponent,
     TextAreaComponent,
     UsageTooltipComponent,
+    RadarChartComponent,
   ],
   templateUrl: './new-workflow.component.html',
   standalone: true,
