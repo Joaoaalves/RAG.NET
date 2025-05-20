@@ -34,6 +34,7 @@ import {
   mapValidProviders,
 } from 'src/app/shared/utils/providers-utils';
 import { mapChunkerStrategies } from 'src/app/shared/utils/chunker-utils';
+import { UsageTooltipComponent } from 'src/app/shared/components/usage-tooltip/usage-tooltip.component';
 
 @Component({
   imports: [
@@ -43,6 +44,7 @@ import { mapChunkerStrategies } from 'src/app/shared/utils/chunker-utils';
     InputComponent,
     SelectComponent,
     TextAreaComponent,
+    UsageTooltipComponent,
   ],
   templateUrl: './new-workflow.component.html',
   standalone: true,

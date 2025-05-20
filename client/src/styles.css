@@ -109,7 +109,6 @@
   @apply !mt-4 inline-block rounded-full px-3 py-1 text-xs font-medium;
 }
 
-
 .status-completed {
   background-color: rgba(255, 32, 86, 0.2);
   color: #ff2056;
@@ -157,6 +156,7 @@ span {
     scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
   }
 }
+
 
 .job-scroll-container {
   padding-right: calc(var(--sb-size) + 12px);
