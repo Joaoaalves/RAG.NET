@@ -7,6 +7,7 @@
   --animate-x-draw: x-draw 0.3s ease-in-out forwards;
   --animate-fade-in: fade-in 1s ease-in-out forwards;
   --animate-scroll: scroll 20s linear infinite;
+  --animate-fade-in-150: fade-in 0.15s ease-in-out forwards;
 
   @keyframes x-draw {
     0% {

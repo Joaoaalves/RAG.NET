@@ -2,22 +2,22 @@
   <label [for]="name" class="text-white">{{ label }}</label>
   <p *ngIf="description.length"class="text-sm text-neutral-400 w-full">{{description}}</p>
   <brn-select
-    class="inline-block w-full  mt-2"
+    class="inline-block w-full mt-2"
     placeholder="Select an option"
     (valueChange)="onModelChange($event)"
     (blur)="onTouched()"
   >
-      <hlm-select-trigger class="bg-black text-white w-full border-neutral-800">
+      <hlm-select-trigger class="bg-black/50 text-white w-full border-[#333333] hover:border-rose-500/40 rounded-full transition-colors duration-">
           <hlm-select-value>
               <div class="flex items-center gap-x-2" *brnSelectValue="let value">
                   {{ value.label }}
               </div>
           </hlm-select-value>
       </hlm-select-trigger>
-      <hlm-select-content class="bg-black">
+      <hlm-select-content class="bg-black border border-rose-500/30 !rounded-lg shadow-lg shadow-rose-500/10  animate-fade-in-150 !p-0">
           @for (option of options; track option.label) {
               <hlm-option
-                class="text-neutral-300 hover:bg-white hover:text-black transition-all duration-300 cursor-pointer"
+                class="w-full !ps-3 text-left text-sm hover:bg-rose-500/10 transition-colors first:rounded-t-lg last:rounded-b-lg text-white"
                 [value]="option"
               >
                   {{ option.label }}
