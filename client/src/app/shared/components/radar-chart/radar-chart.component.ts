@@ -19,6 +19,12 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, BaseChartDirective],
   templateUrl: './radar-chart.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: `
+  :host{
+    display: contents;
+    overflow: visible;
+  }
+  `,
 })
 export class RadarChartComponent implements AfterViewInit {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
@@ -47,6 +53,10 @@ export class RadarChartComponent implements AfterViewInit {
   public chartOptions: ChartOptions<'radar'> = {
     responsive: true,
     maintainAspectRatio: false,
+    aspectRatio: 1,
+    layout: {
+      padding: 0,
+    },
     scales: {
       r: {
         angleLines: { display: false },
@@ -56,6 +66,7 @@ export class RadarChartComponent implements AfterViewInit {
         pointLabels: {
           color: '#999',
           font: { size: 12 },
+          padding: 0,
         },
         ticks: {
           display: false,

@@ -1,216 +1,337 @@
-<div class="p-8 relative z-10">
+<header>
   <h1 class="text-neutral-200 text-4xl">Create Workflow</h1>
   <p class="text-sm text-neutral-400 mt-2">
-    Here you can add a new workflow to your collection.
+    Define your document pipeline, RAG strategy, and cost/speed trade-offs.
   </p>
-  <form
-    class="mt-8 pb-8 rounded-2xl grid grid-cols-1 gap-y-8"
-    [formGroup]="form"
-    (ngSubmit)="createWorkflow()"
-  >
-    <span
-      *ngIf="error"
-      class="text-violet-500 inline-block w-full text-lg text-center mt-8"
-      >{{ error }}</span
-    >
+</header>
 
-    <div class="grid grid-cols-1 w-full p-4 ps-0 gap-y-4">
-      <h2 class="text-neutral-300 text-2xl">Details</h2>
-      <app-input
-        label="Workflow Name *"
-        type="text"
-        name="name"
-        formControlName="name"
-      ></app-input>
-      <app-text-area
-        label="Description *"
-        type="text"
-        name="description"
-        formControlName="description"
-        description="Here you can categorize your workflow, saving things like the category of the documents contained in it or the RAG strategies adopted for it."
-      ></app-text-area>
+<div class="flex flex-col lg:flex-row items-start justify-between gap-10">
+  <div class="w-full max-w-4xl min-w-sm">
+    <div class="relative">
+      <div
+        class="absolute -inset-px rounded-2xl bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 opacity-70 blur-[1px] animate-pulse-slow"
+      ></div>
+      <div
+        class="absolute inset-0 rounded-2xl opacity-10 pointer-events-none z-10"
+        style="
+          background: radial-gradient(
+            circle at 50% 50%,
+            rgba(255, 255, 255, 0.8) 0%,
+            transparent 50%
+          );
+        "
+      ></div>
+      <div class="relative bg-black rounded-2xl p-8 z-10 mt-8">
+        <form
+          class="flex flex-col gap-y-8"
+          [formGroup]="form"
+          (ngSubmit)="createWorkflow()"
+        >
+          <span
+            *ngIf="error"
+            class="text-violet-500 inline-block w-full text-lg text-center mt-8"
+            >{{ error }}</span
+          >
+
+          <div class="grid grid-cols-1 w-full p-4 ps-0 gap-y-6">
+            <div class="space-y-2">
+              <div class="flex gap-3">
+                <label
+                  for="description"
+                  class="block text-[#8A6E7D] text-xs uppercase tracking-wider"
+                  >WORKFLOW NAME</label
+                >
+                <app-usage-tooltip>
+                  Give your workflow a memorable name.
+                </app-usage-tooltip>
+              </div>
+              <input
+                placeholder="e.g. Legal Contract Analyzer"
+                name="name"
+                class="w-full bg-transparent border-b-2 border-[#333333] focus:border-rose-500 px-2 py-2 focus:outline-none transition-colors focus:shadow-[0_4px_8px_rgba(244,63,94,0.1)] placeholder:text-neutral-400 text-neutral-200"
+                formControlName="name"
+              />
+              <p class="text-[#BFA3B5] text-xs">
+                Give your workflow a memorable name.
+              </p>
+            </div>
+
+            <div class="space-y-2">
+              <div class="flex gap-3">
+                <label
+                  for="description"
+                  class="block text-[#8A6E7D] text-xs uppercase tracking-wider"
+                  >DESCRIPTION</label
+                >
+                <app-usage-tooltip>
+                  Capture details like document types or retrieval tactics.
+                </app-usage-tooltip>
+              </div>
+              <textarea
+                placeholder="Describe categories, RAG strategies..."
+                formControlName="description"
+                name="description"
+                class="w-full bg-transparent border-2 border-[#333333] focus:border-fuchsia-500 rounded-md px-3 py-2 h-24 focus:outline-none transition-colors focus:shadow-[0_4px_8px_rgba(217,70,239,0.1)] text-neutral-200 placeholder:text-neutral-400"
+              ></textarea>
+              <p class="text-[#BFA3B5] text-xs">
+                Capture details like document types or retrieval tactics.
+              </p>
+            </div>
+          </div>
+
+          <!-- Chunker -->
+          <div class="grid grid-cols-1 gap-y-4 w-full">
+            <label
+              class="block text-fuchsia-200 text-xs uppercase tracking-wider"
+              >CHUNKER STRATEGY</label
+            >
+            <div class="flex gap-3">
+              <button
+                type="button"
+                class="flex-1 py-3 px-4 rounded-full text-sm transition-all transform bg-[#331A24] text-[#BFA3B5] hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
+                (click)="setChunkerStrategy(2)"
+                [ngClass]="{
+                  'bg-sky-500/20 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
+                    strategyValue == 2
+                }"
+              >
+                Paragraph
+              </button>
+
+              <button
+                type="button"
+                class="flex-1 py-3 px-4 rounded-full text-sm transition-all transform bg-[#331A24] text-[#BFA3B5] hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
+                (click)="setChunkerStrategy(1)"
+                [ngClass]="{
+                  'bg-sky-500/20 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
+                    strategyValue == 1
+                }"
+              >
+                Semantic
+              </button>
+
+              <button
+                type="button"
+                class="flex-1 py-3 px-4 rounded-full text-sm transition-all transform bg-[#331A24] text-[#BFA3B5] hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
+                (click)="setChunkerStrategy(0)"
+                [ngClass]="{
+                  'bg-sky-500/20 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
+                    strategyValue == 0
+                }"
+              >
+                Proposition
+              </button>
+            </div>
+            <div class="grid grid-cols-1 w-full gap-4" formGroupName="settings">
+              <app-slider-input
+                *ngIf="strategyValue != 2"
+                formControlName="threshold"
+              ></app-slider-input>
+              <app-max-chunk-slider
+                *ngIf="strategyValue === 2"
+                formControlName="maxChunkSize"
+              ></app-max-chunk-slider>
+            </div>
+          </div>
+
+          <!-- PROVIDERS -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-4 gap-y-8 w-full">
+            <div class="space-y-5 w-full">
+              <span
+                class="block text-fuchsia-200 text-xs uppercase tracking-wider"
+                >EMBEDDING PROVIDER</span
+              >
+              <div class="mt-4" formGroupName="embeddingProvider">
+                <app-select
+                  label=""
+                  name="provider"
+                  [options]="embeddingOptions"
+                  formControlName="provider"
+                  description=""
+                  placeholder="Select Provider"
+                ></app-select>
+
+                <app-select
+                  label=""
+                  name="model"
+                  [options]="embeddingModelOptions"
+                  formControlName="model"
+                  description=""
+                  placeholder="Select Model"
+                ></app-select>
+              </div>
+
+              <div
+                *ngIf="selectedEmbeddingModel"
+                class="flex flex-wrap gap-2 mt-2"
+              >
+                <div
+                  class="px-3 py-1 rounded-full bg-black border border-rose-500/30 text-rose-500 text-xs flex items-center gap-1"
+                >
+                  <span>Speed:</span>
+                  <ng-container
+                    *ngFor="
+                      let icon of selectedEmbeddingModel.speed | modelSpeed
+                    "
+                  >
+                    <ng-icon [name]="icon"></ng-icon>
+                  </ng-container>
+                </div>
+                <div
+                  class="px-3 py-1 rounded-full bg-black border border-fuchsia-500/30 text-fuchsia-500 text-xs flex items-center gap-1"
+                >
+                  <span
+                    >Max Context:
+                    {{ selectedEmbeddingModel.maxContext }}
+                    tokens
+                  </span>
+                </div>
+                <div
+                  class="px-3 py-1 rounded-full bg-black border border-sky-500/30 text-sky-500 text-xs flex items-center gap-1"
+                >
+                  <span
+                    >Vector Size: {{ selectedEmbeddingModel.vectorSize }}</span
+                  >
+                </div>
+                <div
+                  class="px-3 py-1 rounded-full bg-black border border-emerald-500/30 text-emerald-500 text-xs flex items-center gap-1"
+                >
+                  <span
+                    >Price: U$ {{ selectedEmbeddingModel.price }} / 1M
+                    Tokens</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="space-y-6 w-full">
+              <span
+                class="block text-fuchsia-200 text-xs uppercase tracking-wider"
+                >Conversation PROVIDER</span
+              >
+              <div class="mt-4" formGroupName="conversationProvider">
+                <app-select
+                  label=""
+                  name="provider"
+                  [options]="conversationOptions"
+                  formControlName="provider"
+                  placeholder="Select Provider"
+                  description=""
+                ></app-select>
+
+                <app-select
+                  label=""
+                  name="model"
+                  [options]="conversationModelOptions"
+                  formControlName="model"
+                  placeholder="Select Model"
+                  description=""
+                ></app-select>
+              </div>
+
+              <div
+                *ngIf="selectedConversationModel"
+                class="flex flex-wrap gap-2 mt-2"
+              >
+                <div
+                  class="px-3 py-1 rounded-full bg-black border border-rose-500/30 text-rose-500 text-xs flex items-center gap-1"
+                >
+                  <span>Speed:</span>
+                  <ng-container
+                    *ngFor="
+                      let icon of selectedConversationModel.speed | modelSpeed
+                    "
+                  >
+                    <ng-icon [name]="icon"></ng-icon>
+                  </ng-container>
+                </div>
+                <div
+                  class="px-3 py-1 rounded-full bg-black border border-fuchsia-500/30 text-fuchsia-500 text-xs flex items-center gap-1"
+                >
+                  <span
+                    >Context Window:
+                    {{ selectedConversationModel.contextWindow }}
+                    tokens
+                  </span>
+                </div>
+                <div
+                  class="px-3 py-1 rounded-full bg-black border border-sky-500/30 text-sky-500 text-xs flex items-center gap-1"
+                >
+                  <span
+                    >Input Price: U$
+                    {{ selectedConversationModel.inputPrice }} / 1M Tokens</span
+                  >
+                </div>
+                <div
+                  class="px-3 py-1 rounded-full bg-black border border-emerald-500/30 text-emerald-500 text-xs flex items-center gap-1"
+                >
+                  <span
+                    >Output Price: U$
+                    {{ selectedConversationModel.outputPrice }} / 1M
+                    Tokens</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button
+            class="w-3/4 place-self-center mx-8 col-start-1 bg-violet-500 p-2 rounded-xl hover:scale-105 hover:bg-white hover:text-black cursor-pointer transition-all duration-300 text-white mt-8"
+            type="submit"
+          >
+            Create
+          </button>
+        </form>
+      </div>
     </div>
+  </div>
 
-    <!-- Chunker -->
-    <div class="grid grid-cols-1 gap-y-4 w-full">
-      <label class="block text-fuchsia-200 text-xs uppercase tracking-wider"
-        >CHUNKER STRATEGY</label
+  <div class="max-w-full mx-auto lg:ms-auto">
+    <div class="relative">
+      <div
+        class="absolute -inset-px rounded-2xl bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 opacity-70 blur-[1px] animate-pulse-slow"
+      ></div>
+      <div
+        class="absolute inset-0 rounded-2xl opacity-10 pointer-events-none z-10"
+        style="
+          background: radial-gradient(
+            circle at 50% 50%,
+            rgba(255, 255, 255, 0.8) 0%,
+            transparent 50%
+          );
+        "
+      ></div>
+      <div
+        class="relative bg-black rounded-2xl p-4 lg:p-8 lg:py-4 z-10 mt-8 flex items-start justify-between flex-wrap gap-6 overflow-visible"
       >
-      <div class="flex gap-3">
-        <button
-          type="button"
-          class="flex-1 py-3 px-4 rounded-full text-sm transition-all transform bg-[#331A24] text-[#BFA3B5] hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
-          (click)="setChunkerStrategy(2)"
-          [ngClass]="{
-            'bg-sky-500/20 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
-              strategyValue == 2
-          }"
-        >
-          Paragraph
-        </button>
-
-        <button
-          type="button"
-          class="flex-1 py-3 px-4 rounded-full text-sm transition-all transform bg-[#331A24] text-[#BFA3B5] hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
-          (click)="setChunkerStrategy(1)"
-          [ngClass]="{
-            'bg-sky-500/20 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
-              strategyValue == 1
-          }"
-        >
-          Semantic
-        </button>
-
-        <button
-          type="button"
-          class="flex-1 py-3 px-4 rounded-full text-sm transition-all transform bg-[#331A24] text-[#BFA3B5] hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
-          (click)="setChunkerStrategy(0)"
-          [ngClass]="{
-            'bg-sky-500/20 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
-              strategyValue == 0
-          }"
-        >
-          Proposition
-        </button>
-      </div>
-      <div class="grid grid-cols-1 w-full gap-4" formGroupName="settings">
-        <app-slider-input *ngIf="strategyValue != 2" formControlName="threshold"></app-slider-input>
-        <app-max-chunk-slider *ngIf="strategyValue === 2" formControlName="maxChunkSize"></app-max-chunk-slider>
-      </div>
-    </div>
-
-    <!-- PROVIDERS -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-4 gap-y-8 w-full">
-      <div class="space-y-5 w-full">
-        <span class="block text-fuchsia-200 text-xs uppercase tracking-wider"
-          >EMBEDDING PROVIDER</span
-        >
-        <div class="mt-4" formGroupName="embeddingProvider">
-          <app-select
-            label=""
-            name="provider"
-            [options]="embeddingOptions"
-            formControlName="provider"
-            description=""
-            placeholder="Select Provider"
-          ></app-select>
-
-          <app-select
-            label=""
-            name="model"
-            [options]="embeddingModelOptions"
-            formControlName="model"
-            description=""
-            placeholder="Select Model"
-          ></app-select>
+        <div class="relative overflow-visible py-2">
+          <h3 class="text-[#BFA3B5] text-sm font-medium mb-4 absolute top-0 left-0">
+            Performance Trade-Offs
+          </h3>
+          <app-radar-chart
+            [axes]="[
+              { name: 'Emb. Speed', min: 0, max: 100, current: 60 },
+              { name: 'Cost', min: 0, max: 1000, current: 200 },
+              { name: 'Context', min: 0, max: 10, current: 8 },
+              { name: 'Qry. Speed', min: 0, max: 200, current: 120 },
+              { name: 'Quality', min: 0, max: 5, current: 4 }
+            ]"
+          >
+          </app-radar-chart>
         </div>
 
-        <div *ngIf="selectedEmbeddingModel" class="flex flex-wrap gap-2 mt-2">
-          <div
-            class="px-3 py-1 rounded-full bg-black border border-rose-500/30 text-rose-500 text-xs flex items-center gap-1"
-          >
-            <span>Speed:</span>
-            <ng-container
-              *ngFor="let icon of selectedEmbeddingModel.speed | modelSpeed"
-            >
-              <ng-icon [name]="icon"></ng-icon>
-            </ng-container>
-          </div>
-          <div
-            class="px-3 py-1 rounded-full bg-black border border-fuchsia-500/30 text-fuchsia-500 text-xs flex items-center gap-1"
-          >
-            <span
-              >Max Context:
-              {{ selectedEmbeddingModel.maxContext }}
-              tokens
-            </span>
-          </div>
-          <div
-            class="px-3 py-1 rounded-full bg-black border border-sky-500/30 text-sky-500 text-xs flex items-center gap-1"
-          >
-            <span>Vector Size: {{ selectedEmbeddingModel.vectorSize }}</span>
-          </div>
-          <div
-            class="px-3 py-1 rounded-full bg-black border border-emerald-500/30 text-emerald-500 text-xs flex items-center gap-1"
-          >
-            <span
-              >Price: U$ {{ selectedEmbeddingModel.price }} / 1M Tokens</span
-            >
-          </div>
-        </div>
-      </div>
-      <div class="space-y-6 w-full">
-        <span class="block text-fuchsia-200 text-xs uppercase tracking-wider"
-          >Conversation PROVIDER</span
-        >
-        <div class="mt-4" formGroupName="conversationProvider">
-          <app-select
-            label=""
-            name="provider"
-            [options]="conversationOptions"
-            formControlName="provider"
-            placeholder="Select Provider"
-            description=""
-          ></app-select>
+        <div class="relative overflow-visible">
+          <h3 class="text-[#BFA3B5] text-sm font-medium mb-4">
+            Price Calculator
+          </h3>
 
-          <app-select
-            label=""
-            name="model"
-            [options]="conversationModelOptions"
-            formControlName="model"
-            placeholder="Select Model"
-            description=""
-          ></app-select>
-        </div>
-
-        <div
-          *ngIf="selectedConversationModel"
-          class="flex flex-wrap gap-2 mt-2"
-        >
-          <div
-            class="px-3 py-1 rounded-full bg-black border border-rose-500/30 text-rose-500 text-xs flex items-center gap-1"
-          >
-            <span>Speed:</span>
-            <ng-container
-              *ngFor="let icon of selectedConversationModel.speed | modelSpeed"
-            >
-              <ng-icon [name]="icon"></ng-icon>
-            </ng-container>
-          </div>
-          <div
-            class="px-3 py-1 rounded-full bg-black border border-fuchsia-500/30 text-fuchsia-500 text-xs flex items-center gap-1"
-          >
-            <span
-              >Context Window:
-              {{ selectedConversationModel.contextWindow }}
-              tokens
-            </span>
-          </div>
-          <div
-            class="px-3 py-1 rounded-full bg-black border border-sky-500/30 text-sky-500 text-xs flex items-center gap-1"
-          >
-            <span
-              >Input Price: U$ {{ selectedConversationModel.inputPrice }} / 1M
-              Tokens</span
-            >
-          </div>
-          <div
-            class="px-3 py-1 rounded-full bg-black border border-emerald-500/30 text-emerald-500 text-xs flex items-center gap-1"
-          >
-            <span
-              >Output Price: U$ {{ selectedConversationModel.outputPrice }} / 1M
-              Tokens</span
-            >
-          </div>
+        <app-price-calculator
+          [embeddingCostPerMillion]="100"
+          [examplePages]="1000"
+          [conversationInputCostPerMillion]="2.00"
+          [conversationOutputCostPerMillion]="2.50"
+        ></app-price-calculator>
         </div>
       </div>
     </div>
-
-    <button
-      class="w-3/4 place-self-center mx-8 col-start-1 bg-violet-500 p-2 rounded-xl hover:scale-105 hover:bg-white hover:text-black cursor-pointer transition-all duration-300 text-white mt-8"
-      type="submit"
-    >
-      Create
-    </button>
-  </form>
+  </div>
 </div>

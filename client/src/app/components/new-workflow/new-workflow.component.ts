@@ -10,9 +10,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 // Components
-import { InputComponent } from 'src/app/shared/components/input/input.component';
 import { SelectComponent } from 'src/app/shared/components/select/select.component';
-import { TextAreaComponent } from 'src/app/shared/components/text-area/text-area.component';
 
 // Models
 import { ChunkerStrategy } from 'src/app/models/chunker';
@@ -40,19 +38,21 @@ import { ionStar, ionStarHalf, ionStarOutline } from '@ng-icons/ionicons';
 import { UsageTooltipComponent } from 'src/app/shared/components/usage-tooltip/usage-tooltip.component';
 import { SliderInputComponent } from 'src/app/shared/components/slider-input/slider-input.component';
 import { MaxChunkSliderComponent } from 'src/app/shared/components/max-chunks-slider/max-chunk-slider.component';
+import { RadarChartComponent } from 'src/app/shared/components/radar-chart/radar-chart.component';
+import { PriceCalculatorComponent } from 'src/app/shared/components/price-calculator/price-calculator.component';
 
 @Component({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    InputComponent,
     SelectComponent,
-    TextAreaComponent,
     ModelSpeedPipe,
     UsageTooltipComponent,
     SliderInputComponent,
     MaxChunkSliderComponent,
+    RadarChartComponent,
+    PriceCalculatorComponent,
     NgIcon,
   ],
   providers: [provideIcons({ ionStar, ionStarHalf, ionStarOutline })],
