@@ -5,7 +5,7 @@
   </p>
 </header>
 
-<div class="flex flex-col lg:flex-row items-start justify-between gap-10">
+<div class="flex flex-col lg:flex-row items-start justify-between gap-10 mb-8">
   <div class="w-full max-w-4xl min-w-sm">
     <div class="relative">
       <div
@@ -38,7 +38,7 @@
               <div class="flex gap-3">
                 <label
                   for="description"
-                  class="block text-[#8A6E7D] text-xs uppercase tracking-wider"
+                  class="block text-neutral-100 text-xs uppercase tracking-wider"
                   >WORKFLOW NAME</label
                 >
                 <app-usage-tooltip>
@@ -51,7 +51,7 @@
                 class="w-full bg-transparent border-b-2 border-[#333333] focus:border-rose-500 px-2 py-2 focus:outline-none transition-colors focus:shadow-[0_4px_8px_rgba(244,63,94,0.1)] placeholder:text-neutral-400 text-neutral-200"
                 formControlName="name"
               />
-              <p class="text-[#BFA3B5] text-xs">
+              <p class="text-neutral-300 text-xs">
                 Give your workflow a memorable name.
               </p>
             </div>
@@ -60,7 +60,7 @@
               <div class="flex gap-3">
                 <label
                   for="description"
-                  class="block text-[#8A6E7D] text-xs uppercase tracking-wider"
+                  class="block text-neutral-100 text-xs uppercase tracking-wider"
                   >DESCRIPTION</label
                 >
                 <app-usage-tooltip>
@@ -73,7 +73,7 @@
                 name="description"
                 class="w-full bg-transparent border-2 border-[#333333] focus:border-fuchsia-500 rounded-md px-3 py-2 h-24 focus:outline-none transition-colors focus:shadow-[0_4px_8px_rgba(217,70,239,0.1)] text-neutral-200 placeholder:text-neutral-400"
               ></textarea>
-              <p class="text-[#BFA3B5] text-xs">
+              <p class="text-neutral-300 text-xs">
                 Capture details like document types or retrieval tactics.
               </p>
             </div>
@@ -82,16 +82,16 @@
           <!-- Chunker -->
           <div class="grid grid-cols-1 gap-y-4 w-full">
             <label
-              class="block text-fuchsia-200 text-xs uppercase tracking-wider"
+              class="block text-neutral-100 text-xs uppercase tracking-wider"
               >CHUNKER STRATEGY</label
             >
             <div class="flex gap-3">
               <button
                 type="button"
-                class="flex-1 py-3 px-4 rounded-full text-sm transition-all transform bg-[#331A24] text-[#BFA3B5] hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
+                class="flex-1 py-3 px-4 rounded-full text-sm cursor-pointer transition-all transform bg-[#331A24] text-neutral-100 hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
                 (click)="setChunkerStrategy(2)"
                 [ngClass]="{
-                  'bg-sky-500/20 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
+                  'bg-sky-500 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
                     strategyValue == 2
                 }"
               >
@@ -100,10 +100,10 @@
 
               <button
                 type="button"
-                class="flex-1 py-3 px-4 rounded-full text-sm transition-all transform bg-[#331A24] text-[#BFA3B5] hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
+                class="flex-1 py-3 px-4 rounded-full text-sm cursor-pointer transition-all transform bg-[#331A24] text-neutral-100 hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
                 (click)="setChunkerStrategy(1)"
                 [ngClass]="{
-                  'bg-sky-500/20 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
+                  'bg-sky-500 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
                     strategyValue == 1
                 }"
               >
@@ -112,10 +112,10 @@
 
               <button
                 type="button"
-                class="flex-1 py-3 px-4 rounded-full text-sm transition-all transform bg-[#331A24] text-[#BFA3B5] hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
+                class="flex-1 py-3 px-4 rounded-full text-sm cursor-pointer transition-all transform bg-[#331A24] text-neutral-100 hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
                 (click)="setChunkerStrategy(0)"
                 [ngClass]="{
-                  'bg-sky-500/20 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
+                  'bg-sky-500 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
                     strategyValue == 0
                 }"
               >
@@ -138,7 +138,7 @@
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-4 gap-y-8 w-full">
             <div class="space-y-5 w-full">
               <span
-                class="block text-fuchsia-200 text-xs uppercase tracking-wider"
+                class="block text-neutral-100 text-xs uppercase tracking-wider"
                 >EMBEDDING PROVIDER</span
               >
               <div class="mt-4" formGroupName="embeddingProvider">
@@ -205,7 +205,7 @@
             </div>
             <div class="space-y-6 w-full">
               <span
-                class="block text-fuchsia-200 text-xs uppercase tracking-wider"
+                class="block text-neutral-100 text-xs uppercase tracking-wider"
                 >Conversation PROVIDER</span
               >
               <div class="mt-4" formGroupName="conversationProvider">
@@ -275,17 +275,17 @@
           </div>
 
           <button
-            class="w-3/4 place-self-center mx-8 col-start-1 bg-violet-500 p-2 rounded-xl hover:scale-105 hover:bg-white hover:text-black cursor-pointer transition-all duration-300 text-white mt-8"
+            class="w-full bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 p-2 rounded-lg hover:rounded-[100px] cursor-pointer transition-all duration-300 text-white font-medium text-lg mt-8"
             type="submit"
           >
-            Create
+            Create Workflow
           </button>
         </form>
       </div>
     </div>
   </div>
 
-  <div class="max-w-full mx-auto lg:ms-auto">
+  <div class="max-w-full mx-auto lg:me-0">
     <div class="relative">
       <div
         class="absolute -inset-px rounded-2xl bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 opacity-70 blur-[1px] animate-pulse-slow"
@@ -301,35 +301,32 @@
         "
       ></div>
       <div
-        class="relative bg-black rounded-2xl p-4 lg:p-8 lg:py-4 z-10 mt-8 flex items-start justify-between flex-wrap gap-6 overflow-visible"
+        class="relative bg-black rounded-2xl p-4 lg:p-8 z-10 mt-8 flex flex-col items-start justify-between flex-wrap gap-6 overflow-visible"
       >
         <div class="relative overflow-visible py-2">
-          <h3 class="text-[#BFA3B5] text-sm font-medium mb-4 absolute top-0 left-0">
+          <h3
+            class="text-neutral-100 text-sm font-medium mb-4 absolute top-0 left-0"
+          >
             Performance Trade-Offs
           </h3>
-          <app-radar-chart
-            [axes]="[
-              { name: 'Emb. Speed', min: 0, max: 100, current: 60 },
-              { name: 'Cost', min: 0, max: 1000, current: 200 },
-              { name: 'Context', min: 0, max: 10, current: 8 },
-              { name: 'Qry. Speed', min: 0, max: 200, current: 120 },
-              { name: 'Quality', min: 0, max: 5, current: 4 }
-            ]"
-          >
-          </app-radar-chart>
+
+          <app-radar-chart [axes]="(radarAxes$ | async) ?? []"></app-radar-chart>
         </div>
 
         <div class="relative overflow-visible">
-          <h3 class="text-[#BFA3B5] text-sm font-medium mb-4">
+          <h3 class="text-neutral-100 text-sm font-medium mb-4">
             Price Calculator
           </h3>
 
-        <app-price-calculator
-          [embeddingCostPerMillion]="100"
-          [examplePages]="1000"
-          [conversationInputCostPerMillion]="2.00"
-          [conversationOutputCostPerMillion]="2.50"
-        ></app-price-calculator>
+          <app-price-calculator
+            [embeddingCostPerMillion]="(embeddingCost$ | async) ?? 0"
+            [conversationInputCostPerMillion]="
+              (conversationCosts$ | async)?.in ?? 0
+            "
+            [conversationOutputCostPerMillion]="
+              (conversationCosts$ | async)?.out ?? 0
+            "
+          ></app-price-calculator>
         </div>
       </div>
     </div>

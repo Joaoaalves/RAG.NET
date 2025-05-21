@@ -103,7 +103,6 @@ export class CallbackUrlsFormComponent implements OnInit {
       .subscribe(
         (cb) => {
           this.urls[index] = cb;
-          console.log(cb);
           ctrl.setValue(cb.url, { emitEvent: false });
           ctrl.disable();
           this.editing[index] = false;

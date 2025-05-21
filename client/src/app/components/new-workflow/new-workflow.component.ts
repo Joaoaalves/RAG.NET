@@ -40,6 +40,9 @@ import { SliderInputComponent } from 'src/app/shared/components/slider-input/sli
 import { MaxChunkSliderComponent } from 'src/app/shared/components/max-chunks-slider/max-chunk-slider.component';
 import { RadarChartComponent } from 'src/app/shared/components/radar-chart/radar-chart.component';
 import { PriceCalculatorComponent } from 'src/app/shared/components/price-calculator/price-calculator.component';
+import { WorkflowMetricsService } from 'src/app/services/workflow-metrics.service';
+import { map, Observable } from 'rxjs';
+import { RadarAxis } from 'src/app/services/radar-data.service';
 
 @Component({
   imports: [
@@ -78,16 +81,45 @@ export class NewWorkflowComponent implements OnInit {
   selectedEmbeddingModel: EmbeddingModel | null = null;
   selectedConversationModel: ConversationModel | null = null;
 
+  radarAxes$!: Observable<RadarAxis[]>;
+  embeddingCost$!: Observable<number>;
+  conversationCosts$!: Observable<{ in: number; out: number }>;
+
   constructor(
     private fb: FormBuilder,
     private workflowService: WorkflowService,
-    private router: Router
+    private router: Router,
+    private metrics: WorkflowMetricsService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
     this.loadModels();
     this.setupSubscriptions();
+
+    this.metrics.init(
+      this.form,
+      this.form
+        .get('embeddingProvider.model')!
+        .valueChanges.pipe(
+          map(
+            (id) =>
+              this.embeddingModelOptions.find((m) => m.value === id) ?? null
+          )
+        ),
+      this.form
+        .get('conversationProvider.model')!
+        .valueChanges.pipe(
+          map(
+            (id) =>
+              this.conversationModelOptions.find((m) => m.value === id) ?? null
+          )
+        )
+    );
+
+    this.radarAxes$ = this.metrics.radarAxes$();
+    this.embeddingCost$ = this.metrics.embeddingCost$();
+    this.conversationCosts$ = this.metrics.conversationCosts$();
   }
 
   private initForm(): void {
@@ -215,7 +247,6 @@ export class NewWorkflowComponent implements OnInit {
 
         if (selectedModel) {
           this.selectedEmbeddingModel = selectedModel;
-          console.log(this.selectedEmbeddingModel);
           this.form
             .get('embeddingProvider.vectorSize')
             ?.setValue(selectedModel.vectorSize);

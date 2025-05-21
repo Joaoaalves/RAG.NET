@@ -1,27 +1,19 @@
 <div class="bg-black/40 border border-[#333333] rounded-lg p-4 space-y-4">
   <div class="flex items-center gap-3">
     <div
-      class="w-8 h-8 rounded-full bg-gradient-to-br from-rose-500 to-fuchsia-500 flex items-center justify-center"
+      class="w-8 h-8 rounded-full bg-gradient-to-br from-rose-500 to-fuchsia-500 flex items-center justify-center text-lg text-white"
     >
-      <svg
-        width="16" height="16" viewBox="0 0 24 24" fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M20 12V8H4V12M20 12V16H4V12M20 12H4"
-          stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-        />
-      </svg>
+      <ng-icon name="lucideArrowUp"></ng-icon>
     </div>
     <div class="flex-1">
       <p class="text-white text-sm">Embedding Cost</p>
       <p class="text-[#BFA3B5] text-xs">
         {{ formatCurrency(embeddingCostPerMillion) }} per 1M tokens
         <span
-          *ngIf="examplePages"
+          *ngIf="embeddingCostPerMillion"
           class="block text-[#8A6E7D]"
         >
-          (~{{ examplePages }} pages for {{ exampleEmbeddingCost }})
+          (~{{ oneDolarPages }} pages per U$ 1,00)
         </span>
       </p>
     </div>
@@ -29,23 +21,15 @@
 
   <div class="flex items-center gap-3">
     <div
-      class="w-8 h-8 rounded-full bg-gradient-to-br from-fuchsia-500 to-sky-500 flex items-center justify-center"
+      class="w-8 h-8 rounded-full bg-gradient-to-br from-fuchsia-500 to-sky-500 flex items-center justify-center text-lg text-white"
     >
-      <svg
-        width="16" height="16" viewBox="0 0 24 24" fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M8 12H8.01M12 12H12.01M16 12H16.01M21 12C21 16.418 16.97 20 12 20C10.5 20 9.077 19.692 7.8 19.142L3 20L4.056 16.448C3.389 15.1 3 13.6 3 12C3 7.582 7.03 4 12 4C16.97 4 21 7.582 21 12Z"
-          stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-        />
-      </svg>
+      <ng-icon name="lucideMessageCircle"></ng-icon>
     </div>
     <div class="flex-1">
       <p class="text-white text-sm">Conversation Cost</p>
       <p class="text-[#BFA3B5] text-xs">
-        Input: {{ formatCurrency(conversationInputCostPerMillion) }} per 1k tokens<br>
-        Output: {{ formatCurrency(conversationOutputCostPerMillion) }} per 1k tokens
+        Input: {{ formatCurrency(conversationInputCostPerMillion) }} per 1M tokens<br>
+        Output: {{ formatCurrency(conversationOutputCostPerMillion) }} per 1M tokens
       </p>
     </div>
   </div>

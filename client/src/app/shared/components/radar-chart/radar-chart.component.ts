@@ -40,18 +40,14 @@ export class RadarChartComponent implements AfterViewInit {
     datasets: [
       {
         data: [],
-        borderColor: '#e12afb00',
         borderWidth: 1,
-        pointBackgroundColor: '#000000',
-        pointBorderColor: '#e12afb',
         pointRadius: 3,
-        backgroundColor: [] as any,
       },
     ],
   };
 
   public chartOptions: ChartOptions<'radar'> = {
-    responsive: true,
+    responsive: false,
     maintainAspectRatio: false,
     aspectRatio: 1,
     layout: {
@@ -59,7 +55,7 @@ export class RadarChartComponent implements AfterViewInit {
     },
     elements: {
       line: {
-        tension: 0.05,
+        tension: 0.15,
       },
     },
     scales: {
@@ -67,7 +63,7 @@ export class RadarChartComponent implements AfterViewInit {
         angleLines: { display: false },
         min: 0,
         max: 100,
-        grid: { color: '#222' },
+        grid: { color: '#333' },
         pointLabels: {
           color: '#999',
           font: { size: 12 },
@@ -76,7 +72,7 @@ export class RadarChartComponent implements AfterViewInit {
         ticks: {
           display: false,
           stepSize: 20,
-          color: '#222',
+          color: '#333',
         },
       },
     },
@@ -94,38 +90,51 @@ export class RadarChartComponent implements AfterViewInit {
       const chartRef = this.chart.chart;
 
       this.chartData.labels = axes.map((ax) => ax.name);
-
       const normalized = axes.map(
         (ax) => ((ax.current - ax.min) / (ax.max - ax.min)) * 100
       );
       this.chartData.datasets[0].data = normalized;
 
-      const ctx = chartRef.ctx;
-      const gradientBackground = ctx.createLinearGradient(
-        0,
-        0,
-        chartRef.width,
-        chartRef.height
-      );
-      const gradientBorder = ctx.createLinearGradient(
-        0,
-        0,
-        chartRef.width,
-        chartRef.height
-      );
+      const createGradient = () => {
+        const ctx = chartRef.ctx;
+        const { width, height } = chartRef;
+        const centerX = width / 2;
+        const centerY = height / 2;
+        const radius = Math.min(width, height) / 2;
 
-      gradientBackground.addColorStop(0, '#ff205650');
-      gradientBackground.addColorStop(0.5, '#e12afb50');
-      gradientBackground.addColorStop(0.8, '#00a6f450');
+        const transparentGradient = ctx.createRadialGradient(
+          centerX,
+          centerY,
+          0,
+          centerX,
+          centerY,
+          radius
+        );
+        transparentGradient.addColorStop(0.6, '#ff205650');
+        transparentGradient.addColorStop(0.3, '#e12afb50');
+        transparentGradient.addColorStop(0, '#00a6f450');
 
-      gradientBorder.addColorStop(0, '#ff2056');
-      gradientBorder.addColorStop(0.5, '#e12afb');
-      gradientBorder.addColorStop(0.8, '#00a6f4');
+        const solidGradient = ctx.createRadialGradient(
+          centerX,
+          centerY,
+          0,
+          centerX,
+          centerY,
+          radius
+        );
+        solidGradient.addColorStop(0.6, '#ff2056');
+        solidGradient.addColorStop(0.3, '#e12afb');
+        solidGradient.addColorStop(0, '#00a6f4');
 
-      this.chartData.datasets[0].backgroundColor = gradientBackground;
-      this.chartData.datasets[0].borderColor = gradientBorder;
-      this.chartData.datasets[0].pointBorderColor = gradientBorder;
-      this.chartData.datasets[0].pointBackgroundColor = gradientBorder;
+        return { transparentGradient, solidGradient };
+      };
+
+      const { transparentGradient, solidGradient } = createGradient();
+
+      this.chartData.datasets[0].backgroundColor = transparentGradient;
+      this.chartData.datasets[0].borderColor = solidGradient;
+      this.chartData.datasets[0].pointBorderColor = solidGradient;
+      this.chartData.datasets[0].pointBackgroundColor = solidGradient;
 
       this.chart.update();
     });

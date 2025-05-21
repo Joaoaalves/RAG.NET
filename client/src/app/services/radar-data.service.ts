@@ -6,6 +6,7 @@ export interface RadarAxis {
   min: number;
   max: number;
   current: number;
+  label?: string;
 }
 
 @Injectable({ providedIn: 'root' })

@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
 })
 export class MaxChunkSliderComponent implements ControlValueAccessor, OnInit {
   min = 100;
-  max = 2000;
+  max = 1200;
   step = 50;
 
   value = 100;

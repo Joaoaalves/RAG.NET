@@ -1,19 +1,24 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideArrowUp, lucideMessageCircle } from '@ng-icons/lucide';
 
 @Component({
   selector: 'app-price-calculator',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgIcon],
+  providers: [
+    provideIcons({
+      lucideArrowUp,
+      lucideMessageCircle,
+    }),
+  ],
   templateUrl: './price-calculator.component.html',
 })
 export class PriceCalculatorComponent {
-  @Input() embeddingCostPerMillion!: number;
-  @Input() examplePages?: number;
-
-  @Input() conversationInputCostPerMillion!: number;
-
-  @Input() conversationOutputCostPerMillion!: number;
+  @Input() embeddingCostPerMillion = 0;
+  @Input() conversationInputCostPerMillion = 0;
+  @Input() conversationOutputCostPerMillion = 0;
 
   formatCurrency(value: number): string {
     return value.toLocaleString(undefined, {
@@ -23,10 +28,13 @@ export class PriceCalculatorComponent {
     });
   }
 
-  get exampleEmbeddingCost(): string | null {
-    if (!this.examplePages) return null;
-    const cost =
-      (this.embeddingCostPerMillion / 1_000_000) * (this.examplePages * 250);
-    return this.formatCurrency(cost);
+  get oneDolarPages(): number | null {
+    if (!this.embeddingCostPerMillion) return null;
+    const tokensPerPage = 1000;
+
+    const oneDolarTokens = 1_000_000 / this.embeddingCostPerMillion;
+    const pages = Math.floor(oneDolarTokens / tokensPerPage);
+
+    return pages;
   }
 }
