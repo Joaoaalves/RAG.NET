@@ -42,9 +42,9 @@ export class RadarChartComponent implements AfterViewInit {
         data: [],
         borderColor: '#e12afb00',
         borderWidth: 1,
-        pointBackgroundColor: '#e12afb',
+        pointBackgroundColor: '#000000',
         pointBorderColor: '#e12afb',
-        pointRadius: 5,
+        pointRadius: 3,
         backgroundColor: [] as any,
       },
     ],
@@ -57,12 +57,17 @@ export class RadarChartComponent implements AfterViewInit {
     layout: {
       padding: 0,
     },
+    elements: {
+      line: {
+        tension: 0.05,
+      },
+    },
     scales: {
       r: {
         angleLines: { display: false },
         min: 0,
         max: 100,
-        grid: { color: '#444' },
+        grid: { color: '#222' },
         pointLabels: {
           color: '#999',
           font: { size: 12 },
@@ -70,6 +75,8 @@ export class RadarChartComponent implements AfterViewInit {
         },
         ticks: {
           display: false,
+          stepSize: 20,
+          color: '#222',
         },
       },
     },
@@ -106,7 +113,6 @@ export class RadarChartComponent implements AfterViewInit {
         chartRef.width,
         chartRef.height
       );
-      console.log(chartRef.width, chartRef.height);
 
       gradientBackground.addColorStop(0, '#ff205650');
       gradientBackground.addColorStop(0.5, '#e12afb50');
@@ -118,6 +124,9 @@ export class RadarChartComponent implements AfterViewInit {
 
       this.chartData.datasets[0].backgroundColor = gradientBackground;
       this.chartData.datasets[0].borderColor = gradientBorder;
+      this.chartData.datasets[0].pointBorderColor = gradientBorder;
+      this.chartData.datasets[0].pointBackgroundColor = gradientBorder;
+
       this.chart.update();
     });
   }
