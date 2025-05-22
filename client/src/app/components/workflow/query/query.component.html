@@ -1,21 +1,47 @@
-<div class="flex flex-col p-8 col-start-2 relative">
-  <h1 class="text-4xl text-neutral-200 font-bold">Query on your Collection</h1>
-
-  <p class="text-neutral-300 text-sm text-left max-w-lg mt-4">
-    The embedding process in RAG (Retrieval-Augmented Generation) transforms
-    your document into a searchable vector format, enabling efficient
-    retrieval and contextual AI interactions.
-  </p>
-
-  <span class="text-neutral-400 mt-2">Documents: <strong class="text-white">{{workflow?.documentsCount}}</strong></span>
-    <div class="grid grid-cols-2 w-full">
-      <app-query-form
-        *ngIf="workflow"
-      [onQuery]="queryService.query.bind(queryService)" [apiKey]="workflow.apiKey"></app-query-form>
-
-      <app-query-result
-        [chunks]="queryService.chunks"
-        [filteredContent]="queryService.filteredContent"></app-query-result>
+<header class="mb-8">
+  <div
+    class="flex flex-col md:flex-row justify-between items-start md:items-center"
+  >
+    <div>
+      <h1 class="text-4xl font-bold text-neutral-200 mb-2">Semantic Search</h1>
+      <p class="text-neutral-400 text-sm italic">
+        Interact with your documents using natural language queries.
+      </p>
     </div>
+    <div class="mt-4 md:mt-0 flex flex-col items-end">
+      <div
+        class="px-3 py-1 rounded-full bg-neutral-950 border border-sky-500/20 text-white text-sm flex items-center gap-2 shadow-[0_0_10px_rgba(217,70,239,0.2)]"
+      >
+        <div class="text-sky-500">
+          <ng-icon name="lucideLayers" class="mt-1"></ng-icon>
+        </div>
+        <span>Documents: {{ workflow?.documentsCount ?? 0 }}</span>
+      </div>
+      <div class="mt-2 text-neutral-400 text-xs">
+        Last search: May 22, 2025 • 11:29
+      </div>
+    </div>
+  </div>
+  <div
+    class="h-px w-full bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 mt-4 opacity-50 animate-pulse-slow"
+  ></div>
+</header>
 
+<div class="flex flex-col p-8 col-start-2 relative">
+  <span class="text-neutral-400 mt-2"
+    >Documents:
+    <strong class="text-white">{{ workflow?.documentsCount }}</strong></span
+  >
+  <div class="grid grid-cols-2 w-full">
+    <app-query-form
+      *ngIf="workflow"
+      [onQuery]="queryService.query.bind(queryService)"
+      [apiKey]="workflow.apiKey"
+    ></app-query-form>
+
+    <app-query-result
+      [chunks]="queryService.chunks"
+      [filteredContent]="queryService.filteredContent"
+    ></app-query-result>
+  </div>
 </div>

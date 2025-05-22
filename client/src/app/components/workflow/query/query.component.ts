@@ -6,11 +6,18 @@ import { Workflow } from 'src/app/models/workflow';
 import { QueryService } from 'src/app/services/query.service';
 import { QueryFormComponent } from 'src/app/shared/components/query-form/query-form.component';
 import { QueryResultComponent } from 'src/app/shared/components/query-result/query-result.component';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideLayers } from '@ng-icons/lucide';
 
 @Component({
   templateUrl: './query.component.html',
   selector: 'app-query',
-  imports: [CommonModule, QueryFormComponent, QueryResultComponent],
+  imports: [CommonModule, QueryFormComponent, QueryResultComponent, NgIcon],
+  providers: [
+    provideIcons({
+      lucideLayers,
+    }),
+  ],
   standalone: true,
 })
 export class QueryComponent implements OnInit {
