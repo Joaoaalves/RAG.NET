@@ -6,7 +6,12 @@ import {
   Input,
 } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
+import {
+  ChartConfiguration,
+  ChartOptions,
+  ChartType,
+  TooltipItem,
+} from 'chart.js';
 import {
   RadarDataService,
   RadarAxis,
@@ -40,6 +45,8 @@ export class RadarChartComponent implements AfterViewInit {
     datasets: [
       {
         data: [],
+        // @ts-ignore — we’ll add our own prop
+        rawData: [],
         borderWidth: 1,
         pointRadius: 3,
       },
@@ -50,13 +57,9 @@ export class RadarChartComponent implements AfterViewInit {
     responsive: false,
     maintainAspectRatio: false,
     aspectRatio: 1,
-    layout: {
-      padding: 0,
-    },
+    layout: { padding: 0 },
     elements: {
-      line: {
-        tension: 0.15,
-      },
+      line: { tension: 0.15 },
     },
     scales: {
       r: {
@@ -64,19 +67,24 @@ export class RadarChartComponent implements AfterViewInit {
         min: 0,
         max: 100,
         grid: { color: '#333' },
-        pointLabels: {
-          color: '#999',
-          font: { size: 12 },
-          padding: 0,
-        },
-        ticks: {
-          display: false,
-          stepSize: 20,
-          color: '#333',
+        pointLabels: { color: '#999', font: { size: 12 }, padding: 0 },
+        ticks: { display: false, stepSize: 20, color: '#333' },
+      },
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (context: TooltipItem<'radar'>) => {
+            const dataset = context.dataset as any;
+            const rawValue =
+              dataset.rawData?.[context.dataIndex] ?? context.formattedValue;
+            const label = context.chart.data.labels?.[context.dataIndex] || '';
+            return `${label}: ${Math.round(rawValue)}`;
+          },
         },
       },
     },
-    plugins: { legend: { display: false } },
   };
 
   constructor(private dataService: RadarDataService) {}
@@ -92,6 +100,10 @@ export class RadarChartComponent implements AfterViewInit {
       this.chartData.labels = axes.map((ax) => ax.name);
       const normalized = axes.map(
         (ax) => ((ax.current - ax.min) / (ax.max - ax.min)) * 100
+      );
+
+      (this.chartData.datasets[0] as any).rawData = axes.map(
+        (ax) => ax.current
       );
       this.chartData.datasets[0].data = normalized;
 

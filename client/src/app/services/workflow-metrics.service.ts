@@ -15,7 +15,6 @@ const EMPTY_EMB_MODEL: EmbeddingModel = {
   maxContext: 0,
   vectorSize: 0,
 };
-
 const EMPTY_CONV_MODEL: ConversationModel = {
   value: '',
   label: '',
@@ -32,13 +31,13 @@ export class WorkflowMetricsService {
   private embModel$ = new BehaviorSubject<EmbeddingModel>(EMPTY_EMB_MODEL);
   private convModel$ = new BehaviorSubject<ConversationModel>(EMPTY_CONV_MODEL);
 
+  /** Initialize with form and model-change observables */
   init(
     formGroup: FormGroup,
     embModelChanges$: Observable<EmbeddingModel | null>,
     convModelChanges$: Observable<ConversationModel | null>
   ): void {
     this.form$.next(formGroup);
-
     embModelChanges$
       .pipe(map((m) => m ?? EMPTY_EMB_MODEL))
       .subscribe(this.embModel$);
@@ -47,98 +46,148 @@ export class WorkflowMetricsService {
       .subscribe(this.convModel$);
   }
 
-  private chunkerConfig$() {
+  /** Expose the current chunker configuration as [strategy, threshold, maxSize] */
+  private chunkerConfig$(): Observable<[ChunkerStrategy, number, number]> {
     return this.form$.pipe(
       filter((f): f is FormGroup => f !== null),
       switchMap((form) => {
-        const stratCtrl = form.get('strategy')!;
-        const thrCtrl = form.get('settings.threshold')!;
-        const szCtrl = form.get('settings.maxChunkSize')!;
-
+        const strat = form.get('strategy')!;
+        const thr = form.get('settings.threshold')!;
+        const sz = form.get('settings.maxChunkSize')!;
         return combineLatest([
-          stratCtrl.valueChanges.pipe(startWith(stratCtrl.value)),
-          thrCtrl.valueChanges.pipe(startWith(thrCtrl.value)),
-          szCtrl.valueChanges.pipe(startWith(szCtrl.value)),
+          strat.valueChanges.pipe(startWith(strat.value)),
+          thr.valueChanges.pipe(startWith(thr.value)),
+          sz.valueChanges.pipe(startWith(sz.value)),
         ]);
       })
     );
   }
 
+  /** Public observable of radar axes data */
   radarAxes$(): Observable<RadarAxis[]> {
+    // thresholds for log normalization
+    const PRICE_THRESHOLD = 30; // USD per million tokens
+    const CONTEXT_THRESHOLD = 1_000_000; // tokens
+
     return combineLatest([
       this.chunkerConfig$(),
       this.embModel$,
       this.convModel$,
     ]).pipe(
       map(([[strat, threshold, maxSz], emb, conv]) => {
-        const chunkSpeed =
-          strat === ChunkerStrategy.PARAGRAPH
-            ? 8 + ((maxSz - 100) / 900) * 2
-            : 6 - threshold * 2;
+        const embSpeed = this.calculateEmbeddingSpeed(
+          strat,
+          threshold,
+          maxSz,
+          emb.speed
+        );
+        const convSpeed = this.normalizeLinear(conv.speed, 0, 10);
+        const qualityPct = this.calculateQuality(strat, maxSz, threshold);
 
-        const norm = (v: number, min: number, max: number) =>
-          ((v - min) / (max - min)) * 100;
-
-        const embSpeed = (norm(chunkSpeed, 0, 10) + norm(emb.speed, 0, 10)) / 2;
-        const convSpeed = norm(conv.speed, 0, 10);
-
-        const qualityPercent = this.calculateQuality(strat, maxSz, threshold);
-
-        const costPercent = this.normalizeCost(
+        const rawCost = this.calculateRawCost(
+          strat,
           emb.price,
           conv.inputPrice,
           conv.outputPrice
         );
+        const costPct = this.logNormalize(rawCost, PRICE_THRESHOLD);
+        const contextPct = this.logNormalize(
+          conv.contextWindow,
+          CONTEXT_THRESHOLD
+        );
 
         return [
-          {
-            name: 'Emb. Speed',
-            min: 0,
-            max: 100,
-            current: Math.round(embSpeed),
-          },
-          {
-            name: 'Cost',
-            min: 0,
-            max: 100,
-            current: costPercent,
-          },
-          {
-            name: 'Context',
-            min: 0,
-            max: 2500000,
-            current: conv.contextWindow,
-          },
-          {
-            name: 'Qry. Speed',
-            min: 0,
-            max: 100,
-            current: Math.round(convSpeed),
-          },
-          {
-            name: 'Quality',
-            min: 0,
-            max: 100,
-            current: qualityPercent,
-          },
+          this.buildAxis('Emb. Speed', embSpeed),
+          this.buildAxis('Cost', costPct),
+          this.buildAxis('Context', contextPct),
+          this.buildAxis('Qry. Speed', convSpeed),
+          this.buildAxis('Quality', qualityPct),
         ];
       })
     );
   }
 
+  /** Observable of just the embedding cost (raw) */
   embeddingCost$(): Observable<number> {
-    return this.embModel$.pipe(map((m) => m.price));
+    return combineLatest([
+      this.embModel$,
+      this.convModel$,
+      this.chunkerConfig$(),
+    ]).pipe(
+      map(([emb, conv, [strat, ,]]) =>
+        this.calculateRawCost(
+          strat,
+          emb.price,
+          conv.inputPrice,
+          conv.outputPrice
+        )
+      )
+    );
   }
 
-  private normalizeCost(emb: number, inp: number, out: number): number {
-    const MAX_EMB = 0.3;
-    const MAX_IN = 75;
-    const MAX_OUT = 150;
-    const MAX_TOTAL = MAX_EMB + MAX_IN + MAX_OUT;
+  /** Build a RadarAxis object with 0–100 range */
+  private buildAxis(name: string, currentPct: number): RadarAxis {
+    return { name, min: 0, max: 100, current: Math.round(currentPct) };
+  }
 
-    const total = emb + inp + out;
-    const clamped = Math.min(Math.max(total, 0), MAX_TOTAL);
-    return Math.round((clamped / MAX_TOTAL) * 100);
+  /** Calculate raw cost including conversation if needed */
+  private calculateRawCost(
+    strat: ChunkerStrategy,
+    embPrice: number,
+    convIn: number,
+    convOut: number
+  ): number {
+    let total = embPrice;
+    if (
+      strat === ChunkerStrategy.PROPOSITION ||
+      strat === ChunkerStrategy.SEMANTIC
+    ) {
+      total += convIn + convOut;
+    }
+    return total;
+  }
+
+  /** Logarithmic normalization: maps [1…threshold] → [0…100] */
+  private logNormalize(value: number, threshold: number): number {
+    const v = Math.max(value, 1);
+    return Math.min(100, (Math.log(v) / Math.log(threshold)) * 100);
+  }
+
+  /** Linear normalization: maps [min…max] → [0…100] */
+  private normalizeLinear(v: number, min: number, max: number): number {
+    return ((v - min) / (max - min)) * 100;
+  }
+
+  /** Calculate embedding speed as average of chunk-speed and model speed */
+  private calculateEmbeddingSpeed(
+    strat: ChunkerStrategy,
+    threshold: number,
+    maxSz: number,
+    embSpeedModel: number
+  ): number {
+    const chunkSpeed =
+      strat === ChunkerStrategy.PARAGRAPH
+        ? 8 + ((maxSz - 100) / 900) * 2
+        : 4 - threshold * 2;
+    const normChunk = this.normalizeLinear(chunkSpeed, 0, 10);
+    const normEmb = this.normalizeLinear(embSpeedModel, 0, 10);
+    return (normChunk + normEmb) / 2;
+  }
+
+  private calculateFinalCost(
+    normalizedCost: number,
+    strat: ChunkerStrategy,
+    threshold: number,
+    maxSz: number
+  ): number {
+    let increase = 1;
+    if (strat === ChunkerStrategy.PARAGRAPH) {
+      if (maxSz > 1000) increase = 0.95;
+      else if (maxSz < 500) increase = 1.05;
+      return Math.min(100, Math.max(0, normalizedCost * increase));
+    }
+    increase = threshold > 0.95 ? 1.6 : 1.4;
+    return Math.min(100, normalizedCost * increase);
   }
 
   private calculateQuality(
@@ -146,15 +195,11 @@ export class WorkflowMetricsService {
     maxSz: number,
     threshold: number
   ): number {
-    let qualityRatio: number;
-
-    if (strat === ChunkerStrategy.PARAGRAPH) {
-      qualityRatio = this.paragraphQuality(maxSz);
-    } else {
-      qualityRatio = this.thresholdQuality(threshold);
-    }
-
-    return Math.round(qualityRatio * 100);
+    const ratio =
+      strat === ChunkerStrategy.PARAGRAPH
+        ? this.paragraphQuality(maxSz)
+        : this.thresholdQuality(threshold);
+    return ratio * 100;
   }
 
   private paragraphQuality(maxSz: number): number {
