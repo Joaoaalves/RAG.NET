@@ -37,7 +37,9 @@
     <div class="hidden lg:block w-px h-auto bg-gradient-to-b from-rose-500 via-fuchsia-500 to-sky-500 opacity-50 animate-pulse-slow">
     </div>
     <app-query-result
+      *ngIf="workflow"
       [chunks]="queryService.chunks"
+      [workflowId]="workflow.id"
       class="w-full lg:w-3/5"
       [filteredContent]="queryService.filteredContent"
     ></app-query-result>
