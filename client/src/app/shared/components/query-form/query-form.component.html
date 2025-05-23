@@ -1,21 +1,55 @@
-<div class="max-w-2xl mt-8 space-y-4">
-  <form (ngSubmit)="onSubmit($event)" class="space-y-8" [formGroup]="queryForm">
-      <app-text-area
-        label="Query *"
-        type="text"
-        name="query"
-        [description]="'This is the main input for your search. Enter your question or a descriptive prompt here. Based on this query, the system will perform a semantic search across the collection to identify the most relevant documents or passages that match your intent.'"
-        formControlName="query"
+<div class="w-full">
+  <div class="relative p-0.5 rounded-xl overflow-hidden">
+    <div
+      class="absolute inset-0 bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 blur-[1px]"
+    ></div>
+    <div class="relative bg-neutral-950 rounded-xl p-6">
+      <form
+        (ngSubmit)="onSubmit($event)"
+        class="space-y-8"
+        [formGroup]="queryForm"
+      >
+        <app-text-area
+          label="Your Query"
+          type="text"
+          name="query"
+          placeholder="Ask anything about your collection... e.g. 'Key points from the introduction of each report'"
+          [description]="
+            'Type your question or prompt; our AI will retrieve the most relevant passages.'
+          "
+          formControlName="query"
         ></app-text-area>
+        <button
+          type="submit"
+          class="mt-6 w-full py-3 rounded-full bg-gradient-to-r from-rose-500 to-fuchsia-500 text-white font-bold text-base transition-all hover:shadow-[0_0_20px_rgba(217,70,239,0.3)] hover:scale-[1.03] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none relative overflow-hidden group cursor-pointer animate-pulse-slow"
+          [disabled]="isLoading$ | async"
+        >
+          <ng-container *ngIf="isLoading$ | async; else label">
+            <ng-icon
+              name="lucideLoaderCircle"
+              class="animate-spin h-5 w-5 text-gray-500 inline-block"
+            ></ng-icon>
+            <span class="ml-2">Searching on your collection...</span>
+          </ng-container>
+          <ng-template #label> Search </ng-template>
+        </button>
 
-        <div class="border-t-2 bg-neutral-900 rounded-2xl p-3">
+        <div
+          class="p-4 bg-gradient-to-r from-[#111111] to-[#1a1a1a] rounded-lg border border-[#333333]"
+        >
           <div class="flex items-center justify-between w-full mb-4">
-            <h2 class="text-neutral-200 text-xl">Top K</h2>
-            <hlm-switch
-            class="mr-2 bg-white"
-            formControlName="enableTopK" />
+            <div class="flex gap-x-2 items-end">
+              <span class="text-sm text-white">Top K Results</span>
+              <app-usage-tooltip
+                >Limit results to the top K most similar
+                chunks.</app-usage-tooltip
+              >
+            </div>
+            <hlm-switch class="mr-2 bg-white" formControlName="enableTopK" />
           </div>
-          <p class="text-neutral-400">Top K defines the maximum number of top-ranked results to be retrieved during the search phase. In a RAG pipeline, setting the value of K helps balance breadth and precision by returning only the top K documents or chunks with the highest semantic similarity.</p>
+          <p class="mt-2 text-xs text-neutral-400">
+            Limit results to the top K most similar chunks.
+          </p>
           <app-input
             *ngIf="queryForm.get('enableTopK')?.value"
             type="number"
@@ -24,84 +58,77 @@
             [min]="1"
             [max]="10"
             [step]="1"
-            ></app-input>
+          ></app-input>
         </div>
 
-        <div class="border-t-2 bg-neutral-900 rounded-2xl p-3">
+        <div
+          class="p-4 bg-gradient-to-r from-[#111111] to-[#1a1a1a] rounded-lg border border-[#333333]"
+        >
           <div class="flex items-center justify-between w-full mb-4">
-            <h2 class="text-neutral-200 text-xl">Parent Child</h2>
-            <hlm-switch
-            class="mr-2 bg-white"
-            formControlName="parentChild" />
-          </div>
-          <p class="text-neutral-400">
-            The Parent-Child technique in RAG is useful when you want to retrieve a larger context surrounding a matched chunk. Instead of returning only the chunk that matched the query, this setting ensures the parent document or section is returned as well — for example, an entire chapter in the case of EPUB files. This can improve answer quality in some scenarios by providing more complete context. However, this approach is not ideal for certain data types like CSV collections, where the parent-child relationship does not naturally exist and could lead to less precise or excessive results.
-          </p>
+            <div class="flex gap-x-2 items-end">
+              <span class="text-sm text-white">Parent Child Model</span>
 
-        </div>
-
-        <div class="border-t-2 bg-neutral-900 rounded-2xl p-3 space-y-4">
-          <div class="flex items-center justify-between w-full">
-            <h2 class="text-neutral-200 text-xl">Normalize Score</h2>
-            <hlm-switch
-            class="mr-2 bg-white"
-            formControlName="normalizeScore" />
-          </div>
-          <p class="text-neutral-400">
-            Enabling score normalization means that raw similarity scores will be adjusted to a standard range (e.g., between 0 and 1). Normalization allows for more consistent comparison between results, making it easier to set reliable thresholds for what is considered relevant.
-          </p>
-
-          <app-input
-            *ngIf="queryForm.get('normalizeScore')?.value"
-            label="Minimun Normalized Score"
-            type="number"
-            name="minNormalizedScore"
-            description="Enter the minimum score after normalization"
-            formControlName="minNormalizedScore"
-            [min]="0"
-            [max]="1"
-            [step]="0.01"
-          ></app-input>
-        </div>
-
-        <div *ngIf="!queryForm.get('normalizeScore')?.value" class="border-t-2 bg-neutral-900 rounded-2xl p-3 space-y-4">
-            <div>
-              <div class="flex items-center justify-between w-full">
-              <h2 class="text-neutral-200 text-xl mb-4">Score Threshold</h2>
-              <hlm-switch
-              class="mr-2 bg-white"
-              formControlName="scoreThreshold" />
+              <app-usage-tooltip>
+                Return full parent sections for matched chunks to preserve
+                context.
+              </app-usage-tooltip>
             </div>
-            <p class="text-neutral-400">
-              When normalization is disabled, the score threshold allows you to define a minimum raw score that a result must exceed to be considered relevant. This helps filter out low-scoring results and improves the overall quality of the retrieval.
-            </p>
+            <hlm-switch class="mr-2 bg-white" formControlName="parentChild" />
           </div>
+          <p class="mt-2 text-xs text-neutral-400">
+            Return full parent sections for matched chunks to preserve context.
+          </p>
+        </div>
 
-          <app-input
-            *ngIf="queryForm.get('scoreThreshold')?.value"
-            type="number"
-            name="minScore"
+        <div
+          class="p-4 bg-gradient-to-r from-[#111111] to-[#1a1a1a] rounded-lg border border-[#333333] space-y-4"
+        >
+          <div class="flex items-center justify-between w-full">
+            <span class="text-sm text-white">Scoring Controls</span>
+            <div class="flex items-center gap-2 bg-[#222222] rounded-full p-1">
+              <button
+                type="button"
+                (click)="toggleNormalize()"
+                [ngClass]="{'bg-gradient-to-r from-rose-500 to-fuchsia-500' : queryForm.get('normalizeScore')?.value}"
+                class="px-3 py-1 rounded-full text-xs transition-colors text-white cursor-pointer"
+              >
+                Normalize</button
+              ><button
+                type="button"
+                (click)="toggleNormalize()"
+                [ngClass]="{'bg-gradient-to-r from-fuchsia-500 to-sky-500' : !queryForm.get('normalizeScore')?.value}"
+                class="px-3 py-1 rounded-full text-xs transition-colors text-white cursor-pointer"
+              >
+                Raw
+              </button>
+            </div>
+          </div>
+          <app-slider-input
+            label="Threshold"
+            tooltip="Adjust scores to a 0–1 scale for consistent filtering."
+            [min]="0.5"
+            *ngIf="queryForm.get('normalizeScore')?.value"
+            class="border-none bg-none"
+            formControlName="minNormalizedScore"
+          ></app-slider-input>
+          <app-slider-input
+            label="Threshold"
+            tooltip="Set minimum raw similarity score for result inclusion."
+            [min]="0.5"
+            *ngIf="!queryForm.get('normalizeScore')?.value"
+            class="border-none !bg-none"
             formControlName="minScore"
-            [min]="0"
-            [max]="1"
-            [step]="0.01"
-          ></app-input>
+          ></app-slider-input>
+
+          <p class="mt-2 text-xs text-neutral-400">
+            {{queryForm.get('normalizeScore')?.value ? "Adjust scores to a 0–1 scale for consistent filtering." : "Set minimum raw similarity score for result inclusion."}}
+          </p>
 
         </div>
-        <button
-        type="submit"
-        class="w-full bg-white text-black py-2 px-4 rounded mt-4 hover:bg-gray-300 transition duration-300 cursor-pointer disabled:cursor-not-allowed"
-        [disabled]="(isLoading$ | async)"
-      >
-        <ng-container *ngIf="(isLoading$ | async); else label">
-          <ng-icon name="lucideLoaderCircle" class="animate-spin h-5 w-5 text-gray-500 inline-block"></ng-icon>
-          <span class="ml-2">Searching on your collection...</span>
-        </ng-container>
-        <ng-template #label>
-          Search
-        </ng-template>
-      </button>
+
       </form>
+    </div>
+  </div>
 </div>
 
 <hlm-toaster />

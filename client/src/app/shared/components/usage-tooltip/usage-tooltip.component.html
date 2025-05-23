@@ -1,21 +1,18 @@
-<div class="group relative inline-block ">
-  <div
-    class="text-sm/tight xl:text-base/tight h-5 text-neutral-300 hover:text-fuchsia-500 cursor-pointer transition-colors duration-300"
-  >
-    <ng-icon name="lucideCircleHelp"></ng-icon>
-  </div>
+<div
+  #tooltipTrigger
+  (mouseenter)="showTooltip()"
+  (mouseleave)="hideTooltip()"
+  class="text-xs/tight xl:text-sm/tight h-5 text-neutral-300 hover:text-fuchsia-500 transition-colors duration-300 trigger"
+>
+  <ng-icon name="lucideCircleHelp"></ng-icon>
+</div>
 
-  <div
-    class="absolute left-1/2 bottom-full mb-2 w-max opacity-0 pointer-events-none transition-opacity duration-300 group-hover:opacity-100 group-hover:pointer-events-auto transform -translate-x-1/2 "
-  >
-    <div
-      class="bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 p-[1px] rounded"
-    >
-      <div
-        class="bg-black px-2 py-1 text-sm text-white rounded whitespace-nowrap relative "
-      >
-        <ng-content class=""></ng-content>
+<ng-template #tooltipTemplate>
+  <div class="z-50">
+    <div class="bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 p-[1px] rounded">
+      <div class="bg-black px-2 py-1 text-sm text-white rounded whitespace-nowrap">
+        <ng-content></ng-content>
       </div>
     </div>
   </div>
-</div>
+</ng-template>

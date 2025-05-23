@@ -15,6 +15,8 @@ import { lucideLoaderCircle } from '@ng-icons/lucide';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component';
 import { toast } from 'ngx-sonner';
+import { UsageTooltipComponent } from '../usage-tooltip/usage-tooltip.component';
+import { SliderInputComponent } from '../slider-input/slider-input.component';
 
 @Component({
   templateUrl: './query-form.component.html',
@@ -26,10 +28,17 @@ import { toast } from 'ngx-sonner';
     HlmSwitchComponent,
     ReactiveFormsModule,
     HlmToasterComponent,
+    SliderInputComponent,
+    UsageTooltipComponent,
     NgIcon,
   ],
   providers: [provideIcons({ lucideLoaderCircle })],
   standalone: true,
+  styles: `
+  :host: {
+    display: contents;
+  }
+  `,
 })
 export class QueryFormComponent implements OnInit {
   queryForm!: FormGroup;
@@ -50,10 +59,9 @@ export class QueryFormComponent implements OnInit {
       enableTopK: [false, [Validators.required]],
       topK: [5, [Validators.min(1), Validators.max(10)]],
       parentChild: [false, [Validators.required]],
-      normalizeScore: [false, [Validators.required]],
+      normalizeScore: [true, [Validators.required]],
       minNormalizedScore: [0.5, [Validators.min(0), Validators.max(1)]],
-      scoreThreshold: [false, [Validators.required]],
-      minScore: [0.3, [Validators.min(0), Validators.max(1)]],
+      minScore: [0.5, [Validators.min(0), Validators.max(1)]],
     });
   }
 
@@ -73,9 +81,7 @@ export class QueryFormComponent implements OnInit {
 
       if (this.queryForm.value.normalizeScore) {
         data.minNormalizedScore = this.queryForm.value.minNormalizedScore;
-      }
-
-      if (this.queryForm.value.scoreThreshold) {
+      } else {
         data.minScore = this.queryForm.value.minScore;
       }
 
@@ -100,5 +106,12 @@ export class QueryFormComponent implements OnInit {
       toast.error('Please fill in all required fields.');
       this.isLoadingSubject.next(false);
     }
+  }
+
+  toggleNormalize() {
+    const curr = this.queryForm.get('normalizeScore')?.value;
+    this.queryForm.patchValue({
+      normalizeScore: !curr,
+    });
   }
 }

@@ -7,6 +7,11 @@ import { ContentItem } from 'src/app/models/query';
   templateUrl: './query-result.component.html',
   imports: [CommonModule],
   standalone: true,
+  styles: `
+    :host{
+      display: contents;
+    }
+  `,
 })
 export class QueryResultComponent {
   @Input() chunks: ContentItem[] = [];

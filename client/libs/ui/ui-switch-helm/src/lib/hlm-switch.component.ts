@@ -60,7 +60,7 @@ export class HlmSwitchComponent implements ControlValueAccessor {
   public readonly userClass = input<ClassValue>('', { alias: 'class' });
   protected readonly _computedClass = computed(() =>
     hlm(
-      'group inline-flex h-[24px] w-[44px] data-[state=checked]:!bg-violet-600 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input',
+      'group inline-flex h-[24px] w-[44px] data-[state=checked]:bg-fuchsia-500 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=unchecked]:bg-[#27272a]',
       this.disabled() ? 'cursor-not-allowed opacity-50' : '',
       this.userClass()
     )

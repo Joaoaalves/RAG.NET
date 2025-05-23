@@ -27,21 +27,18 @@
   ></div>
 </header>
 
-<div class="flex flex-col p-8 col-start-2 relative">
-  <span class="text-neutral-400 mt-2"
-    >Documents:
-    <strong class="text-white">{{ workflow?.documentsCount }}</strong></span
-  >
-  <div class="grid grid-cols-2 w-full">
+  <div class="flex flex-col lg:flex-row gap-6 relative">
     <app-query-form
       *ngIf="workflow"
       [onQuery]="queryService.query.bind(queryService)"
       [apiKey]="workflow.apiKey"
+      class="w-full lg:w-2/3"
     ></app-query-form>
-
+    <div class="hidden lg:block w-px h-auto bg-gradient-to-b from-rose-500 via-fuchsia-500 to-sky-500 opacity-50 animate-pulse-slow">
+    </div>
     <app-query-result
       [chunks]="queryService.chunks"
+      class="w-full lg:w-3/5"
       [filteredContent]="queryService.filteredContent"
     ></app-query-result>
   </div>
-</div>

@@ -125,6 +125,8 @@
             <div class="grid grid-cols-1 w-full gap-4" formGroupName="settings">
               <app-slider-input
                 *ngIf="strategyValue != 2"
+                label="Threshold"
+                tooltip="Higher values create more precise chunks but may split content too finely."
                 formControlName="threshold"
               ></app-slider-input>
               <app-max-chunk-slider

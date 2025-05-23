@@ -1,4 +1,10 @@
-import { Component, forwardRef, HostBinding, OnInit } from '@angular/core';
+import {
+  Component,
+  forwardRef,
+  HostBinding,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ControlValueAccessor,
@@ -28,10 +34,13 @@ import { UsageTooltipComponent } from '../usage-tooltip/usage-tooltip.component'
   styleUrls: ['./slider-input.component.css'],
 })
 export class SliderInputComponent implements ControlValueAccessor, OnInit {
+  @Input() min = 0.1;
+  @Input() max = 1;
+  @Input() step = 0.01;
+  @Input() tooltip = '';
+  @Input() label = '';
+  @Input() class = '';
   value = 0.7;
-  min = 0.1;
-  max = 1.0;
-  step = 0.01;
 
   onChange = (_: number) => {};
   onTouched = () => {};

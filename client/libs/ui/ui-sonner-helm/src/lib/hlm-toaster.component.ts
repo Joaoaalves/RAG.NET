@@ -76,7 +76,7 @@ export class HlmToasterComponent {
   public readonly toastOptions = input<ToasterProps['toastOptions']>({
     classes: {
       toast:
-        'group toast group-[.toaster]:!bg-neutral-800 group-[.toaster]:!text-neutral-100 group-[.toaster]:!border-neutral-900 group-[.toaster]:shadow-lg',
+        'group toast group-[.toaster]:!bg-gradient-to-r group-[.toaster]:!from-[#111111] group-[.toaster]:!to-[#1a1a1a] group-[.toaster]:!border-1.5 group-[.toaster]:!border-[#333333] group-[.toaster]:!text-neutral-100 group-[.toaster]:shadow-lg',
       description: 'group-[.toast]:!text-neutral-300',
       actionButton:
         'group-[.toast]:bg-primary group-[.toast]:text-primary-foreground',

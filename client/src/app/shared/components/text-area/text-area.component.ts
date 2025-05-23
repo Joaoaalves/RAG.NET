@@ -22,6 +22,7 @@ export class TextAreaComponent implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() description: string = '';
   @Input() name: string = '';
+  @Input() placeholder: string = '';
 
   value: any;
 
