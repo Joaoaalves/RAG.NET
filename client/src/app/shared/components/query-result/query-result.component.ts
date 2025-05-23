@@ -3,11 +3,13 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideSearch } from '@ng-icons/lucide';
 import { ContentItem } from 'src/app/models/query';
+import { ResultCardComponent } from './result-card.component';
+import { FilteredResultComponent } from './filtered-result.component';
 
 @Component({
   selector: 'app-query-result',
   templateUrl: './query-result.component.html',
-  imports: [CommonModule, NgIcon],
+  imports: [CommonModule, NgIcon, ResultCardComponent, FilteredResultComponent],
   providers: [
     provideIcons({
       lucideSearch,
@@ -32,6 +34,7 @@ export class QueryResultComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log(this.chunks);
     const chunksChanged = !!changes['chunks'];
     const filteredChanged = !!changes['filteredContent'];
 

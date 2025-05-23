@@ -74,6 +74,7 @@ export class QueryFormComponent implements OnInit {
       const data: QueryRequest = {
         query: this.queryForm.value.query,
         parentChild: this.queryForm.value.parentChild,
+        normalizeScore: this.queryForm.value.normalizeScore,
       };
 
       if (this.queryForm.value.enableTopK) {

@@ -32,34 +32,20 @@
         <ng-icon name="lucideSearch"></ng-icon>
       </div>
       <p class="text-neutral-400 text-center">
-        No filtered results. <a class="underline text-neutral-100 hover:text-fuchsia-500" [href]="'/dashboard/workflows/' + workflowId">Enable filtering content</a> and enter a query to see your content come alive.
-      </p>
-    </div>
-    <div class="w-full" *ngIf="filteredContent.length > 0">
-      <h3 class="self-start text-neutral-300 text-2xl mt-12">
-        Filtered Content
-      </h3>
-      <p class="self-start text-start text-neutral-400 text-sm">
-        This section displays only the chunks that passed through an additional
-        filtering step...
-      </p>
-      <ng-container *ngFor="let filtered of filteredContent; index as i">
-        <div
-          class="w-full bg-neutral-900 border border-neutral-700 rounded-2xl p-4 shadow-md flex gap-4 mt-8"
+        No filtered results.
+        <a
+          class="underline text-neutral-100 hover:text-fuchsia-500"
+          [href]="'/dashboard/workflows/' + workflowId"
+          >Enable filtering content</a
         >
-          <div
-            class="text-2xl font-bold text-white flex-shrink-0 w-10 text-center"
-          >
-            {{ i + 1 }}
-          </div>
-          <div class="flex-1 min-w-0">
-            <p class="text-neutral-100 text-base">
-              {{ filtered }}
-            </p>
-          </div>
-        </div>
-      </ng-container>
+        and enter a query to see your content come alive.
+      </p>
     </div>
+    <app-filtered-result
+      *ngFor="let chunk of filteredContent; index as i"
+      [text]="chunk"
+      [index]="i"
+    ></app-filtered-result>
   </div>
 
   <div *ngIf="currentTab === 1" class="w-full">
@@ -77,36 +63,10 @@
       </p>
     </div>
 
-    <ng-container *ngFor="let chunk of chunks; index as i">
-      <div
-        class="w-full bg-neutral-900 border border-neutral-700 rounded-2xl p-4 shadow-md flex gap-4 mt-8"
-      >
-        <div
-          class="text-2xl font-bold text-white flex-shrink-0 w-10 text-center"
-        >
-          {{ i + 1 }}
-        </div>
-        <div class="flex-1 min-w-0">
-          <p class="text-neutral-100 text-base break-words">
-            {{ chunk.text }}
-          </p>
-          <div class="text-sm text-neutral-400 mt-2 flex items-center gap-4">
-            <span
-              >Score:
-              <span class="text-white font-medium">{{
-                chunk.score | number : '1.2-2'
-              }}</span></span
-            >
-            <span *ngIf="chunk.pageId"
-              >Page: <span class="text-white">{{ chunk.pageId }}</span></span
-            >
-            <span *ngIf="chunk.chunkId"
-              >Chunk ID:
-              <span class="text-white">{{ chunk.chunkId }}</span></span
-            >
-          </div>
-        </div>
-      </div>
-    </ng-container>
+    <app-result-card
+      *ngFor="let chunk of chunks; index as i"
+      [contentItem]="chunk"
+      [index]="i"
+    ></app-result-card>
   </div>
 </div>

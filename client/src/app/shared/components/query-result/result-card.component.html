@@ -1,0 +1,42 @@
+<div class="w-full relative rounded-lg overflow-hidden group mb-4">
+  <div
+    class="p-0.5 absolute inset-0 bg-gradient-to-b from-rose-500 via-fuchsia-500 to-sky-500 transition-all duration-300 grayscale-100 group-hover:grayscale-0 blur-[1px]"
+  ></div>
+  <div
+    class="bg-[#111111]  transition-all duration-300 hover:shadow-[0_4px_12px_rgba(217,70,239,0.15)] relative ms-1"
+  >
+    <div class="flex relative">
+      <div class="flex-1 p-4">
+        <div class="flex items-center gap-3 mb-3">
+          <div
+            class="w-6 h-6 rounded-full bg-gradient-to-r from-rose-500 to-fuchsia-500 flex items-center justify-center text-white text-xs"
+          >
+            {{ index + 1}}
+          </div>
+          <div
+            class="px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-500 text-xs"
+          >
+            {{ contentItem.score | number: '1.2-2' }}
+          </div>
+        </div>
+        <div class="text-white text-sm leading-relaxed false">
+          {{ contentItem.text }}
+        </div>
+        <div class="flex flex-wrap gap-3 mt-3">
+          <div class="flex items-center gap-1 text-neutral-400 text-xs">
+            <ng-icon name="lucideBookOpenCheck"></ng-icon>
+            <span>{{ contentItem.pageId }}</span>
+          </div>
+          <div class="flex items-center gap-1 text-neutral-400 text-xs">
+            <ng-icon name="lucideLayers"></ng-icon>
+            <span>ID: {{ contentItem.chunkId }}</span>
+          </div>
+          <div class="flex items-center gap-1 text-neutral-400 text-xs">
+            <ng-icon name="lucideFileText"></ng-icon>
+            <span>{{ '123456' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

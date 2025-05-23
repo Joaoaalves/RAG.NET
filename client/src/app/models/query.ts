@@ -2,7 +2,7 @@ export interface QueryRequest {
   query: string;
   topK?: number;
   parentChild?: boolean;
-  normalizeScore?: boolean;
+  normalizeScore: boolean;
   minNormalizedScore?: number;
   minScore?: number;
 }
@@ -13,6 +13,7 @@ export interface ContentItem {
   score: number;
   pageId?: string;
   chunkId?: string;
+  source: number;
 }
 
 export interface QueryResponse {
