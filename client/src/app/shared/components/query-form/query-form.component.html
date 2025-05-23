@@ -6,7 +6,7 @@
     <div class="relative bg-neutral-950 rounded-xl p-6">
       <form
         (ngSubmit)="onSubmit($event)"
-        class="space-y-8"
+        class="space-y-6"
         [formGroup]="queryForm"
       >
         <app-text-area
@@ -21,7 +21,7 @@
         ></app-text-area>
         <button
           type="submit"
-          class="mt-6 w-full py-3 rounded-full bg-gradient-to-r from-rose-500 to-fuchsia-500 text-white font-bold text-base transition-all hover:shadow-[0_0_20px_rgba(217,70,239,0.3)] hover:scale-[1.03] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none relative overflow-hidden group cursor-pointer animate-pulse-slow"
+          class="w-full py-3 rounded-full bg-gradient-to-r from-rose-500 to-fuchsia-500 text-white font-bold text-base transition-all hover:shadow-[0_0_20px_rgba(217,70,239,0.3)] hover:scale-[1.03] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none relative overflow-hidden group"
           [disabled]="isLoading$ | async"
         >
           <ng-container *ngIf="isLoading$ | async; else label">
@@ -31,101 +31,143 @@
             ></ng-icon>
             <span class="ml-2">Searching on your collection...</span>
           </ng-container>
-          <ng-template #label> Search </ng-template>
+          <ng-template #label>Search</ng-template>
         </button>
-
-        <div
-          class="p-4 bg-gradient-to-r from-[#111111] to-[#1a1a1a] rounded-lg border border-[#333333]"
+        <button
+          type="button"
+          class="flex items-center justify-between w-full text-neutral-200 hover:text-white transition-colors cursor-pointer"
+          (click)="toggleRefine()"
         >
-          <div class="flex items-center justify-between w-full mb-4">
-            <div class="flex gap-x-2 items-end">
-              <span class="text-sm text-white">Top K Results</span>
-              <app-usage-tooltip
-                >Limit results to the top K most similar
-                chunks.</app-usage-tooltip
-              >
-            </div>
-            <hlm-switch class="mr-2 bg-white" formControlName="enableTopK" />
+          <span class="text-sm font-medium">Refine Results</span>
+          <div class="text-fuchsia-500">
+            <ng-icon
+              name="lucideChevronDown"
+              class="transition-transform duration-300"
+              [class.rotate-180]="isRefineOpen"
+            ></ng-icon>
           </div>
-          <p class="mt-2 text-xs text-neutral-400">
-            Limit results to the top K most similar chunks.
-          </p>
-          <app-input
-            *ngIf="queryForm.get('enableTopK')?.value"
-            type="number"
-            name="topK"
-            formControlName="topK"
-            [min]="1"
-            [max]="10"
-            [step]="1"
-          ></app-input>
+        </button>
+        <div
+          class="overflow-hidden transition-[max-height] duration-500 ease-in-out"
+          [ngStyle]="{ 'max-height': isRefineOpen ? '1000px' : '0px' }"
+        >
+          <div class="space-y-6">
+            <div
+              class="p-4 bg-gradient-to-r from-[#111111] to-[#1a1a1a] rounded-lg border border-[#333333]"
+            >
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex gap-x-2 items-end">
+                  <span class="text-sm text-white">Top K Results</span>
+                  <app-usage-tooltip
+                    >Limit results to the top K most similar
+                    chunks.</app-usage-tooltip
+                  >
+                </div>
+                <hlm-switch
+                  class="mr-2 bg-white"
+                  formControlName="enableTopK"
+                ></hlm-switch>
+              </div>
+              <app-input
+                *ngIf="queryForm.get('enableTopK')?.value"
+                type="number"
+                name="topK"
+                formControlName="topK"
+                [min]="1"
+                [max]="10"
+                [step]="1"
+              ></app-input>
+
+              <p class="mt-2 text-xs text-neutral-400">Limit results to the top K most similar
+                    chunks.</p>
+            </div>
+
+            <div
+              class="p-4 bg-gradient-to-r from-[#111111] to-[#1a1a1a] rounded-lg border border-[#333333]"
+            >
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex gap-x-2 items-end">
+                  <span class="text-sm text-white">Parent Child Model</span>
+                  <app-usage-tooltip
+                    >Return full parent sections for matched
+                    chunks.</app-usage-tooltip
+                  >
+                </div>
+                <hlm-switch
+                  class="mr-2 bg-white"
+                  formControlName="parentChild"
+                ></hlm-switch>
+              </div>
+
+
+              <p class="mt-2 text-xs text-neutral-400">Return full parent sections for matched
+                    chunks.</p>
+
+            </div>
+
+            <div
+              class="p-4 bg-gradient-to-r from-[#111111] to-[#1a1a1a] rounded-lg border border-[#333333] space-y-4"
+            >
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-white">Scoring Controls</span>
+                <div
+                  class="flex items-center gap-2 bg-[#222222] rounded-full p-1"
+                >
+                  <button
+                    type="button"
+                    (click)="toggleNormalize()"
+                    [ngClass]="{
+                      'bg-gradient-to-r from-rose-500 to-fuchsia-500':
+                        queryForm.get('normalizeScore')?.value,
+                      'bg-transparent': !queryForm.get('normalizeScore')?.value
+                    }"
+                    class="px-3 py-1 rounded-full text-xs transition-colors text-white cursor-pointer"
+                  >
+                    Normalize
+                  </button>
+                  <button
+                    type="button"
+                    (click)="toggleNormalize()"
+                    [ngClass]="{
+                      'bg-gradient-to-r from-fuchsia-500 to-sky-500':
+                        !queryForm.get('normalizeScore')?.value,
+                      'bg-transparent': queryForm.get('normalizeScore')?.value
+                    }"
+                    class="px-3 py-1 rounded-full text-xs transition-colors text-white cursor-pointer"
+                  >
+                    Raw
+                  </button>
+                </div>
+              </div>
+              <app-slider-input
+                *ngIf="queryForm.get('normalizeScore')?.value"
+                label="Threshold"
+                tooltip="Adjust scores to a 0–1 scale."
+                [min]="0.5"
+                formControlName="minNormalizedScore"
+                class="border-none bg-none"
+              ></app-slider-input>
+              <app-slider-input
+                *ngIf="!queryForm.get('normalizeScore')?.value"
+                label="Threshold"
+                tooltip="Set minimum raw similarity score."
+                [min]="0.3"
+                formControlName="minScore"
+                class="border-none bg-none"
+              ></app-slider-input>
+
+              <p class="mt-2 text-xs text-neutral-400">
+                {{
+                  queryForm.get('normalizeScore')?.value
+                    ? 'Adjust scores to a 0–1 scale for consistent filtering.'
+                    : 'Set minimum raw similarity score for result inclusion.'
+                }}
+              </p>
+            </div>
+          </div>
         </div>
 
-        <div
-          class="p-4 bg-gradient-to-r from-[#111111] to-[#1a1a1a] rounded-lg border border-[#333333]"
-        >
-          <div class="flex items-center justify-between w-full mb-4">
-            <div class="flex gap-x-2 items-end">
-              <span class="text-sm text-white">Parent Child Model</span>
-
-              <app-usage-tooltip>
-                Return full parent sections for matched chunks to preserve
-                context.
-              </app-usage-tooltip>
-            </div>
-            <hlm-switch class="mr-2 bg-white" formControlName="parentChild" />
-          </div>
-          <p class="mt-2 text-xs text-neutral-400">
-            Return full parent sections for matched chunks to preserve context.
-          </p>
-        </div>
-
-        <div
-          class="p-4 bg-gradient-to-r from-[#111111] to-[#1a1a1a] rounded-lg border border-[#333333] space-y-4"
-        >
-          <div class="flex items-center justify-between w-full">
-            <span class="text-sm text-white">Scoring Controls</span>
-            <div class="flex items-center gap-2 bg-[#222222] rounded-full p-1">
-              <button
-                type="button"
-                (click)="toggleNormalize()"
-                [ngClass]="{'bg-gradient-to-r from-rose-500 to-fuchsia-500' : queryForm.get('normalizeScore')?.value}"
-                class="px-3 py-1 rounded-full text-xs transition-colors text-white cursor-pointer"
-              >
-                Normalize</button
-              ><button
-                type="button"
-                (click)="toggleNormalize()"
-                [ngClass]="{'bg-gradient-to-r from-fuchsia-500 to-sky-500' : !queryForm.get('normalizeScore')?.value}"
-                class="px-3 py-1 rounded-full text-xs transition-colors text-white cursor-pointer"
-              >
-                Raw
-              </button>
-            </div>
-          </div>
-          <app-slider-input
-            label="Threshold"
-            tooltip="Adjust scores to a 0–1 scale for consistent filtering."
-            [min]="0.5"
-            *ngIf="queryForm.get('normalizeScore')?.value"
-            class="border-none bg-none"
-            formControlName="minNormalizedScore"
-          ></app-slider-input>
-          <app-slider-input
-            label="Threshold"
-            tooltip="Set minimum raw similarity score for result inclusion."
-            [min]="0.5"
-            *ngIf="!queryForm.get('normalizeScore')?.value"
-            class="border-none !bg-none"
-            formControlName="minScore"
-          ></app-slider-input>
-
-          <p class="mt-2 text-xs text-neutral-400">
-            {{queryForm.get('normalizeScore')?.value ? "Adjust scores to a 0–1 scale for consistent filtering." : "Set minimum raw similarity score for result inclusion."}}
-          </p>
-
-        </div>
-
+        <hlm-toaster />
       </form>
     </div>
   </div>

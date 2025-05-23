@@ -11,7 +11,7 @@ import {
 } from '@angular/forms';
 import { HlmSwitchComponent } from 'libs/ui/ui-switch-helm/src/lib/hlm-switch.component';
 import { CommonModule } from '@angular/common';
-import { lucideLoaderCircle } from '@ng-icons/lucide';
+import { lucideChevronDown, lucideLoaderCircle } from '@ng-icons/lucide';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component';
 import { toast } from 'ngx-sonner';
@@ -32,7 +32,7 @@ import { SliderInputComponent } from '../slider-input/slider-input.component';
     UsageTooltipComponent,
     NgIcon,
   ],
-  providers: [provideIcons({ lucideLoaderCircle })],
+  providers: [provideIcons({ lucideLoaderCircle, lucideChevronDown })],
   standalone: true,
   styles: `
   :host: {
@@ -44,6 +44,7 @@ export class QueryFormComponent implements OnInit {
   queryForm!: FormGroup;
   private isLoadingSubject = new BehaviorSubject<boolean>(false);
   isLoading$ = this.isLoadingSubject.asObservable();
+  isRefineOpen = false;
 
   @Input() apiKey!: string;
   @Input() onQuery!: (
@@ -60,8 +61,8 @@ export class QueryFormComponent implements OnInit {
       topK: [5, [Validators.min(1), Validators.max(10)]],
       parentChild: [false, [Validators.required]],
       normalizeScore: [true, [Validators.required]],
-      minNormalizedScore: [0.5, [Validators.min(0), Validators.max(1)]],
-      minScore: [0.5, [Validators.min(0), Validators.max(1)]],
+      minNormalizedScore: [0.5, [Validators.min(0.5), Validators.max(1)]],
+      minScore: [0.3, [Validators.min(0.3), Validators.max(1)]],
     });
   }
 
@@ -113,5 +114,9 @@ export class QueryFormComponent implements OnInit {
     this.queryForm.patchValue({
       normalizeScore: !curr,
     });
+  }
+
+  toggleRefine() {
+    this.isRefineOpen = !this.isRefineOpen;
   }
 }
