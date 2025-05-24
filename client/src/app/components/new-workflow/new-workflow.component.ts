@@ -293,7 +293,7 @@ export class NewWorkflowComponent implements OnInit {
     }
     const workflowDetails: CreateWorkflowRequest = formValue;
     this.workflowService.createWorkflow(workflowDetails).subscribe(
-      (id) => this.router.navigate(['/dashboard']),
+      (id) => this.router.navigate(['/dashboard/workflows']),
       (response) => {
         this.error = response.error.message;
       }

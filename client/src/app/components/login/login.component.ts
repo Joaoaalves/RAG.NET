@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/dashboard/workflows']);
     }
 
     this.form = this.fb.group({
@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
     this.error = '';
     const credentials = this.form.value;
     this.authService.login(credentials).subscribe(
-      () => this.router.navigate(['/dashboard']),
+      () => this.router.navigate(['/dashboard/workflows']),
       () => {
         this.error = 'Email and/or password invalid.';
       }
