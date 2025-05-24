@@ -39,9 +39,24 @@ import { Observable } from 'rxjs';
 })
 export class SidebarComponent implements OnInit {
   navItems = [
-    { icon: 'lucideLayers', label: 'Workflows', url: '/dashboard/workflows' },
-    { icon: 'lucideDatabase', label: 'Providers', url: '/dashboard/providers' },
-    { icon: 'lucideLogOut', label: 'Logout', url: '/logout' },
+    {
+      icon: 'lucideLayers',
+      label: 'Workflows',
+      onClick: () => this.navigateWorkflows(),
+      url: '/dashboard/workflows',
+    },
+    {
+      icon: 'lucideDatabase',
+      label: 'Providers',
+      onClick: () => this.navigateWorkflows(),
+      url: '/dashboard/providers',
+    },
+    {
+      icon: 'lucideLogOut',
+      label: 'Logout',
+      onClick: () => this.logout(),
+      url: '/login',
+    },
   ];
 
   sidebarOpen = true;
@@ -63,6 +78,14 @@ export class SidebarComponent implements OnInit {
 
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  navigateWorkflows() {
+    this.router.navigate(['/dashboard/workflows']);
+  }
+
+  navigateProviders() {
+    this.router.navigate(['/dashboard/providers']);
   }
 
   logout() {
