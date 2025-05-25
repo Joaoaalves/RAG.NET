@@ -21,7 +21,7 @@ export enum EmbeddingProviderEnum {
 }
 
 export interface EmbeddingProvider {
-  provider: EmbeddingProviderEnum;
+  provider: 'OPENAI' | 'VOYAGE';
   model: string;
   apiKey: string;
   vectorSize: number;

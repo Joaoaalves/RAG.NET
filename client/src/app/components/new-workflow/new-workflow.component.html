@@ -145,26 +145,20 @@
               >
               <div class="mt-4" formGroupName="embeddingProvider">
                 <app-select
-                  label=""
-                  name="provider"
-                  [options]="embeddingOptions"
+
+                  [options]="embeddingOptions$ | async"
                   formControlName="provider"
-                  description=""
                   placeholder="Select Provider"
                 ></app-select>
 
                 <app-select
-                  label=""
-                  name="model"
-                  [options]="embeddingModelOptions"
+                  [options]="embeddingModels$ | async"
                   formControlName="model"
-                  description=""
                   placeholder="Select Model"
                 ></app-select>
               </div>
 
               <div
-                *ngIf="selectedEmbeddingModel"
                 class="flex flex-wrap gap-2 mt-2"
               >
                 <div
@@ -173,7 +167,7 @@
                   <span>Speed:</span>
                   <ng-container
                     *ngFor="
-                      let icon of selectedEmbeddingModel.speed | modelSpeed
+                      let icon of (embeddingModel$ | async)?.speed ?? 0 | modelSpeed
                     "
                   >
                     <ng-icon [name]="icon"></ng-icon>
@@ -184,7 +178,7 @@
                 >
                   <span
                     >Max Context:
-                    {{ selectedEmbeddingModel.maxContext }}
+                    {{ (embeddingModel$ | async)?.maxContext }}
                     tokens
                   </span>
                 </div>
@@ -192,14 +186,14 @@
                   class="px-3 py-1 rounded-full bg-black border border-sky-500/30 text-sky-500 text-xs flex items-center gap-1"
                 >
                   <span
-                    >Vector Size: {{ selectedEmbeddingModel.vectorSize }}</span
+                    >Vector Size: {{ (embeddingModel$ | async)?.vectorSize }}</span
                   >
                 </div>
                 <div
                   class="px-3 py-1 rounded-full bg-black border border-emerald-500/30 text-emerald-500 text-xs flex items-center gap-1"
                 >
                   <span
-                    >Price: U$ {{ selectedEmbeddingModel.price }} / 1M
+                    >Price: U$ {{ (embeddingModel$ | async)?.price }} / 1M
                     Tokens</span
                   >
                 </div>
@@ -212,26 +206,20 @@
               >
               <div class="mt-4" formGroupName="conversationProvider">
                 <app-select
-                  label=""
-                  name="provider"
-                  [options]="conversationOptions"
+                  [options]="conversationOptions$ | async"
                   formControlName="provider"
                   placeholder="Select Provider"
-                  description=""
                 ></app-select>
 
                 <app-select
-                  label=""
-                  name="model"
-                  [options]="conversationModelOptions"
+                  [options]="conversationModels$ | async"
                   formControlName="model"
                   placeholder="Select Model"
-                  description=""
                 ></app-select>
               </div>
 
               <div
-                *ngIf="selectedConversationModel"
+                *ngIf="(conversationModels$ | async)"
                 class="flex flex-wrap gap-2 mt-2"
               >
                 <div
@@ -240,7 +228,7 @@
                   <span>Speed:</span>
                   <ng-container
                     *ngFor="
-                      let icon of selectedConversationModel.speed | modelSpeed
+                      let icon of (conversationModel$ | async)?.speed ?? 0| modelSpeed
                     "
                   >
                     <ng-icon [name]="icon"></ng-icon>
@@ -251,7 +239,7 @@
                 >
                   <span
                     >Context Window:
-                    {{ selectedConversationModel.contextWindow }}
+                    {{ (conversationModel$ | async)?.contextWindow }}
                     tokens
                   </span>
                 </div>
@@ -260,7 +248,7 @@
                 >
                   <span
                     >Input Price: U$
-                    {{ selectedConversationModel.inputPrice }} / 1M Tokens</span
+                    {{ (conversationModel$ | async)?.inputPrice }} / 1M Tokens</span
                   >
                 </div>
                 <div
@@ -268,7 +256,7 @@
                 >
                   <span
                     >Output Price: U$
-                    {{ selectedConversationModel.outputPrice }} / 1M
+                    {{ (conversationModel$ | async)?.outputPrice }} / 1M
                     Tokens</span
                   >
                 </div>

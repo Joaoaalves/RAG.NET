@@ -3,10 +3,15 @@ import { EmbeddingModel } from './embedding';
 
 export interface ProviderOption {
   label: string;
-  value: number;
+  value: string | number;
 }
 
-export type SupportedProvider = 'openai' | 'anthropic' | 'voyage' | 'qdrant' | 'gemini';
+export type SupportedProvider =
+  | 'openai'
+  | 'anthropic'
+  | 'voyage'
+  | 'qdrant'
+  | 'gemini';
 
 export type GetProvidersResponse = Provider[];
 

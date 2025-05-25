@@ -48,7 +48,7 @@ export class SidebarComponent implements OnInit {
     {
       icon: 'lucideDatabase',
       label: 'Providers',
-      onClick: () => this.navigateWorkflows(),
+      onClick: () => this.navigateProviders(),
       url: '/dashboard/providers',
     },
     {

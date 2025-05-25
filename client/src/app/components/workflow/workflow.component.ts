@@ -12,12 +12,14 @@ import { CallbackUrlsFormComponent } from 'src/app/shared/components/callback-ur
 import { WorkflowService } from 'src/app/services/workflow.service';
 import { FilterConfigComponent } from 'src/app/shared/components/filter-config/filter-config.component';
 import { Filter } from 'src/app/models/filter';
+import { ProviderSettingsComponent } from 'src/app/shared/components/provider-settings/provider-settings.component';
 
 @Component({
   standalone: true,
   imports: [
     CommonModule,
     QueryEnhancerConfigComponent,
+    ProviderSettingsComponent,
     FilterConfigComponent,
     CallbackUrlsFormComponent,
   ],
@@ -26,6 +28,10 @@ import { Filter } from 'src/app/models/filter';
 export class WorkflowComponent implements OnInit {
   workflowId!: string;
   workflow!: Workflow;
+
+  convProviderId: number = -1;
+  embProviderId: number = -1;
+
   autoQueryEnhancer?: QueryEnhancer;
   hydeEnhancer?: QueryEnhancer;
   filter?: Filter;
@@ -37,6 +43,11 @@ export class WorkflowComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadWorkflowFromRoute();
+    this.loadProvidersIds();
+  }
+
+  get currentDate() {
+    return new Date().toLocaleDateString();
   }
 
   private loadWorkflowFromRoute(): void {
@@ -60,5 +71,15 @@ export class WorkflowComponent implements OnInit {
       );
       this.filter = workflow.filter;
     });
+  }
+
+  private loadProvidersIds() {
+    if (this.workflow) {
+      this.embProviderId =
+        this.workflow.embeddingProvider.provider === 'OPENAI' ? 0 : 1;
+
+      this.convProviderId =
+        this.workflow.conversationProvider.provider === 'OPENAI' ? 0 : 1;
+    }
   }
 }

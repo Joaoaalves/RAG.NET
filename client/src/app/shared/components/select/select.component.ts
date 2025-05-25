@@ -36,7 +36,7 @@ export class SelectComponent
   @Input() value?: string | number = '';
   @Input() placeholder: string = '';
 
-  @Input() options: { value: string | number; label: string }[] = [];
+  @Input() options: { value: string | number; label: string }[] | null = [];
 
   selectedOption: { label: string; value: string | number } | undefined;
 
@@ -98,7 +98,7 @@ export class SelectComponent
   private getOptionByValue(
     value: string | number | undefined
   ): { label: string; value: string | number } | undefined {
-    if (value === undefined) return undefined;
+    if (value === undefined || !this.options) return undefined;
     return this.options.find((option) => option.value === value);
   }
 }

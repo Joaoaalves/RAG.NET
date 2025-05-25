@@ -14,6 +14,6 @@ export interface ConversationModel {
 }
 
 export interface ConversationProvider {
-  provider: ConversationProviderEnum;
+  provider: 'OPENAI' | 'ANTHROPIC';
   model: string;
 }

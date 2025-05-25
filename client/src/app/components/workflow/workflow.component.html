@@ -1,49 +1,123 @@
-<div class="">
-  <h1 *ngIf="workflow" class="text-4xl text-neutral-200">{{ workflow.name }}</h1>
-  <p *ngIf="workflow" class="text-sm text-neutral-300">{{ workflow.description }}</p>
+<section class="space-y-6">
+  <div class="flex items-center gap-3">
+    <div
+      class="w-1.5 h-6 bg-gradient-to-b from-rose-500 via-fuchsia-500 to-sky-500 rounded-full animate-fade-in"
+    ></div>
+    <h2 class="text-2xl uppercase text-[#BFA3B5] font-light tracking-wider">
+      General Information
+    </h2>
+  </div>
+  <div
+    class="bg-[#111111]/80 rounded-xl p-6 shadow-[0_0_20px_rgba(217,70,239,0.1)] space-y-6"
+  >
+    <h1 *ngIf="workflow" class="text-3xl font-bold text-white">
+      {{ workflow.name }}
+    </h1>
+    <p
+      *ngIf="workflow"
+      class="text-neutral-400 cursor-pointer hover:text-white transition-colors"
+    >
+      {{ workflow.description }}
+    </p>
 
-  <div class="border-t-2 border-neutral-600 mt-8 py-4 space-y-4">
+    <div class="flex flex-wrap gap-3">
+      <div
+        class="px-3 py-1 rounded-full bg-black border border-rose-500/20 text-white text-sm shadow-[0_0_5px_rgba(244,63,94,0.2)]"
+      >
+        Created: {{ currentDate }}
+      </div>
+      <div
+        class="px-3 py-1 rounded-full bg-black border border-fuchsia-500/20 text-white text-sm shadow-[0_0_5px_rgba(217,70,239,0.2)]"
+      >
+        Last Modified: {{ currentDate }}
+      </div>
+      <div
+        *ngIf="workflow"
+        class="px-3 py-1 rounded-full bg-black border border-sky-500/20 text-white text-sm shadow-[0_0_5px_rgba(14,165,233,0.2)]"
+      >
+        Documents: {{ workflow.documentsCount}}
+      </div>
+    </div>
+  </div>
+
+  <!-- SEPARATOR -->
+  <div
+    class="h-px bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 opacity-30"
+  ></div>
+
+  <app-provider-settings
+    *ngIf="workflow"
+    [currentEmbedding]="embProviderId"
+    [currentConversation]="convProviderId"
+  ></app-provider-settings>
+
+
+    <!-- SEPARATOR -->
+  <div
+    class="h-px bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 opacity-30 mt-6"
+  ></div>
+
+
+  <div class="py-4 space-y-4">
     <h2 class="text-3xl text-neutral-300">Query Enhancers</h2>
 
     <app-query-enhancer-config
-    [workflowId]="workflowId"
-    [queryEnhancer]="autoQueryEnhancer"
-    type="auto-query"
-    title="Auto Querying"
-    description="Auto Querying is a feature that automatically generates multiple relevant search queries based on the user's original input. Instead of relying solely on a single query, the system expands the input into several targeted queries to retrieve more comprehensive information from a knowledge base. This ensures more complete and accurate responses. You can customize how many queries are generated using the 'Maximum queries' field. Additionally, the 'Guidance' field allows you to provide extra context or instructions to steer how the queries should be constructed."
-    [guidanceEnabled]="true"
-    [maxQueriesEnabled]="true"
-    [recommended]="true">
-  </app-query-enhancer-config>
+      [workflowId]="workflowId"
+      [queryEnhancer]="autoQueryEnhancer"
+      type="auto-query"
+      title="Auto Querying"
+      description="Auto Querying is a feature that automatically generates multiple relevant search queries based on the user's original input. Instead of relying solely on a single query, the system expands the input into several targeted queries to retrieve more comprehensive information from a knowledge base. This ensures more complete and accurate responses. You can customize how many queries are generated using the 'Maximum queries' field. Additionally, the 'Guidance' field allows you to provide extra context or instructions to steer how the queries should be constructed."
+      [guidanceEnabled]="true"
+      [maxQueriesEnabled]="true"
+      [recommended]="true"
+    >
+    </app-query-enhancer-config>
 
-  <app-query-enhancer-config
-    [workflowId]="workflowId"
-    [queryEnhancer]="hydeEnhancer"
-    type="hyde"
-    title="Hypothetical Document Embedding"
-    description=" HyDE (Hypothetical Document Embedding) is a technique designed to enhance retrieval performance when the available retriever struggles with new or specialized domains. It is particularly useful when your retrieval system's performance (e.g., Recall) is not optimal, or when the queries and documents come from a domain that differs from the data the retriever was originally trained on. The method works by first prompting an instruction-following language model in a zero-shot manner to generate multiple “fake” documents based on the input query. These hypothetical documents are then encoded into embedding vectors and averaged to form a single, robust representation. This averaged embedding better captures the relevant textual patterns, allowing for more accurate identification of similar documents from a larger dataset. The retrieved documents can then be used in downstream applications such as generating responses in a RAG (Retrieval-Augmented Generation) pipeline."
-    [guidanceEnabled]="false"
-    [maxQueriesEnabled]="true">
-  </app-query-enhancer-config>
+    <app-query-enhancer-config
+      [workflowId]="workflowId"
+      [queryEnhancer]="hydeEnhancer"
+      type="hyde"
+      title="Hypothetical Document Embedding"
+      description=" HyDE (Hypothetical Document Embedding) is a technique designed to enhance retrieval performance when the available retriever struggles with new or specialized domains. It is particularly useful when your retrieval system's performance (e.g., Recall) is not optimal, or when the queries and documents come from a domain that differs from the data the retriever was originally trained on. The method works by first prompting an instruction-following language model in a zero-shot manner to generate multiple “fake” documents based on the input query. These hypothetical documents are then encoded into embedding vectors and averaged to form a single, robust representation. This averaged embedding better captures the relevant textual patterns, allowing for more accurate identification of similar documents from a larger dataset. The retrieved documents can then be used in downstream applications such as generating responses in a RAG (Retrieval-Augmented Generation) pipeline."
+      [guidanceEnabled]="false"
+      [maxQueriesEnabled]="true"
+    >
+    </app-query-enhancer-config>
   </div>
 
-  <div class="border-t-2 border-neutral-600 py-4 space-y-4">
+    <!-- SEPARATOR -->
+  <div
+    class="h-px bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 opacity-30"
+  ></div>
+
+  <div class="py-4 space-y-4">
     <h2 class="text-3xl text-neutral-300">Filters</h2>
     <app-filter-config
-    title="Relevant Segment Extraction"
-    description="Relevant Segment Extraction is a technique used to identify and extract the most pertinent segments of text from a larger document or dataset. This process is particularly useful in scenarios where the goal is to retrieve specific information or insights from extensive textual data. By focusing on the most relevant segments, the system can enhance the efficiency and accuracy of information retrieval, making it easier to find and utilize the desired content."
-    [recommended]="true"
-    [workflowId]="workflowId"
-    [filter]="filter"
-    strategy="rse">
-  </app-filter-config>
+      title="Relevant Segment Extraction"
+      description="Relevant Segment Extraction is a technique used to identify and extract the most pertinent segments of text from a larger document or dataset. This process is particularly useful in scenarios where the goal is to retrieve specific information or insights from extensive textual data. By focusing on the most relevant segments, the system can enhance the efficiency and accuracy of information retrieval, making it easier to find and utilize the desired content."
+      [recommended]="true"
+      [workflowId]="workflowId"
+      [filter]="filter"
+      strategy="rse"
+    >
+    </app-filter-config>
   </div>
-  <div class="border-t-2 border-neutral-600 py-4 space-y-4">
+
+    <!-- SEPARATOR -->
+  <div
+    class="h-px bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 opacity-30"
+  ></div>
+
+  <div class="py-4 space-y-4">
     <h2 class="text-3xl text-neutral-300">Callback URLs</h2>
     <p>
       <!-- Here i should add the description telling the user that he can add the callback urls that api should send a request after finishing embedding process -->
     </p>
 
-    <app-callback-urls-form *ngIf="workflow" [urls]="workflow.callbackUrls ?? []" [workflowId]="workflowId"></app-callback-urls-form>
+    <app-callback-urls-form
+      *ngIf="workflow"
+      [urls]="workflow.callbackUrls ?? []"
+      [workflowId]="workflowId"
+    ></app-callback-urls-form>
   </div>
-</div>
+</section>

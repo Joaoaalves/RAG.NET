@@ -17,20 +17,8 @@ import { ChunkerStrategy } from 'src/app/models/chunker';
 import { CreateWorkflowRequest } from 'src/app/models/workflow';
 import { EmbeddingModel } from 'src/app/models/embedding';
 import { ConversationModel } from 'src/app/models/chat';
-import {
-  ProviderData,
-  ProviderOption,
-  ProvidersResponse,
-} from 'src/app/models/provider';
+import { ProviderOption } from 'src/app/models/provider';
 
-// Services
-import { WorkflowService } from 'src/app/services/workflow.service';
-
-// Utils
-import {
-  getProviderKeyByValueFromResponse,
-  mapValidProviders,
-} from 'src/app/shared/utils/providers-utils';
 import { mapChunkerStrategies } from 'src/app/shared/utils/chunker-utils';
 import { ModelSpeedPipe } from './model-speed.pipe';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -41,8 +29,17 @@ import { MaxChunkSliderComponent } from 'src/app/shared/components/max-chunks-sl
 import { RadarChartComponent } from 'src/app/shared/components/radar-chart/radar-chart.component';
 import { PriceCalculatorComponent } from 'src/app/shared/components/price-calculator/price-calculator.component';
 import { WorkflowMetricsService } from 'src/app/services/workflow-metrics.service';
-import { map, Observable } from 'rxjs';
+import {
+  map,
+  Observable,
+  startWith,
+  switchMap,
+  tap,
+  withLatestFrom,
+} from 'rxjs';
 import { RadarAxis } from 'src/app/services/radar-data.service';
+import { ProviderSelectService } from 'src/app/services/provider-select.service';
+import { WorkflowService } from 'src/app/services/workflow.service';
 
 @Component({
   imports: [
@@ -64,22 +61,18 @@ import { RadarAxis } from 'src/app/services/radar-data.service';
 })
 export class NewWorkflowComponent implements OnInit {
   form!: FormGroup;
-  error: string = '';
-  chunkerStrategies: { label: string; value: number }[] = [];
+  error = '';
+  chunkerStrategies: { label: string; value: number | string }[] = [];
 
-  embeddingProviders: ProviderData[] = [];
-  conversationProviders: ProviderData[] = [];
+  embeddingOptions$!: Observable<{ value: string | number; label: string }[]>;
+  conversationOptions$!: Observable<
+    { value: string | number; label: string }[]
+  >;
+  embeddingModels$!: Observable<EmbeddingModel[]>;
+  conversationModels$!: Observable<ConversationModel[]>;
 
-  embeddingOptions: ProviderOption[] = [];
-  conversationOptions: ProviderOption[] = [];
-
-  embeddingModelsResponse!: ProvidersResponse<EmbeddingModel>;
-  conversationModelsResponse!: ProvidersResponse<ConversationModel>;
-  embeddingModelOptions: EmbeddingModel[] = [];
-  conversationModelOptions: ConversationModel[] = [];
-
-  selectedEmbeddingModel: EmbeddingModel | null = null;
-  selectedConversationModel: ConversationModel | null = null;
+  embeddingModel$!: Observable<EmbeddingModel | null>;
+  conversationModel$!: Observable<ConversationModel | null>;
 
   radarAxes$!: Observable<RadarAxis[]>;
   embeddingCost$!: Observable<number>;
@@ -87,44 +80,14 @@ export class NewWorkflowComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private workflowService: WorkflowService,
     private router: Router,
-    private metrics: WorkflowMetricsService
+    private metrics: WorkflowMetricsService,
+    private workflowService: WorkflowService,
+    private ps: ProviderSelectService
   ) {}
 
   ngOnInit(): void {
-    this.initForm();
-    this.loadModels();
-    this.setupSubscriptions();
-
-    this.metrics.init(
-      this.form,
-      this.form
-        .get('embeddingProvider.model')!
-        .valueChanges.pipe(
-          map(
-            (id) =>
-              this.embeddingModelOptions.find((m) => m.value === id) ?? null
-          )
-        ),
-      this.form
-        .get('conversationProvider.model')!
-        .valueChanges.pipe(
-          map(
-            (id) =>
-              this.conversationModelOptions.find((m) => m.value === id) ?? null
-          )
-        )
-    );
-
-    this.radarAxes$ = this.metrics.radarAxes$();
-    this.embeddingCost$ = this.metrics.embeddingCost$();
-    this.conversationCosts$ = this.metrics.conversationCosts$();
-  }
-
-  private initForm(): void {
     this.chunkerStrategies = mapChunkerStrategies();
-
     this.form = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
@@ -143,142 +106,63 @@ export class NewWorkflowComponent implements OnInit {
       embeddingProvider: this.fb.group({
         provider: [-1, Validators.required],
         model: [null, Validators.required],
+        vectorSize: [0],
       }),
       conversationProvider: this.fb.group({
         provider: [-1, Validators.required],
         model: [null, Validators.required],
       }),
     });
+
+    this.embeddingOptions$ = this.ps.getEmbeddingProviders();
+    this.conversationOptions$ = this.ps.getConversationProviders();
+
+    const embProvCtrl = this.form.get('embeddingProvider.provider')!;
+    this.embeddingModels$ = embProvCtrl.valueChanges.pipe(
+      startWith(embProvCtrl.value),
+      switchMap((id) => this.ps.getEmbeddingModels(id)),
+      tap(() => this.form.get('embeddingProvider.model')!.reset())
+    );
+
+    const embModelCtrl = this.form.get('embeddingProvider.model')!;
+    this.embeddingModel$ = embModelCtrl.valueChanges.pipe(
+      startWith(embModelCtrl.value),
+      withLatestFrom(this.embeddingModels$),
+      map(([val, list]) => list.find((m) => m.value === val) ?? null),
+      tap((m) =>
+        this.form
+          .get('embeddingProvider.vectorSize')!
+          .setValue(m?.vectorSize ?? 0)
+      )
+    );
+
+    const convProvCtrl = this.form.get('conversationProvider.provider')!;
+    this.conversationModels$ = convProvCtrl.valueChanges.pipe(
+      startWith(convProvCtrl.value),
+      switchMap((id) => this.ps.getConversationModels(id)),
+      tap(() => this.form.get('conversationProvider.model')!.reset())
+    );
+
+    const convModelCtrl = this.form.get('conversationProvider.model')!;
+    this.conversationModel$ = convModelCtrl.valueChanges.pipe(
+      startWith(convModelCtrl.value),
+      withLatestFrom(this.conversationModels$),
+      map(([val, list]) => list.find((m) => m.value === val) ?? null)
+    );
+
+    this.metrics.init(this.form, this.embeddingModel$, this.conversationModel$);
+
+    this.radarAxes$ = this.metrics.radarAxes$();
+    this.embeddingCost$ = this.metrics.embeddingCost$();
+    this.conversationCosts$ = this.metrics.conversationCosts$();
   }
 
   get strategyValue(): number {
     return this.form.get('strategy')?.value;
   }
 
-  public setChunkerStrategy(value: number) {
-    this.form.patchValue({
-      strategy: value,
-    });
-  }
-
-  private loadModels(): void {
-    this.workflowService.getEmbeddingModels().subscribe((response) => {
-      this.embeddingModelsResponse = response;
-
-      this.embeddingProviders = mapValidProviders(response);
-      this.embeddingProviders.forEach((provider) => {
-        this.embeddingOptions.push({
-          label: provider.title,
-          value: provider.id,
-        });
-      });
-
-      const currentProvider = this.form.get(
-        'embeddingProvider.provider'
-      )?.value;
-      this.updateEmbeddingModelOptions(currentProvider);
-    });
-
-    this.workflowService.getConversationModels().subscribe((response) => {
-      this.conversationModelsResponse = response;
-
-      this.conversationProviders = mapValidProviders(response);
-      this.conversationProviders.forEach((provider) => {
-        this.conversationOptions.push({
-          label: provider.title,
-          value: provider.id,
-        });
-      });
-
-      const currentProvider = this.form.get(
-        'conversationProvider.provider'
-      )?.value;
-      this.updateConversationModelOptions(currentProvider);
-    });
-  }
-
-  private setupSubscriptions(): void {
-    this.subscribeEmbeddingProviderChanges();
-    this.subscribeConversationProviderChanges();
-    this.subscribeEmbeddingModelChanges();
-    this.subscribeConversationModelChanges();
-  }
-
-  private subscribeEmbeddingProviderChanges(): void {
-    this.form
-      .get('embeddingProvider.provider')
-      ?.valueChanges.subscribe((providerValue: number) => {
-        this.updateEmbeddingModelOptions(providerValue);
-        this.form.get('embeddingProvider.model')?.reset();
-        this.form.get('embeddingProvider.vectorSize')?.setValue(0);
-      });
-  }
-
-  private subscribeConversationProviderChanges(): void {
-    this.form
-      .get('conversationProvider.provider')
-      ?.valueChanges.subscribe((providerValue: number) => {
-        this.updateConversationModelOptions(providerValue);
-        this.form.get('conversationProvider.model')?.reset();
-      });
-  }
-
-  private subscribeConversationModelChanges(): void {
-    this.form
-      .get('conversationProvider.model')
-      ?.valueChanges.subscribe((modelValue: string) => {
-        const selectedModel = this.conversationModelOptions.find(
-          (m) => m.value === modelValue
-        );
-
-        if (selectedModel) {
-          this.selectedConversationModel = selectedModel;
-        }
-      });
-  }
-
-  private subscribeEmbeddingModelChanges(): void {
-    this.form
-      .get('embeddingProvider.model')
-      ?.valueChanges.subscribe((modelValue: string) => {
-        const selectedModel = this.embeddingModelOptions.find(
-          (m) => m.value === modelValue
-        );
-
-        if (selectedModel) {
-          this.selectedEmbeddingModel = selectedModel;
-          this.form
-            .get('embeddingProvider.vectorSize')
-            ?.setValue(selectedModel.vectorSize);
-        } else {
-          this.selectedEmbeddingModel = null;
-        }
-      });
-  }
-
-  private updateEmbeddingModelOptions(provider: number): void {
-    const providerKey = getProviderKeyByValueFromResponse(
-      provider,
-      this.embeddingModelsResponse
-    );
-    if (providerKey && this.embeddingModelsResponse[providerKey]) {
-      this.embeddingModelOptions = this.embeddingModelsResponse[providerKey];
-    } else {
-      this.embeddingModelOptions = [];
-    }
-  }
-
-  private updateConversationModelOptions(provider: number): void {
-    const providerKey = getProviderKeyByValueFromResponse(
-      provider,
-      this.conversationModelsResponse
-    );
-    if (providerKey && this.conversationModelsResponse[providerKey]) {
-      this.conversationModelOptions =
-        this.conversationModelsResponse[providerKey];
-    } else {
-      this.conversationModelOptions = [];
-    }
+  setChunkerStrategy(value: number): void {
+    this.form.patchValue({ strategy: value });
   }
 
   createWorkflow(): void {

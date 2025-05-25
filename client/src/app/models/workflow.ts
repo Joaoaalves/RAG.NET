@@ -14,6 +14,7 @@ export interface Workflow {
   settings: ChunkerSettings;
   apiKey: string;
   embeddingProvider: EmbeddingProvider;
+  conversationProvider: ConversationProvider;
   queryEnhancers: QueryEnhancer[];
   filter?: Filter;
   callbackUrls?: CallbackUrl[];
