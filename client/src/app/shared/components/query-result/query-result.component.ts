@@ -34,7 +34,6 @@ export class QueryResultComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(this.chunks);
     const chunksChanged = !!changes['chunks'];
     const filteredChanged = !!changes['filteredContent'];
 

@@ -29,8 +29,14 @@ export class WorkflowComponent implements OnInit {
   workflowId!: string;
   workflow!: Workflow;
 
-  convProviderId: number = -1;
-  embProviderId: number = -1;
+  convProvider: { provider: number; model: string } = {
+    provider: -1,
+    model: '',
+  };
+  embProvider: { provider: number; model: string } = {
+    provider: -1,
+    model: '',
+  };
 
   autoQueryEnhancer?: QueryEnhancer;
   hydeEnhancer?: QueryEnhancer;
@@ -43,7 +49,6 @@ export class WorkflowComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadWorkflowFromRoute();
-    this.loadProvidersIds();
   }
 
   get currentDate() {
@@ -70,16 +75,21 @@ export class WorkflowComponent implements OnInit {
         (qe) => qe.type === 'HYPOTHETICAL_DOCUMENT_EMBEDDING'
       );
       this.filter = workflow.filter;
+
+      this.loadProvidersIds();
     });
   }
 
   private loadProvidersIds() {
     if (this.workflow) {
-      this.embProviderId =
+      this.embProvider.provider =
         this.workflow.embeddingProvider.provider === 'OPENAI' ? 0 : 1;
 
-      this.convProviderId =
+      this.embProvider.model = this.workflow.embeddingProvider.model;
+
+      this.convProvider.provider =
         this.workflow.conversationProvider.provider === 'OPENAI' ? 0 : 1;
+      this.convProvider.model = this.workflow.conversationProvider.model;
     }
   }
 }

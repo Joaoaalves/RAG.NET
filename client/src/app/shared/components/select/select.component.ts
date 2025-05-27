@@ -11,11 +11,11 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BrnSelectImports } from '@spartan-ng/brain/select';
 import { HlmSelectImports } from '@spartan-ng/ui-select-helm';
 
+export type SelectValue = { label: string; value: string | number };
+
 @Component({
   selector: 'app-select',
-  host: {
-    style: 'display: block',
-  },
+  host: { style: 'display: contents' },
   imports: [BrnSelectImports, HlmSelectImports, CommonModule],
   templateUrl: './select.component.html',
   standalone: true,
@@ -30,22 +30,25 @@ import { HlmSelectImports } from '@spartan-ng/ui-select-helm';
 export class SelectComponent
   implements OnInit, OnChanges, ControlValueAccessor
 {
-  @Input() label: string = '';
-  @Input() name: string = '';
-  @Input() description: string = '';
-  @Input() value?: string | number = '';
-  @Input() placeholder: string = '';
+  @Input() label = '';
+  @Input() name = '';
+  @Input() description = '';
+  @Input() value?: string | number | Array<string | number> = '';
+  @Input() placeholder = '';
+  @Input() options: SelectValue[] | null = [];
 
-  @Input() options: { value: string | number; label: string }[] | null = [];
-
-  selectedOption: { label: string; value: string | number } | undefined;
+  selectedOption?: SelectValue | SelectValue[];
 
   onChange = (value: any) => {};
   onTouched = () => {};
 
   writeValue(value: any): void {
-    if (value === undefined || value === null) {
+    if (value == null) {
       this.selectedOption = undefined;
+    } else if (Array.isArray(value)) {
+      this.selectedOption = value.map(
+        (v) => this.getOptionByValue(v) || { label: String(v), value: v }
+      );
     } else {
       this.selectedOption = this.getOptionByValue(value) || {
         label: String(value),
@@ -59,46 +62,43 @@ export class SelectComponent
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
-
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
 
-  setDisabledState?(isDisabled: boolean): void {}
-
   ngOnInit(): void {
-    if (this.value !== undefined && this.value !== null) {
-      this.selectedOption = this.getOptionByValue(this.value) || {
-        label: String(this.value),
-        value: this.value,
-      };
-
-      this.onModelChange(this.selectedOption);
+    if (this.value != null) {
+      this.writeValue(this.value);
+      this.onChange(this.value);
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['options'] || changes['value']) {
-      if (this.value !== undefined && this.value !== null) {
-        this.selectedOption = this.getOptionByValue(this.value) || {
-          label: String(this.value),
-          value: this.value,
-        };
-        this.onChange(this.value);
-      }
+      this.writeValue(this.value);
+      this.onChange(this.value);
     }
   }
 
-  onModelChange(selected: { label: string; value: string | number }): void {
+  onModelChange(selected: SelectValue | SelectValue[] | undefined): void {
+    if (selected === undefined) {
+      this.selectedOption = undefined;
+      this.value = undefined;
+      this.onChange(undefined);
+      return;
+    }
+
     this.selectedOption = selected;
-    this.value = selected.value;
-    this.onChange(selected.value);
+    const newValue = Array.isArray(selected)
+      ? selected.map((s) => s.value)
+      : selected.value;
+    this.value = newValue;
+    this.onChange(newValue);
   }
 
   private getOptionByValue(
     value: string | number | undefined
-  ): { label: string; value: string | number } | undefined {
-    if (value === undefined || !this.options) return undefined;
-    return this.options.find((option) => option.value === value);
+  ): SelectValue | undefined {
+    return this.options?.find((o) => o.value === value);
   }
 }
