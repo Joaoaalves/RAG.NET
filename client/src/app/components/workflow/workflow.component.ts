@@ -13,11 +13,15 @@ import { WorkflowService } from 'src/app/services/workflow.service';
 import { FilterConfigComponent } from 'src/app/shared/components/filter-config/filter-config.component';
 import { Filter } from 'src/app/models/filter';
 import { ProviderSettingsComponent } from 'src/app/shared/components/provider-settings/provider-settings.component';
+import { WorkflowNameComponent } from './data/workflow-name.component';
+import { WorkflowDescriptionComponent } from './data/workflow-description.component';
 
 @Component({
   standalone: true,
   imports: [
     CommonModule,
+    WorkflowNameComponent,
+    WorkflowDescriptionComponent,
     QueryEnhancerConfigComponent,
     ProviderSettingsComponent,
     FilterConfigComponent,
