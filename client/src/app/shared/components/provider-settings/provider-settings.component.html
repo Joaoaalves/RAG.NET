@@ -1,51 +1,84 @@
 <section class="space-y-6">
   <div class="flex items-center gap-3">
-    <div class="w-1.5 h-6 bg-gradient-to-b from-rose-500 via-fuchsia-500 to-sky-500 rounded-full animate-fade-in"></div>
-    <h2 class="text-2xl uppercase text-[#BFA3B5] font-light tracking-wider">Providers Configuration</h2>
+    <div
+      class="w-1.5 h-6 bg-gradient-to-b from-rose-500 via-fuchsia-500 to-sky-500 rounded-full animate-fade-in"
+    ></div>
+    <h2 class="text-2xl uppercase text-[#BFA3B5] font-light tracking-wider">
+      Providers Configuration
+    </h2>
   </div>
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-
     <!-- Embedding Form -->
     <ng-container *ngIf="!showConfirmEmbedding">
-      <form *ngIf="embeddingOptions$ | async" [formGroup]="embeddingForm" class="bg-[#111111]/80 rounded-xl p-6 shadow-[0_0_20px_rgba(217,70,239,0.1)]">
+      <form
+        *ngIf="embeddingOptions$ | async"
+        [formGroup]="embeddingForm"
+        class="bg-[#111111]/80 rounded-xl p-6 shadow-[0_0_20px_rgba(217,70,239,0.1)]"
+      >
         <div class="flex items-center gap-3 mb-4">
-          <div class="w-8 h-8 rounded-full bg-gradient-to-r from-rose-500 to-fuchsia-500 flex items-center justify-center text-white">
-            <ng-icon name="lucideCode" class="mt-2"></ng-icon>
+          <div
+            class="w-8 h-8 rounded-full bg-gradient-to-r from-rose-500 to-fuchsia-500 flex items-center justify-center text-white"
+          >
+            <ng-icon name="lucideCode"></ng-icon>
           </div>
           <h3 class="text-xl text-white">Embedding Provider</h3>
         </div>
         <div class="relative mb-4">
-          <app-select formControlName="provider" [options]="embeddingOptions$ | async" placeholder="Select Provider"></app-select>
+          <app-select
+            formControlName="provider"
+            [options]="embeddingOptions$ | async"
+            placeholder="Select Provider"
+          ></app-select>
         </div>
         <div class="mb-4">
-          <app-select formControlName="model" [options]="embeddingModels$ | async" placeholder="Select Model"></app-select>
+          <app-select
+            formControlName="model"
+            [options]="embeddingModels$ | async"
+            placeholder="Select Model"
+          ></app-select>
         </div>
         <div class="bg-black/50 rounded-lg p-4 space-y-3">
           <h4 class="text-sm text-fuchsia-500 font-medium">Model Overview</h4>
           <div class="grid grid-cols-2 gap-3 text-xs">
             <div class="flex items-center gap-2">
-              <ng-icon class="mt-1 text-yellow-500" name="lucideZap"></ng-icon>
+              <div class="text-yellow-500">
+                <ng-icon class="mt-1" name="lucideZap"></ng-icon>
+              </div>
               <span class="text-neutral-400">Speed:</span>
               <div class="flex gap-0.5 text-fuchsia-500">
-                <ng-icon class="mt-1" name="ionStar"></ng-icon>
-                <ng-icon class="mt-1" name="ionStar"></ng-icon>
-                <ng-icon class="mt-1" name="ionStar"></ng-icon>
-                <ng-icon class="mt-1" name="ionStarHalf"></ng-icon>
-                <ng-icon class="mt-1" name="ionStarOutline"></ng-icon>
+                <ng-container
+                  *ngFor="
+                    let icon of (selectedEmbeddingModel$ | async)?.speed ?? 0
+                      | modelSpeed
+                  "
+                >
+                  <ng-icon [name]="icon"></ng-icon>
+                </ng-container>
               </div>
             </div>
             <div class="flex items-center gap-2">
-              <ng-icon class="mt-1 text-sky-500" name="lucideClock"></ng-icon>
-              <span class="text-neutral-400">Context:</span><span class="text-white">8K</span>
+              <div class="text-sky-500">
+                <ng-icon class="mt-1" name="lucideClock"></ng-icon>
+              </div>
+              <span class="text-neutral-400">Context:</span
+              ><span class="text-white">{{(selectedEmbeddingModel$ | async)?.maxContext}}</span>
             </div>
             <div class="flex items-center gap-2">
-              <ng-icon class="mt-1 text-green-500" name="lucideDatabase"></ng-icon>
-              <span class="text-neutral-400">Vector Size:</span><span class="text-white">3072 dims</span>
+              <div class="text-green-500">
+                <ng-icon
+                  class="mt-1"
+                  name="lucideDatabase"
+                ></ng-icon>
+              </div>
+              <span class="text-neutral-400">Vector Size:</span
+              ><span class="text-white">{{(selectedEmbeddingModel$ | async)?.vectorSize}} dims</span>
             </div>
             <div class="flex items-center gap-2">
-              <ng-icon class="mt-1 text-rose-500" name="lucideDollarSign"></ng-icon>
-              <span class="text-neutral-400">Cost:</span><span class="text-white">$0.00013/1K tokens</span>
+              <div class="text-rose-500">
+                <ng-icon class="mt-1" name="lucideDollarSign"></ng-icon>
+              </div>
+              <span class="text-neutral-400">Cost:</span
+              ><span class="text-white">${{(selectedEmbeddingModel$ | async)?.price}}/1M tokens</span>
             </div>
           </div>
         </div>
@@ -58,83 +91,90 @@
       </form>
     </ng-container>
 
-
     <!-- Embedding Confirmation -->
     <ng-container *ngIf="showConfirmEmbedding">
-      <div class="text-center space-y-4 bg-[#111111]/80 rounded-xl p-6">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="32"
-          height="32"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-triangle-alert text-yellow-500 mx-auto"
-        >
-          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path>
-          <path d="M12 9v4"></path>
-          <path d="M12 17h.01"></path>
-        </svg>
-        <h3 class="text-white font-medium">Confirm Provider Change</h3>
-        <p class="text-neutral-400 text-sm">Switching providers may impact performance and cost. Proceed?</p>
-        <div class="flex gap-3 justify-center">
-          <button
-            (click)="confirmEmbedding()"
-            class="px-4 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition-colors"
-          >
-            Confirm
-          </button>
-          <button
-            (click)="cancelEmbedding()"
-            class="px-4 py-2 border border-neutral-600 text-neutral-400 rounded-lg hover:border-neutral-500 hover:text-white transition-colors"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
+      <app-confirmation
+        message="Switching providers may impact performance and cost. Proceed? Note: Embedding models can have different vector sizes. Changing the model without proper handling may lead to malfunction."
+        (confirmEvent)="confirmEmbedding()"
+        (cancelEvent)="cancelEmbedding()"
+      ></app-confirmation>
     </ng-container>
-
-
 
     <!-- Conversation Form -->
     <ng-container *ngIf="!showConfirmConversation">
-      <form [formGroup]="conversationForm" class="bg-[#111111]/80 rounded-xl p-6 shadow-[0_0_20px_rgba(217,70,239,0.1)]">
+      <form
+        [formGroup]="conversationForm"
+        class="bg-[#111111]/80 rounded-xl p-6 shadow-[0_0_20px_rgba(217,70,239,0.1)]"
+      >
         <div class="flex items-center gap-3 mb-4">
-          <div class="w-8 h-8 rounded-full bg-gradient-to-r from-fuchsia-500 to-sky-500 flex items-center justify-center text-white">
-            <ng-icon name="lucideMessageCircle" class="mt-1"></ng-icon>
+          <div
+            class="w-8 h-8 rounded-full bg-gradient-to-r from-fuchsia-500 to-sky-500 flex items-center justify-center text-white"
+          >
+            <ng-icon name="lucideMessageCircle"></ng-icon>
           </div>
           <h3 class="text-xl text-white">Conversation Provider</h3>
         </div>
         <div class="relative mb-4">
-          <app-select formControlName="provider" [options]="conversationOptions$ | async" placeholder="Select Provider"></app-select>
+          <app-select
+            formControlName="provider"
+            [options]="conversationOptions$ | async"
+            placeholder="Select Provider"
+          ></app-select>
         </div>
         <div class="mb-4">
-          <app-select formControlName="model" [options]="conversationModels$ | async" placeholder="Select Model"></app-select>
+          <app-select
+            formControlName="model"
+            [options]="conversationModels$ | async"
+            placeholder="Select Model"
+          ></app-select>
         </div>
         <div class="bg-black/50 rounded-lg p-4 space-y-3">
           <h4 class="text-sm text-sky-500 font-medium">Model Overview</h4>
           <div class="grid grid-cols-2 gap-3 text-xs">
             <div class="flex items-center gap-2">
-              <ng-icon class="mt-1 text-yellow-500" name="lucideZap"></ng-icon>
+              <div class="text-yellow-500">
+                <ng-icon class="mt-1" name="lucideZap"></ng-icon>
+              </div>
               <span class="text-neutral-400">Speed:</span>
-              <div class="flex gap-0.5 text-fuchsia-500">
-                <ng-icon class="mt-1" name="ionStar"></ng-icon>
-                <ng-icon class="mt-1" name="ionStar"></ng-icon>
-                <ng-icon class="mt-1" name="ionStar"></ng-icon>
-                <ng-icon class="mt-1" name="ionStarHalf"></ng-icon>
-                <ng-icon class="mt-1" name="ionStarOutline"></ng-icon>
+              <div class="flex gap-0.5 text-sky-500">
+                <ng-container
+                  *ngFor="
+                    let icon of (selectedConversationModel$ | async)?.speed ?? 0
+                      | modelSpeed
+                  "
+                >
+                  <ng-icon [name]="icon"></ng-icon>
+                </ng-container>
               </div>
             </div>
             <div class="flex items-center gap-2">
-              <ng-icon class="mt-1 text-sky-500" name="lucideClock"></ng-icon>
-              <span class="text-neutral-400">Context:</span><span class="text-white">128K</span>
+              <div class="text-sky-500">
+                <ng-icon class="mt-1" name="lucideClock"></ng-icon>
+              </div>
+              <span class="text-neutral-400">Context:</span
+              ><span class="text-white">{{
+                (selectedConversationModel$ | async)?.contextWindow
+              }}</span>
             </div>
-            <div class="flex items-center gap-2 col-span-2">
-              <ng-icon class="mt-1 text-rose-500" name="lucideDollarSign"></ng-icon>
-              <span class="text-neutral-400">Cost:</span><span class="text-white">$0.01/1K tokens</span>
+            <div class="flex items-center gap-2">
+              <div class="text-rose-500">
+                <ng-icon class="mt-1" name="lucideDollarSign"></ng-icon>
+              </div>
+              <span class="text-neutral-400">Input Price:</span
+              ><span class="text-white"
+                >${{ (selectedConversationModel$ | async)?.inputPrice }}/1M
+                tokens</span
+              >
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="text-rose-500">
+                <ng-icon class="mt-1" name="lucideDollarSign"></ng-icon>
+              </div>
+              <span class="text-neutral-400">Output Price:</span
+              ><span class="text-white"
+                >${{ (selectedConversationModel$ | async)?.outputPrice }}/1M
+                tokens</span
+              >
             </div>
           </div>
         </div>
@@ -147,44 +187,12 @@
       </form>
     </ng-container>
 
-
-
     <!-- Conversation Confirmation -->
     <ng-container *ngIf="showConfirmConversation">
-      <div class="text-center space-y-4 bg-[#111111]/80 rounded-xl p-6">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="32"
-          height="32"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-triangle-alert text-yellow-500 mx-auto"
-        >
-          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path>
-          <path d="M12 9v4"></path>
-          <path d="M12 17h.01"></path>
-        </svg>
-        <h3 class="text-white font-medium">Confirm Provider Change</h3>
-        <p class="text-neutral-400 text-sm">Switching providers may impact performance and cost. Proceed?</p>
-        <div class="flex gap-3 justify-center">
-          <button
-            (click)="confirmConversation()"
-            class="px-4 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition-colors"
-          >
-            Confirm
-          </button>
-          <button
-            (click)="cancelConversation()"
-            class="px-4 py-2 border border-neutral-600 text-neutral-400 rounded-lg hover:border-neutral-500 hover:text-white transition-colors"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
+      <app-confirmation
+        (confirmEvent)="confirmConversation()"
+        (cancelEvent)="cancelConversation()"
+      ></app-confirmation>
     </ng-container>
   </div>
 </section>

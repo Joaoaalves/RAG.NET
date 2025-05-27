@@ -1,0 +1,21 @@
+  <div class="text-center space-y-4 bg-[#111111]/80 rounded-xl p-6">
+    <div class="text-yellow-500 mx-auto text-4xl">
+      <ng-icon name="lucideTriangleAlert"></ng-icon>
+    </div>
+    <h3 class="text-white font-medium">{{ title }}</h3>
+    <p class="text-neutral-400 text-sm">{{ message }}</p>
+    <div class="flex gap-3 justify-center">
+      <button
+        (click)="confirm()"
+        class="cursor-pointer px-4 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition-colors"
+      >
+        Confirm
+      </button>
+      <button
+        (click)="cancel()"
+        class="cursor-pointer px-4 py-2 border border-neutral-600 text-neutral-400 rounded-lg hover:border-neutral-500 hover:text-white transition-colors"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>

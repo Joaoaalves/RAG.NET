@@ -19,16 +19,32 @@ import {
   lucideStar,
   lucideZap,
 } from '@ng-icons/lucide';
-import { Observable, startWith, switchMap, tap } from 'rxjs';
+import {
+  map,
+  Observable,
+  startWith,
+  switchMap,
+  tap,
+  withLatestFrom,
+} from 'rxjs';
 import { ConversationModel } from 'src/app/models/chat';
 import { EmbeddingModel } from 'src/app/models/embedding';
 import { ProviderSelectService } from 'src/app/services/provider-select.service';
 import { SelectComponent } from '../select/select.component';
+import { ConfirmationComponent } from './confirmation.component';
+import { ModelSpeedPipe } from 'src/app/components/new-workflow/model-speed.pipe';
 
 @Component({
   selector: 'app-provider-settings',
   templateUrl: './provider-settings.component.html',
-  imports: [NgIcon, CommonModule, ReactiveFormsModule, SelectComponent],
+  imports: [
+    NgIcon,
+    CommonModule,
+    ReactiveFormsModule,
+    SelectComponent,
+    ConfirmationComponent,
+    ModelSpeedPipe,
+  ],
   providers: [
     provideIcons({
       lucideZap,
@@ -60,6 +76,9 @@ export class ProviderSettingsComponent implements OnInit {
   >;
   embeddingModels$!: Observable<EmbeddingModel[]>;
   conversationModels$!: Observable<ConversationModel[]>;
+
+  selectedEmbeddingModel$!: Observable<EmbeddingModel | null>;
+  selectedConversationModel$!: Observable<ConversationModel | null>;
 
   showConfirmEmbedding = false;
   pendingEmbeddingValue: number | null = null;
@@ -123,6 +142,22 @@ export class ProviderSettingsComponent implements OnInit {
           }
         }
       })
+    );
+
+    const embModel = this.embeddingForm.get('model')!;
+
+    this.selectedEmbeddingModel$ = embModel?.valueChanges.pipe(
+      startWith(embModel.value),
+      withLatestFrom(this.embeddingModels$),
+      map(([val, list]) => list.find((m) => m.value === val) ?? null)
+    );
+
+    const convModel = this.conversationForm.get('model')!;
+
+    this.selectedConversationModel$ = convModel?.valueChanges.pipe(
+      startWith(convModel.value),
+      withLatestFrom(this.conversationModels$),
+      map(([val, list]) => list.find((m) => m.value === val) ?? null)
     );
   }
 
