@@ -18,6 +18,7 @@ import { InputComponent } from '../input/input.component';
 
 // Services
 import { FilterService } from 'src/app/services/filter.service';
+import { NumberCounterInputComponent } from '../number-counter-input/number-counter-input.component';
 
 @Component({
   selector: 'app-filter-config',
@@ -27,20 +28,20 @@ import { FilterService } from 'src/app/services/filter.service';
     CommonModule,
     ReactiveFormsModule,
     HlmSwitchComponent,
+    NumberCounterInputComponent,
     InputComponent,
   ],
 })
 export class FilterConfigComponent {
   @Input() title: string = '';
   @Input() description: string = '';
-  @Input() recommended: boolean = false;
   @Input() filter?: Filter;
   @Input() workflowId!: string;
   @Input() strategy!: string | FilterStrategy;
   filterStrategies: { label: string; value: number }[] = [
     {
       label: 'Relevant Segment Extraction',
-      value: 0,
+      value: 1,
     },
   ];
   configForm!: FormGroup;

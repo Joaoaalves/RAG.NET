@@ -1,0 +1,35 @@
+<div>
+  <label class="block text-sm text-white mb-2">{{ label }}</label>
+  <div class="flex items-center gap-3">
+    <button
+      class="w-8 h-8 rounded-full cursor-pointer bg-gradient-to-r from-rose-500 to-fuchsia-500 text-white flex items-center justify-center hover:shadow-[0_0_10px_rgba(217,70,239,0.3)] transition-all"
+      (click)="decrement()"
+      [disabled]="value <= min"
+      type="button"
+    >
+      <div class="text-2xl/tight text-white">
+        <ng-icon name="lucideMinus" class="mt-1.5"></ng-icon>
+      </div>
+    </button>
+
+    <input
+      type="number"
+      [value]="value"
+      (input)="onInput($event)"
+      class="text-white text-lg font-medium w-12 text-center outline-none bg-transparent border-none appearance-none"
+      inputmode="numeric"
+      pattern="[0-9]*"
+    />
+
+    <button
+      class="w-8 h-8 rounded-full cursor-pointer bg-gradient-to-r from-rose-500 to-fuchsia-500 text-white flex items-center justify-center hover:shadow-[0_0_10px_rgba(217,70,239,0.3)] transition-all"
+      (click)="increment()"
+      [disabled]="value >= max"
+      type="button"
+    >
+      <div class="text-2xl/tight text-white">
+        <ng-icon name="lucidePlus" class="mt-1"></ng-icon>
+      </div>
+    </button>
+  </div>
+</div>

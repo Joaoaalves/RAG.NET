@@ -16,7 +16,6 @@ import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
 
 // Components
-import { InputComponent } from 'src/app/shared/components/input/input.component';
 import { TextAreaComponent } from 'src/app/shared/components/text-area/text-area.component';
 import { HlmSwitchComponent } from 'libs/ui/ui-switch-helm/src/lib/hlm-switch.component';
 
@@ -32,7 +31,6 @@ import { SliderInputComponent } from '../slider-input/slider-input.component';
     CommonModule,
     ReactiveFormsModule,
     HlmSwitchComponent,
-    InputComponent,
     SliderInputComponent,
     TextAreaComponent,
   ],
@@ -42,7 +40,6 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
   @Input() queryEnhancer?: QueryEnhancer;
   @Input() workflowId!: string;
   @Input() type!: string;
-  @Input() recommended: boolean = false;
   @Input() title!: string;
   @Input() description!: string;
   @Input() guidanceEnabled: boolean = false;
