@@ -42,3 +42,16 @@ export interface CreateWorkflowResponse {
   message: string;
   workflowId: string;
 }
+
+export interface WorkflowUpdateRequest {
+  name?: string;
+  description?: string;
+  embeddingProvider?: {
+    provider: number;
+    model: string;
+  };
+  conversationProvider?: {
+    provider: number;
+    model: string;
+  };
+}

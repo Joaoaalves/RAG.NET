@@ -10,6 +10,7 @@ using RAGNET.Application.UseCases.WorkflowUseCases;
 using RAGNET.Application.Filters;
 using RAGNET.Domain.Services.Queue;
 using RAGNET.Domain.Entities.Jobs;
+using RAGNET.Application.Mappers;
 
 namespace web.Controllers.WorkflowControllers
 {
@@ -20,10 +21,12 @@ namespace web.Controllers.WorkflowControllers
         ICreateWorkflowUseCase createWorkflowUseCase,
         IDeleteWorkflowUseCase deleteWorkflowUseCase,
         IGetWorkflowUseCase getWorkflowUseCase,
+        IUpdateWorkflowUseCase updateWorkflowUseCase,
         UserManager<User> userManager) : ControllerBase
     {
         private readonly IGetUserWorkflowsUseCase _getUserWorkflowsUseCase = getUserWorkflowsUseCase;
         private readonly ICreateWorkflowUseCase _createWorkflowUseCase = createWorkflowUseCase;
+        private readonly IUpdateWorkflowUseCase _updateWorkflowUseCase = updateWorkflowUseCase;
         private readonly IDeleteWorkflowUseCase _deleteWorkflowUseCase = deleteWorkflowUseCase;
         private readonly IGetWorkflowUseCase _getWorkflowUseCase = getWorkflowUseCase;
         private readonly UserManager<User> _userManager = userManager;
@@ -86,6 +89,33 @@ namespace web.Controllers.WorkflowControllers
             }
         }
 
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateWorkflow([FromBody] WorkflowDetailsUpdateDTO dto, Guid id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+                return Unauthorized();
+
+            try
+            {
+                var workflow = await _updateWorkflowUseCase.Execute(dto, id, user);
+
+                return Ok(new
+                {
+                    workflow.Name,
+                    workflow.Description,
+                    ConversationProvider = workflow.ConversationProviderConfig.ToDTOFromConversationProviderConfig(),
+                    EmbeddingProvider = workflow.EmbeddingProviderConfig.ToDTOFromEmbeddingProviderConfig()
+                });
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteWorkflow(Guid id)
         {
@@ -96,8 +126,8 @@ namespace web.Controllers.WorkflowControllers
 
             try
             {
-                var workflow = await _deleteWorkflowUseCase.Execute(id, user.Id);
-                return Ok(workflow);
+                var deleted = await _deleteWorkflowUseCase.Execute(id, user.Id);
+                return Ok(deleted);
             }
             catch (Exception ex)
             {

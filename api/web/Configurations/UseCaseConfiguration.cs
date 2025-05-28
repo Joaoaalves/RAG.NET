@@ -22,6 +22,7 @@ namespace web.Configurations
             services.AddScoped<ICreateWorkflowUseCase, CreateWorkflowUseCase>();
             services.AddScoped<IGetUserWorkflowsUseCase, GetUserWorkflowsUseCase>();
             services.AddScoped<IDeleteWorkflowUseCase, DeleteWorkflowUseCase>();
+            services.AddScoped<IUpdateWorkflowUseCase, UpdateWorkflowUseCase>();
 
             // Query Enhancer
             services.AddScoped<ICreateQueryEnhancerUseCase, CreateQueryEnhancerUseCase>();

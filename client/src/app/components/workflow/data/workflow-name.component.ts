@@ -22,7 +22,7 @@ import { lucideCheck, lucidePencil, lucideX } from '@ng-icons/lucide';
 })
 export class WorkflowNameComponent {
   @Input() name: string = '';
-  @Output() saveEvent = new EventEmitter<string>();
+  @Output() saveEvent = new EventEmitter<{ name: string }>();
   @Output() cancelEvent = new EventEmitter<void>();
 
   isEditing: boolean = false;
@@ -34,7 +34,7 @@ export class WorkflowNameComponent {
   }
 
   save() {
-    this.saveEvent.emit(this.editedName);
+    this.saveEvent.emit({ name: this.editedName });
     this.isEditing = false;
   }
 

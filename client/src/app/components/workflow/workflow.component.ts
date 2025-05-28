@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Workflow } from 'src/app/models/workflow';
+import { Workflow, WorkflowUpdateRequest } from 'src/app/models/workflow';
 import { QueryEnhancer } from 'src/app/models/query-enhancer';
 import { CommonModule } from '@angular/common';
 
@@ -15,6 +15,12 @@ import { Filter } from 'src/app/models/filter';
 import { ProviderSettingsComponent } from 'src/app/shared/components/provider-settings/provider-settings.component';
 import { WorkflowNameComponent } from './data/workflow-name.component';
 import { WorkflowDescriptionComponent } from './data/workflow-description.component';
+import { EmbeddingModel, EmbeddingProvider } from 'src/app/models/embedding';
+import {
+  getProviderIdFromName,
+  getProviderOption,
+  mapValidProviders,
+} from 'src/app/shared/utils/providers-utils';
 
 @Component({
   standalone: true,
@@ -69,6 +75,23 @@ export class WorkflowComponent implements OnInit {
     });
   }
 
+  updateWorkflow(data: WorkflowUpdateRequest) {
+    try {
+      this.workflowService
+        .updateWorkflow(data, this.workflow.id)
+        .subscribe((workflow) => {
+          this.workflow.name = workflow.name;
+          this.workflow.description = workflow.description;
+          this.workflow.embeddingProvider = workflow.embeddingProvider;
+          this.workflow.conversationProvider = workflow.conversationProvider;
+
+          this.loadProvidersIds();
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   private loadWorkflow(id: string): void {
     this.workflowService.getWorkflow(id).subscribe((workflow) => {
       this.workflow = workflow;
@@ -85,15 +108,18 @@ export class WorkflowComponent implements OnInit {
   }
 
   private loadProvidersIds() {
-    if (this.workflow) {
-      this.embProvider.provider =
-        this.workflow.embeddingProvider.provider === 'OPENAI' ? 0 : 1;
+    if (!this.workflow) return;
 
-      this.embProvider.model = this.workflow.embeddingProvider.model;
+    this.embProvider = {
+      provider: getProviderIdFromName(this.workflow.embeddingProvider.provider),
+      model: this.workflow.embeddingProvider.model,
+    };
 
-      this.convProvider.provider =
-        this.workflow.conversationProvider.provider === 'OPENAI' ? 0 : 1;
-      this.convProvider.model = this.workflow.conversationProvider.model;
-    }
+    this.convProvider = {
+      provider: getProviderIdFromName(
+        this.workflow.conversationProvider.provider
+      ),
+      model: this.workflow.conversationProvider.model,
+    };
   }
 }

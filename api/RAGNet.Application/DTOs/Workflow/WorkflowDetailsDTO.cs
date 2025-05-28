@@ -18,11 +18,11 @@ namespace RAGNET.Application.DTOs.Workflow
         public int DocumentsCount { get; set; }
         [JsonConverter(typeof(ChunkerStrategyConverter))]
         public ChunkerStrategy? Strategy { get; set; }
-        public ChunkerSettingsDTO? Settings { get; set; } = null!;
+        public ChunkerSettingsDTO? Settings { get; set; }
         public string ApiKey { get; set; } = string.Empty;
-        public EmbeddingProviderConfigDTO? EmbeddingProvider { get; set; } = null!;
-        public ConversationProviderConfigDTO? ConversationProvider { get; set; } = null!;
-        public ICollection<QueryEnhancerDTO> QueryEnhancers { get; set; } = new List<QueryEnhancerDTO>();
+        public EmbeddingProviderConfigDTO? EmbeddingProvider { get; set; }
+        public ConversationProviderConfigDTO? ConversationProvider { get; set; }
+        public ICollection<QueryEnhancerDTO> QueryEnhancers { get; set; } = [];
         public ICollection<CallbackUrlDTO> CallbackUrls { get; set; } = [];
         public FilterDTO? Filter { get; set; }
     }

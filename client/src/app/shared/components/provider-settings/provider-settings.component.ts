@@ -1,5 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  model,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -20,6 +29,7 @@ import {
   lucideZap,
 } from '@ng-icons/lucide';
 import {
+  debounceTime,
   map,
   Observable,
   startWith,
@@ -63,9 +73,22 @@ import { ModelSpeedPipe } from 'src/app/components/new-workflow/model-speed.pipe
   ],
   standalone: true,
 })
-export class ProviderSettingsComponent implements OnInit {
+export class ProviderSettingsComponent implements OnInit, OnChanges {
   @Input() currentEmbedding!: { provider: number; model: string };
   @Input() currentConversation!: { provider: number; model: string };
+
+  @Output() saveEmbeddingEvent = new EventEmitter<{
+    embeddingProvider: {
+      provider: number;
+      model: string;
+    };
+  }>();
+  @Output() saveConversationEvent = new EventEmitter<{
+    conversationProvider: {
+      provider: number;
+      model: string;
+    };
+  }>();
 
   embeddingForm!: FormGroup;
   conversationForm!: FormGroup;
@@ -81,12 +104,33 @@ export class ProviderSettingsComponent implements OnInit {
   selectedConversationModel$!: Observable<ConversationModel | null>;
 
   showConfirmEmbedding = false;
-  pendingEmbeddingValue: number | null = null;
+  pendingEmbeddingValue: { provider: number; model: string } | null = null;
 
   showConfirmConversation = false;
-  pendingConversationValue: number | null = null;
+  pendingConversationValue: { provider: number; model: string } | null = null;
 
   constructor(private fb: FormBuilder, private ps: ProviderSelectService) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['currentEmbedding'] &&
+      !changes['currentEmbedding'].firstChange
+    ) {
+      this.embeddingForm.patchValue({
+        provider: this.currentEmbedding.provider,
+        model: this.currentEmbedding.model,
+      });
+    }
+    if (
+      changes['currentConversation'] &&
+      !changes['currentConversation'].firstChange
+    ) {
+      this.conversationForm.patchValue({
+        provider: this.currentConversation.provider,
+        model: this.currentConversation.model,
+      });
+    }
+  }
 
   ngOnInit(): void {
     this.initForms();
@@ -111,6 +155,7 @@ export class ProviderSettingsComponent implements OnInit {
     const embProv = this.embeddingForm.get('provider')!;
     this.embeddingModels$ = embProv.valueChanges.pipe(
       startWith(this.currentEmbedding.provider),
+      debounceTime(0),
       switchMap((id) => this.ps.getEmbeddingModels(id)),
       tap((models) => {
         if (models && models.length > 0) {
@@ -118,7 +163,9 @@ export class ProviderSettingsComponent implements OnInit {
             (m) => m.value === this.currentEmbedding.model
           );
           if (initialModel) {
-            this.embeddingForm.get('model')!.setValue(initialModel.value);
+            this.embeddingForm
+              .get('model')!
+              .setValue(initialModel.value, { emitEvent: false });
           } else {
             this.embeddingForm.get('model')!.reset();
           }
@@ -129,6 +176,7 @@ export class ProviderSettingsComponent implements OnInit {
     const convProv = this.conversationForm.get('provider')!;
     this.conversationModels$ = convProv.valueChanges.pipe(
       startWith(this.currentConversation.provider),
+      debounceTime(0),
       switchMap((id) => this.ps.getConversationModels(id)),
       tap((models) => {
         if (models && models.length > 0) {
@@ -163,8 +211,16 @@ export class ProviderSettingsComponent implements OnInit {
 
   changeEmbeddingProvider(): void {
     const selectedProvider = this.embeddingForm.get('provider')!.value;
-    if (selectedProvider !== this.currentEmbedding) {
-      this.pendingEmbeddingValue = selectedProvider;
+    const selectedModel = this.embeddingForm.get('model')!.value;
+
+    if (
+      selectedProvider !== this.currentEmbedding.provider ||
+      selectedModel !== this.currentEmbedding.model
+    ) {
+      this.pendingEmbeddingValue = {
+        provider: selectedProvider,
+        model: selectedModel,
+      };
       this.showConfirmEmbedding = true;
     } else {
       this.applyEmbeddingChange();
@@ -173,10 +229,10 @@ export class ProviderSettingsComponent implements OnInit {
 
   confirmEmbedding(): void {
     if (this.pendingEmbeddingValue !== null) {
-      this.currentEmbedding.provider = this.pendingEmbeddingValue;
       this.embeddingForm
         .get('provider')!
-        .setValue(this.currentEmbedding.provider);
+        .setValue(this.pendingEmbeddingValue.provider);
+
       this.applyEmbeddingChange();
     }
     this.showConfirmEmbedding = false;
@@ -191,12 +247,28 @@ export class ProviderSettingsComponent implements OnInit {
   private applyEmbeddingChange(): void {
     const provider = this.embeddingForm.get('provider')!.value;
     const model = this.embeddingForm.get('model')!.value;
+
+    this.saveEmbeddingEvent.emit({
+      embeddingProvider: {
+        provider,
+        model,
+      },
+    });
   }
 
   changeConversationProvider(): void {
     const selectedProvider = this.conversationForm.get('provider')!.value;
-    if (selectedProvider !== this.currentConversation) {
-      this.pendingConversationValue = selectedProvider;
+    const selectedModel = this.conversationForm.get('model')!.value;
+
+    if (
+      selectedProvider !== this.currentConversation.provider ||
+      selectedModel !== this.currentConversation.model
+    ) {
+      this.pendingConversationValue = {
+        provider: selectedProvider,
+        model: selectedModel,
+      };
+
       this.showConfirmConversation = true;
     } else {
       this.applyConversationChange();
@@ -205,10 +277,10 @@ export class ProviderSettingsComponent implements OnInit {
 
   confirmConversation(): void {
     if (this.pendingConversationValue !== null) {
-      this.currentConversation.provider = this.pendingConversationValue;
       this.conversationForm
         .get('provider')!
-        .setValue(this.currentConversation.provider);
+        .setValue(this.pendingConversationValue.provider);
+
       this.applyConversationChange();
     }
     this.showConfirmConversation = false;
@@ -223,5 +295,12 @@ export class ProviderSettingsComponent implements OnInit {
   private applyConversationChange(): void {
     const provider = this.conversationForm.get('provider')!.value;
     const model = this.conversationForm.get('model')!.value;
+
+    this.saveConversationEvent.emit({
+      conversationProvider: {
+        provider,
+        model,
+      },
+    });
   }
 }

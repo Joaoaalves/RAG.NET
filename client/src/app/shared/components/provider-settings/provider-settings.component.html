@@ -84,7 +84,8 @@
         </div>
         <button
           (click)="changeEmbeddingProvider()"
-          class="mt-4 w-full py-2 border border-fuchsia-500/30 text-fuchsia-500 rounded-lg hover:bg-fuchsia-500/10 transition-colors cursor-pointer"
+          [disabled]="embeddingForm.invalid"
+          class="mt-4 w-full py-2 border border-fuchsia-500/30 text-fuchsia-500 rounded-lg hover:bg-fuchsia-500/10 transition-colors cursor-pointer disabled:cursor-not-allowed"
         >
           Change
         </button>
@@ -180,7 +181,8 @@
         </div>
         <button
           (click)="changeConversationProvider()"
-          class="mt-4 w-full py-2 border border-sky-500/30 text-sky-500 rounded-lg hover:bg-sky-500/10 transition-colors cursor-pointer"
+          [disabled]="conversationForm.invalid"
+          class="mt-4 w-full py-2 border border-sky-500/30 text-sky-500 rounded-lg hover:bg-sky-500/10 transition-colors cursor-pointer disabled:cursor-not-allowed"
         >
           Change
         </button>

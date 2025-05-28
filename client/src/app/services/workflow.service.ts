@@ -8,6 +8,7 @@ import {
   WorkflowsInfoResponse,
   CreateWorkflowRequest,
   CreateWorkflowResponse,
+  WorkflowUpdateRequest,
 } from '../models/workflow';
 import { ProvidersResponse } from '../models/provider';
 import { EmbeddingModel } from '../models/embedding';
@@ -54,6 +55,15 @@ export class WorkflowService {
           return of(false);
         })
       );
+  }
+
+  updateWorkflow(
+    data: WorkflowUpdateRequest,
+    workflowId: string
+  ): Observable<Workflow> {
+    return this.httpClient
+      .put<Workflow>(`${this.apiUrl}/api/workflows/${workflowId}`, data)
+      .pipe(map((response) => response));
   }
 
   getEmbeddingModels(): Observable<ProvidersResponse<EmbeddingModel>> {

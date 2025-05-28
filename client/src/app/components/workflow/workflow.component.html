@@ -12,10 +12,13 @@
   >
     <app-workflow-name
       *ngIf="workflow"
+      (saveEvent)="updateWorkflow($event)"
       [name]="workflow.name"
     ></app-workflow-name>
+
     <app-workflow-description
       *ngIf="workflow"
+      (saveEvent)="updateWorkflow($event)"
       [description]="workflow.description"
     ></app-workflow-description>
 
@@ -46,6 +49,8 @@
 
   <app-provider-settings
     *ngIf="workflow"
+    (saveEmbeddingEvent)="updateWorkflow($event)"
+    (saveConversationEvent)="updateWorkflow($event)"
     [currentEmbedding]="embProvider"
     [currentConversation]="convProvider"
   ></app-provider-settings>

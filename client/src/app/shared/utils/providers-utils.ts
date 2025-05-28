@@ -2,6 +2,24 @@ import { PROVIDERS_DATA } from 'src/app/core/constants/providers.constant';
 import { ProviderData, SupportedProvider } from 'src/app/models/provider';
 
 /**
+ * Get the numeric ID for a given provider name.
+ */
+export function getProviderIdFromName(name: string): number {
+  const key = name.toLowerCase() as SupportedProvider;
+  return PROVIDERS_DATA[key]?.id ?? -1;
+}
+
+/**
+ * Get the provider name from its numeric ID.
+ */
+export function getProviderNameFromId(id: number): SupportedProvider | null {
+  const entry = Object.entries(PROVIDERS_DATA).find(
+    ([_, data]) => data.id === id
+  );
+  return entry ? (entry[0] as SupportedProvider) : null;
+}
+
+/**
  * Get label and value for a given provider name.
  * Returns null if provider is not in the map.
  */

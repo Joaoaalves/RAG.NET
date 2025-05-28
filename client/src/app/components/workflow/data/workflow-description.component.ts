@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class WorkflowDescriptionComponent {
   @Input() description: string = '';
-  @Output() saveEvent = new EventEmitter<string>();
+  @Output() saveEvent = new EventEmitter<{ description: string }>();
   @Output() cancelEvent = new EventEmitter<void>();
 
   isEditing: boolean = false;
@@ -22,7 +22,9 @@ export class WorkflowDescriptionComponent {
   }
 
   save() {
-    this.saveEvent.emit(this.editedDescription);
+    this.saveEvent.emit({
+      description: this.editedDescription,
+    });
     this.isEditing = false;
   }
 

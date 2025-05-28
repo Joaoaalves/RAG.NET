@@ -10,7 +10,6 @@ import {
   Provider as AIProvider,
   GetProvidersResponse,
   ProviderData,
-  ProvidersResponse,
   SupportedProvider,
 } from '../models/provider';
 
