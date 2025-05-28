@@ -35,7 +35,7 @@ import { SliderInputComponent } from '../slider-input/slider-input.component';
   providers: [provideIcons({ lucideLoaderCircle, lucideChevronDown })],
   standalone: true,
   styles: `
-  :host: {
+  :host {
     display: contents;
   }
   `,
