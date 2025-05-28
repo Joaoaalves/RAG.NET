@@ -20,7 +20,12 @@ import { InputComponent } from '../input/input.component';
 // Services
 import { CallbackUrlService } from 'src/app/services/callback-url.service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { heroTrash, heroPencilSquare } from '@ng-icons/heroicons/outline';
+import {
+  lucideCheck,
+  lucidePencil,
+  lucideExternalLink,
+  lucideTrash,
+} from '@ng-icons/lucide';
 
 @Component({
   selector: 'app-callback-urls-form',
@@ -32,7 +37,14 @@ import { heroTrash, heroPencilSquare } from '@ng-icons/heroicons/outline';
     InputComponent,
     NgIcon,
   ],
-  providers: [provideIcons({ heroTrash, heroPencilSquare })],
+  providers: [
+    provideIcons({
+      lucideCheck,
+      lucidePencil,
+      lucideExternalLink,
+      lucideTrash,
+    }),
+  ],
   templateUrl: './callback-urls-form.component.html',
 })
 export class CallbackUrlsFormComponent implements OnInit {

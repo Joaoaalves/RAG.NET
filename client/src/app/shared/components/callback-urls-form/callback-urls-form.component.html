@@ -1,37 +1,70 @@
-<div class="grid grid-cols-1 w-full gap-4">
-  <!-- EXISTING CALLBACK URLS -->
-  <form [formGroup]="parentForm">
+<div
+  class="bg-[#111111]/80 rounded-xl p-6 shadow-[0_0_20px_rgba(217,70,239,0.1)]"
+>
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-xl text-white">Webhook Notifications</h3>
+  </div>
+
+  <p class="text-neutral-300 text-sm mb-4">
+    Configure webhook endpoints to receive notifications about workflow events
+    and processing status.
+  </p>
+
+  <form [formGroup]="parentForm" class="space-y-4 animate-fade-in">
     <div formArrayName="urls">
       <div
         *ngFor="let urlGroup of urlsFormArray.controls; let i = index"
         [formGroupName]="i"
-        class="grid grid-cols-[1fr_48px_48px] items-end min-w-100 w-2/3 gap-2 mb-2"
+        class="space-y-2"
       >
-        <app-input
-          label="Callback URL"
-          type="text"
-          [name]="'url' + i"
-          description=""
-          formControlName="url"
-          class="flex-grow"
-        ></app-input>
+        <div
+          class="group flex items-center gap-2 p-3 bg-black/50 rounded-lg border transition-colors"
+          [ngClass]="{
+            'border-sky-500 shadow-[0_0_0_1px_rgba(14,165,233,0.5)]':
+              editing[i],
+            'border-neutral-700 hover:border-sky-500/30': !editing[i]
+          }"
+        >
+          <div class="text-sky-500 shrink-0">
+            <ng-icon
+              name="lucideExternalLink"
+              class="w-[14px] h-[14px]"
+            ></ng-icon>
+          </div>
 
-        <button
-          *ngIf="!editing[i]"
-          type="button"
-          (click)="startEditing(i)"
-          class="p-2 bg-violet-500 text-white rounded cursor-pointer grid place-items-center h-10"
-        >
-          <ng-icon name="heroPencilSquare"></ng-icon>
-        </button>
-        <button
-          *ngIf="editing[i]"
-          type="button"
-          (click)="saveUrl(i)"
-          class="p-2 bg-green-500 text-white rounded cursor-pointer"
-        >
-          Save
-        </button>
+          <input
+            type="text"
+            formControlName="url"
+            class="flex-1 bg-transparent text-white text-sm font-mono border-none focus:outline-none focus:ring-0 disabled:opacity-70"
+            [ngClass]="{
+              'text-sky-300 font-semibold': editing[i]
+            }"
+          />
+
+          <span
+            *ngIf="editing[i]"
+            class="text-xs text-sky-400 font-medium bg-sky-500/10 px-2 py-0.5 rounded"
+          >
+            Editing...
+          </span>
+
+          <button
+            *ngIf="!editing[i]"
+            type="button"
+            (click)="startEditing(i)"
+            class="cursor-pointer opacity-0 group-hover:opacity-100 w-6 h-6 rounded-full bg-sky-500/20 text-sky-500 flex items-center justify-center hover:bg-sky-500/30 transition-all"
+          >
+            <ng-icon name="lucidePencil" class="mt-1"></ng-icon>
+          </button>
+
+          <button
+            *ngIf="editing[i]"
+            type="button"
+            (click)="saveUrl(i)"
+            class="cursor-pointer w-6 h-6 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center hover:bg-green-500/30 transition-all"
+          >
+            <ng-icon name="lucideCheck" class="mt-1"></ng-icon>
+          </button>
 
           <app-alert
             [id]="'deleteCallbackUrl' + i"
@@ -39,36 +72,35 @@
             description="Are you sure you want to delete this callback URL?"
             (actionConfirmed)="deleteUrl(i)"
           >
-          <div
-            class="h-10 w-12 text-white hover:text-red-500 bg-red-500 hover:bg-white cursor-pointer transition-all duration-300 group rounded grid place-items-center"
-          >
-            <ng-icon name="heroTrash"></ng-icon>
-          </div>
-        </app-alert>
-
-
+            <div
+              class="cursor-pointer opacity-0 group-hover:opacity-100 w-6 h-6 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center hover:bg-red-500/30 transition-all"
+            >
+              <ng-icon name="lucideTrash" class="mt-1"></ng-icon>
+            </div>
+          </app-alert>
+        </div>
       </div>
     </div>
   </form>
 
-  <!-- ADD NEW CALLBACK URL -->
-  <form [formGroup]="newUrlForm"
-  class="grid grid-cols-[1fr_48px] items-end min-w-100 w-2/3 gap-2 mb-2">
-    <app-input
-      label="New Callback URL"
-      type="text"
-      name="newUrl"
-      description="Add a new callback URL for this workflow."
-      formControlName="url"
-      placeholder="Add new callback URL"
-      class="flex-grow"
-    ></app-input>
-    <button
-      type="submit"
-      (click)="addUrl()"
-      class="p-2 bg-violet-500 text-white rounded cursor-pointer"
+  <form [formGroup]="newUrlForm" (ngSubmit)="addUrl()" class="mt-6 space-y-2">
+    <label for="newUrl" class="text-sm text-white font-medium block"
+      >New Callback URL</label
     >
-      Add
-    </button>
+    <div class="flex items-center gap-2">
+      <input
+        id="newUrl"
+        formControlName="url"
+        type="text"
+        placeholder="https://example.com/webhook"
+        class="flex-1 px-3 py-2 rounded bg-black/50 border border-neutral-700 text-white text-sm placeholder:text-neutral-500 focus:border-sky-500 focus:ring-0"
+      />
+      <button
+        type="submit"
+        class="cursor-pointer px-4 py-2 bg-gradient-to-r from-fuchsia-500 to-sky-500 text-white rounded-lg hover:shadow-[0_0_10px_rgba(14,165,233,0.3)] transition-all"
+      >
+        Add
+      </button>
+    </div>
   </form>
 </div>
