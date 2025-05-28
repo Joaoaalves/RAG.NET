@@ -7,7 +7,6 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  model,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -155,7 +154,7 @@ export class ProviderSettingsComponent implements OnInit, OnChanges {
     const embProv = this.embeddingForm.get('provider')!;
     this.embeddingModels$ = embProv.valueChanges.pipe(
       startWith(this.currentEmbedding.provider),
-      debounceTime(0),
+      debounceTime(10),
       switchMap((id) => this.ps.getEmbeddingModels(id)),
       tap((models) => {
         if (models && models.length > 0) {
@@ -163,9 +162,7 @@ export class ProviderSettingsComponent implements OnInit, OnChanges {
             (m) => m.value === this.currentEmbedding.model
           );
           if (initialModel) {
-            this.embeddingForm
-              .get('model')!
-              .setValue(initialModel.value, { emitEvent: false });
+            this.embeddingForm.get('model')!.setValue(initialModel.value);
           } else {
             this.embeddingForm.get('model')!.reset();
           }
@@ -176,13 +173,14 @@ export class ProviderSettingsComponent implements OnInit, OnChanges {
     const convProv = this.conversationForm.get('provider')!;
     this.conversationModels$ = convProv.valueChanges.pipe(
       startWith(this.currentConversation.provider),
-      debounceTime(0),
+      debounceTime(10),
       switchMap((id) => this.ps.getConversationModels(id)),
       tap((models) => {
         if (models && models.length > 0) {
           const initialModel = models.find(
             (m) => m.value === this.currentConversation.model
           );
+
           if (initialModel) {
             this.conversationForm.get('model')!.setValue(initialModel.value);
           } else {

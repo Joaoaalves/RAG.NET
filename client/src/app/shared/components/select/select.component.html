@@ -1,6 +1,6 @@
 <div class="flex flex-col min-w-full">
-  <label [for]="name" class="text-white">{{ label }}</label>
-  <p *ngIf="description.length"class="text-sm text-neutral-400 w-full">{{description}}</p>
+  <label class="text-white">{{ label }}</label>
+  <p *ngIf="description.length" class="text-sm text-neutral-400 w-full">{{description}}</p>
   <brn-select
     class="inline-block min-w-full mt-2"
     [placeholder]="placeholder"
