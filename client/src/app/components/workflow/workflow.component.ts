@@ -15,12 +15,10 @@ import { Filter } from 'src/app/models/filter';
 import { ProviderSettingsComponent } from 'src/app/shared/components/provider-settings/provider-settings.component';
 import { WorkflowNameComponent } from './data/workflow-name.component';
 import { WorkflowDescriptionComponent } from './data/workflow-description.component';
-import { EmbeddingModel, EmbeddingProvider } from 'src/app/models/embedding';
-import {
-  getProviderIdFromName,
-  getProviderOption,
-  mapValidProviders,
-} from 'src/app/shared/utils/providers-utils';
+
+import { getProviderIdFromName } from 'src/app/shared/utils/providers-utils';
+
+import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component';
 
 @Component({
   standalone: true,
@@ -31,6 +29,7 @@ import {
     QueryEnhancerConfigComponent,
     ProviderSettingsComponent,
     FilterConfigComponent,
+    HlmToasterComponent,
     CallbackUrlsFormComponent,
   ],
   templateUrl: 'workflow.component.html',

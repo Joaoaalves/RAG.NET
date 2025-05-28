@@ -19,11 +19,11 @@ import { toast } from 'ngx-sonner';
 import { InputComponent } from 'src/app/shared/components/input/input.component';
 import { TextAreaComponent } from 'src/app/shared/components/text-area/text-area.component';
 import { HlmSwitchComponent } from 'libs/ui/ui-switch-helm/src/lib/hlm-switch.component';
-import { HlmToasterComponent } from './../../../../../libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component';
 
 // Models
 import { QueryEnhancer } from 'src/app/models/query-enhancer';
 import { QueryEnhancerService } from 'src/app/services/query-enhancer.service';
+import { SliderInputComponent } from '../slider-input/slider-input.component';
 
 @Component({
   selector: 'app-query-enhancer-config',
@@ -32,8 +32,8 @@ import { QueryEnhancerService } from 'src/app/services/query-enhancer.service';
     CommonModule,
     ReactiveFormsModule,
     HlmSwitchComponent,
-    HlmToasterComponent,
     InputComponent,
+    SliderInputComponent,
     TextAreaComponent,
   ],
   templateUrl: './query-enhancer-config.component.html',

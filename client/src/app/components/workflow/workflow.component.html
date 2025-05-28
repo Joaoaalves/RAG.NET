@@ -62,16 +62,15 @@
 
   <div class="py-4 space-y-4">
     <h2 class="text-3xl text-neutral-300">Query Enhancers</h2>
-
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
     <app-query-enhancer-config
       [workflowId]="workflowId"
       [queryEnhancer]="autoQueryEnhancer"
       type="auto-query"
       title="Auto Querying"
-      description="Auto Querying is a feature that automatically generates multiple relevant search queries based on the user's original input. Instead of relying solely on a single query, the system expands the input into several targeted queries to retrieve more comprehensive information from a knowledge base. This ensures more complete and accurate responses. You can customize how many queries are generated using the 'Maximum queries' field. Additionally, the 'Guidance' field allows you to provide extra context or instructions to steer how the queries should be constructed."
+      description="Automatically generates multiple query variations to improve search coverage and relevance."
       [guidanceEnabled]="true"
       [maxQueriesEnabled]="true"
-      [recommended]="true"
     >
     </app-query-enhancer-config>
 
@@ -79,12 +78,14 @@
       [workflowId]="workflowId"
       [queryEnhancer]="hydeEnhancer"
       type="hyde"
-      title="Hypothetical Document Embedding"
-      description=" HyDE (Hypothetical Document Embedding) is a technique designed to enhance retrieval performance when the available retriever struggles with new or specialized domains. It is particularly useful when your retrieval system's performance (e.g., Recall) is not optimal, or when the queries and documents come from a domain that differs from the data the retriever was originally trained on. The method works by first prompting an instruction-following language model in a zero-shot manner to generate multiple “fake” documents based on the input query. These hypothetical documents are then encoded into embedding vectors and averaged to form a single, robust representation. This averaged embedding better captures the relevant textual patterns, allowing for more accurate identification of similar documents from a larger dataset. The retrieved documents can then be used in downstream applications such as generating responses in a RAG (Retrieval-Augmented Generation) pipeline."
+      title="HyDE"
+      description="Hypothetical Document Embeddings - generates synthetic documents to improve retrieval accuracy."
       [guidanceEnabled]="false"
       [maxQueriesEnabled]="true"
     >
     </app-query-enhancer-config>
+    </div>
+
   </div>
 
   <!-- SEPARATOR -->
@@ -97,7 +98,6 @@
     <app-filter-config
       title="Relevant Segment Extraction"
       description="Relevant Segment Extraction is a technique used to identify and extract the most pertinent segments of text from a larger document or dataset. This process is particularly useful in scenarios where the goal is to retrieve specific information or insights from extensive textual data. By focusing on the most relevant segments, the system can enhance the efficiency and accuracy of information retrieval, making it easier to find and utilize the desired content."
-      [recommended]="true"
       [workflowId]="workflowId"
       [filter]="filter"
       strategy="rse"
@@ -123,3 +123,5 @@
     ></app-callback-urls-form>
   </div>
 </section>
+
+<hlm-toaster />
