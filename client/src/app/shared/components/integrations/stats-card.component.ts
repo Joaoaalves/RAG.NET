@@ -15,8 +15,6 @@ import {
   heroCodeBracket,
 } from '@ng-icons/heroicons/outline';
 
-gsap.registerPlugin(ScrollTrigger);
-
 @Component({
   selector: 'app-stats-card',
   standalone: true,

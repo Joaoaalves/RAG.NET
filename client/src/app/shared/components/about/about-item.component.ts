@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, Input } from '@angular/core';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { HighlightTextPipe } from './highlight-text.pipe';
 
 @Component({
@@ -18,7 +17,6 @@ export class AboutItemComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     var selector = `#about-card-${this.index}`;
-    gsap.registerPlugin(ScrollTrigger);
 
     gsap.set(selector, {
       y: '-50%',

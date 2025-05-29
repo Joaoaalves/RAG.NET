@@ -10,10 +10,6 @@ import { SplitText } from 'gsap/all';
   standalone: true,
 })
 export class HeroComponent implements AfterViewInit {
-  constructor() {
-    gsap.registerPlugin(SplitText);
-  }
-
   ngAfterViewInit(): void {
     // Split text for staggered reveal
     const title = new SplitText('#hero-title', {

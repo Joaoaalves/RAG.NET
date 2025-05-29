@@ -14,7 +14,6 @@ import { Filter, FilterStrategy } from 'src/app/models/filter';
 
 // Components
 import { HlmSwitchComponent } from 'libs/ui/ui-switch-helm/src/lib/hlm-switch.component';
-import { InputComponent } from '../input/input.component';
 
 // Services
 import { FilterService } from 'src/app/services/filter.service';
@@ -29,7 +28,6 @@ import { NumberCounterInputComponent } from '../number-counter-input/number-coun
     ReactiveFormsModule,
     HlmSwitchComponent,
     NumberCounterInputComponent,
-    InputComponent,
   ],
 })
 export class FilterConfigComponent {

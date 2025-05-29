@@ -37,7 +37,7 @@
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2">
               <h4 class="text-sm font-medium text-white truncate">
-                {{ job.document?.title || 'Unnamed Document' }}
+                {{ job.document.title }}
               </h4>
             </div>
             <p *ngIf="job.process" class="text-xs text-white/60 truncate">

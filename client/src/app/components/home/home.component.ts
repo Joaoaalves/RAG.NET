@@ -6,6 +6,10 @@ import { IntegrationsComponent } from 'src/app/shared/components/integrations/in
 import { NavBarComponent } from 'src/app/shared/components/nav-bar/nav-bar.component';
 import { RoadmapComponent } from 'src/app/shared/components/roadmap/roadmap.component';
 
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap } from 'gsap';
+import { SplitText } from 'gsap/all';
+
 @Component({
   templateUrl: './home.component.html',
   imports: [
@@ -18,4 +22,10 @@ import { RoadmapComponent } from 'src/app/shared/components/roadmap/roadmap.comp
   ],
   standalone: true,
 })
-export class HomeComponent {}
+export class HomeComponent {
+  constructor() {
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.registerPlugin(SplitText);
+  }
+}

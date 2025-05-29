@@ -15,11 +15,6 @@ import { SidebarComponent } from 'src/app/shared/components/sidebar/sidebar.comp
   templateUrl: './dashboard-layout.component.html',
   standalone: true,
   imports: [RouterOutlet, SidebarComponent, JobBarComponent],
-  styles: `
-  :host{
-  display: contents;
-  }
-  `,
 })
 export class DashboardLayoutComponent {
   jobs$: Observable<JobItem[]>;

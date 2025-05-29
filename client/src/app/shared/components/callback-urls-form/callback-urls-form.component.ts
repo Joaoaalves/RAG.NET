@@ -15,7 +15,6 @@ import { CallbackUrl } from 'src/app/models/callback-url';
 
 // Components
 import { AlertComponent } from '../alert/alert.component';
-import { InputComponent } from '../input/input.component';
 
 // Services
 import { CallbackUrlService } from 'src/app/services/callback-url.service';
@@ -30,13 +29,7 @@ import {
 @Component({
   selector: 'app-callback-urls-form',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    AlertComponent,
-    InputComponent,
-    NgIcon,
-  ],
+  imports: [CommonModule, ReactiveFormsModule, AlertComponent, NgIcon],
   providers: [
     provideIcons({
       lucideCheck,

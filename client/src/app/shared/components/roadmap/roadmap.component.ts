@@ -1,13 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
 import { TimelineItemComponent } from './timeline-item.component';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FloatingParticlesComponent } from './floating-particles.component';
 import { FeedbackFormComponent } from './feedback-form.component';
-
-gsap.registerPlugin(ScrollTrigger);
 
 export interface RoadmapItem {
   id: number;
@@ -15,12 +11,6 @@ export interface RoadmapItem {
   description: string;
   status: 'completed' | 'in-progress' | 'upcoming';
   icon: string;
-}
-
-interface RoadmapCategory {
-  label: string;
-  color: 'sky' | 'indigo' | 'rose';
-  items: RoadmapItem[];
 }
 
 @Component({
@@ -48,7 +38,6 @@ export class RoadmapComponent implements OnInit {
       feedback: [''],
     });
   }
-
   activeSection = 0;
   roadmapItems: RoadmapItem[] = [
     {
