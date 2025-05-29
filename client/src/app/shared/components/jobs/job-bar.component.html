@@ -23,6 +23,7 @@
       aria-label="Expand task bar"
       (click)="toggleJobsBar()"
       [class.rotate-180]="!isOpen"
+      *ngIf="jobs.length > 0"
     >
       <ng-icon name="lucideChevronDown" class="mt-1"></ng-icon>
     </button>
