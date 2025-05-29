@@ -1,0 +1,94 @@
+<div class="relative w-full h-full bg-gradient-to-br from-neutral-900 to-black">
+  <div class="grid grid-cols-1 lg:grid-cols-2 h-full">
+    <div class="p-4 border-r border-neutral-700">
+      <div class="bg-black rounded-lg p-4 h-full font-mono text-sm">
+        <div class="text-green-400 mb-2">
+          $ curl -X POST https://api.rag.net/v1/query
+        </div>
+        <div class="text-neutral-400 mb-1">-H "Authorization: Bearer sk-..."</div>
+        <div class="text-neutral-400 mb-1">
+          -H "Content-Type: application/json"
+        </div>
+        <div class="text-neutral-400 mb-3">-d '&#123;</div>
+        <div class="text-sky-400 ml-4 mb-1">
+          "workflow_id": "workflow_123",
+        </div>
+        <div class="text-sky-400 ml-4 mb-1">
+          "query": "What is the refund policy?",
+        </div>
+        <div class="text-sky-400 ml-4 mb-1">
+          "callback_url": "https://app.com/webhook"
+        </div>
+        <div class="text-neutral-400 mb-4">&#125;'</div>
+
+        <div
+          [ngClass]="showResponse ? 'opacity-100' : 'opacity-0'"
+          class="transition-all duration-500"
+        >
+          <div class="text-yellow-400 mb-2">Response:</div>
+          <div class="text-green-400 text-xs">
+            &#123;<br />
+            &nbsp;&nbsp;"request_id": "req_abc123",<br />
+            &nbsp;&nbsp;"status": "processing",<br />
+            &nbsp;&nbsp;"estimated_time": "2s"<br />
+            &#125;
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-4">
+      <div class="bg-neutral-800 rounded-lg p-4 h-full relative overflow-hidden">
+        <h4 class="text-white font-medium mb-4">Live API Requests</h4>
+
+        <div class="space-y-3">
+          <div class="bg-neutral-900 rounded-lg p-3 border border-fuchsia-500/30">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-white text-sm">req_abc123</span>
+              <div
+                class="w-2 h-2 bg-fuchsia-500 rounded-full animate-pulse"
+              ></div>
+            </div>
+            <div class="text-fuchsia-500 text-xs font-medium">
+              {{ steps[step] }}
+            </div>
+            <div class="w-full bg-neutral-700 rounded-full h-1 mt-2">
+              <div
+                class="h-1 rounded-full bg-gradient-to-r from-fuchsia-500 to-purple-500 transition-all duration-500"
+                [style.width]="getProgressWidth()"
+              ></div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="step === steps.length - 1"
+            class="bg-green-900/30 border border-green-500/50 rounded-lg p-3 animate-fade-in"
+          >
+            <div class="flex items-center space-x-2">
+              <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+              <span class="text-green-400 text-sm"
+                >Callback sent to webhook</span
+              >
+            </div>
+            <div class="text-neutral-400 text-xs mt-1">
+              https://app.com/webhook
+            </div>
+          </div>
+        </div>
+
+        <div class="absolute inset-0 pointer-events-none">
+          <div
+            *ngFor="let particle of particles"
+            class="absolute w-0.5 h-0.5 bg-white rounded-full animate-pulse opacity-10"
+            [ngStyle]="{
+              left: particle.left,
+              top: particle.top,
+              animationDelay: particle.animationDelay,
+              animationDuration: particle.animationDuration
+            }"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

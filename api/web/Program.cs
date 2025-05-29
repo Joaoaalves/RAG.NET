@@ -6,7 +6,6 @@ using web.Configurations;
 using web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-
 var isProductionEnv = Environment.GetEnvironmentVariable("PRODUCTION") ?? "false";
 var isDevelopment = isProductionEnv == "false";
 

@@ -1,0 +1,101 @@
+<div
+  class="relative w-full h-full p-6 bg-gradient-to-br from-gray-900 to-black overflow-hidden"
+>
+  <div class="flex items-center justify-between mb-6">
+    <h3 class="text-white font-semibold">RAG.NET Builder</h3>
+    <div class="flex items-center space-x-2">
+      <span
+        [ngClass]="mode === 'beginner' ? 'text-sky-400' : 'text-gray-400'"
+        class="text-sm"
+        >Beginner</span
+      >
+      <div class="w-8 h-4 bg-gray-700 rounded-full relative ms-2">
+        <div
+          class="w-3 h-3 bg-sky-400 rounded-full absolute top-0.5 transition-all duration-500"
+          [ngClass]="mode === 'expert' ? 'translate-x-4 !bg-fuchsia-500' : 'translate-x-0.5'"
+        ></div>
+      </div>
+      <span
+        [ngClass]="mode === 'expert' ? 'text-fuchsia-500' : 'text-gray-400'"
+        class="text-sm"
+        >Expert</span
+      >
+    </div>
+  </div>
+  <div class="relative h-[340px]">
+    <div class="relative">
+      <div
+        class="transition-all duration-700"
+        [ngClass]="
+          mode === 'beginner'
+            ? 'opacity-100 translate-x-0'
+            : 'opacity-0 -translate-x-full absolute inset-0'
+        "
+      >
+        <h4 class="text-sky-400 font-medium mb-4">Template Gallery</h4>
+        <div class="grid grid-cols-2 gap-3">
+          <div
+            *ngFor="let template of beginnerTemplates"
+            class="bg-gray-800/50 rounded-lg p-3 border border-sky-500/30 hover:border-sky-500/60 transition-all cursor-pointer"
+          >
+            <div class="text-2xl mb-2 text-white">
+              <ng-icon [name]="template.icon"></ng-icon>
+            </div>
+            <div class="text-white text-sm font-medium">
+              {{ template.title }}
+            </div>
+            <div class="text-gray-400 text-xs">{{ template.desc }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="transition-all duration-700"
+        [ngClass]="
+          mode === 'expert'
+            ? 'opacity-100 translate-x-0'
+            : 'opacity-0 translate-x-full absolute inset-0'
+        "
+      >
+        <h4 class="text-fuchsia-500 font-medium mb-4">Advanced Configuration</h4>
+        <div class="space-y-4">
+          <div
+            class="bg-gray-800/50 rounded-lg p-3 border border-fuchsia-500/30"
+          >
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-white text-sm">Embedding Strategy</span>
+              <span class="text-fuchsia-500 text-xs">Custom</span>
+            </div>
+            <div class="text-gray-400 text-xs">
+              Semantic chunking with 512 token overlap
+            </div>
+          </div>
+
+          <div
+            class="bg-gray-800/50 rounded-lg p-3 border border-purple-500/30"
+          >
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-white text-sm">Retrieval Parameters</span>
+              <span class="text-fuchsia-500 text-xs">Optimized</span>
+            </div>
+            <div class="text-gray-400 text-xs">
+              Top-k: 5, similarity threshold: 0.8
+            </div>
+          </div>
+
+          <div
+            class="bg-gray-800/50 rounded-lg p-3 border border-purple-500/30"
+          >
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-white text-sm">Cache Policy</span>
+              <span class="text-fuchsia-500 text-xs">Enabled</span>
+            </div>
+            <div class="text-gray-400 text-xs">
+              TTL: 1h, LRU eviction, 1GB limit
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

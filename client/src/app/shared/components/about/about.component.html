@@ -1,15 +1,17 @@
 <section
-  class="bg-gradient-to-b from-neutral-900 to-black w-screen flex flex-col items-center justify-center px-20"
   id="about"
+  class="bg-gradient-to-b from-neutral-900 to-black w-full pb-16"
 >
-  <app-supported-providers></app-supported-providers>
-  <div class="flex flex-col items-center justify-center mb-16 gap-y-12 xl:gap-y-20 2xl:gap-y-40">
+  <app-supported-providers class="mb-12"></app-supported-providers>
+
+  <div class="px-10 md:px-40">
     <app-about-item
-      *ngFor="let item of aboutItems; let index = index"
+      *ngFor="let item of aboutItems; let i = index"
       [title]="item.title"
       [subtitle]="item.subtitle"
-      [index]="index"
       [imageUrl]="item.imageUrl"
-      ></app-about-item>
+      [index]="i"
+      [dynamicComponent]="item.component"
+    ></app-about-item>
   </div>
 </section>

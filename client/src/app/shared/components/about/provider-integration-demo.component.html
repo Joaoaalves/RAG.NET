@@ -1,0 +1,73 @@
+<div class="relative w-full h-full p-6 bg-gradient-to-br from-gray-900 to-black">
+  <div class="flex items-center justify-between mb-6">
+    <h3 class="text-white font-semibold">Provider Configuration</h3>
+    <div class="flex space-x-2">
+      <div class="w-3 h-3 rounded-full bg-red-500"></div>
+      <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+      <div class="w-3 h-3 rounded-full bg-green-500"></div>
+    </div>
+  </div>
+
+  <div class="mb-6">
+    <label class="block text-gray-400 text-sm mb-2">Select AI Provider</label>
+    <div class="relative">
+      <div class="bg-gray-800 border border-gray-600 rounded-lg p-3 flex items-center space-x-3">
+        <div class="text-2xl transition-all duration-500 animate-fade-in">
+          <img [src]="providers[selectedProvider].logo" class="h-8 w-8" alt="">
+        </div>
+        <span class="text-white font-medium animate-fade-in">{{ providers[selectedProvider].name }}</span>
+        <div class="ml-auto text-gray-400">▼</div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="space-y-4 transition-all duration-500"
+    [ngClass]="{
+      'opacity-100 translate-y-0': showMetrics,
+      'opacity-0 translate-y-4': !showMetrics
+    }"
+  >
+    <h4 class="text-white font-medium mb-3">Real-Time Performance</h4>
+
+    <div class="grid grid-cols-3 gap-4">
+      <div class="bg-gray-800/50 rounded-lg p-3 border border-gray-700">
+        <div class="text-gray-400 text-xs mb-1">Latency</div>
+        <div class="text-green-400 font-bold">{{ providers[selectedProvider].latency }}</div>
+      </div>
+      <div class="bg-gray-800/50 rounded-lg p-3 border border-gray-700">
+        <div class="text-gray-400 text-xs mb-1">Cost/1K tokens</div>
+        <div class="text-blue-400 font-bold">{{ providers[selectedProvider].cost }}</div>
+      </div>
+      <div class="bg-gray-800/50 rounded-lg p-3 border border-gray-700">
+        <div class="text-gray-400 text-xs mb-1">Quality Score</div>
+        <div class="text-purple-400 font-bold">{{ providers[selectedProvider].quality }}</div>
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      <ng-container *ngFor="let label of performanceLabels; let i = index">
+        <div class="space-y-1">
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-300">{{ label }}</span>
+            <span class="text-white">{{ performanceValues[i] }}%</span>
+          </div>
+          <div class="w-full bg-gray-700 rounded-full h-2">
+            <div
+              class="h-2 rounded-full bg-gradient-to-r from-fuchsia-500 to-sky-500 transition-all duration-1000"
+              [style.width]="showMetrics ? performanceValues[i] + '%' : '0%'"
+            ></div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="mt-6">
+    <button
+      class="w-full py-3 px-4 bg-gradient-to-r from-fuchsia-500 to-sky-500 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-fuchsia-500/25 transition-all duration-300"
+    >
+      Save Configuration
+    </button>
+  </div>
+</div>

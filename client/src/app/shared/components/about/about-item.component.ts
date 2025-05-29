@@ -1,7 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Input } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  ElementRef,
+  ViewChild,
+  Type,
+} from '@angular/core';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { HighlightTextPipe } from './highlight-text.pipe';
+
+gsap.registerPlugin(ScrollTrigger);
 
 @Component({
   selector: 'app-about-item',
@@ -10,28 +20,35 @@ import { HighlightTextPipe } from './highlight-text.pipe';
   standalone: true,
 })
 export class AboutItemComponent implements AfterViewInit {
-  @Input() title: string = 'About Us';
-  @Input() subtitle: string = 'We are a team of passionate developers.';
-  @Input() imageUrl: string = 'assets/images/about.jpg';
+  @Input() title = 'About Us';
+  @Input() subtitle = 'We are a team of passionate developers.';
+  @Input() imageUrl = 'assets/images/about.jpg';
   @Input() index = 0;
+  @Input() dynamicComponent!: Type<any>;
+
+  @ViewChild('imageWrapper', { static: true }) imageEl!: ElementRef;
+  @ViewChild('textWrapper', { static: true }) textEl!: ElementRef;
 
   ngAfterViewInit() {
-    var selector = `#about-card-${this.index}`;
-
-    gsap.set(selector, {
-      y: '-50%',
-      rotationX: 30,
-      z: -100,
+    gsap.from(this.imageEl.nativeElement, {
+      x: this.index % 2 === 0 ? -100 : 100,
+      opacity: 0,
+      duration: 1,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: this.imageEl.nativeElement,
+        start: 'top 80%',
+      },
     });
 
-    gsap.to(selector, {
-      y: 0,
-      rotationX: 0,
-      z: 0,
+    gsap.from(this.textEl.nativeElement, {
+      x: this.index % 2 === 0 ? 100 : -100,
+      opacity: 0,
+      duration: 1,
+      ease: 'power3.out',
       scrollTrigger: {
-        trigger: selector,
-        start: 'top center',
-        end: 'bottom center',
+        trigger: this.textEl.nativeElement,
+        start: 'top 80%',
       },
     });
   }
