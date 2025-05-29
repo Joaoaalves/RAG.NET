@@ -1,19 +1,75 @@
-<li class="p-2 border border-neutral-500 rounded-xl flex items-start justify-start gap-x-4">
-  <div  class="bg-neutral-800 min-w-11 min-h-11 grid place-items-center rounded-xl flex-1">
-    <app-job-pending *ngIf="['Processing','Pending'].includes(job.status) && job.process" [status]="job.status" [progress]="job.process.progress"/>
-    <app-job-done *ngIf="job.status == 'Done'" />
-    <app-job-error *ngIf="job.status == 'Error'" />
-  </div>
+<li class="inline-block transition-all duration-300 w-[300px]">
+  <div class="relative group">
+    <div
+      class="relative p-[1px] border-white/10 border rounded-xl overflow-hidden transition-transform duration-300 ease-out transform group-hover:scale-[1.02] group-hover:shadow-[0_0_15px_rgba(217,70,239,0.2)]"
+    >
+      <div
+        class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-transparent group-hover:from-rose-500 group-hover:via-fuchsia-500 group-hover:to-sky-500 transition-all duration-500"
+      ></div>
+      <div class="relative bg-black/60 backdrop-blur-sm rounded-xl p-3">
+        <div class="flex items-center gap-4">
 
-  <div class="w-full">
-    <h3 class="text-neutral-300 text-lg">
-        Document: <strong *ngIf="job.document">{{ job.document.title }}</strong>
-    </h3>
-    <span *ngIf="job.process" class="text-neutral-400 text-sm">
-        Process: {{ job.process.title }}
-    </span>
-    <span *ngIf="job.status === 'Error'" class="text-red-500 text-xs">
-      {{ job.error }}
-    </span>
+          <div class="relative flex-shrink-0">
+            <div
+              class="w-10 h-10 rounded-full bg-black/80 border border-white/10 flex items-center justify-center overflow-hidden"
+            >
+              <app-job-pending
+                *ngIf="
+                  ['Processing', 'Pending'].includes(job.status) && job.process
+                "
+                [status]="job.status"
+                [progress]="job.process.progress"
+              />
+              <app-job-done *ngIf="job.status === 'Done'" />
+              <app-job-error *ngIf="job.status === 'Error'" />
+            </div>
+            <div
+              class="absolute inset-0 rounded-full blur-md -z-10 opacity-30"
+              [ngClass]="{
+                'bg-sky-500': job.status === 'Done',
+                'bg-rose-500': job.status === 'Error',
+                'bg-fuchsia-500':
+                  job.status === 'Processing' || job.status === 'Pending'
+              }"
+            ></div>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <h4 class="text-sm font-medium text-white truncate">
+                {{ job.document?.title || 'Unnamed Document' }}
+              </h4>
+            </div>
+            <p *ngIf="job.process" class="text-xs text-white/60 truncate">
+              Process: {{ job.process.title }}
+            </p>
+            <p
+              *ngIf="job.status === 'Error'"
+              class="text-xs text-red-500 truncate"
+            >
+              {{ job.error }}
+            </p>
+          </div>
+
+          <button
+            class="opacity-0 group-hover:opacity-100 transition-opacity rounded-full hover:bg-white/10 text-white/70 hover:text-white text-lg/tight grid place-items-center w-8 h-8 cursor-pointer"
+            aria-label="Cancel job"
+            *ngIf="job.status === 'Done' || job.status === 'Error'"
+            (click)="onRemoveJob()"
+          >
+            <ng-icon name="lucideX"></ng-icon>
+          </button>
+        </div>
+
+        <div
+          class="mt-2 h-[2px] w-full bg-white/5 rounded-full overflow-hidden"
+        >
+          <div
+            class="h-full transition-all duration-500 ease-out bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500"
+            [style.width.%]="job.process.progress"
+          ></div>
+        </div>
+      </div>
+    </div>
   </div>
 </li>

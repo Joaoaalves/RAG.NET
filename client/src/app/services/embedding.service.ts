@@ -51,6 +51,12 @@ export class EmbeddingService {
     };
   }
 
+  deleteJob(jobId: string): void {
+    const currentJobs = this.jobs.getValue();
+    const updatedJobs = currentJobs.filter((job) => job.jobId !== jobId);
+    this.jobs.next(updatedJobs);
+  }
+
   private updateJobStatus(
     response: JobNotificationResponse,
     status: JobStatus,

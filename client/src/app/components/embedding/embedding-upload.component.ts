@@ -1,4 +1,3 @@
-import { WaveProgressComponent } from './../../shared/components/wave-progress/wave-progress.component';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';

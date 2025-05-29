@@ -5,6 +5,7 @@ import { JobItem } from 'src/app/models/job';
 
 // Services
 import { EmbeddingService } from 'src/app/services/embedding.service';
+import { JobBarComponent } from 'src/app/shared/components/jobs/job-bar.component';
 
 // Components
 import { SidebarComponent } from 'src/app/shared/components/sidebar/sidebar.component';
@@ -13,7 +14,7 @@ import { SidebarComponent } from 'src/app/shared/components/sidebar/sidebar.comp
   selector: 'app-dashboard-layout',
   templateUrl: './dashboard-layout.component.html',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent],
+  imports: [RouterOutlet, SidebarComponent, JobBarComponent],
   styles: `
   :host{
   display: contents;
