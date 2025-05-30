@@ -21,11 +21,16 @@ export class JobBarComponent implements OnInit, OnDestroy {
 
   private previousJobsLength = 0;
   private subscription!: Subscription;
+  runningJobs = 0;
 
   constructor(private embeddingService: EmbeddingService) {}
 
   ngOnInit() {
     this.subscription = this.jobs$.subscribe((jobs) => {
+      this.runningJobs = jobs.filter(
+        (j) => j.status === 'Pending' || j.status === 'Processing'
+      ).length;
+
       if (jobs.length === 0) {
         this.isOpen = false;
       }

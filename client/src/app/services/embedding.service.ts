@@ -21,80 +21,7 @@ export class EmbeddingService {
     private notifier: JobNotificationService
   ) {
     this.initSignalRListeners();
-  }
-
-  private initSignalRListeners() {
-    this.notifier.onProgress((response) => {
-      this.updateJobStatus(response, 'Processing');
-    });
-    this.notifier.onCompleted((response) => {
-      this.updateJobStatus(response, 'Done');
-    });
-    this.notifier.onFailed((response, errorMessage) => {
-      this.updateJobStatus(response, 'Error', errorMessage);
-    });
-  }
-
-  private createNewJobItem(jobId: string, title: string): JobItem {
-    return {
-      jobId: jobId,
-      process: {
-        title: 'Uploading File',
-        progress: 0,
-      },
-      document: {
-        id: '',
-        title: title,
-        pages: 0,
-      },
-      status: 'Pending',
-    };
-  }
-
-  deleteJob(jobId: string): void {
-    const currentJobs = this.jobs.getValue();
-    const updatedJobs = currentJobs.filter((job) => job.jobId !== jobId);
-    this.jobs.next(updatedJobs);
-  }
-
-  private updateJobStatus(
-    response: JobNotificationResponse,
-    status: JobStatus,
-    error?: string
-  ) {
-    const currentJobs = this.jobs.getValue();
-    const jobIndex = currentJobs.findIndex((j) => j.jobId === response.jobId);
-
-    let updatedJobs: JobItem[];
-
-    if (jobIndex > -1) {
-      updatedJobs = currentJobs.map((job) =>
-        job.jobId === response.jobId
-          ? {
-              ...job,
-              document: response.document,
-              process: response.process,
-              status,
-              error,
-            }
-          : job
-      );
-    } else {
-      const newJob: JobItem = {
-        jobId: response.jobId,
-        process: response.process,
-        document: response.document,
-        status,
-        error,
-      };
-      updatedJobs = [...currentJobs, newJob];
-    }
-
-    this.jobs.next(updatedJobs);
-  }
-
-  private getFileName(file: File): string {
-    return file.name.replace(/\.[^/.]+$/, '');
+    this.startCleanupTimer();
   }
 
   sendFile(file: File, apiKey: string): void {
@@ -125,5 +52,101 @@ export class EmbeddingService {
         })
       )
       .subscribe();
+  }
+
+  deleteJob(jobId: string): void {
+    const currentJobs = this.jobs.getValue();
+    const updatedJobs = currentJobs.filter((job) => job.jobId !== jobId);
+    this.jobs.next(updatedJobs);
+  }
+
+  private initSignalRListeners() {
+    this.notifier.onProgress((response) => {
+      this.updateJobStatus(response, 'Processing');
+    });
+    this.notifier.onCompleted((response) => {
+      this.updateJobStatus(response, 'Done');
+    });
+    this.notifier.onFailed((response, errorMessage) => {
+      this.updateJobStatus(response, 'Error', errorMessage);
+    });
+  }
+
+  private createNewJobItem(jobId: string, title: string): JobItem {
+    return {
+      jobId: jobId,
+      process: {
+        title: 'Uploading File',
+        progress: 0,
+      },
+      document: {
+        id: '',
+        title: title,
+        pages: 0,
+      },
+      status: 'Pending',
+      updatedAt: Date.now(),
+    };
+  }
+
+  private updateJobStatus(
+    response: JobNotificationResponse,
+    status: JobStatus,
+    error?: string
+  ) {
+    const currentJobs = this.jobs.getValue();
+    const jobIndex = currentJobs.findIndex((j) => j.jobId === response.jobId);
+
+    let updatedJobs: JobItem[];
+
+    if (jobIndex > -1) {
+      updatedJobs = currentJobs.map((job) =>
+        job.jobId === response.jobId
+          ? {
+              ...job,
+              document: response.document,
+              process: response.process,
+              status,
+              error,
+              updatedAt: Date.now(),
+            }
+          : job
+      );
+    } else {
+      const newJob: JobItem = {
+        jobId: response.jobId,
+        process: response.process,
+        document: response.document,
+        status,
+        error,
+        updatedAt: Date.now(),
+      };
+      updatedJobs = [...currentJobs, newJob];
+    }
+
+    this.jobs.next(updatedJobs);
+  }
+
+  private getFileName(file: File): string {
+    return file.name.replace(/\.[^/.]+$/, '');
+  }
+
+  private startCleanupTimer() {
+    setInterval(() => {
+      const now = Date.now();
+      const oneMinute = 60 * 1000;
+
+      const currentJobs = this.jobs.getValue();
+      const filtered = currentJobs.filter((job) => {
+        if (job.status === 'Done' || job.status === 'Error') {
+          return now - job.updatedAt < oneMinute;
+        }
+        return true;
+      });
+
+      if (filtered.length !== currentJobs.length) {
+        this.jobs.next(filtered);
+      }
+    }, 5000);
   }
 }

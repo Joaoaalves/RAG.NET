@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { toast } from 'ngx-sonner';
 
 // Components
 import { WorkflowCardComponent } from 'src/app/shared/components/workflow-card/workflow-card.component';
@@ -39,6 +40,17 @@ export class WorkflowsComponent implements OnInit {
   }
 
   removeWorkflow(workflowId: string) {
-    this.workflows = this.workflows.filter((w) => w.id !== workflowId);
+    const workflow = this.workflows.filter((w) => w.id === workflowId)[0];
+    if (workflow) {
+      this.workflows = this.workflows.filter((w) => w.id !== workflow.id);
+      toast('Workflow deleted!', {
+        description: `'${workflow.name}' was successfully deleted!`,
+      });
+      return;
+    }
+
+    toast('An error occurred!', {
+      description: 'The workflow with provided ID was not found!',
+    });
   }
 }

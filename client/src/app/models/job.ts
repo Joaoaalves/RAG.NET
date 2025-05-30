@@ -13,6 +13,7 @@ export interface JobItem {
   process: JobProcess;
   document: Document;
   error?: string;
+  updatedAt: number;
 }
 
 export interface JobNotificationResponse {
