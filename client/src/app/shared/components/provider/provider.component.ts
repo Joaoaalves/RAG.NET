@@ -16,12 +16,16 @@ import {
 } from 'src/app/models/provider';
 import { ProvidersService } from 'src/app/services/providers.service';
 import { provideIcons } from '@ng-icons/core';
-import {
-  heroArrowTopRightOnSquare,
-  heroPencil,
-  heroXMark,
-} from '@ng-icons/heroicons/outline';
 import { NgIcon } from '@ng-icons/core';
+import { AlertComponent } from '../alert/alert.component';
+import {
+  lucideCheck,
+  lucideCircleArrowOutUpRight,
+  lucideCircleX,
+  lucideKey,
+  lucidePencil,
+  lucideTrash,
+} from '@ng-icons/lucide';
 
 @Component({
   selector: 'app-provider',
@@ -31,13 +35,17 @@ import { NgIcon } from '@ng-icons/core';
     InputComponent,
     ReactiveFormsModule,
     FormsModule,
+    AlertComponent,
     NgIcon,
   ],
   providers: [
     provideIcons({
-      heroPencil,
-      heroXMark,
-      heroArrowTopRightOnSquare,
+      lucideCheck,
+      lucideTrash,
+      lucidePencil,
+      lucideKey,
+      lucideCircleArrowOutUpRight,
+      lucideCircleX,
     }),
   ],
   standalone: true,
@@ -45,32 +53,38 @@ import { NgIcon } from '@ng-icons/core';
 export class ProviderComponent implements OnInit {
   @Input() Provider!: Provider;
 
+  providerId = '';
+  form!: FormGroup;
   providerData: ProviderData | undefined;
-  form: FormGroup;
+
   hasApiKey: boolean = false;
   isUpdating: boolean = false;
+  lastValidValue: string = '';
 
   constructor(
     private fb: FormBuilder,
     private providersService: ProvidersService
-  ) {
+  ) {}
+
+  ngOnInit() {
     this.form = this.fb.group({
       apiKey: ['', Validators.required],
     });
-  }
 
-  ngOnInit() {
     this.providerData = this.providersService.mapProviderData(
       this.Provider.provider.toLowerCase() as SupportedProvider
     );
 
     this.hasApiKey = !!this.Provider.apiKey;
-
+    this.providerId = this.Provider?.id;
     if (this.Provider.apiKey && this.providerData?.keyTemplate) {
-      const visibleKey =
-        this.providerData?.keyTemplate.slice(0, -this.Provider.apiKey.length) +
-        this.Provider.apiKey;
+      const visibleKey = this.providerData?.keyTemplate + this.Provider.apiKey;
+
+      this.lastValidValue = visibleKey;
+
       this.form.patchValue({ apiKey: visibleKey });
+
+      this.disableInput();
     }
 
     this.form.get('apiKey')?.valueChanges.subscribe((value: string) => {
@@ -78,18 +92,6 @@ export class ProviderComponent implements OnInit {
         const lastPart = value.slice(-4);
         this.Provider.apiKey = lastPart;
       }
-    });
-  }
-
-  onSubmit(event: Event) {
-    event.preventDefault();
-    if (this.form.valid) {
-      this.hasApiKey ? this.update() : this.add();
-      return;
-    }
-
-    toast.error('Invalid API Key', {
-      description: 'You should provide a valid API Key.',
     });
   }
 
@@ -102,23 +104,34 @@ export class ProviderComponent implements OnInit {
       });
     }
   }
+
   startEdition() {
+    this.lastValidValue = this.form.get('apiKey')!.value;
+    this.enableInput();
     this.isUpdating = true;
     this.form.setValue({ apiKey: '' });
   }
 
   finishApiKeyEdition(apiKey?: string) {
     this.isUpdating = false;
-    const suffix = apiKey?.slice(0, -4) ?? this.Provider.apiKey;
-    this.form.setValue({
-      apiKey: this.providerData?.keyTemplate.slice(0, -4) + suffix,
-    });
+    if (apiKey) {
+      const visibleKey = this.providerData?.keyTemplate + apiKey.slice(-4);
+      this.form.setValue({
+        apiKey: visibleKey,
+      });
+    } else {
+      this.form.setValue({
+        apiKey: this.lastValidValue,
+      });
+    }
+
+    this.disableInput();
   }
 
   update() {
     const apiKey: string = this.form.get('apiKey')?.value;
 
-    if (!apiKey) {
+    if (!apiKey || !this.form.valid) {
       toast.error('Invalid API Key', {
         description: 'You should provide a valid API Key.',
       });
@@ -130,19 +143,18 @@ export class ProviderComponent implements OnInit {
     try {
       this.providersService
         .updateProvider(
-          this.Provider.id,
+          this.providerId,
           apiKey,
           this.Provider.provider.toLowerCase() as SupportedProvider
         )
         .subscribe({
           next: () => {
             toast.success('Provider updated successfully');
-
-            this.finishApiKeyEdition();
+            this.finishApiKeyEdition(apiKey);
           },
           error: (msg) => {
             toast.error('Update failed', {
-              description: `${msg}`,
+              description: `${msg.error}`,
             });
           },
         });
@@ -153,8 +165,17 @@ export class ProviderComponent implements OnInit {
     }
   }
 
+  dismiss() {
+    this.isUpdating = false;
+    this.form.setValue({
+      apiKey: this.lastValidValue,
+    });
+
+    this.disableInput();
+  }
+
   delete() {
-    this.providersService.deleteProvider(this.Provider.id).subscribe({
+    this.providersService.deleteProvider(this.providerId).subscribe({
       next: () => {
         toast.success('Provider deleted successfully', {
           description: 'The provider has been deleted successfully.',
@@ -162,7 +183,8 @@ export class ProviderComponent implements OnInit {
 
         this.form.reset();
         this.hasApiKey = false;
-        this.Provider.apiKey = '';
+        this.providerId = '';
+        this.enableInput();
       },
       error: (msg) => {
         toast.error('An error occurred', {
@@ -175,7 +197,7 @@ export class ProviderComponent implements OnInit {
   add() {
     const apiKey = this.form.get('apiKey')?.value;
 
-    if (!apiKey) {
+    if (!apiKey || !this.form.valid) {
       toast.error('Invalid API Key', {
         description: 'You should provide a valid API Key.',
       });
@@ -188,12 +210,12 @@ export class ProviderComponent implements OnInit {
           apiKey
         )
         .subscribe({
-          next: () => {
+          next: (response) => {
             toast.success('Provider saved successfully', {
               description: 'The provider has been saved successfully.',
             });
             this.hasApiKey = true;
-
+            this.providerId = response.id;
             this.finishApiKeyEdition(apiKey);
           },
           error: (msg) => {
@@ -207,5 +229,13 @@ export class ProviderComponent implements OnInit {
         description: `${err}`,
       });
     }
+  }
+
+  private disableInput() {
+    this.form.get('apiKey')!.disable();
+  }
+
+  private enableInput() {
+    this.form.get('apiKey')!.enable();
   }
 }

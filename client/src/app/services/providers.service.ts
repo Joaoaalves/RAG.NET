@@ -40,7 +40,6 @@ export class ProvidersService extends BaseApiService {
     apiKey: string
   ): Observable<AIProvider> {
     const providerData = this.mapProviderData(provider);
-
     if (!providerData) {
       throw new Error(`Provider ${provider} not found`);
     }

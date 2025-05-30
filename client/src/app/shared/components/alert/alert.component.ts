@@ -63,8 +63,9 @@ export class AlertComponent {
 
   @Output() actionConfirmed = new EventEmitter<boolean>();
 
-  confirmAction() {
+  onConfirmClick(ctx: any) {
     this.actionConfirmed.emit(true);
+    ctx.close();
   }
 
   getVariantConfig() {

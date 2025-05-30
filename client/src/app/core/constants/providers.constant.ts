@@ -39,7 +39,7 @@ export const PROVIDERS_DATA: Record<SupportedProvider, ProviderData> = {
     icon: 'img/providers/qdrant.svg',
     apiKeyUrl: 'https://cloud.qdrant.io/',
     keyTemplate: '***************',
-    regex: '^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$',
+    regex: '^[\\w-]*.[\\w-]*.[\\w-]*$',
   },
   gemini: {
     id: 4,

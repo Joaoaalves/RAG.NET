@@ -6,7 +6,7 @@
   </div>
   <div
     *ngIf="providers.length > 0"
-    class="flex flex-col items-stretch justify-start gap-8 w-2/3"
+    class="grid grid-cols-1 lg:grid-cols-2 gap-8"
   >
     <app-provider [Provider]="getProvider('openai')"></app-provider>
 
