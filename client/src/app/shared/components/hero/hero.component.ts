@@ -1,12 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component } from '@angular/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { lucideArrowRight, lucideArrowUpRight } from '@ng-icons/lucide';
 import { gsap } from 'gsap';
 import { SplitText } from 'gsap/all';
 
 @Component({
   selector: 'app-hero',
   templateUrl: './hero.component.html',
-  imports: [CommonModule],
+  imports: [CommonModule, NgIcon],
+  providers: [
+    provideIcons({
+      lucideArrowUpRight,
+      lucideArrowRight,
+    }),
+  ],
   standalone: true,
 })
 export class HeroComponent implements AfterViewInit {

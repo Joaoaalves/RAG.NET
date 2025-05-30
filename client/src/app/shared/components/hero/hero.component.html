@@ -2,12 +2,29 @@
   id="home"
   class="w-screen h-screen bg-black/90 relative grid grid-cols-2 p-4 sm:p-10 lg:p-40"
 >
+  <svg
+    class="absolute top-0 left-0 w-full h-full z-10 pointer-events-none"
+    xmlns="http://www.w3.org/2000/svg"
+    preserveAspectRatio="none"
+  >
+    <defs>
+      <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path
+          d="M 40 0 L 0 0 0 40"
+          fill="none"
+          stroke="#ffffff08"
+          stroke-width="1"
+        />
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#grid)" />
+  </svg>
   <div
     class="absolute inset-0 bg-[url(/img/home/background.webp)] bg-cover bg-right-bottom animate-fade-in"
   ></div>
 
   <div
-    class="z-10 flex flex-col justify-center items-start max-w-[90vw] w-2xl h-full"
+    class="z-10 flex flex-col justify-center items-start max-w-[90vw] w-3xl h-full"
   >
     <div #lampContainer class="relative mt-8 w-full overflow-visible">
       <div
@@ -48,14 +65,20 @@
       <a
         id="register-btn"
         href="/register"
-        class="bg-neutral-900 text-white hover:bg-violet-600 transition-all duration-300 text-center py-2 rounded-xl opacity-0"
-        >Get Started</a
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-11 rounded-md px-8 group relative overflow-hidden bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 hover:shadow-2xl hover:shadow-fuchsia-500/25 transition-all duration-300 text-white"
+        >
+        GET STARTED FREE
+        <ng-icon name="lucideArrowUpRight" class="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 !text-xl/tight"></ng-icon>
+        </a
       >
       <a
         id="docs-btn"
         href="/docs"
-        class="border border-white text-white hover:bg-rose-500 hover:border-rose-500 transition-all duration-300 text-center py-2 rounded-xl  opacity-0"
-        >Documentation</a
+        class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border bg-black h-11 rounded-md px-8 border-white/10 text-white hover:bg-white/5 transition-all duration-300"
+        >
+        DOCUMENTATION
+        <ng-icon name="lucideArrowRight" class="!text-xl/tight"></ng-icon>
+        </a
       >
     </div>
   </div>

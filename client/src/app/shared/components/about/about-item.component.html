@@ -1,25 +1,49 @@
-<div
-  class="relative overflow-hidden my-16 w-full"
->
-  <div
-    class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
-  >
-    <ng-container *ngComponentOutlet="dynamicComponent"></ng-container>
+<div class="relative overflow-hidden my-16 lg:my-24 w-full">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
     <div
-      #textWrapper
+      id="text-wrapper"
       class="w-full flex flex-col justify-start items-start h-full"
+      [class.lg:order-1]="index % 2 === 1"
     >
       <h2
-        class="text-3xl md:text-5xl font-bold text-transparent bg-clip-text
-               bg-gradient-to-b from-[#f5f5f5] via-[#f5f5f5] to-[#999999]
-               drop-shadow-[2px_0_4px_#00000060]"
+        class="text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-[#f5f5f5] via-[#f5f5f5] to-[#999999] drop-shadow-[2px_0_4px_#00000060]"
       >
         {{ title }}
       </h2>
       <p
-        class="mt-4 text-base md:text-lg text-neutral-200"
+        class="mt-4 text-base md:text-lg text-neutral-200 mb-8"
         [innerHTML]="subtitle | highlightText"
       ></p>
+
+      <div class="space-y-6">
+        <div
+          *ngFor="let feat of feats"
+          class="flex items-start space-x-4 group bg-gradient-to-r from-sky-500/0 to-sky-500/0 hover:from-sky-500/5 hover:to-sky-500/20 border border-sky-500/0 hover:border-sky-500 rounded-2xl hover:bg-sky-500/20 transition-all duration-300 p-2"
+        >
+          <div
+            class="text-2xl/tight text-sky-500 transition-colors duration-300 grid place-items-center"
+          >
+            <ng-icon [name]="feat.icon" class="mt-1"></ng-icon>
+          </div>
+
+          <div>
+            <h3
+              class="text-white font-semibold mb-1 transition-colors duraiont-300"
+            >
+              {{ feat.title }}
+            </h3>
+            <p
+              class="text-gray-400 group-hover:text-gray-300 transition-colors"
+            >
+              {{ feat.description }}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <ng-container
+      *ngComponentOutlet="dynamicComponent"
+    ></ng-container>
   </div>
 </div>

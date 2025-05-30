@@ -1,9 +1,9 @@
 <div class="relative">
   <div
     class="relative w-full rounded-2xl overflow-hidden
-           bg-gradient-to-br from-gray-900 to-black border border-white/10"
+           bg-gradient-to-br from-slate-900 to-black border border-white/15"
   >
-    <div class="relative w-full p-6 bg-gradient-to-br from-gray-900 to-black">
+    <div class="relative w-full p-6 bg-gradient-to-br from-slate-900 to-black">
       <div class="flex items-center justify-between mb-6">
         <h3 class="text-white font-semibold">Create New Workflow</h3>
         <div class="flex space-x-2">
@@ -19,7 +19,7 @@
           class="relative p-4 rounded-lg border transition-all duration-500"
           [ngClass]="{
             'border-fuchsia-500 bg-fuchsia-500/10 shadow-lg shadow-fuchsia-500/20': i === currentStep && i < steps.length,
-            'border-gray-600 bg-gray-800/50': i > currentStep,
+            'border-slate-600 bg-slate-800/50': i > currentStep,
             'border-green-500 bg-green-500/10': i < currentStep || (i === currentStep && currentStep === steps.length)
           }"
         >
@@ -28,7 +28,7 @@
               class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500"
               [ngClass]="{
                 'bg-fuchsia-500 text-white': i === currentStep && currentStep < steps.length,
-                'bg-gray-600 text-gray-300': i > currentStep,
+                'bg-slate-600 text-slate-300': i > currentStep,
                 'bg-green-500 text-white': i < currentStep || (i === currentStep && currentStep === steps.length)
               }"
             >
@@ -43,7 +43,7 @@
                 class="font-medium"
                 [ngClass]="{
                   'text-white': i === currentStep,
-                  'text-gray-300': i !== currentStep
+                  'text-slate-300': i !== currentStep
                 }"
               >
                 {{ step.title }}
@@ -51,8 +51,8 @@
               <p
                 class="text-sm"
                 [ngClass]="{
-                  'text-gray-200': i === currentStep,
-                  'text-gray-400': i !== currentStep
+                  'text-slate-200': i === currentStep,
+                  'text-slate-400': i !== currentStep
                 }"
               >
                 {{ step.description }}
@@ -71,7 +71,7 @@
         <button
           class="w-full py-3 px-4 rounded-lg font-semibold transition-all duration-500"
           [ngClass]="{
-            'bg-gray-700 text-gray-400 cursor-not-allowed': currentStep < steps.length,
+            'bg-slate-700 text-slate-400 cursor-not-allowed': currentStep < steps.length,
             'bg-gradient-to-r from-fuchsia-500 to-sky-500 text-white shadow-lg shadow-fuchsia-500/25': currentStep === steps.length
           }"
         >
