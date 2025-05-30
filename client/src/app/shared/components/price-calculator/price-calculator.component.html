@@ -1,35 +1,40 @@
-<div class="bg-black/40 border border-[#333333] rounded-lg p-4 space-y-4">
-  <div class="flex items-center gap-3">
+<div class="space-y-4">
+  <div
+    class="flex items-start gap-3 bg-black/40 border border-[#333333] rounded-lg p-3"
+  >
     <div
       class="w-8 h-8 rounded-full bg-gradient-to-br from-rose-500 to-fuchsia-500 flex items-center justify-center text-lg text-white"
     >
       <ng-icon name="lucideArrowUp"></ng-icon>
     </div>
-    <div class="flex-1">
+    <div class="flex flex-col items-start justify-start">
       <p class="text-white text-sm">Embedding Cost</p>
-      <p class="text-[#BFA3B5] text-xs">
+      <p class="text-neutral-400 text-xs">
         {{ formatCurrency(embeddingCostPerMillion) }} per 1M tokens
-        <span
-          *ngIf="embeddingCostPerMillion"
-          class="block text-[#8A6E7D]"
-        >
-          (~{{ oneDolarPages }} pages per U$ 1,00)
-        </span>
       </p>
+      <span *ngIf="embeddingCostPerMillion" class="block text-xs text-neutral-500">
+        (~{{ oneDolarPages }} pages per U$ 1,00)
+      </span>
     </div>
   </div>
 
-  <div class="flex items-center gap-3">
+  <div
+    class="flex items-start gap-3 bg-black/40 border border-[#333333] rounded-lg p-3"
+  >
     <div
       class="w-8 h-8 rounded-full bg-gradient-to-br from-fuchsia-500 to-sky-500 flex items-center justify-center text-lg text-white"
     >
       <ng-icon name="lucideMessageCircle"></ng-icon>
     </div>
-    <div class="flex-1">
+    <div class="flex flex-col items-start justify-start">
       <p class="text-white text-sm">Conversation Cost</p>
-      <p class="text-[#BFA3B5] text-xs">
-        Input: {{ formatCurrency(conversationInputCostPerMillion) }} per 1M tokens<br>
-        Output: {{ formatCurrency(conversationOutputCostPerMillion) }} per 1M tokens
+      <p class="text-neutral-400 text-xs">
+        Input: {{ formatCurrency(conversationInputCostPerMillion) }} per 1M
+        tokens
+      </p>
+      <p class="text-neutral-400 text-xs">
+        Output: {{ formatCurrency(conversationOutputCostPerMillion) }} per 1M
+        tokens
       </p>
     </div>
   </div>

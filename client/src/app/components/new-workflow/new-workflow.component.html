@@ -5,7 +5,7 @@
   </p>
 </header>
 
-<div class="flex flex-col lg:flex-row items-start justify-between gap-10 mb-8">
+<div class="flex flex-col lg:flex-row items-start justify-between gap-10 mb-24">
   <div class="w-full max-w-4xl min-w-sm">
     <div class="relative">
       <div
@@ -88,7 +88,7 @@
             <div class="flex gap-3">
               <button
                 type="button"
-                class="flex-1 py-3 px-4 rounded-full text-sm cursor-pointer transition-all transform bg-[#331A24] text-neutral-100 hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
+                class="flex-1 py-3 px-4 rounded-full text-sm cursor-pointer transition-all transform bg-neutral-900 text-neutral-100 hover:bg-white hover:text-black hover:translate-y-[-1px]"
                 (click)="setChunkerStrategy(2)"
                 [ngClass]="{
                   'bg-sky-500 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
@@ -100,7 +100,7 @@
 
               <button
                 type="button"
-                class="flex-1 py-3 px-4 rounded-full text-sm cursor-pointer transition-all transform bg-[#331A24] text-neutral-100 hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
+                class="flex-1 py-3 px-4 rounded-full text-sm cursor-pointer transition-all transform bg-neutral-900 text-neutral-100 hover:bg-white hover:text-black hover:translate-y-[-1px]"
                 (click)="setChunkerStrategy(1)"
                 [ngClass]="{
                   'bg-sky-500 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
@@ -112,7 +112,7 @@
 
               <button
                 type="button"
-                class="flex-1 py-3 px-4 rounded-full text-sm cursor-pointer transition-all transform bg-[#331A24] text-neutral-100 hover:bg-[#3D1F2B] hover:translate-y-[-1px]"
+                class="flex-1 py-3 px-4 rounded-full text-sm cursor-pointer transition-all transform bg-neutral-900 text-neutral-100 hover:bg-white hover:text-black hover:translate-y-[-1px]"
                 (click)="setChunkerStrategy(0)"
                 [ngClass]="{
                   'bg-sky-500 text-white shadow-[0_0_15px_rgba(14,165,233,0.3)] translate-y-[-3px]':
@@ -145,7 +145,6 @@
               >
               <div class="mt-4" formGroupName="embeddingProvider">
                 <app-select
-
                   [options]="embeddingOptions$ | async"
                   formControlName="provider"
                   placeholder="Select Provider"
@@ -158,16 +157,15 @@
                 ></app-select>
               </div>
 
-              <div
-                class="flex flex-wrap gap-2 mt-2"
-              >
+              <div class="flex flex-wrap gap-2 mt-2">
                 <div
                   class="px-3 py-1 rounded-full bg-black border border-rose-500/30 text-rose-500 text-xs flex items-center gap-1"
                 >
                   <span>Speed:</span>
                   <ng-container
                     *ngFor="
-                      let icon of (embeddingModel$ | async)?.speed ?? 0 | modelSpeed
+                      let icon of (embeddingModel$ | async)?.speed ?? 0
+                        | modelSpeed
                     "
                   >
                     <ng-icon [name]="icon"></ng-icon>
@@ -186,7 +184,8 @@
                   class="px-3 py-1 rounded-full bg-black border border-sky-500/30 text-sky-500 text-xs flex items-center gap-1"
                 >
                   <span
-                    >Vector Size: {{ (embeddingModel$ | async)?.vectorSize }}</span
+                    >Vector Size:
+                    {{ (embeddingModel$ | async)?.vectorSize }}</span
                   >
                 </div>
                 <div
@@ -219,7 +218,7 @@
               </div>
 
               <div
-                *ngIf="(conversationModels$ | async)"
+                *ngIf="conversationModels$ | async"
                 class="flex flex-wrap gap-2 mt-2"
               >
                 <div
@@ -228,7 +227,8 @@
                   <span>Speed:</span>
                   <ng-container
                     *ngFor="
-                      let icon of (conversationModel$ | async)?.speed ?? 0| modelSpeed
+                      let icon of (conversationModel$ | async)?.speed ?? 0
+                        | modelSpeed
                     "
                   >
                     <ng-icon [name]="icon"></ng-icon>
@@ -248,7 +248,8 @@
                 >
                   <span
                     >Input Price: U$
-                    {{ (conversationModel$ | async)?.inputPrice }} / 1M Tokens</span
+                    {{ (conversationModel$ | async)?.inputPrice }} / 1M
+                    Tokens</span
                   >
                 </div>
                 <div
@@ -263,61 +264,44 @@
               </div>
             </div>
           </div>
+          <div
+            class="relative grid grid-cols-1 lg:grid-cols-2 gap-6 overflow-visible"
+          >
+            <div class="relative overflow-visible py-2">
+              <h3
+                class="text-neutral-100 text-sm w-full text-center font-medium mb-4 absolute top-0 left-0"
+              >
+                Performance Trade-Offs
+              </h3>
 
+              <app-radar-chart
+                [axes]="(radarAxes$ | async) ?? []"
+              ></app-radar-chart>
+            </div>
+
+            <div class="relative overflow-visible text-center">
+              <h3 class="text-neutral-100 text-sm font-medium mb-4">
+                Price Calculator
+              </h3>
+
+              <app-price-calculator
+                [embeddingCostPerMillion]="(embeddingCost$ | async) ?? 0"
+                [conversationInputCostPerMillion]="
+                  (conversationCosts$ | async)?.in ?? 0
+                "
+                [conversationOutputCostPerMillion]="
+                  (conversationCosts$ | async)?.out ?? 0
+                "
+              ></app-price-calculator>
+            </div>
+          </div>
           <button
-            class="w-full bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 p-2 rounded-lg hover:rounded-[100px] cursor-pointer transition-all duration-300 text-white font-medium text-lg mt-8"
+            class="w-full bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 p-2 rounded-lg hover:rounded-[100px] cursor-pointer transition-all duration-300 text-white font-medium text-lg"
             type="submit"
           >
             Create Workflow
           </button>
         </form>
-      </div>
-    </div>
-  </div>
-
-  <div class="max-w-full mx-auto lg:me-0">
-    <div class="relative">
-      <div
-        class="absolute -inset-px rounded-2xl bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 opacity-70 blur-[1px] animate-pulse-slow"
-      ></div>
-      <div
-        class="absolute inset-0 rounded-2xl opacity-10 pointer-events-none z-10"
-        style="
-          background: radial-gradient(
-            circle at 50% 50%,
-            rgba(255, 255, 255, 0.8) 0%,
-            transparent 50%
-          );
-        "
-      ></div>
-      <div
-        class="relative bg-black rounded-2xl p-4 lg:p-8 z-10 mt-8 flex flex-col items-start justify-between flex-wrap gap-6 overflow-visible"
-      >
-        <div class="relative overflow-visible py-2">
-          <h3
-            class="text-neutral-100 text-sm font-medium mb-4 absolute top-0 left-0"
-          >
-            Performance Trade-Offs
-          </h3>
-
-          <app-radar-chart [axes]="(radarAxes$ | async) ?? []"></app-radar-chart>
-        </div>
-
-        <div class="relative overflow-visible">
-          <h3 class="text-neutral-100 text-sm font-medium mb-4">
-            Price Calculator
-          </h3>
-
-          <app-price-calculator
-            [embeddingCostPerMillion]="(embeddingCost$ | async) ?? 0"
-            [conversationInputCostPerMillion]="
-              (conversationCosts$ | async)?.in ?? 0
-            "
-            [conversationOutputCostPerMillion]="
-              (conversationCosts$ | async)?.out ?? 0
-            "
-          ></app-price-calculator>
-        </div>
       </div>
     </div>
   </div>

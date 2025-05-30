@@ -12,7 +12,9 @@
     class="relative flex items-center justify-between p-4 border-b border-white/5"
   >
     <div class="flex items-center gap-2">
-      <div class="w-2 h-2 rounded-full bg-rose-500"></div>
+      <div class="w-2 h-2 rounded-full bg-rose-500"
+        [class.!bg-neutral-500]="jobs.length === 0"
+      ></div>
       <h3 class="text-sm font-medium text-white">Active Jobs</h3>
       <span class="text-xs px-2 py-0.5 rounded-full bg-white/10 text-white/70"
         >{{ jobs.length }} running</span
