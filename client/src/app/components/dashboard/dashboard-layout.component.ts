@@ -18,8 +18,13 @@ import { SidebarComponent } from 'src/app/shared/components/sidebar/sidebar.comp
 })
 export class DashboardLayoutComponent {
   jobs$: Observable<JobItem[]>;
+  navOpen = true;
 
   constructor(private embeddingService: EmbeddingService) {
     this.jobs$ = this.embeddingService.jobs$;
+  }
+
+  onToggleNav(isOpen: boolean) {
+    this.navOpen = isOpen;
   }
 }

@@ -1,4 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5000',
+  get apiUrl() {
+    return `${window.location.protocol}//${window.location.hostname}:5000`;
+  },
 };

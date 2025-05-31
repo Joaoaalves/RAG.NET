@@ -1,4 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://api-dev:8080',
+  get apiUrl() {
+    return `${window.location.protocol}//${window.location.hostname}:5000`;
+  },
 };

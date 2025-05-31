@@ -25,13 +25,7 @@ builder.Services.AddControllers();
 builder.Services.AddHandlerConfiguration();
 
 // Cors
-builder.Services.AddCors(opt =>
-{
-    opt.AddPolicy("CorsPolicy", policyBuilder =>
-    {
-        policyBuilder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins(clientURL);
-    });
-});
+builder.Services.AddCorsConfiguration();
 
 builder.Services.AddSwaggerConfiguration();
 builder.Services.AddEndpointsApiExplorer();
@@ -54,7 +48,49 @@ if (isDevelopment)
     app.UseSwaggerUI();
 }
 
-app.UseCors("CorsPolicy");
+app.Use(async (context, next) =>
+{
+    var origin = context.Request.Headers["Origin"].ToString();
+
+    if (!string.IsNullOrEmpty(origin) &&
+        (origin == "http://localhost:4200" || origin == "http://192.168.0.52:4200"))
+    {
+        context.Items["CorsPolicyName"] = "FrontendPolicy";
+    }
+    else
+    {
+        context.Items["CorsPolicyName"] = "PublicPolicy";
+    }
+
+    await next();
+});
+
+// Dynamic CORS
+app.UseWhen(
+    context =>
+    {
+        var origin = context.Request.Headers.Origin.ToString();
+
+        if (string.IsNullOrWhiteSpace(origin))
+            return false;
+
+        try
+        {
+            var uri = new Uri(origin);
+            return uri.Host.StartsWith("192.168.0.") || uri.Host == "localhost";
+        }
+        catch
+        {
+            return false;
+        }
+    },
+    appBuilder =>
+    {
+        appBuilder.UseCors("CorsPolicy");
+    });
+
+app.UseCors("PublicPolicy");
+
 app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();

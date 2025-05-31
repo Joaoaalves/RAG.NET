@@ -1,5 +1,5 @@
 import { UserService } from 'src/app/services/user.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { User } from 'src/app/models/user';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -38,6 +38,8 @@ import { Observable } from 'rxjs';
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent implements OnInit {
+  @Output() toggleNavEvent = new EventEmitter<boolean>();
+
   navItems = [
     {
       icon: 'lucideLayers',
@@ -78,6 +80,7 @@ export class SidebarComponent implements OnInit {
 
   toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
+    this.toggleNavEvent.emit(this.sidebarOpen);
   }
 
   navigateWorkflows() {

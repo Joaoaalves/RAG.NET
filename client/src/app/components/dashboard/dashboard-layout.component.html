@@ -1,10 +1,11 @@
-<div class="w-screen overflow-x-hidden h-screen grid grid-cols-[256px_1fr]">
-  <div>
-    <app-sidebar></app-sidebar>
-  </div>
-  <section class="grid grid-cols-1 grid-rows-1 h-[97dvh]">
-    <div class="flex flex-col h-[99%] p-8 relative z-0">
-      <div class="absolute inset-0 z-[-1]">
+<div class="w-screen overflow-x-hidden h-screen grid grid-cols-1 grid-rows-[0fr]"
+>
+    <app-sidebar
+      (toggleNavEvent)="onToggleNav($event)"
+    ></app-sidebar>
+  <section class="grid grid-cols-1 grid-rows-1 min-w-full h-full md:ps-64">
+    <div class="flex flex-col h-[99%] md:p-8 relative z-0">
+      <div class="absolute inset-0 z-[-1] overflow-hidden">
         <div
           class="absolute top-0 -left-4 w-72 h-72 bg-fuchsia-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob"
         ></div>
@@ -15,7 +16,31 @@
           class="absolute -bottom-8 left-20 w-72 h-72 bg-rose-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob animation-delay-4000"
         ></div>
       </div>
-      <router-outlet></router-outlet>
+      <svg
+        class="absolute top-0 left-0 w-full h-full z-10 pointer-events-none"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <pattern
+            id="grid"
+            width="40"
+            height="40"
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              d="M 40 0 L 0 0 0 40"
+              fill="none"
+              stroke="#ffffff04"
+              stroke-width="1"
+            />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid)" />
+      </svg>
+      <main class="p-4 md:p-8">
+        <router-outlet></router-outlet>
+      </main>
       <app-job-bar [jobs$]="jobs$"></app-job-bar>
     </div>
   </section>

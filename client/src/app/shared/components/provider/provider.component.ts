@@ -32,7 +32,6 @@ import {
   templateUrl: './provider.component.html',
   imports: [
     CommonModule,
-    InputComponent,
     ReactiveFormsModule,
     FormsModule,
     AlertComponent,
