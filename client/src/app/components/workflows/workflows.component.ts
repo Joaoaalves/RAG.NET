@@ -32,11 +32,28 @@ export class WorkflowsComponent implements OnInit {
   }
 
   workflows: Workflow[] = [];
+  filteredWorkflows: Workflow[] = [];
 
   loadWorkflows(): void {
     this.workflowService.getWorkflows().subscribe((response) => {
       this.workflows = response;
+      this.filteredWorkflows = this.workflows;
     });
+  }
+
+  filterWorkflows(query: string) {
+    this.filteredWorkflows = this.workflows;
+
+    if (query.length > 0) {
+      query = query.toLowerCase();
+      this.filteredWorkflows = this.workflows.filter(
+        (w) =>
+          w.name.toLowerCase().includes(query) ||
+          w.description.toLowerCase().includes(query)
+      );
+    }
+
+    return this.filteredWorkflows;
   }
 
   removeWorkflow(workflowId: string) {

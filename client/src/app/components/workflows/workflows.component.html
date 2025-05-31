@@ -1,8 +1,10 @@
 <div class="grid grid-cols-1 grid-rows-[80px_1fr] p-8 col-start-2 mb-12">
-  <app-workflows-nav-bar></app-workflows-nav-bar>
+  <app-workflows-nav-bar
+    (queryEvent)="filterWorkflows($event)"
+  ></app-workflows-nav-bar>
   <div class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8">
     <app-workflow-card
-    *ngFor="let workflow of workflows"
+    *ngFor="let workflow of filteredWorkflows"
     [workflow]="workflow"
     (workflowDeleted)="removeWorkflow($event)">
     >
