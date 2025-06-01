@@ -106,6 +106,7 @@ namespace web.Controllers.WorkflowControllers
                 {
                     workflow.Name,
                     workflow.Description,
+                    workflow.IsActive,
                     ConversationProvider = workflow.ConversationProviderConfig.ToDTOFromConversationProviderConfig(),
                     EmbeddingProvider = workflow.EmbeddingProviderConfig.ToDTOFromEmbeddingProviderConfig()
                 });
