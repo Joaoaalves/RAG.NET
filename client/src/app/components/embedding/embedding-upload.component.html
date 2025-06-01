@@ -134,9 +134,9 @@
       <p class="text-neutral-400 text-sm">
         This workflow processes documents and extracts key information using AI.
       </p>
-      <div class="flex items-center justify-between text-sm w-full">
+      <div class="flex items-center justify-between text-sm w-full" *ngIf="workflow">
         <p class="text-neutral-400">Status</p>
-        <span class="text-green-500">Active</span>
+        <span [class.text-sky-500]="workflow.isActive" [class.text-rose-500]="!workflow.isActive">{{workflow.isActive ? 'Active' : 'Inactive'}}</span>
       </div>
     </div>
     <div

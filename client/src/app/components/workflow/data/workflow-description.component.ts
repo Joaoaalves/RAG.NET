@@ -1,4 +1,11 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -9,6 +16,9 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './workflow-description.component.html',
 })
 export class WorkflowDescriptionComponent {
+  @ViewChild('workflowDescription')
+  textAreaRef?: ElementRef<HTMLTextAreaElement>;
+
   @Input() description: string = '';
   @Output() saveEvent = new EventEmitter<{ description: string }>();
   @Output() cancelEvent = new EventEmitter<void>();
@@ -19,6 +29,10 @@ export class WorkflowDescriptionComponent {
   startEditing() {
     this.editedDescription = this.description;
     this.isEditing = true;
+
+    setTimeout(() => {
+      this.textAreaRef?.nativeElement.focus();
+    });
   }
 
   save() {

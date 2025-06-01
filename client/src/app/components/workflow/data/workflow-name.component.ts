@@ -1,4 +1,11 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -21,6 +28,7 @@ import { lucideCheck, lucidePencil, lucideX } from '@ng-icons/lucide';
   templateUrl: './workflow-name.component.html',
 })
 export class WorkflowNameComponent {
+  @ViewChild('workflowName') nameInputRef?: ElementRef<HTMLInputElement>;
   @Input() name: string = '';
   @Output() saveEvent = new EventEmitter<{ name: string }>();
   @Output() cancelEvent = new EventEmitter<void>();
@@ -31,6 +39,10 @@ export class WorkflowNameComponent {
   startEditing() {
     this.editedName = this.name;
     this.isEditing = true;
+
+    setTimeout(() => {
+      this.nameInputRef?.nativeElement.focus();
+    });
   }
 
   save() {

@@ -9,6 +9,7 @@
   </ng-container>
   <ng-container *ngIf="isEditing">
     <textarea
+      #workflowDescription
       [(ngModel)]="editedDescription"
       (keyup.control.enter)="save()"
       (keyup.esc)="cancel()"

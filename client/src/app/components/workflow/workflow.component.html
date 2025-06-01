@@ -10,11 +10,20 @@
   <div
     class="bg-[#111111]/80 rounded-xl p-6 shadow-[0_0_20px_rgba(217,70,239,0.1)] space-y-6"
   >
-    <app-workflow-name
-      *ngIf="workflow"
-      (saveEvent)="updateWorkflow($event)"
-      [name]="workflow.name"
-    ></app-workflow-name>
+    <div class="min-w-full items-center flex">
+      <app-workflow-name
+        *ngIf="workflow"
+        (saveEvent)="updateWorkflow($event)"
+        [name]="workflow.name"
+        class="flex-1"
+      ></app-workflow-name>
+
+      <hlm-switch
+        class="bg-white"
+        (click)="toggleEnabled($event)"
+        [checked]="workflow.isActive"
+      />
+    </div>
 
     <app-workflow-description
       *ngIf="workflow"
@@ -23,6 +32,11 @@
     ></app-workflow-description>
 
     <div class="flex flex-wrap gap-3">
+      <div
+        class="px-3 py-1 rounded-full bg-black border border-rose-500/20 text-white text-sm shadow-[0_0_5px_rgba(244,63,94,0.2)]"
+      >
+        Status: {{ workflow.isActive ? "Active" : "Inactive" }}
+      </div>
       <div
         class="px-3 py-1 rounded-full bg-black border border-rose-500/20 text-white text-sm shadow-[0_0_5px_rgba(244,63,94,0.2)]"
       >
@@ -105,7 +119,9 @@
       <div
         class="w-1.5 h-6 bg-gradient-to-b from-rose-500 via-fuchsia-500 to-sky-500 rounded-full animate-fade-in"
       ></div>
-      <h2 class="text-3xl uppercase text-[#BFA3B5] font-light tracking-wider">Filters</h2>
+      <h2 class="text-3xl uppercase text-[#BFA3B5] font-light tracking-wider">
+        Filters
+      </h2>
     </div>
     <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
       <app-filter-config

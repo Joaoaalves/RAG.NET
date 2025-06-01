@@ -3,22 +3,22 @@ import { ActivatedRoute } from '@angular/router';
 import { Workflow, WorkflowUpdateRequest } from 'src/app/models/workflow';
 import { QueryEnhancer } from 'src/app/models/query-enhancer';
 import { CommonModule } from '@angular/common';
+import { Filter } from 'src/app/models/filter';
+import { getProviderIdFromName } from 'src/app/shared/utils/providers-utils';
+import { toast } from 'ngx-sonner';
 
 // Components
 import { QueryEnhancerConfigComponent } from 'src/app/shared/components/query-enhancer-config/query-enhancer-config.component';
 import { CallbackUrlsFormComponent } from 'src/app/shared/components/callback-urls-form/callback-urls-form.component';
-
-// Services
-import { WorkflowService } from 'src/app/services/workflow.service';
-import { FilterConfigComponent } from 'src/app/shared/components/filter-config/filter-config.component';
-import { Filter } from 'src/app/models/filter';
 import { ProviderSettingsComponent } from 'src/app/shared/components/provider-settings/provider-settings.component';
 import { WorkflowNameComponent } from './data/workflow-name.component';
 import { WorkflowDescriptionComponent } from './data/workflow-description.component';
-
-import { getProviderIdFromName } from 'src/app/shared/utils/providers-utils';
-
 import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component';
+import { HlmSwitchComponent } from 'libs/ui/ui-switch-helm/src/lib/hlm-switch.component';
+import { FilterConfigComponent } from 'src/app/shared/components/filter-config/filter-config.component';
+
+// Services
+import { WorkflowService } from 'src/app/services/workflow.service';
 
 @Component({
   standalone: true,
@@ -31,6 +31,7 @@ import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.
     FilterConfigComponent,
     HlmToasterComponent,
     CallbackUrlsFormComponent,
+    HlmSwitchComponent,
   ],
   templateUrl: 'workflow.component.html',
 })
@@ -72,6 +73,22 @@ export class WorkflowComponent implements OnInit {
         this.loadWorkflow(id);
       }
     });
+  }
+
+  toggleEnabled(event: Event) {
+    event.stopPropagation();
+
+    this.workflowService
+      .toggleWorkflow(!this.workflow.isActive, this.workflow.id)
+      .subscribe((w) => {
+        this.workflow.isActive = w.isActive;
+
+        toast('Workflow updated!', {
+          description: `Workflow ${
+            this.workflow.isActive ? 'enabled' : 'disabled'
+          } successfully!`,
+        });
+      });
   }
 
   updateWorkflow(data: WorkflowUpdateRequest) {

@@ -66,6 +66,15 @@ export class WorkflowService {
       .pipe(map((response) => response));
   }
 
+  toggleWorkflow(isActive: boolean, workflowId: string): Observable<Workflow> {
+    console.log(isActive, workflowId);
+    return this.httpClient
+      .put<Workflow>(`${this.apiUrl}/api/workflows/${workflowId}`, {
+        isActive,
+      })
+      .pipe(map((response) => response));
+  }
+
   getEmbeddingModels(): Observable<ProvidersResponse<EmbeddingModel>> {
     return this.httpClient
       .get<ProvidersResponse<EmbeddingModel>>(

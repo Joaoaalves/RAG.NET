@@ -17,7 +17,6 @@ import { ChunkerStrategy } from 'src/app/models/chunker';
 import { CreateWorkflowRequest } from 'src/app/models/workflow';
 import { EmbeddingModel } from 'src/app/models/embedding';
 import { ConversationModel } from 'src/app/models/chat';
-import { ProviderOption } from 'src/app/models/provider';
 
 import { mapChunkerStrategies } from 'src/app/shared/utils/chunker-utils';
 import { ModelSpeedPipe } from './model-speed.pipe';
@@ -61,6 +60,7 @@ import { WorkflowService } from 'src/app/services/workflow.service';
 })
 export class NewWorkflowComponent implements OnInit {
   form!: FormGroup;
+  isSubmitting = false;
   error = '';
   chunkerStrategies: { label: string; value: number | string }[] = [];
 
@@ -166,21 +166,33 @@ export class NewWorkflowComponent implements OnInit {
   }
 
   createWorkflow(): void {
-    if (this.form.invalid) {
+    if (this.form.invalid || this.isSubmitting) {
       this.error = 'Please fill in all required fields correctly.';
       return;
     }
+
+    this.isSubmitting = true;
+    this.error = '';
+
     const formValue = this.form.value;
     if (typeof formValue.embeddingProvider.model === 'object') {
       formValue.embeddingProvider.model =
         formValue.embeddingProvider.model.value;
     }
+
     const workflowDetails: CreateWorkflowRequest = formValue;
-    this.workflowService.createWorkflow(workflowDetails).subscribe(
-      (id) => this.router.navigate(['/dashboard/workflows']),
-      (response) => {
-        this.error = response.error.message;
-      }
-    );
+
+    this.workflowService.createWorkflow(workflowDetails).subscribe({
+      next: (id) => {
+        this.router.navigate(['/dashboard/workflows']);
+      },
+      error: (response) => {
+        this.error = response.error?.message || 'Something went wrong.';
+        this.isSubmitting = false;
+      },
+      complete: () => {
+        this.isSubmitting = false;
+      },
+    });
   }
 }

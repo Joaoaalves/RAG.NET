@@ -1,38 +1,43 @@
-<div class="flex items-center gap-2 mb-4">
-  <ng-container *ngIf="!isEditing">
-    <div class="flex gap-x-4 items-center justify-center group">
-      <h1
-        class="text-3xl font-bold text-white cursor-pointer animate-fade-in-300"
-        (click)="startEditing()"
-      >
-        {{ name }}
-      </h1>
-      <div
-        class="opacity-0 group-hover:opacity-100 transition-all duration-300 text-white text-xl/tight"
-      >
-        <ng-icon name="lucidePencil" class="mt-1"></ng-icon>
-      </div>
+<div class="flex flex-1 items-center gap-2">
+  <div
+    class="flex gap-x-4 items-center justify-center group"
+    *ngIf="!isEditing"
+  >
+    <h1
+      class="text-3xl font-bold text-white cursor-pointer animate-fade-in-300"
+      (click)="startEditing()"
+    >
+      {{ name }}
+    </h1>
+    <div
+      class="opacity-0 group-hover:opacity-100 transition-all duration-300 text-white text-xl/tight"
+    >
+      <ng-icon name="lucidePencil" class="mt-1"></ng-icon>
     </div>
-  </ng-container>
-  <ng-container *ngIf="isEditing" class="animate-fade-in-300">
-      <input
-        [(ngModel)]="editedName"
-        (keyup.enter)="save()"
-        (keydown.esc)="cancel()"
-        placeholder="Enter workflow name..."
-        class="animate-fade-in-300 text-3xl font-bold text-neutral-200 bg-transparent border-b-2 border-fuchsia-500 focus:outline-none flex-1 placeholder:text-neutral-400"
-      />
-      <button
-        (click)="save()"
-        class="w-8 h-8 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center hover:bg-green-500/30 transition-colors"
-      >
-        <ng-icon name="lucideCheck"></ng-icon>
-      </button>
-      <button
-        (click)="cancel()"
-        class="w-8 h-8 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center hover:bg-red-500/30 transition-colors"
-      >
-        <ng-icon name="lucideX"></ng-icon>
-      </button>
-  </ng-container>
+  </div>
+  <div
+    *ngIf="isEditing"
+    class="flex items-center gap-2 w-full animate-fade-in-300"
+  >
+    <input
+      #workflowName
+      [(ngModel)]="editedName"
+      (keyup.enter)="save()"
+      (keydown.esc)="cancel()"
+      placeholder="Enter workflow name..."
+      class="text-3xl font-bold text-neutral-200 bg-transparent border-b-2 border-fuchsia-500 focus:outline-none flex-1 placeholder:text-neutral-400"
+    />
+    <button
+      (click)="save()"
+      class="w-8 h-8 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center hover:bg-green-500/30 transition-colors"
+    >
+      <ng-icon name="lucideCheck"></ng-icon>
+    </button>
+    <button
+      (click)="cancel()"
+      class="w-8 h-8 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center hover:bg-red-500/30 transition-colors"
+    >
+      <ng-icon name="lucideX"></ng-icon>
+    </button>
+  </div>+
 </div>

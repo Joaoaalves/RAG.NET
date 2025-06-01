@@ -60,6 +60,10 @@ export class WorkflowsComponent implements OnInit {
     const workflow = this.workflows.filter((w) => w.id === workflowId)[0];
     if (workflow) {
       this.workflows = this.workflows.filter((w) => w.id !== workflow.id);
+      this.filteredWorkflows = this.filteredWorkflows.filter(
+        (w) => w.id !== workflow.id
+      );
+
       toast('Workflow deleted!', {
         description: `'${workflow.name}' was successfully deleted!`,
       });

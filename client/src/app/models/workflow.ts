@@ -9,6 +9,7 @@ export interface Workflow {
   id: string;
   name: string;
   description: string;
+  isActive: boolean;
   documentsCount: number;
   strategy: ChunkerStrategy;
   settings: ChunkerSettings;

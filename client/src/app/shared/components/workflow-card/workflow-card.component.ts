@@ -16,6 +16,7 @@ import { lucidePlus, lucideSearch } from '@ng-icons/lucide';
 
 // Components
 import { AlertComponent } from '../alert/alert.component';
+import { HlmSwitchComponent } from 'libs/ui/ui-switch-helm/src/lib/hlm-switch.component';
 
 // Models
 import { Workflow } from 'src/app/models/workflow';
@@ -26,7 +27,7 @@ import { WorkflowService } from 'src/app/services/workflow.service';
 @Component({
   selector: 'app-workflow-card',
   standalone: true,
-  imports: [CommonModule, NgIcon, AlertComponent],
+  imports: [CommonModule, NgIcon, AlertComponent, HlmSwitchComponent],
   providers: [
     provideIcons({ heroTrash, heroClipboard, lucidePlus, lucideSearch }),
   ],
@@ -50,6 +51,22 @@ export class WorkflowCardComponent {
     this.router.navigate([`/dashboard/workflows/${this.workflow.id}`]);
   }
 
+  toggleEnabled(event: Event) {
+    event.stopPropagation();
+
+    this.workflowService
+      .toggleWorkflow(!this.workflow.isActive, this.workflow.id)
+      .subscribe((w) => {
+        this.workflow.isActive = w.isActive;
+
+        toast('Workflow updated!', {
+          description: `Workflow ${
+            this.workflow.isActive ? 'enabled' : 'disabled'
+          } successfully!`,
+        });
+      });
+  }
+
   deleteWorkflow() {
     this.workflowService
       .deleteWorkflow(this.workflow.id)
@@ -58,6 +75,20 @@ export class WorkflowCardComponent {
           this.workflowDeleted.emit(this.workflow.id);
         }
       });
+  }
+
+  navigateQuery(event: Event) {
+    event.stopPropagation();
+    return this.router.navigate([
+      `/dashboard/workflows/${this.workflow.id}/query`,
+    ]);
+  }
+
+  navigateEmbedding(event: Event) {
+    event.stopPropagation();
+    return this.router.navigate([
+      `/dashboard/workflows/${this.workflow.id}/embedd`,
+    ]);
   }
 
   copyToClipboard() {

@@ -9,7 +9,7 @@
   --animate-scroll: scroll 20s linear infinite;
   --animate-fade-in-150: fade-in 0.15s ease-in-out forwards;
   --animate-fade-in-300: fade-in 0.3s ease-in-out forwards;
-  --animate-blob: blob 7s infinite;
+  --animate-blob: blob 7s ease-in-out infinite;
 
   @keyframes x-draw {
     0% {

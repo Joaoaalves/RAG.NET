@@ -146,6 +146,11 @@ namespace web.Controllers.WorkflowControllers
                 var workflow = HttpContext.Items["Workflow"] as Workflow
                     ?? throw new InvalidOperationException("Workflow not found on context.");
 
+                if (!workflow.IsActive)
+                {
+                    throw new Exception("Workflow is not active!");
+                }
+
                 var ms = new MemoryStream();
                 file.CopyTo(ms);
 
@@ -170,7 +175,6 @@ namespace web.Controllers.WorkflowControllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 Response.StatusCode = 400;
                 await Response.WriteAsync(ex.Message);
             }
