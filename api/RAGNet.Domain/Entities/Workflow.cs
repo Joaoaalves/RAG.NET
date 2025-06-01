@@ -11,6 +11,7 @@ namespace RAGNET.Domain.Entities
 
         public string Name { get; set; } = String.Empty;
         public string Description { get; set; } = String.Empty;
+        public bool IsActive { get; set; } = true;
         public int DocumentsCount { get; set; } = 0;
         [ForeignKey("User")]
         public string UserId { get; set; } = String.Empty;

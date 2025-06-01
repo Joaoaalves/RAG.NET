@@ -14,6 +14,7 @@ namespace RAGNET.Application.DTOs.Workflow
         public Guid Id { get; set; }
         public string Name { get; set; } = String.Empty;
         public string Description { get; set; } = string.Empty;
+        public bool IsActive { get; set; } = true;
         public Guid CollectionId { get; set; }
         public int DocumentsCount { get; set; }
         [JsonConverter(typeof(ChunkerStrategyConverter))]
