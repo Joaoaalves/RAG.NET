@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
-import { InputComponent } from '../input/input.component';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -49,7 +54,7 @@ import {
   ],
   standalone: true,
 })
-export class ProviderComponent implements OnInit {
+export class ProviderComponent implements OnInit, OnChanges {
   @Input() Provider!: Provider;
 
   providerId = '';
@@ -65,7 +70,19 @@ export class ProviderComponent implements OnInit {
     private providersService: ProvidersService
   ) {}
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['Provider'] && changes['Provider'].currentValue) {
+      this.initializeProvider();
+    }
+  }
+
   ngOnInit() {
+    this.initializeProvider();
+  }
+
+  initializeProvider() {
+    if (!this.Provider) return;
+
     this.form = this.fb.group({
       apiKey: ['', Validators.required],
     });
@@ -76,13 +93,11 @@ export class ProviderComponent implements OnInit {
 
     this.hasApiKey = !!this.Provider.apiKey;
     this.providerId = this.Provider?.id;
+
     if (this.Provider.apiKey && this.providerData?.keyTemplate) {
-      const visibleKey = this.providerData?.keyTemplate + this.Provider.apiKey;
-
+      const visibleKey = this.providerData.keyTemplate + this.Provider.apiKey;
       this.lastValidValue = visibleKey;
-
       this.form.patchValue({ apiKey: visibleKey });
-
       this.disableInput();
     }
 

@@ -29,7 +29,7 @@ export const PROVIDERS_DATA: Record<SupportedProvider, ProviderData> = {
     icon: 'img/providers/voyage.svg',
     apiKeyUrl: 'https://voyage.ai/account/settings',
     keyTemplate: 'pa-***************',
-    regex: '^pa-[A-Za-z0-9-]{30,60}$',
+    regex: '^pa-[A-Za-z0-9-_]{30,60}$',
   },
   qdrant: {
     id: 3,

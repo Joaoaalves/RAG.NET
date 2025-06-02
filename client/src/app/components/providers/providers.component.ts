@@ -16,22 +16,30 @@ import { ProviderComponent } from 'src/app/shared/components/provider/provider.c
 })
 export class ProvidersComponent implements OnInit {
   providers: GetProvidersResponse = [];
+
+  providerMap: Record<SupportedProvider, Provider> = {
+    openai: this.getDefaultProvider('openai'),
+    anthropic: this.getDefaultProvider('anthropic'),
+    gemini: this.getDefaultProvider('gemini'),
+    voyage: this.getDefaultProvider('voyage'),
+    qdrant: this.getDefaultProvider('qdrant'),
+  };
+
   constructor(private providersService: ProvidersService) {}
 
   ngOnInit(): void {
     this.getUserProviders();
   }
 
-  getProvider(provider: string): Provider {
-    if (!this.providers || this.providers.length === 0) {
-      return this.getDefaultProvider(provider);
-    }
+  getUserProviders() {
+    this.providersService.getUserProviders().subscribe((response) => {
+      this.providers = response;
 
-    const prov = this.providers.find(
-      (prov) => prov.provider.toLowerCase() === provider.toLowerCase()
-    );
-
-    return prov ?? this.getDefaultProvider(provider);
+      for (const p of response) {
+        const key = p.provider.toLowerCase() as SupportedProvider;
+        this.providerMap[key] = p;
+      }
+    });
   }
 
   getDefaultProvider(provider: string): Provider {
@@ -41,11 +49,5 @@ export class ProvidersComponent implements OnInit {
       userId: '',
       provider: provider as SupportedProvider,
     };
-  }
-
-  getUserProviders() {
-    this.providersService.getUserProviders().subscribe((response) => {
-      this.providers = response;
-    });
   }
 }
