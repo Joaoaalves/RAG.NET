@@ -9,7 +9,7 @@ namespace web.Configurations
         public static IServiceCollection AddRepositoryConfiguration(this IServiceCollection services)
         {
             services.AddScoped<IWorkflowRepository, WorkflowRepository>();
-            services.AddScoped<IUserApiKeyRepository, UserApiKeyRepository>();
+            services.AddScoped<IProviderApiKeyRepository, ProviderApiKeyRepository>();
             services.AddScoped<IChunkerRepository, ChunkerRepository>();
             services.AddScoped<IQueryEnhancerRepository, QueryEnhancerRepository>();
             services.AddScoped<IFilterRepository, FilterRepository>();

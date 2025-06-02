@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using RAGNET.Domain.Entities;
 
-namespace RAGNET.Domain.Entities
+namespace RAGNET.Domain.Documents
 {
     public class Document
     {

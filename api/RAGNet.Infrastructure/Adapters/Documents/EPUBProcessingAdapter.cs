@@ -5,8 +5,9 @@ using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services;
 using VersOne.Epub;
 using System.Text;
+using RAGNET.Domain.Documents;
 
-namespace RAGNET.Infrastructure.Adapters.Document
+namespace RAGNET.Infrastructure.Adapters.Documents
 {
     public class EpubProcessingAdapter(
         IDocumentRepository documentRepository,
@@ -40,13 +41,13 @@ namespace RAGNET.Infrastructure.Adapters.Document
             return result;
         }
 
-        public async Task<Domain.Entities.Document> CreateDocumentWithPagesAsync(string title, Guid workflowId, List<string> pages)
+        public async Task<Document> CreateDocumentWithPagesAsync(string title, Guid workflowId, List<string> pages)
         {
-            var document = await _documentRepository.AddAsync(new Domain.Entities.Document
+            var document = await _documentRepository.AddAsync(new Document
             {
                 Title = title,
                 WorkflowId = workflowId,
-                Pages = new List<Page>()
+                Pages = []
             });
 
             foreach (var pageText in pages)

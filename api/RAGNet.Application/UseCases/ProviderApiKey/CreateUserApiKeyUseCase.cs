@@ -1,22 +1,22 @@
-using RAGNET.Application.DTOs.UserApiKey;
+using RAGNET.Application.DTOs.ProviderApiKey;
 using RAGNET.Application.Mappers;
 using RAGNET.Domain.Enums;
 using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services.ApiKey;
 
-namespace RAGNET.Application.UseCases.UserApiKey
+namespace RAGNET.Application.UseCases.ProviderApiKey
 {
-    public interface ICreateUserApiKeyUseCase
+    public interface ICreateProviderApiKeyUseCase
     {
-        Task<Domain.Entities.UserApiKey> ExecuteAsync(CreateUserApiKeyDTO dto, string userId);
+        Task<Domain.Entities.ProviderApiKey> ExecuteAsync(CreateProviderApiKeyDTO dto, string userId);
     }
 
-    public class CreateUserApiKeyUseCase(IUserApiKeyRepository userApiKeyRepository, ICryptoService cryptoService) : ICreateUserApiKeyUseCase
+    public class CreateProviderApiKeyUseCase(IProviderApiKeyRepository userApiKeyRepository, ICryptoService cryptoService) : ICreateProviderApiKeyUseCase
     {
-        private readonly IUserApiKeyRepository _userApiKeyRepository = userApiKeyRepository;
+        private readonly IProviderApiKeyRepository _userApiKeyRepository = userApiKeyRepository;
         private readonly ICryptoService _cryptoService = cryptoService;
 
-        public async Task<Domain.Entities.UserApiKey> ExecuteAsync(CreateUserApiKeyDTO dto, string userId)
+        public async Task<Domain.Entities.ProviderApiKey> ExecuteAsync(CreateProviderApiKeyDTO dto, string userId)
         {
             if (string.IsNullOrEmpty(dto.ApiKey))
                 throw new ArgumentException("API key cannot be null or empty.", nameof(dto.ApiKey));
@@ -31,7 +31,7 @@ namespace RAGNET.Application.UseCases.UserApiKey
             var suffix = dto.ApiKey.Substring(dto.ApiKey.Length - 4, 4);
             dto.ApiKey = encryptedApiKey;
 
-            var userApiKey = dto.ToUserApiKey(userId, suffix);
+            var userApiKey = dto.ToProviderApiKey(userId, suffix);
             await _userApiKeyRepository.AddAsync(userApiKey);
 
             return userApiKey;

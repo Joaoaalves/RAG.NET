@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.SignalR;
 using RAGNET.Domain.Services.Queue;
 using RAGNET.Domain.Entities.Jobs;
+using RAGNET.Domain.Documents;
 
 namespace RAGNET.Infrastructure.Adapters.SignalR
 {
@@ -8,7 +9,7 @@ namespace RAGNET.Infrastructure.Adapters.SignalR
     {
         private readonly IHubContext<JobStatusHub> _hub = hub;
 
-        private Task Notify(string method, Guid jobId, string userId, Domain.Entities.Document document, Process currentProcess, CancellationToken ct = default)
+        private Task Notify(string method, Guid jobId, string userId, Document document, Process currentProcess, CancellationToken ct = default)
         {
             var group = JobStatusHub.GetGroupName(userId);
 
@@ -27,12 +28,12 @@ namespace RAGNET.Infrastructure.Adapters.SignalR
                            }, ct);
         }
 
-        public Task NotifyProgress(Guid jobId, string userId, Domain.Entities.Document document, Process currentProcess, CancellationToken ct = default)
+        public Task NotifyProgress(Guid jobId, string userId, Document document, Process currentProcess, CancellationToken ct = default)
         {
             return Notify("JobProgress", jobId, userId, document, currentProcess, ct);
         }
 
-        public Task NotifySuccessAsync(Guid jobId, string userId, Domain.Entities.Document document, CancellationToken ct = default)
+        public Task NotifySuccessAsync(Guid jobId, string userId, Document document, CancellationToken ct = default)
         {
             return Notify("JobCompleted", jobId, userId, document, new Process
             {
@@ -41,7 +42,7 @@ namespace RAGNET.Infrastructure.Adapters.SignalR
             }, ct);
         }
 
-        public Task NotifyFailureAsync(Guid jobId, string userId, Domain.Entities.Document document, CancellationToken ct = default)
+        public Task NotifyFailureAsync(Guid jobId, string userId, Document document, CancellationToken ct = default)
         {
 
             return Notify("JobFailed", jobId, userId, document, new Process

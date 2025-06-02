@@ -1,17 +1,17 @@
 using RAGNET.Domain.Repositories;
 
-namespace RAGNET.Application.UseCases.UserApiKey
+namespace RAGNET.Application.UseCases.ProviderApiKey
 {
-    public interface IDeleteUserApiKeyUseCase
+    public interface IDeleteProviderApiKeyUseCase
     {
         Task<bool> ExecuteAsync(Guid userApiKeyId, string userId);
     }
 
-    public class DeleteUserApiKeyUseCase(
-        IUserApiKeyRepository userApiKeyRepository
-    ) : IDeleteUserApiKeyUseCase
+    public class DeleteProviderApiKeyUseCase(
+        IProviderApiKeyRepository userApiKeyRepository
+    ) : IDeleteProviderApiKeyUseCase
     {
-        private readonly IUserApiKeyRepository _userApiKeyRepository = userApiKeyRepository;
+        private readonly IProviderApiKeyRepository _userApiKeyRepository = userApiKeyRepository;
 
         public async Task<bool> ExecuteAsync(Guid userApiKeyId, string userId)
         {

@@ -1,5 +1,5 @@
+using RAGNET.Domain.Documents;
 using RAGNET.Domain.Entities;
-using Microsoft.AspNetCore.Http;
 
 namespace RAGNET.Domain.Services
 {

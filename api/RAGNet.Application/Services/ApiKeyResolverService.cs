@@ -5,9 +5,9 @@ using RAGNET.Domain.Services.ApiKey;
 
 namespace RAGNET.Application.Services
 {
-    public class ApiKeyResolverService(IUserApiKeyRepository userApiKeyRepository, ICryptoService cryptoService) : IApiKeyResolverService
+    public class ApiKeyResolverService(IProviderApiKeyRepository userApiKeyRepository, ICryptoService cryptoService) : IApiKeyResolverService
     {
-        private readonly IUserApiKeyRepository _userApiKeyRepository = userApiKeyRepository;
+        private readonly IProviderApiKeyRepository _userApiKeyRepository = userApiKeyRepository;
         private readonly ICryptoService _cryptoService = cryptoService;
 
         public async Task<string> ResolveForUserAsync(string userId, SupportedProvider provider)
@@ -18,7 +18,7 @@ namespace RAGNET.Application.Services
                 return String.Empty;
 
             // Decrypt
-            var apiKey = _cryptoService.Decrypt(userApiKey.ApiKey);
+            var apiKey = _cryptoService.Decrypt(userApiKey.ApiKey.Value);
 
             return apiKey;
         }

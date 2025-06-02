@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Http;
 using Moq;
+using RAGNET.Domain.Documents;
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Repositories;
-using RAGNET.Infrastructure.Adapters.Document;
+using RAGNET.Infrastructure.Adapters.Documents;
 using tests.Helpers;
 
 namespace tests.RAGNet.Infrastructure.Tests.Adapters

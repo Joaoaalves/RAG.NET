@@ -154,6 +154,26 @@ namespace RAGNet.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("RAGNET.Domain.Documents.Document", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("WorkflowId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkflowId");
+
+                    b.ToTable("Documents");
+                });
+
             modelBuilder.Entity("RAGNET.Domain.Entities.CallbackUrl", b =>
                 {
                     b.Property<Guid>("Id")
@@ -274,26 +294,6 @@ namespace RAGNet.Infrastructure.Migrations
                     b.ToTable("ConversationProviderConfigs");
                 });
 
-            modelBuilder.Entity("RAGNET.Domain.Entities.Document", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("WorkflowId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WorkflowId");
-
-                    b.ToTable("Documents");
-                });
-
             modelBuilder.Entity("RAGNET.Domain.Entities.EmbeddingProviderConfig", b =>
                 {
                     b.Property<Guid>("Id")
@@ -393,6 +393,28 @@ namespace RAGNet.Infrastructure.Migrations
                     b.HasIndex("DocumentId");
 
                     b.ToTable("Pages");
+                });
+
+            modelBuilder.Entity("RAGNET.Domain.Entities.ProviderApiKey", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Provider")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("Provider");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ProviderApiKeys", "Users");
                 });
 
             modelBuilder.Entity("RAGNET.Domain.Entities.QueryEnhancer", b =>
@@ -571,34 +593,6 @@ namespace RAGNet.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("RAGNET.Domain.Entities.UserApiKey", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ApiKey")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("KeySuffix")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Provider")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserApiKeys");
-                });
-
             modelBuilder.Entity("RAGNET.Domain.Entities.Workflow", b =>
                 {
                     b.Property<Guid>("Id")
@@ -694,6 +688,17 @@ namespace RAGNet.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RAGNET.Domain.Documents.Document", b =>
+                {
+                    b.HasOne("RAGNET.Domain.Entities.Workflow", "Workflow")
+                        .WithMany("Documents")
+                        .HasForeignKey("WorkflowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Workflow");
+                });
+
             modelBuilder.Entity("RAGNET.Domain.Entities.CallbackUrl", b =>
                 {
                     b.HasOne("RAGNET.Domain.Entities.Workflow", "Workflow")
@@ -749,17 +754,6 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Navigation("Workflow");
                 });
 
-            modelBuilder.Entity("RAGNET.Domain.Entities.Document", b =>
-                {
-                    b.HasOne("RAGNET.Domain.Entities.Workflow", "Workflow")
-                        .WithMany("Documents")
-                        .HasForeignKey("WorkflowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Workflow");
-                });
-
             modelBuilder.Entity("RAGNET.Domain.Entities.EmbeddingProviderConfig", b =>
                 {
                     b.HasOne("RAGNET.Domain.Entities.Workflow", "Workflow")
@@ -795,13 +789,46 @@ namespace RAGNet.Infrastructure.Migrations
 
             modelBuilder.Entity("RAGNET.Domain.Entities.Page", b =>
                 {
-                    b.HasOne("RAGNET.Domain.Entities.Document", "Document")
+                    b.HasOne("RAGNET.Domain.Documents.Document", "Document")
                         .WithMany("Pages")
                         .HasForeignKey("DocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Document");
+                });
+
+            modelBuilder.Entity("RAGNET.Domain.Entities.ProviderApiKey", b =>
+                {
+                    b.HasOne("RAGNET.Domain.Entities.User", "User")
+                        .WithMany("ApiKeys")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("RAGNET.Domain.SharedKernel.ApiKeys.ApiKey", "ApiKey", b1 =>
+                        {
+                            b1.Property<Guid>("ProviderApiKeyId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(300)
+                                .HasColumnType("character varying(300)")
+                                .HasColumnName("ApiKey");
+
+                            b1.HasKey("ProviderApiKeyId");
+
+                            b1.ToTable("ProviderApiKeys", "Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProviderApiKeyId");
+                        });
+
+                    b.Navigation("ApiKey")
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RAGNET.Domain.Entities.QueryEnhancer", b =>
@@ -848,17 +875,6 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Navigation("Ranker");
                 });
 
-            modelBuilder.Entity("RAGNET.Domain.Entities.UserApiKey", b =>
-                {
-                    b.HasOne("RAGNET.Domain.Entities.User", "User")
-                        .WithMany("ApiKeys")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("RAGNET.Domain.Entities.Workflow", b =>
                 {
                     b.HasOne("RAGNET.Domain.Entities.User", null)
@@ -868,14 +884,14 @@ namespace RAGNet.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RAGNET.Domain.Documents.Document", b =>
+                {
+                    b.Navigation("Pages");
+                });
+
             modelBuilder.Entity("RAGNET.Domain.Entities.Chunker", b =>
                 {
                     b.Navigation("Metas");
-                });
-
-            modelBuilder.Entity("RAGNET.Domain.Entities.Document", b =>
-                {
-                    b.Navigation("Pages");
                 });
 
             modelBuilder.Entity("RAGNET.Domain.Entities.Filter", b =>

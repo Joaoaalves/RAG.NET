@@ -5,25 +5,28 @@
 namespace RAGNet.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddKeySuffixToApiKey : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
+            migrationBuilder.DropColumn(
                 name: "KeySuffix",
-                table: "UserApiKeys",
-                type: "text",
-                nullable: false,
-                defaultValue: "");
+                schema: "Users",
+                table: "ProviderApiKeys");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
+            migrationBuilder.AddColumn<string>(
                 name: "KeySuffix",
-                table: "UserApiKeys");
+                schema: "Users",
+                table: "ProviderApiKeys",
+                type: "character varying(12)",
+                maxLength: 12,
+                nullable: false,
+                defaultValue: "");
         }
     }
 }

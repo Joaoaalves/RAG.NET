@@ -1,7 +1,7 @@
 using RAGNET.Domain.Factories;
 using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services;
-using RAGNET.Infrastructure.Adapters.Document;
+using RAGNET.Infrastructure.Adapters.Documents;
 
 namespace RAGNET.Infrastructure.Factories
 {

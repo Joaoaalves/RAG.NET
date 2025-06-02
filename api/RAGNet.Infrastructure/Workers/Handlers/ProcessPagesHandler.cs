@@ -1,12 +1,14 @@
 using System.Collections.Concurrent;
 
 using RAGNet.Domain.Services;
+using RAGNET.Domain.Documents;
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Entities.Jobs;
 
 using RAGNET.Domain.Services;
 using RAGNET.Domain.Services.ApiKey;
 using RAGNET.Domain.Services.Queue;
+
 namespace RAGNET.Infrastructure.Workers.Handlers
 {
     public class ProcessPagesHandler(IApiKeyResolverService apiKeyResolver, IEmbeddingProcessingService embeddingService, IJobNotificationService realTimeNotifier) : BaseJobProcessingHandler

@@ -1,19 +1,20 @@
 using RAGNET.Domain.Services;
 using UglyToad.PdfPig;
-using Microsoft.AspNetCore.Http;
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Repositories;
 
-namespace RAGNET.Infrastructure.Adapters.Document
+using RAGNET.Domain.Documents; // Should use the Document from here
+
+namespace RAGNET.Infrastructure.Adapters.Documents
 {
     public class PDFProcessingAdapter(IDocumentRepository documentRepository, IPageRepository pageRepository) : IDocumentProcessingService
     {
         private readonly IDocumentRepository _documentRepository = documentRepository;
         private readonly IPageRepository _pageRepository = pageRepository;
 
-        public async Task<Domain.Entities.Document> CreateDocumentWithPagesAsync(string title, Guid workflowId, List<string> pages)
+        public async Task<Document> CreateDocumentWithPagesAsync(string title, Guid workflowId, List<string> pages)
         {
-            var document = await _documentRepository.AddAsync(new Domain.Entities.Document
+            var document = await _documentRepository.AddAsync(new Document
             {
                 Title = title,
                 WorkflowId = workflowId,

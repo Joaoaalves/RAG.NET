@@ -6,23 +6,23 @@ using RAGNET.Infrastructure.Data;
 
 namespace RAGNET.Infrastructure.Repositories
 {
-    public class UserApiKeyRepository(ApplicationDbContext context) : Repository<UserApiKey>(context), IUserApiKeyRepository
+    public class ProviderApiKeyRepository(ApplicationDbContext context) : Repository<ProviderApiKey>(context), IProviderApiKeyRepository
     {
         public Task<bool> ExistsAsync(SupportedProvider provider, string userId)
         {
-            return _context.UserApiKeys
+            return _context.ProviderApiKeys
                 .AnyAsync(u => u.Provider == provider && u.UserId == userId);
         }
 
-        public async Task<UserApiKey?> GetByUserIdAndProviderAsync(string userId, SupportedProvider provider)
+        public async Task<ProviderApiKey?> GetByUserIdAndProviderAsync(string userId, SupportedProvider provider)
         {
-            return await _context.UserApiKeys
+            return await _context.ProviderApiKeys
                 .FirstOrDefaultAsync(u => u.UserId == userId && u.Provider == provider);
         }
 
-        public async Task<IEnumerable<UserApiKey>> GetByUserIdAsync(string userId)
+        public async Task<IEnumerable<ProviderApiKey>> GetByUserIdAsync(string userId)
         {
-            return await _context.UserApiKeys
+            return await _context.ProviderApiKeys
                 .Where(u => u.UserId == userId)
                 .ToListAsync();
         }

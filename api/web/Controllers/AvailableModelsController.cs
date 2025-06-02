@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using RAGNET.Application.DTOs.Conversation;
 using RAGNET.Application.DTOs.Embedder;
-using RAGNET.Application.UseCases.UserApiKey;
+using RAGNET.Application.UseCases.ProviderApiKey;
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Enums;
 using RAGNET.Infrastructure.Adapters.Chat;
@@ -16,12 +16,12 @@ namespace web.Controllers
     [ApiController]
     public class AvailableModelsController(
         UserManager<User> userManager,
-        IGetUserApiKeysUseCase getUserApiKeysUseCase
+        IGetProviderApiKeysUseCase getProviderApiKeysUseCase
     ) : ControllerBase
     {
 
         private readonly UserManager<User> _userManager = userManager;
-        private readonly IGetUserApiKeysUseCase _getUserApiKeysUseCase = getUserApiKeysUseCase;
+        private readonly IGetProviderApiKeysUseCase _getProviderApiKeysUseCase = getProviderApiKeysUseCase;
 
         [HttpGet("conversation")]
         [Authorize]
@@ -32,7 +32,7 @@ namespace web.Controllers
             if (user == null)
                 return Unauthorized();
 
-            var userApiKeys = await _getUserApiKeysUseCase.ExecuteAsync(user.Id);
+            var userApiKeys = await _getProviderApiKeysUseCase.ExecuteAsync(user.Id);
 
             if (userApiKeys.Count == 0)
                 return Unauthorized("User has no API keys");
@@ -64,7 +64,7 @@ namespace web.Controllers
             if (user == null)
                 return Unauthorized();
 
-            var userApiKeys = await _getUserApiKeysUseCase.ExecuteAsync(user.Id);
+            var userApiKeys = await _getProviderApiKeysUseCase.ExecuteAsync(user.Id);
 
             if (userApiKeys.Count == 0)
                 return Unauthorized("User has no API keys");

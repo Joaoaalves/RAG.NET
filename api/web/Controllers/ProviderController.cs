@@ -1,30 +1,30 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using RAGNET.Application.DTOs.UserApiKey;
+using RAGNET.Application.DTOs.ProviderApiKey;
 using RAGNET.Application.Mappers;
-using RAGNET.Application.UseCases.UserApiKey;
+using RAGNET.Application.UseCases.ProviderApiKey;
 using RAGNET.Domain.Entities;
 
 namespace web.Controllers
 {
     public class ProviderController(
-        ICreateUserApiKeyUseCase createUserApiKeyUseCase,
-        IGetUserApiKeysUseCase getUserApiKeyUseCase,
-        IUpdateUserApiKeyUseCase updateUserApiKeyUseCase,
-        IDeleteUserApiKeyUseCase deleteUserApiKeyUseCase,
+        ICreateProviderApiKeyUseCase createProviderApiKeyUseCase,
+        IGetProviderApiKeysUseCase getProviderApiKeyUseCase,
+        IUpdateProviderApiKeyUseCase updateProviderApiKeyUseCase,
+        IDeleteProviderApiKeyUseCase deleteProviderApiKeyUseCase,
         UserManager<User> userManager
     ) : ControllerBase
     {
-        private readonly ICreateUserApiKeyUseCase _createUserApiKeyUseCase = createUserApiKeyUseCase;
-        private readonly IGetUserApiKeysUseCase _getUserApiKeyUseCase = getUserApiKeyUseCase;
-        private readonly IUpdateUserApiKeyUseCase _updateUserApiKeyUseCase = updateUserApiKeyUseCase;
-        private readonly IDeleteUserApiKeyUseCase _deleteUserApiKeyUseCase = deleteUserApiKeyUseCase;
+        private readonly ICreateProviderApiKeyUseCase _createProviderApiKeyUseCase = createProviderApiKeyUseCase;
+        private readonly IGetProviderApiKeysUseCase _getProviderApiKeyUseCase = getProviderApiKeyUseCase;
+        private readonly IUpdateProviderApiKeyUseCase _updateProviderApiKeyUseCase = updateProviderApiKeyUseCase;
+        private readonly IDeleteProviderApiKeyUseCase _deleteProviderApiKeyUseCase = deleteProviderApiKeyUseCase;
         readonly UserManager<User> _userManager = userManager;
 
         [HttpPost("/api/provider")]
         [Authorize]
-        public async Task<IActionResult> CreateUserApiKey([FromBody] CreateUserApiKeyDTO dto)
+        public async Task<IActionResult> CreateProviderApiKey([FromBody] CreateProviderApiKeyDTO dto)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace web.Controllers
                 if (user == null)
                     return Unauthorized();
 
-                var result = await _createUserApiKeyUseCase.ExecuteAsync(dto, user.Id);
+                var result = await _createProviderApiKeyUseCase.ExecuteAsync(dto, user.Id);
 
                 if (result == null)
                     return BadRequest("Error creating user API key");
@@ -48,7 +48,7 @@ namespace web.Controllers
 
         [HttpGet("/api/provider")]
         [Authorize]
-        public async Task<IActionResult> GetUserApiKeys()
+        public async Task<IActionResult> GetProviderApiKeys()
         {
             try
             {
@@ -57,7 +57,7 @@ namespace web.Controllers
                 if (user == null)
                     return Unauthorized();
 
-                var result = await _getUserApiKeyUseCase.ExecuteAsync(user.Id);
+                var result = await _getProviderApiKeyUseCase.ExecuteAsync(user.Id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -68,7 +68,7 @@ namespace web.Controllers
 
         [HttpPut("/api/provider/{providerId}")]
         [Authorize]
-        public async Task<IActionResult> UpdateUserApiKey([FromBody] UpdateUserApiKeyDTO dto, [FromRoute] Guid providerId)
+        public async Task<IActionResult> UpdateProviderApiKey([FromBody] UpdateProviderApiKeyDTO dto, [FromRoute] Guid providerId)
         {
             try
             {
@@ -77,7 +77,7 @@ namespace web.Controllers
                 if (user == null)
                     return Unauthorized();
 
-                var result = await _updateUserApiKeyUseCase.ExecuteAsync(dto, providerId, user.Id);
+                var result = await _updateProviderApiKeyUseCase.ExecuteAsync(dto, providerId, user.Id);
                 return Ok(result.ToDTO());
             }
             catch (Exception exc)
@@ -88,7 +88,7 @@ namespace web.Controllers
 
         [HttpDelete("/api/provider/{providerId}")]
         [Authorize]
-        public async Task<IActionResult> DeleteUserApiKey([FromRoute] Guid providerId)
+        public async Task<IActionResult> DeleteProviderApiKey([FromRoute] Guid providerId)
         {
             try
             {
@@ -97,7 +97,7 @@ namespace web.Controllers
                     return Unauthorized();
 
 
-                var result = await _deleteUserApiKeyUseCase.ExecuteAsync(providerId, user.Id);
+                var result = await _deleteProviderApiKeyUseCase.ExecuteAsync(providerId, user.Id);
                 return Ok(result);
             }
             catch (Exception exc)

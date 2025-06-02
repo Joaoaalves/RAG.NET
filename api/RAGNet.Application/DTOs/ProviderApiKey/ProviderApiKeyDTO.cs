@@ -4,9 +4,9 @@ using System.Text.Json.Serialization;
 using RAGNET.Application.Converters;
 using RAGNET.Domain.Enums;
 
-namespace RAGNET.Application.DTOs.UserApiKey
+namespace RAGNET.Application.DTOs.ProviderApiKey
 {
-    public class UserApiKeyDTO
+    public class ProviderApiKeyDTO
     {
         public string Id { get; set; } = String.Empty;
         public string ApiKey { get; set; } = String.Empty;

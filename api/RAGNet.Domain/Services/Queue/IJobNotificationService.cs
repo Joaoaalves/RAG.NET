@@ -1,4 +1,4 @@
-using RAGNET.Domain.Entities;
+using RAGNET.Domain.Documents;
 using RAGNET.Domain.Entities.Jobs;
 
 namespace RAGNET.Domain.Services.Queue

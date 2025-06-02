@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using RAGNET.Domain.Documents;
 
 namespace RAGNET.Domain.Entities
 {

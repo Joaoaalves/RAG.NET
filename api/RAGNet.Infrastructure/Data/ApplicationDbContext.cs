@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
+using RAGNET.Domain.Documents;
 using RAGNET.Domain.Entities;
 
 namespace RAGNET.Infrastructure.Data
@@ -9,7 +9,7 @@ namespace RAGNET.Infrastructure.Data
     {
         public DbSet<Workflow> Workflows { get; set; }
         public DbSet<CallbackUrl> CallbackUrls { get; set; }
-        public DbSet<UserApiKey> UserApiKeys { get; set; }
+        public DbSet<ProviderApiKey> ProviderApiKeys { get; set; }
         public DbSet<Chunker> Chunkers { get; set; }
         public DbSet<ChunkerMeta> ChunkerMetas { get; set; }
         public DbSet<EmbeddingProviderConfig> EmbeddingProviderConfigs { get; set; }
@@ -27,7 +27,9 @@ namespace RAGNET.Infrastructure.Data
         {
             base.OnModelCreating(builder);
 
-            // Relationship: User -> UserApiKeys
+            builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
+            // Relationship: User -> ProviderApiKeys
             builder.Entity<User>()
                         .HasMany(u => u.ApiKeys)
                         .WithOne(u => u.User)

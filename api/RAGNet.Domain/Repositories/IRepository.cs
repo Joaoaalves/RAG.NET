@@ -1,3 +1,4 @@
+using RAGNET.Domain.Documents;
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Enums;
 
@@ -24,10 +25,10 @@ namespace RAGNET.Domain.Repositories
         Task<IEnumerable<Workflow>> GetUserWorkflows(string id);
         Task UpdateByApiKey(Workflow workflow, string apiKey);
     }
-    public interface IUserApiKeyRepository : IRepository<UserApiKey>
+    public interface IProviderApiKeyRepository : IRepository<ProviderApiKey>
     {
-        Task<IEnumerable<UserApiKey>> GetByUserIdAsync(string userId);
-        Task<UserApiKey?> GetByUserIdAndProviderAsync(string userId, SupportedProvider provider);
+        Task<IEnumerable<ProviderApiKey>> GetByUserIdAsync(string userId);
+        Task<ProviderApiKey?> GetByUserIdAndProviderAsync(string userId, SupportedProvider provider);
         Task<bool> ExistsAsync(SupportedProvider provider, string userId);
     }
     public interface ICallbackUrlRepository : IRepository<CallbackUrl>

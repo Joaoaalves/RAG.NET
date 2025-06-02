@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using RAGNET.Domain.Documents;
 using RAGNET.Domain.Interfaces;
 
 namespace RAGNET.Domain.Entities

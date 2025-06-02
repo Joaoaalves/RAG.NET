@@ -37,7 +37,9 @@ services:
       dockerfile: RAGNet.Infrastructure/Persistence/Dockerfile
       target: migrations
     depends_on:
-      - postgres
+      postgres:
+        condition: service_started
+        
   rabbitmq:
     image: rabbitmq:3-management
     ports:
@@ -67,6 +69,8 @@ services:
     ports:
       - "5000:8080"
     depends_on:
+      migrations:
+        condition: service_completed_successfully
       postgres:
         condition: service_started
       qdrant:

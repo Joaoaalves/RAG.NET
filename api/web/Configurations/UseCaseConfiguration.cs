@@ -2,7 +2,7 @@ using RAGNET.Application.UseCases.CallbackUrlUseCases;
 using RAGNET.Application.UseCases.ContentFilterUseCases;
 using RAGNET.Application.UseCases.Query;
 using RAGNET.Application.UseCases.QueryEnhancerUseCases;
-using RAGNET.Application.UseCases.UserApiKey;
+using RAGNET.Application.UseCases.ProviderApiKey;
 using RAGNET.Application.UseCases.WorkflowUseCases;
 
 namespace web.Configurations
@@ -12,10 +12,10 @@ namespace web.Configurations
         public static IServiceCollection AddUseCaseConfiguration(this IServiceCollection services)
         {
             // User API Key
-            services.AddScoped<ICreateUserApiKeyUseCase, CreateUserApiKeyUseCase>();
-            services.AddScoped<IGetUserApiKeysUseCase, GetUserApiKeysUseCase>();
-            services.AddScoped<IUpdateUserApiKeyUseCase, UpdateUserApiKeyUseCase>();
-            services.AddScoped<IDeleteUserApiKeyUseCase, DeleteUserApiKeyUseCase>();
+            services.AddScoped<ICreateProviderApiKeyUseCase, CreateProviderApiKeyUseCase>();
+            services.AddScoped<IGetProviderApiKeysUseCase, GetProviderApiKeysUseCase>();
+            services.AddScoped<IUpdateProviderApiKeyUseCase, UpdateProviderApiKeyUseCase>();
+            services.AddScoped<IDeleteProviderApiKeyUseCase, DeleteProviderApiKeyUseCase>();
 
             // Workflow
             services.AddScoped<IGetWorkflowUseCase, GetWorkflowUseCase>();
