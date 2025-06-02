@@ -4,19 +4,12 @@
       <h1 class="text-4xl text-neutral-200 font-bold">Providers</h1>
     </div>
   </div>
-  <div
-    *ngIf="providers.length > 0"
-    class="grid grid-cols-1 lg:grid-cols-2 gap-8"
-  >
-    <app-provider [Provider]="getProvider('openai')"></app-provider>
-
-    <app-provider [Provider]="getProvider('anthropic')"></app-provider>
-
-    <app-provider [Provider]="getProvider('gemini')"></app-provider>
-
-    <app-provider [Provider]="getProvider('voyage')"></app-provider>
-
-    <app-provider [Provider]="getProvider('qdrant')"></app-provider>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <app-provider [Provider]="providerMap['openai']"></app-provider>
+    <app-provider [Provider]="providerMap['anthropic']"></app-provider>
+    <app-provider [Provider]="providerMap['gemini']"></app-provider>
+    <app-provider [Provider]="providerMap['voyage']"></app-provider>
+    <app-provider [Provider]="providerMap['qdrant']"></app-provider>
   </div>
 </div>
 
