@@ -1,6 +1,13 @@
 using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services;
 using RAGNET.Domain.Services.Queue;
+using RAGNET.Domain.SharedKernel.Providers;
+using RAGNET.Infrastructure.Adapters.Chat.Anthropic;
+using RAGNET.Infrastructure.Adapters.Chat.Gemini;
+using RAGNET.Infrastructure.Adapters.Chat.OpenAi;
+using RAGNET.Infrastructure.Adapters.Embedding.Gemini;
+using RAGNET.Infrastructure.Adapters.Embedding.OpenAI;
+using RAGNET.Infrastructure.Adapters.Embedding.Voyage;
 using RAGNET.Infrastructure.Adapters.Queue;
 using RAGNET.Infrastructure.Adapters.SignalR;
 using RAGNET.Infrastructure.Adapters.Trello;
@@ -49,6 +56,30 @@ namespace web.Configurations
 
             // Trello
             services.AddScoped<ICardCreatorService, TrelloCardCreator>();
+
+
+            // Providers
+            services.AddSingleton<OpenAIChatModelCatalog>();
+            services.AddSingleton<AnthropicChatModelCatalog>();
+            services.AddSingleton<GeminiChatModelCatalog>();
+            services.AddSingleton<Dictionary<SupportedProvider, IProviderConversationModelCatalog>>(sp => new()
+            {
+                { SupportedProvider.OpenAI, sp.GetRequiredService<OpenAIChatModelCatalog>() },
+                { SupportedProvider.Anthropic, sp.GetRequiredService<AnthropicChatModelCatalog>() },
+                { SupportedProvider.Gemini, sp.GetRequiredService<GeminiChatModelCatalog>() },
+            });
+
+
+            services.AddSingleton<OpenAIEmbeddingModelCatalog>();
+            services.AddSingleton<VoyageEmbeddingModelCatalog>();
+            services.AddSingleton<GeminiEmbeddingModelCatalog>();
+
+            services.AddSingleton<Dictionary<SupportedProvider, IProviderEmbeddingModelCatalog>>(sp => new()
+            {
+                { SupportedProvider.OpenAI, sp.GetRequiredService<OpenAIEmbeddingModelCatalog>() },
+                { SupportedProvider.Voyage, sp.GetRequiredService<VoyageEmbeddingModelCatalog>() },
+                { SupportedProvider.Gemini, sp.GetRequiredService<GeminiEmbeddingModelCatalog>() },
+            });
 
             return services;
         }

@@ -19,6 +19,7 @@
       ></app-workflow-name>
 
       <hlm-switch
+      *ngIf="workflow"
         class="bg-white"
         (click)="toggleEnabled($event)"
         [checked]="workflow.isActive"
@@ -31,7 +32,9 @@
       [description]="workflow.description"
     ></app-workflow-description>
 
-    <div class="flex flex-wrap gap-3">
+    <div class="flex flex-wrap gap-3"
+      *ngIf="workflow"
+    >
       <div
         class="px-3 py-1 rounded-full bg-black border border-rose-500/20 text-white text-sm shadow-[0_0_5px_rgba(244,63,94,0.2)]"
       >

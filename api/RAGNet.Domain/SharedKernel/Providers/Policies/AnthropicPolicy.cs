@@ -1,26 +1,28 @@
 using System.Text.RegularExpressions;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.SharedKernel.Providers;
+using RAGNET.Domain.SharedKernel.Providers.Rules;
 
 namespace RAGNET.Domain.Providers.SharedKernel.Policies
 {
     public partial class AnthropicPolicy : IProviderPolicy
     {
-        private const string Pattern = "^sk-ant-[a-z0-9-]+-[A-Za-z0-9_-]{80,140}$";
+        public string Name => "Anthropic";
+        public string Prefix => "sk-ant-";
+        public string Pattern => "^sk-ant-[a-z0-9-]+-[A-Za-z0-9_-]{80,140}$";
+        public string Url => "https://console.anthropic.com/settings/keys";
+        public static SupportedProvider Id => SupportedProvider.Anthropic;
 
-        public static SupportedProvider Type => SupportedProvider.Anthropic;
+        SupportedProvider IProviderPolicy.Id => throw new NotImplementedException();
 
-        SupportedProvider IProviderPolicy.Type => throw new NotImplementedException();
 
         public void Validate(string apiKey)
         {
-            if (!Regex().IsMatch(apiKey))
-                throw new BusinessRuleValidationException(
-                    new ProviderApiKeyMustMatchPatternRule(Type, Pattern)
-                );
-        }
+            var regexRule = new ApiKeyMustMatchPatternRule(Id, apiKey, Pattern);
 
-        [GeneratedRegex(Pattern)]
-        private static partial Regex Regex();
+            if (regexRule.IsBroken())
+                throw new BusinessRuleValidationException(regexRule);
+
+        }
     }
 }

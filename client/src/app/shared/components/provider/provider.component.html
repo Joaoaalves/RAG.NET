@@ -1,16 +1,16 @@
 <div
-  *ngIf="providerData"
+  *ngIf="provider"
   class="w-full h-full border-white/10 border backdrop-blur-sm bg-gradient-to-br from-neutral-900 via-neutral-950 to-black transition-all animate-fade-in-300 rounded-2xl p-4 shadow-md flex flex-col items-start gap-4"
 >
   <div class="flex items-start gap-x-4">
     <img
-      [src]="providerData.icon"
-      alt="Logo of {{ providerData.title }}"
+      [src]="providerImage"
+      alt="Logo of {{ provider.name }}"
       class="w-8 h-8 rounded-lg"
     />
     <div class="flex-1 flex gap-x-2">
       <h3 class="text-neutral-100 text-xl font-medium">
-        {{ providerData.title }}
+        {{ provider.name }}
       </h3>
       <button
         class="text-white cursor-pointer hover:text-fuchsia-500 transition-all duration-300 hover:scale-110"
@@ -99,7 +99,7 @@
       <input
         formControlName="apiKey"
         type="text"
-        [placeholder]="providerData.keyTemplate"
+        [placeholder]="providerTemplate"
         class="flex-1 px-3 py-2 rounded bg-black/50 border border-neutral-700 text-white text-sm placeholder:text-neutral-500 focus:border-sky-500 focus:ring-0"
       />
       <button

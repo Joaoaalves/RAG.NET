@@ -1,75 +1,52 @@
-import { Injectable, Provider } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
-// Types and Constants
-import { PROVIDERS_DATA } from '../core/constants/providers.constant';
 
 import { BaseApiService } from './base-api.service';
 import { catchError, map, Observable, of } from 'rxjs';
-import {
-  Provider as AIProvider,
-  GetProvidersResponse,
-  ProviderData,
-  SupportedProvider,
-} from '../models/provider';
+import { Provider as AIProvider, Provider } from '../models/provider';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProvidersService extends BaseApiService {
+  providers: Provider[] = [];
   constructor(http: HttpClient) {
     super(http);
   }
 
-  mapProviderData(provider: SupportedProvider): ProviderData {
-    return PROVIDERS_DATA[provider];
+  getUserProviders(): Observable<Provider[]> {
+    return this.http.get<Provider[]>(this.buildUrl('/api/provider')).pipe(
+      map((response) => {
+        this.providers = response;
+        return response;
+      })
+    );
   }
 
-  getAllProviders() {
-    return Object.values(PROVIDERS_DATA);
-  }
-
-  getUserProviders(): Observable<GetProvidersResponse> {
-    return this.http
-      .get<GetProvidersResponse>(this.buildUrl('/api/provider'))
-      .pipe(map((response) => response));
-  }
-
-  addProvider(
-    provider: SupportedProvider,
-    apiKey: string
-  ): Observable<AIProvider> {
-    const providerData = this.mapProviderData(provider);
-    if (!providerData) {
-      throw new Error(`Provider ${provider} not found`);
-    }
-
-    if (this.isValidApiKey(provider, apiKey)) {
+  addProvider(provider: Provider, apiKey: string): Observable<AIProvider> {
+    console.log(provider);
+    if (this.isValidApiKey(provider.providerId, apiKey)) {
       return this.http
         .post<AIProvider>(this.buildUrl('/api/provider'), {
-          provider: providerData.id,
+          provider: provider.providerId,
           apiKey,
         })
         .pipe(map((response) => response));
     }
 
-    throw new Error(`Invalid API Key format for provider ${provider}`);
+    throw new Error(`Invalid API Key format for provider ${provider.name}`);
   }
 
-  updateProvider(
-    providerId: string,
-    apiKey: string,
-    provider: SupportedProvider
-  ): Observable<string> {
-    if (this.isValidApiKey(provider, apiKey)) {
+  updateProvider(provider: Provider, apiKey: string): Observable<string> {
+    if (this.isValidApiKey(provider.providerId, apiKey)) {
       return this.http
-        .put<Provider>(this.buildUrl(`/api/provider/${providerId}`), {
+        .put<Provider>(this.buildUrl(`/api/provider/${provider.id}`), {
           apiKey,
         })
         .pipe(map((response) => apiKey));
     }
 
-    throw new Error(`Invalid API Key format for provider ${provider}`);
+    throw new Error(`Invalid API Key format for provider ${provider.name}`);
   }
 
   deleteProvider(providerId: string): Observable<boolean> {
@@ -81,11 +58,18 @@ export class ProvidersService extends BaseApiService {
       );
   }
 
-  private isValidApiKey(provider: SupportedProvider, apiKey: string): boolean {
-    const providerData = this.mapProviderData(provider);
-    if (!providerData || !providerData.regex) return false;
+  private getProviderById(providerId: number) {
+    return this.providers.find((prov) => prov.providerId === providerId);
+  }
 
-    const regex = new RegExp(providerData.regex);
-    return regex.test(apiKey);
+  private isValidApiKey(providerId: number, apiKey: string): boolean {
+    const prov = this.getProviderById(providerId);
+
+    if (prov) {
+      const regex = new RegExp(prov.pattern);
+      return regex.test(apiKey);
+    }
+
+    return false;
   }
 }

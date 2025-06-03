@@ -3,9 +3,9 @@ import { FormGroup } from '@angular/forms';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { filter, map, startWith, switchMap } from 'rxjs/operators';
 import { ChunkerStrategy } from 'src/app/models/chunker';
-import { EmbeddingModel } from 'src/app/models/embedding';
-import { ConversationModel } from 'src/app/models/chat';
+
 import { RadarAxis } from 'src/app/services/radar-data.service';
+import { ConversationModel, EmbeddingModel } from '../models/models';
 
 const EMPTY_EMB_MODEL: EmbeddingModel = {
   value: '',

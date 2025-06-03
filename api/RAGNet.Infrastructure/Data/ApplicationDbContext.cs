@@ -29,12 +29,12 @@ namespace RAGNET.Infrastructure.Data
 
             builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
-            // Relationship: User -> ProviderApiKeys
-            builder.Entity<User>()
-                        .HasMany(u => u.ApiKeys)
-                        .WithOne(u => u.User)
-                        .HasForeignKey(u => u.UserId)
-                        .OnDelete(DeleteBehavior.Cascade);
+            // // Relationship: User -> ProviderApiKeys
+            // builder.Entity<User>()
+            //             .HasMany(u => u.ApiKeys)
+            //             .WithOne(u => u.User)
+            //             .HasForeignKey(u => u.UserId)
+            //             .OnDelete(DeleteBehavior.Cascade);
 
             // Relationship: Workflow -> CallbackURLs
             builder.Entity<Workflow>()

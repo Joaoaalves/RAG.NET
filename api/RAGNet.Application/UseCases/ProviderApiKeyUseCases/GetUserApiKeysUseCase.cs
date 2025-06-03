@@ -1,6 +1,7 @@
 using RAGNET.Application.DTOs.ProviderApiKey;
 using RAGNET.Application.Mappers;
 using RAGNET.Domain.Repositories;
+using RAGNET.Domain.SharedKernel.Providers;
 
 namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
 {
@@ -15,15 +16,37 @@ namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
 
         public async Task<List<ProviderApiKeyDTO>> ExecuteAsync(string userId)
         {
-            var result = await _providerApiKeyRepository.GetByUserIdAsync(userId);
-            List<ProviderApiKeyDTO> apiKeys = [];
+            var userApiKeys = await _providerApiKeyRepository.GetByUserIdAsync(userId);
 
-            foreach (var apiKey in result)
+            var result = new List<ProviderApiKeyDTO>();
+
+            foreach (var apiKey in userApiKeys)
             {
-                apiKeys.Add(apiKey.ToDTO());
+                result.Add(apiKey.ToDTO());
             }
 
-            return apiKeys;
+            var allProviders = Enum.GetValues<SupportedProvider>();
+
+            foreach (var provider in allProviders)
+            {
+                bool alreadyExists = userApiKeys.Any(k => k.Provider.Id == provider);
+                if (!alreadyExists)
+                {
+                    var policy = ProviderPolicyFactory.GetPolicy(provider);
+
+                    result.Add(new ProviderApiKeyDTO
+                    {
+                        ApiKey = string.Empty,
+                        ProviderId = provider,
+                        Name = policy.Name,
+                        Prefix = policy.Prefix,
+                        Pattern = policy.Pattern,
+                        Url = policy.Url
+                    });
+                }
+            }
+
+            return result;
         }
     }
 }

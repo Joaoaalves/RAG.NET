@@ -1,6 +1,6 @@
 using RAGNET.Application.DTOs.Chunker;
 using RAGNET.Application.DTOs.Conversation;
-using RAGNET.Application.DTOs.Embedder;
+using RAGNET.Application.DTOs.Embedding;
 using RAGNET.Domain.Enums;
 
 namespace RAGNET.Application.DTOs.Workflow

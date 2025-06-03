@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RAGNET.Domain.Entities;
-using RAGNET.Domain.SharedKernel.Providers;
 
 namespace RAGNET.Infrastructure.Domain.ProviderApiKeys;
 
@@ -16,13 +15,9 @@ internal sealed class ProviderApiKeyEntityTypeConfiguration : IEntityTypeConfigu
         builder.Property(x => x.UserId)
             .IsRequired();
 
-        builder.HasOne(x => x.User)
-            .WithMany()
-            .HasForeignKey(x => x.UserId);
-
         builder.OwnsOne(x => x.Provider, provider =>
         {
-            provider.Property(p => p.Type)
+            provider.Property(p => p.Id)
                 .HasColumnName("Provider")
                 .HasConversion<string>()
                 .IsRequired();

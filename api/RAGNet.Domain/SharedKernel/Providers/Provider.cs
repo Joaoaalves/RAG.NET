@@ -5,27 +5,33 @@ namespace RAGNET.Domain.SharedKernel.Providers
 {
     public class Provider : ValueObject
     {
-        public SupportedProvider Type { get; }
+        public SupportedProvider Id { get; }
         public ApiKey ApiKey { get; } = null!;
+        public IProviderPolicy Policy { get; } = null!;
+        public string Name => Policy.Name;
+        public string Prefix => Policy.Prefix;
+        public string Pattern => Policy.Pattern;
+        public string Url => Policy.Url;
         private Provider() { }
 
-        public Provider(SupportedProvider type, string apiKey)
+        public Provider(SupportedProvider provider, string apiKey)
         {
-            Type = type;
+            Id = provider;
             ApiKey = new ApiKey(apiKey);
+            Policy = ProviderPolicyFactory.GetPolicy(provider);
         }
 
-        public static Provider CreateFromEncrypted(SupportedProvider type, string encryptedApiKey)
+        public static Provider CreateFromEncrypted(SupportedProvider provider, string encryptedApiKey)
         {
-            return new Provider(type, encryptedApiKey);
+            return new Provider(provider, encryptedApiKey);
         }
 
-        public static Provider CreateValidated(SupportedProvider type, string plainApiKey)
+        public static Provider CreateValidated(SupportedProvider provider, string plainApiKey)
         {
-            var policy = ProviderPolicyFactory.GetPolicy(type);
+            var policy = ProviderPolicyFactory.GetPolicy(provider);
             policy.Validate(plainApiKey);
 
-            return new Provider(type, plainApiKey);
+            return new Provider(provider, plainApiKey);
         }
     }
 }

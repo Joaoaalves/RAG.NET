@@ -1,7 +1,7 @@
 using RAGNET.Application.DTOs.CallbackUrl;
 using RAGNET.Application.DTOs.Chunker;
 using RAGNET.Application.DTOs.Conversation;
-using RAGNET.Application.DTOs.Embedder;
+using RAGNET.Application.DTOs.Embedding;
 using RAGNET.Application.DTOs.QueryEnhancer;
 using RAGNET.Application.DTOs.Workflow;
 using RAGNET.Domain.Entities;

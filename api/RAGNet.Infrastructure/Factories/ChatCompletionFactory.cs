@@ -2,7 +2,9 @@ using RAGNET.Domain.Entities;
 using RAGNET.Domain.Factories;
 using RAGNET.Domain.Services;
 using RAGNET.Domain.SharedKernel.Providers;
-using RAGNET.Infrastructure.Adapters.Chat;
+using RAGNET.Infrastructure.Adapters.Chat.Anthropic;
+using RAGNET.Infrastructure.Adapters.Chat.Gemini;
+using RAGNET.Infrastructure.Adapters.Chat.OpenAi;
 
 namespace RAGNET.Infrastructure.Factories
 {

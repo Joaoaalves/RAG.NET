@@ -4,13 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.SharedKernel.Providers;
-
 using RAGNET.Application.DTOs.Conversation;
-using RAGNET.Application.DTOs.Embedder;
+using RAGNET.Application.DTOs.Embedding;
 using RAGNET.Application.UseCases.ProviderApiKeyUseCases;
-
-using RAGNET.Infrastructure.Adapters.Chat;
-using RAGNET.Infrastructure.Adapters.Embedding;
 
 namespace web.Controllers
 {
@@ -18,43 +14,46 @@ namespace web.Controllers
     [ApiController]
     public class AvailableModelsController(
         UserManager<User> userManager,
-        IGetProviderApiKeysUseCase getProviderApiKeysUseCase
+        IGetProviderApiKeysUseCase getProviderApiKeysUseCase,
+        IProviderModelCatalogService providerModelCatalogService
     ) : ControllerBase
     {
-
         private readonly UserManager<User> _userManager = userManager;
         private readonly IGetProviderApiKeysUseCase _getProviderApiKeysUseCase = getProviderApiKeysUseCase;
+        private readonly IProviderModelCatalogService _providerModelCatalogService = providerModelCatalogService;
 
         [HttpGet("conversation")]
         [Authorize]
         public async Task<IActionResult> GetConversationModels()
         {
             var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
+            if (user is null)
                 return Unauthorized();
 
-            var userApiKeys = await _getProviderApiKeysUseCase.ExecuteAsync(user.Id);
-
-            if (userApiKeys.Count == 0)
+            var providerApiKeys = await _getProviderApiKeysUseCase.ExecuteAsync(user.Id);
+            if (providerApiKeys.Count == 0)
                 return Unauthorized("User has no API keys");
 
-            var models = new ConversationModelsDTO();
+            var availableModels = _providerModelCatalogService.GetConversationModels();
+            var response = new ConversationModelsResponseDTO();
 
-            foreach (var userApiKey in userApiKeys)
+            foreach (var apiKey in providerApiKeys)
             {
-                if (userApiKey.Provider == SupportedProvider.OpenAI)
-                    models.OpenAI = OpenAIChatAdapter.GetModels();
+                if (string.IsNullOrWhiteSpace(apiKey.ApiKey))
+                    continue;
 
-                if (userApiKey.Provider == SupportedProvider.Anthropic)
-                    models.Anthropic = AnthropicChatAdapter.GetModels();
-
-                if (userApiKey.Provider == SupportedProvider.Gemini)
+                if (availableModels.TryGetValue(apiKey.ProviderId, out var models))
                 {
-                    models.Gemini = GeminiChatAdapter.GetModels();
+                    response.Providers.Add(new ConversationProviderDTO
+                    {
+                        ProviderId = apiKey.ProviderId,
+                        ProviderName = apiKey.ProviderId,
+                        Models = models
+                    });
                 }
             }
-            return Ok(models);
+
+            return Ok(response.Providers);
         }
 
         [HttpGet("embedding")]
@@ -62,33 +61,33 @@ namespace web.Controllers
         public async Task<IActionResult> GetEmbeddingModels()
         {
             var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
+            if (user is null)
                 return Unauthorized();
 
-            var userApiKeys = await _getProviderApiKeysUseCase.ExecuteAsync(user.Id);
-
-            if (userApiKeys.Count == 0)
+            var providerApiKeys = await _getProviderApiKeysUseCase.ExecuteAsync(user.Id);
+            if (providerApiKeys.Count == 0)
                 return Unauthorized("User has no API keys");
 
+            var availableModels = _providerModelCatalogService.GetEmbeddingModels();
+            var response = new EmbeddingModelsResponseDTO();
 
-            var models = new EmbeddingModelsDTO();
-
-            foreach (var userApiKey in userApiKeys)
+            foreach (var apiKey in providerApiKeys)
             {
-                if (userApiKey.Provider == SupportedProvider.OpenAI)
-                    models.OpenAI = OpenAIEmbeddingAdapter.GetModels();
+                if (string.IsNullOrWhiteSpace(apiKey.ApiKey))
+                    continue;
 
-                if (userApiKey.Provider == SupportedProvider.Voyage)
-                    models.Voyage = VoyageEmbeddingAdapter.GetModels();
-
-                if (userApiKey.Provider == SupportedProvider.Gemini)
+                if (availableModels.TryGetValue(apiKey.ProviderId, out var models))
                 {
-                    models.Gemini = GeminiEmbeddingAdapter.GetModels();
+                    response.Providers.Add(new EmbeddingProviderDTO
+                    {
+                        ProviderId = apiKey.ProviderId,
+                        ProviderName = apiKey.ProviderId,
+                        Models = models
+                    });
                 }
             }
 
-            return Ok(models);
+            return Ok(response.Providers);
         }
     }
 }

@@ -1,5 +1,5 @@
 using RAGNET.Application.DTOs.Conversation;
-using RAGNET.Application.DTOs.Embedder;
+using RAGNET.Application.DTOs.Embedding;
 
 namespace RAGNET.Application.DTOs.Workflow
 {

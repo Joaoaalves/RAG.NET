@@ -18,12 +18,16 @@ namespace RAGNET.Application.Mappers
 
         public static ProviderApiKeyDTO ToDTO(this ProviderApiKey userApiKey)
         {
+            var prov = userApiKey.Provider;
             return new ProviderApiKeyDTO
             {
-                Id = userApiKey.Id.ToString(),
-                ApiKey = userApiKey.Provider.ApiKey.Suffix,
-                UserId = userApiKey.UserId,
-                Provider = userApiKey.Provider.Type
+                Id = userApiKey.Id,
+                Name = prov.Name,
+                Pattern = prov.Pattern,
+                ApiKey = prov.ApiKey.Suffix,
+                ProviderId = prov.Id,
+                Prefix = prov.Prefix,
+                Url = prov.Url
             };
         }
     }

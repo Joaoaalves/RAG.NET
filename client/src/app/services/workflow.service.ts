@@ -10,9 +10,8 @@ import {
   CreateWorkflowResponse,
   WorkflowUpdateRequest,
 } from '../models/workflow';
-import { ProvidersResponse } from '../models/provider';
-import { EmbeddingModel } from '../models/embedding';
-import { ConversationModel } from '../models/chat';
+import { ProviderResponse } from '../models/provider';
+import { ConversationModel, EmbeddingModel } from '../models/models';
 
 @Injectable({
   providedIn: 'root',
@@ -67,7 +66,6 @@ export class WorkflowService {
   }
 
   toggleWorkflow(isActive: boolean, workflowId: string): Observable<Workflow> {
-    console.log(isActive, workflowId);
     return this.httpClient
       .put<Workflow>(`${this.apiUrl}/api/workflows/${workflowId}`, {
         isActive,
@@ -75,17 +73,17 @@ export class WorkflowService {
       .pipe(map((response) => response));
   }
 
-  getEmbeddingModels(): Observable<ProvidersResponse<EmbeddingModel>> {
+  getEmbeddingModels(): Observable<ProviderResponse<EmbeddingModel>[]> {
     return this.httpClient
-      .get<ProvidersResponse<EmbeddingModel>>(
+      .get<ProviderResponse<EmbeddingModel>[]>(
         `${this.apiUrl}/api/models/embedding`
       )
       .pipe(map((response) => response));
   }
 
-  getConversationModels(): Observable<ProvidersResponse<ConversationModel>> {
+  getConversationModels(): Observable<ProviderResponse<ConversationModel>[]> {
     return this.httpClient
-      .get<ProvidersResponse<ConversationModel>>(
+      .get<ProviderResponse<ConversationModel>[]>(
         `${this.apiUrl}/api/models/conversation`
       )
       .pipe(map((response) => response));

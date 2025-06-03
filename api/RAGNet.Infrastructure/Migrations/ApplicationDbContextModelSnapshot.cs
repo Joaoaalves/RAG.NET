@@ -806,7 +806,7 @@ namespace RAGNet.Infrastructure.Migrations
                             b1.Property<Guid>("ProviderApiKeyId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<string>("Type")
+                            b1.Property<string>("Id")
                                 .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("Provider");

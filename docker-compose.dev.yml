@@ -39,6 +39,10 @@ services:
     depends_on:
       postgres:
         condition: service_started
+        restart: true
+      rabbitmq:
+        condition: service_healthy
+        restart: true
         
   rabbitmq:
     image: rabbitmq:3-management

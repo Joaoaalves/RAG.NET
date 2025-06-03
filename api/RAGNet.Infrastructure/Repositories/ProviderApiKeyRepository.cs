@@ -11,20 +11,27 @@ namespace RAGNET.Infrastructure.Repositories
         public Task<bool> ExistsAsync(SupportedProvider provider, string userId)
         {
             return _context.ProviderApiKeys
-                .AnyAsync(u => u.Provider.Type == provider && u.UserId == userId);
+                .AnyAsync(u => u.Provider.Id == provider && u.UserId == userId);
         }
 
         public async Task<ProviderApiKey?> GetByUserIdAndProviderAsync(string userId, SupportedProvider provider)
         {
             return await _context.ProviderApiKeys
-                .FirstOrDefaultAsync(u => u.UserId == userId && u.Provider.Type == provider);
+                .FirstOrDefaultAsync(u => u.UserId == userId && u.Provider.Id == provider);
         }
 
         public async Task<IEnumerable<ProviderApiKey>> GetByUserIdAsync(string userId)
         {
-            return await _context.ProviderApiKeys
+            var apiKeys = await _context.ProviderApiKeys
                 .Where(u => u.UserId == userId)
                 .ToListAsync();
+
+            foreach (var key in apiKeys)
+            {
+                key.Provider = Provider.CreateFromEncrypted(key.Provider.Id, key.Provider.ApiKey.Value);
+            }
+
+            return apiKeys;
         }
     }
 }

@@ -27,7 +27,7 @@ namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
 
                 var encryptedApiKey = _cryptoService.Encrypt(dto.ApiKey);
                 userApiKey.Provider = new Provider(
-                    userApiKey.Provider.Type,
+                    userApiKey.Provider.Id,
                     encryptedApiKey);
 
                 await _providerApiKeyRepository.UpdateAsync(userApiKey, userId);

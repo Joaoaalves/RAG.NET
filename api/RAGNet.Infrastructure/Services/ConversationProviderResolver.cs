@@ -1,37 +1,29 @@
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Exceptions;
 using RAGNET.Domain.Services;
+using RAGNET.Domain.SharedKernel.Models;
 using RAGNET.Domain.SharedKernel.Providers;
-using RAGNET.Infrastructure.Adapters.Chat;
 
 namespace RAGNET.Infrastructure.Services
 {
-    public class ConversationProviderResolver : IConversationProviderResolver
+    public class ConversationProviderResolver(IProviderModelCatalogService providerModelCatalogService) : IConversationProviderResolver
     {
 
+        private readonly IProviderModelCatalogService _providerModelCatalogService = providerModelCatalogService;
         public ConversationModel Resolve(ConversationProviderConfig config)
         {
-            List<ConversationModel> validModels = [];
-            if (config.Provider == ConversationProviderEnum.OPENAI)
+            Dictionary<SupportedProvider, List<ConversationModel>> validModels = _providerModelCatalogService.GetConversationModels();
+
+            var provider = (SupportedProvider)config.Provider;
+
+
+            if (validModels.TryGetValue(provider, out var models))
             {
-                validModels = OpenAIChatAdapter.GetModels();
+                var validModel = models.FirstOrDefault(m => m.Value == config.Model) ?? throw new InvalidConversationModelException($"The model '{config.Model}' is not valid for provider '{config.Provider}'.");
+                return validModel;
             }
 
-            if (config.Provider == ConversationProviderEnum.ANTHROPIC)
-            {
-                validModels = AnthropicChatAdapter.GetModels();
-            }
-
-            if (config.Provider == ConversationProviderEnum.GEMINI)
-            {
-                validModels = GeminiChatAdapter.GetModels();
-            }
-
-            ConversationModel validModel = validModels.FirstOrDefault(m => m.Value == config.Model) ?? throw new InvalidConversationModelException(
-                    $"The model '{config.Model}' is not valid."
-                );
-
-            return validModel;
+            throw new InvalidConversationModelException($"The provider '{config.Provider}' is not supported.");
         }
     }
 }

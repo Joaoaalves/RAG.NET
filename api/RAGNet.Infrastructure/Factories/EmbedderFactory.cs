@@ -1,9 +1,11 @@
 using RAGNET.Domain.Entities;
-using RAGNET.Domain.Enums;
 using RAGNET.Domain.Factories;
 using RAGNET.Domain.Services;
 using RAGNET.Domain.SharedKernel.Providers;
-using RAGNET.Infrastructure.Adapters.Embedding;
+
+using RAGNET.Infrastructure.Adapters.Embedding.Gemini;
+using RAGNET.Infrastructure.Adapters.Embedding.OpenAI;
+using RAGNET.Infrastructure.Adapters.Embedding.Voyage;
 
 namespace RAGNET.Infrastructure.Factories
 {

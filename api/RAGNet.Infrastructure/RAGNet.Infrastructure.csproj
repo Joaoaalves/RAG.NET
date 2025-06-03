@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RAGNet.Domain\RAGNet.Domain.csproj" />
+    <ProjectReference Include="..\RAGNet.Application\RAGNet.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

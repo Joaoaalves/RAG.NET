@@ -1,45 +1,30 @@
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.Exceptions;
 using RAGNET.Domain.Services;
+using RAGNET.Domain.SharedKernel.Models;
 using RAGNET.Domain.SharedKernel.Providers;
-using RAGNET.Infrastructure.Adapters.Embedding;
 
 
 namespace RAGNET.Infrastructure.Services
 {
-    public class EmbeddingProviderResolver : IEmbeddingProviderResolver
+    public class EmbeddingProviderResolver(IProviderModelCatalogService providerModelCatalogService) : IEmbeddingProviderResolver
     {
-
+        private readonly IProviderModelCatalogService _providerModelCatalogService = providerModelCatalogService;
         public EmbeddingModel Resolve(EmbeddingProviderConfig config)
         {
-            List<EmbeddingModel> validModels = [];
-            if (config.Provider == EmbeddingProviderEnum.OPENAI)
+            Dictionary<SupportedProvider, List<EmbeddingModel>> validModels = _providerModelCatalogService.GetEmbeddingModels();
+
+            var provider = (SupportedProvider)config.Provider;
+
+
+            if (validModels.TryGetValue(provider, out var models))
             {
-                validModels = OpenAIEmbeddingAdapter.GetModels();
+                var validModel = models.FirstOrDefault(m => m.Value == config.Model) ?? throw new InvalidConversationModelException($"The model '{config.Model}' is not valid for provider '{config.Provider}'.");
+                return validModel;
             }
 
-            if (config.Provider == EmbeddingProviderEnum.VOYAGE)
-            {
-                validModels = VoyageEmbeddingAdapter.GetModels();
-            }
+            throw new InvalidConversationModelException($"The provider '{config.Provider}' is not supported.");
 
-            if (config.Provider == EmbeddingProviderEnum.GEMINI)
-            {
-                validModels = GeminiEmbeddingAdapter.GetModels();
-            }
-
-            if (validModels.Count == 0)
-            {
-                throw new InvalidEmbeddingModelException(
-                    $"The embedding provider '{config.Provider}' is not valid."
-                );
-            }
-
-            EmbeddingModel validModel = validModels.FirstOrDefault(m => m.Value == config.Model) ?? throw new InvalidEmbeddingModelException(
-                    $"This embedding model '{config.Model}' is not valid."
-                );
-
-            return validModel;
         }
     }
 }

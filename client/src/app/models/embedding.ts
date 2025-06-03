@@ -6,22 +6,9 @@ export interface EmbeddingResponse {
   jobId: string;
 }
 
-export interface EmbeddingModel {
-  label: string;
-  value: string;
-  speed: number;
-  price: number;
-  vectorSize: number;
-  maxContext: number;
-}
-
-export enum EmbeddingProviderEnum {
-  OPENAI = 0,
-  VOYAGE = 1,
-}
-
 export interface EmbeddingProvider {
-  provider: 'OPENAI' | 'VOYAGE';
+  providerName: string;
+  providerId: number;
   model: string;
   apiKey: string;
   vectorSize: number;

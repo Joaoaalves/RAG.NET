@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Workflow, WorkflowUpdateRequest } from 'src/app/models/workflow';
 import { QueryEnhancer } from 'src/app/models/query-enhancer';
 import { CommonModule } from '@angular/common';
 import { Filter } from 'src/app/models/filter';
-import { getProviderIdFromName } from 'src/app/shared/utils/providers-utils';
 import { toast } from 'ngx-sonner';
 
 // Components
@@ -19,6 +18,7 @@ import { FilterConfigComponent } from 'src/app/shared/components/filter-config/f
 
 // Services
 import { WorkflowService } from 'src/app/services/workflow.service';
+import { ProviderModel } from 'src/app/models/provider';
 
 @Component({
   standalone: true,
@@ -35,16 +35,19 @@ import { WorkflowService } from 'src/app/services/workflow.service';
   ],
   templateUrl: 'workflow.component.html',
 })
-export class WorkflowComponent implements OnInit {
+export class WorkflowComponent {
   workflowId!: string;
   workflow!: Workflow;
 
-  convProvider: { provider: number; model: string } = {
-    provider: -1,
+  convProvider: ProviderModel = {
+    providerId: -1,
+    providerName: '',
     model: '',
   };
-  embProvider: { provider: number; model: string } = {
-    provider: -1,
+
+  embProvider: ProviderModel = {
+    providerId: -1,
+    providerName: '',
     model: '',
   };
 
@@ -53,19 +56,9 @@ export class WorkflowComponent implements OnInit {
   filter?: Filter;
 
   constructor(
-    private readonly workflowService: WorkflowService,
-    private readonly route: ActivatedRoute
-  ) {}
-
-  ngOnInit(): void {
-    this.loadWorkflowFromRoute();
-  }
-
-  get currentDate() {
-    return new Date().toLocaleDateString();
-  }
-
-  private loadWorkflowFromRoute(): void {
+    private workflowService: WorkflowService,
+    private route: ActivatedRoute
+  ) {
     this.route.paramMap.subscribe((params) => {
       const id = params.get('workflowId');
       if (id) {
@@ -75,14 +68,16 @@ export class WorkflowComponent implements OnInit {
     });
   }
 
+  get currentDate() {
+    return new Date().toLocaleDateString();
+  }
+
   toggleEnabled(event: Event) {
     event.stopPropagation();
-
     this.workflowService
       .toggleWorkflow(!this.workflow.isActive, this.workflow.id)
       .subscribe((w) => {
         this.workflow.isActive = w.isActive;
-
         toast('Workflow updated!', {
           description: `Workflow ${
             this.workflow.isActive ? 'enabled' : 'disabled'
@@ -92,31 +87,26 @@ export class WorkflowComponent implements OnInit {
   }
 
   updateWorkflow(data: WorkflowUpdateRequest) {
-    try {
-      this.workflowService
-        .updateWorkflow(data, this.workflow.id)
-        .subscribe((workflow) => {
-          this.workflow.name = workflow.name;
-          this.workflow.description = workflow.description;
-          this.workflow.embeddingProvider = workflow.embeddingProvider;
-          this.workflow.conversationProvider = workflow.conversationProvider;
-
-          this.loadProvidersIds();
-        });
-    } catch (error) {
-      console.error(error);
-    }
+    this.workflowService
+      .updateWorkflow(data, this.workflow.id)
+      .subscribe((w) => {
+        this.workflow = { ...this.workflow, ...w };
+        this.loadProvidersIds();
+      });
   }
 
   private loadWorkflow(id: string): void {
     this.workflowService.getWorkflow(id).subscribe((workflow) => {
       this.workflow = workflow;
+
       this.autoQueryEnhancer = workflow.queryEnhancers.find(
         (qe) => qe.type === 'AUTO_QUERY'
       );
+
       this.hydeEnhancer = workflow.queryEnhancers.find(
         (qe) => qe.type === 'HYPOTHETICAL_DOCUMENT_EMBEDDING'
       );
+
       this.filter = workflow.filter;
 
       this.loadProvidersIds();
@@ -127,14 +117,14 @@ export class WorkflowComponent implements OnInit {
     if (!this.workflow) return;
 
     this.embProvider = {
-      provider: getProviderIdFromName(this.workflow.embeddingProvider.provider),
+      providerName: this.workflow.embeddingProvider.providerName,
+      providerId: this.workflow.embeddingProvider.providerId,
       model: this.workflow.embeddingProvider.model,
     };
 
     this.convProvider = {
-      provider: getProviderIdFromName(
-        this.workflow.conversationProvider.provider
-      ),
+      providerName: this.workflow.conversationProvider.providerName,
+      providerId: this.workflow.conversationProvider.providerId,
       model: this.workflow.conversationProvider.model,
     };
   }

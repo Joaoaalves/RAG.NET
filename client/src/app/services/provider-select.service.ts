@@ -1,23 +1,16 @@
 import { Injectable } from '@angular/core';
 import { ReplaySubject, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { WorkflowService } from 'src/app/services/workflow.service';
-import {
-  ProviderData,
-  ProviderOption,
-  ProvidersResponse,
-} from 'src/app/models/provider';
-import { EmbeddingModel } from 'src/app/models/embedding';
-import { ConversationModel } from 'src/app/models/chat';
-import {
-  getProviderKeyByValueFromResponse,
-  mapValidProviders,
-} from 'src/app/shared/utils/providers-utils';
+import { ConversationModel, EmbeddingModel } from '../models/models';
+import { ProviderResponse } from '../models/provider';
+
+import { SelectOption } from '../models/select';
 
 @Injectable({ providedIn: 'root' })
 export class ProviderSelectService {
-  private embResp$ = new ReplaySubject<ProvidersResponse<EmbeddingModel>>(1);
-  private convResp$ = new ReplaySubject<ProvidersResponse<ConversationModel>>(
+  private embResp$ = new ReplaySubject<ProviderResponse<EmbeddingModel>[]>(1);
+  private convResp$ = new ReplaySubject<ProviderResponse<ConversationModel>[]>(
     1
   );
 
@@ -26,28 +19,28 @@ export class ProviderSelectService {
     this.workflow.getConversationModels().subscribe(this.convResp$);
   }
 
-  getEmbeddingProviders(): Observable<
-    { value: string | number; label: string }[]
-  > {
+  getEmbeddingProvidersAsSelectOptions(): Observable<SelectOption[]> {
     return this.embResp$.pipe(
-      map((res) =>
-        mapValidProviders(res).map((p: ProviderData) => ({
-          label: p.title,
-          value: p.id,
-        }))
+      map((providers) =>
+        providers.map((prov) => {
+          return {
+            label: prov.providerName,
+            value: prov.providerId,
+          };
+        })
       )
     );
   }
 
-  getConversationProviders(): Observable<
-    { value: string | number; label: string }[]
-  > {
+  getConversationProvidersAsSelectOptions(): Observable<SelectOption[]> {
     return this.convResp$.pipe(
-      map((res) =>
-        mapValidProviders(res).map((p: ProviderData) => ({
-          label: p.title,
-          value: p.id,
-        }))
+      map((providers) =>
+        providers.map((prov) => {
+          return {
+            label: prov.providerName,
+            value: prov.providerId,
+          };
+        })
       )
     );
   }
@@ -55,8 +48,9 @@ export class ProviderSelectService {
   getEmbeddingModels(providerId: number): Observable<EmbeddingModel[]> {
     return this.embResp$.pipe(
       map((res) => {
-        const key = getProviderKeyByValueFromResponse(providerId, res);
-        return key && res[key] ? res[key] : [];
+        const provider = res.find((curr) => curr.providerId === providerId);
+
+        return provider ? provider.models : [];
       })
     );
   }
@@ -64,8 +58,9 @@ export class ProviderSelectService {
   getConversationModels(providerId: number): Observable<ConversationModel[]> {
     return this.convResp$.pipe(
       map((res) => {
-        const key = getProviderKeyByValueFromResponse(providerId, res);
-        return key && res[key] ? res[key] : [];
+        const provider = res.find((curr) => curr.providerId === providerId);
+
+        return provider ? provider.models : [];
       })
     );
   }

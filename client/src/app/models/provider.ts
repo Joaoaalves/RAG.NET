@@ -1,9 +1,14 @@
-import { ConversationModel } from './chat';
-import { EmbeddingModel } from './embedding';
+import { ConversationModel, EmbeddingModel } from './models';
 
 export interface ProviderOption {
   label: string;
   value: string | number;
+}
+
+export interface ProviderModel {
+  providerId: number;
+  providerName: string;
+  model: string;
 }
 
 export type SupportedProvider =
@@ -13,27 +18,20 @@ export type SupportedProvider =
   | 'qdrant'
   | 'gemini';
 
-export type GetProvidersResponse = Provider[];
-
-export interface ProvidersResponse<
-  T extends EmbeddingModel | ConversationModel
+export interface ProviderResponse<
+  T extends ConversationModel | EmbeddingModel
 > {
-  [key: string]: T[];
+  providerId: number;
+  providerName: string;
+  models: T[];
 }
 
 export interface Provider {
-  id: string;
+  id?: string;
   apiKey: string;
-  userId: string;
-  provider: string;
-}
-
-export interface ProviderData {
-  id: number;
-  title: string;
-  description: string;
-  apiKeyUrl: string;
-  icon: string;
-  keyTemplate: string;
-  regex: string;
+  providerId: number;
+  name: string;
+  pattern: string;
+  prefix: string;
+  url: string;
 }

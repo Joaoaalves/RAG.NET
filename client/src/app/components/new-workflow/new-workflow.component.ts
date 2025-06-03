@@ -15,8 +15,6 @@ import { SelectComponent } from 'src/app/shared/components/select/select.compone
 // Models
 import { ChunkerStrategy } from 'src/app/models/chunker';
 import { CreateWorkflowRequest } from 'src/app/models/workflow';
-import { EmbeddingModel } from 'src/app/models/embedding';
-import { ConversationModel } from 'src/app/models/chat';
 
 import { mapChunkerStrategies } from 'src/app/shared/utils/chunker-utils';
 import { ModelSpeedPipe } from './model-speed.pipe';
@@ -39,6 +37,7 @@ import {
 import { RadarAxis } from 'src/app/services/radar-data.service';
 import { ProviderSelectService } from 'src/app/services/provider-select.service';
 import { WorkflowService } from 'src/app/services/workflow.service';
+import { ConversationModel, EmbeddingModel } from 'src/app/models/models';
 
 @Component({
   imports: [
@@ -68,6 +67,7 @@ export class NewWorkflowComponent implements OnInit {
   conversationOptions$!: Observable<
     { value: string | number; label: string }[]
   >;
+
   embeddingModels$!: Observable<EmbeddingModel[]>;
   conversationModels$!: Observable<ConversationModel[]>;
 
@@ -114,8 +114,9 @@ export class NewWorkflowComponent implements OnInit {
       }),
     });
 
-    this.embeddingOptions$ = this.ps.getEmbeddingProviders();
-    this.conversationOptions$ = this.ps.getConversationProviders();
+    this.embeddingOptions$ = this.ps.getEmbeddingProvidersAsSelectOptions();
+    this.conversationOptions$ =
+      this.ps.getConversationProvidersAsSelectOptions();
 
     const embProvCtrl = this.form.get('embeddingProvider.provider')!;
     this.embeddingModels$ = embProvCtrl.valueChanges.pipe(

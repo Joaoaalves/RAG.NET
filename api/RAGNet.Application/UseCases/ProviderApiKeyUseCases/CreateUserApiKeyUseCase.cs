@@ -23,19 +23,13 @@ namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
             if (await _providerApiKeyRepository.ExistsAsync(dto.Provider, userId))
                 throw new InvalidOperationException("API key already exists for this user.");
 
-            Console.WriteLine(dto.ApiKey);
-            Console.WriteLine(dto.Provider);
-
             Provider.CreateValidated(dto.Provider, dto.ApiKey); // Just validate
-
-            Console.WriteLine("Created with plain");
 
             // Hash
             var encryptedApiKey = _cryptoService.Encrypt(dto.ApiKey);
 
             // Create encrypted provider
             var provider = Provider.CreateFromEncrypted(dto.Provider, encryptedApiKey);
-            Console.WriteLine("Created encrypted");
             var providerApiKey = new ProviderApiKey
             {
                 Id = Guid.NewGuid(),

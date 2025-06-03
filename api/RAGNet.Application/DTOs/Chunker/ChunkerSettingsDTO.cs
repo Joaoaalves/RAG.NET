@@ -1,5 +1,3 @@
-using RAGNET.Application.DTOs.Embedder;
-
 namespace RAGNET.Application.DTOs.Chunker
 {
     public class ChunkerSettingsDTO

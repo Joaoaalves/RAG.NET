@@ -8,15 +8,15 @@
     *ngIf="providers.length > 0"
     class="grid grid-cols-1 lg:grid-cols-2 gap-8"
   >
-    <app-provider [Provider]="getProvider('openai')"></app-provider>
+    <app-provider [provider]="getProvider('openai')"></app-provider>
 
-    <app-provider [Provider]="getProvider('anthropic')"></app-provider>
+    <app-provider [provider]="getProvider('anthropic')"></app-provider>
 
-    <app-provider [Provider]="getProvider('gemini')"></app-provider>
+    <app-provider [provider]="getProvider('gemini')"></app-provider>
 
-    <app-provider [Provider]="getProvider('voyage')"></app-provider>
+    <app-provider [provider]="getProvider('voyage')"></app-provider>
 
-    <app-provider [Provider]="getProvider('qdrant')"></app-provider>
+    <app-provider [provider]="getProvider('qdrant')"></app-provider>
   </div>
 </div>
 

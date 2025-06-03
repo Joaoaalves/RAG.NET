@@ -1,5 +1,4 @@
 using RAGNET.Application.DTOs.Conversation;
-using RAGNET.Application.DTOs.Embedder;
 using RAGNET.Domain.Entities;
 using RAGNET.Domain.SharedKernel.Providers;
 
@@ -11,7 +10,7 @@ namespace RAGNET.Application.Mappers
         {
             return new ConversationProviderConfig
             {
-                Provider = dto.Provider,
+                Provider = dto.ProviderId,
                 Model = dto.Model,
                 WorkflowId = workflowId
             };
@@ -21,7 +20,8 @@ namespace RAGNET.Application.Mappers
         {
             return new ConversationProviderConfigDTO
             {
-                Provider = conversationProvider.Provider,
+                ProviderId = conversationProvider.Provider,
+                ProviderName = conversationProvider.Provider,
                 Model = conversationProvider.Model
             };
         }

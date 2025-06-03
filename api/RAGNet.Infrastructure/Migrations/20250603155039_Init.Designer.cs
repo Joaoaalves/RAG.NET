@@ -12,7 +12,7 @@ using RAGNET.Infrastructure.Data;
 namespace RAGNet.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250603001341_Init")]
+    [Migration("20250603155039_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -809,7 +809,7 @@ namespace RAGNet.Infrastructure.Migrations
                             b1.Property<Guid>("ProviderApiKeyId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<string>("Type")
+                            b1.Property<string>("Id")
                                 .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("Provider");

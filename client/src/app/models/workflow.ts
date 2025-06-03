@@ -1,8 +1,8 @@
 import { CallbackUrl } from './callback-url';
-import { ConversationProvider } from './chat';
 import { ChunkerSettings, ChunkerStrategy } from './chunker';
 import { EmbeddingProvider } from './embedding';
 import { Filter } from './filter';
+import { ProviderModel } from './provider';
 import { QueryEnhancer } from './query-enhancer';
 
 export interface Workflow {
@@ -14,8 +14,8 @@ export interface Workflow {
   strategy: ChunkerStrategy;
   settings: ChunkerSettings;
   apiKey: string;
-  embeddingProvider: EmbeddingProvider;
-  conversationProvider: ConversationProvider;
+  embeddingProvider: ProviderModel;
+  conversationProvider: ProviderModel;
   queryEnhancers: QueryEnhancer[];
   filter?: Filter;
   callbackUrls?: CallbackUrl[];
@@ -31,7 +31,7 @@ export interface CreateWorkflowRequest {
   strategy: ChunkerStrategy;
   settings: ChunkerSettings;
   embeddingProvider: EmbeddingProvider;
-  conversationProvider: ConversationProvider;
+  conversationProvider: ProviderModel;
 }
 
 export interface QueryEnhancerUpdateResponse {
@@ -48,11 +48,11 @@ export interface WorkflowUpdateRequest {
   name?: string;
   description?: string;
   embeddingProvider?: {
-    provider: number;
+    providerId: number;
     model: string;
   };
   conversationProvider?: {
-    provider: number;
+    providerId: number;
     model: string;
   };
 }
