@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
+using RAGNET.Domain.Entities;
+using RAGNET.Domain.SharedKernel.Providers;
+
 using RAGNET.Application.DTOs.Conversation;
 using RAGNET.Application.DTOs.Embedder;
-using RAGNET.Application.UseCases.ProviderApiKey;
-using RAGNET.Domain.Entities;
-using RAGNET.Domain.Enums;
+using RAGNET.Application.UseCases.ProviderApiKeyUseCases;
+
 using RAGNET.Infrastructure.Adapters.Chat;
 using RAGNET.Infrastructure.Adapters.Embedding;
 

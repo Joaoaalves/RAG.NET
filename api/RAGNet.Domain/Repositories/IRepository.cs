@@ -1,6 +1,6 @@
 using RAGNET.Domain.Documents;
 using RAGNET.Domain.Entities;
-using RAGNET.Domain.Enums;
+using RAGNET.Domain.SharedKernel.Providers;
 
 namespace RAGNET.Domain.Repositories
 {

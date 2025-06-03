@@ -2,7 +2,7 @@ using RAGNET.Application.UseCases.CallbackUrlUseCases;
 using RAGNET.Application.UseCases.ContentFilterUseCases;
 using RAGNET.Application.UseCases.Query;
 using RAGNET.Application.UseCases.QueryEnhancerUseCases;
-using RAGNET.Application.UseCases.ProviderApiKey;
+using RAGNET.Application.UseCases.ProviderApiKeyUseCases;
 using RAGNET.Application.UseCases.WorkflowUseCases;
 
 namespace web.Configurations

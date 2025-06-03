@@ -1,11 +1,14 @@
 using System.Text.Json.Serialization;
+
+using RAGNET.Domain.Enums;
+
 using RAGNET.Application.Converters;
 using RAGNET.Application.DTOs.CallbackUrl;
 using RAGNET.Application.DTOs.Chunker;
 using RAGNET.Application.DTOs.ContentFilter;
+using RAGNET.Application.DTOs.Conversation;
 using RAGNET.Application.DTOs.Embedder;
 using RAGNET.Application.DTOs.QueryEnhancer;
-using RAGNET.Domain.Enums;
 
 namespace RAGNET.Application.DTOs.Workflow
 {

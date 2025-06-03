@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using RAGNET.Domain.Enums;
+using RAGNET.Domain.SharedKernel.Providers;
 
 namespace RAGNET.Domain.Entities
 {

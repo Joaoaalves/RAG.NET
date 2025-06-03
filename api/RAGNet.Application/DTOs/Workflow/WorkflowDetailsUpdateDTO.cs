@@ -1,3 +1,4 @@
+using RAGNET.Application.DTOs.Conversation;
 using RAGNET.Application.DTOs.Embedder;
 
 namespace RAGNET.Application.DTOs.Workflow

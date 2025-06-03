@@ -1,4 +1,5 @@
 using RAGNET.Application.DTOs.Chunker;
+using RAGNET.Application.DTOs.Conversation;
 using RAGNET.Application.DTOs.Embedder;
 using RAGNET.Domain.Enums;
 

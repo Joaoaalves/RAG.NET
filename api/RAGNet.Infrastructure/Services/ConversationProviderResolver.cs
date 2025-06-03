@@ -1,8 +1,7 @@
 using RAGNET.Domain.Entities;
-using RAGNET.Domain.Enums;
 using RAGNET.Domain.Exceptions;
 using RAGNET.Domain.Services;
-
+using RAGNET.Domain.SharedKernel.Providers;
 using RAGNET.Infrastructure.Adapters.Chat;
 
 namespace RAGNET.Infrastructure.Services

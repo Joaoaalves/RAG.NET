@@ -1,9 +1,9 @@
 using RAGNET.Application.DTOs.ProviderApiKey;
 using RAGNET.Domain.Repositories;
 using RAGNET.Domain.Services.ApiKey;
-using RAGNET.Domain.SharedKernel.ApiKeys;
+using RAGNET.Domain.SharedKernel.Providers;
 
-namespace RAGNET.Application.UseCases.ProviderApiKey
+namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
 {
     public interface IUpdateProviderApiKeyUseCase
     {
@@ -11,11 +11,11 @@ namespace RAGNET.Application.UseCases.ProviderApiKey
     }
 
     public class UpdateProviderApiKeyUseCase(
-        IProviderApiKeyRepository userApiKeyRepository,
+        IProviderApiKeyRepository providerApiKeyRepository,
         ICryptoService cryptoService
     ) : IUpdateProviderApiKeyUseCase
     {
-        private readonly IProviderApiKeyRepository _userApiKeyRepository = userApiKeyRepository;
+        private readonly IProviderApiKeyRepository _providerApiKeyRepository = providerApiKeyRepository;
 
         private readonly ICryptoService _cryptoService = cryptoService;
 
@@ -23,12 +23,14 @@ namespace RAGNET.Application.UseCases.ProviderApiKey
         {
             try
             {
-                var userApiKey = await _userApiKeyRepository.GetByIdAsync(providerId, userId) ?? throw new Exception("User API key not found");
+                var userApiKey = await _providerApiKeyRepository.GetByIdAsync(providerId, userId) ?? throw new Exception("User API key not found");
 
                 var encryptedApiKey = _cryptoService.Encrypt(dto.ApiKey);
-                userApiKey.ApiKey = new ApiKey(encryptedApiKey);
+                userApiKey.Provider = new Provider(
+                    userApiKey.Provider.Type,
+                    encryptedApiKey);
 
-                await _userApiKeyRepository.UpdateAsync(userApiKey, userId);
+                await _providerApiKeyRepository.UpdateAsync(userApiKey, userId);
 
                 return userApiKey;
             }

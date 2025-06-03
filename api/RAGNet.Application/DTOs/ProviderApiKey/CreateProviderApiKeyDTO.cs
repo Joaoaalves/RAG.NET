@@ -1,4 +1,4 @@
-using RAGNET.Domain.Enums;
+using RAGNET.Domain.SharedKernel.Providers;
 
 namespace RAGNET.Application.DTOs.ProviderApiKey
 {

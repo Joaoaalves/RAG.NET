@@ -401,11 +401,6 @@ namespace RAGNet.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Provider")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("Provider");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -414,7 +409,7 @@ namespace RAGNet.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ProviderApiKeys", "Users");
+                    b.ToTable("ProviderApiKeys", "AspNetUsers");
                 });
 
             modelBuilder.Entity("RAGNET.Domain.Entities.QueryEnhancer", b =>
@@ -806,26 +801,47 @@ namespace RAGNet.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("RAGNET.Domain.SharedKernel.ApiKeys.ApiKey", "ApiKey", b1 =>
+                    b.OwnsOne("RAGNET.Domain.SharedKernel.Providers.Provider", "Provider", b1 =>
                         {
                             b1.Property<Guid>("ProviderApiKeyId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<string>("Value")
+                            b1.Property<string>("Type")
                                 .IsRequired()
-                                .HasMaxLength(300)
-                                .HasColumnType("character varying(300)")
-                                .HasColumnName("ApiKey");
+                                .HasColumnType("text")
+                                .HasColumnName("Provider");
 
                             b1.HasKey("ProviderApiKeyId");
 
-                            b1.ToTable("ProviderApiKeys", "Users");
+                            b1.ToTable("ProviderApiKeys", "AspNetUsers");
 
                             b1.WithOwner()
                                 .HasForeignKey("ProviderApiKeyId");
+
+                            b1.OwnsOne("RAGNET.Domain.SharedKernel.ApiKeys.ApiKey", "ApiKey", b2 =>
+                                {
+                                    b2.Property<Guid>("ProviderApiKeyId")
+                                        .HasColumnType("uuid");
+
+                                    b2.Property<string>("Value")
+                                        .IsRequired()
+                                        .HasMaxLength(300)
+                                        .HasColumnType("character varying(300)")
+                                        .HasColumnName("ApiKey");
+
+                                    b2.HasKey("ProviderApiKeyId");
+
+                                    b2.ToTable("ProviderApiKeys", "AspNetUsers");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("ProviderApiKeyId");
+                                });
+
+                            b1.Navigation("ApiKey")
+                                .IsRequired();
                         });
 
-                    b.Navigation("ApiKey")
+                    b.Navigation("Provider")
                         .IsRequired();
 
                     b.Navigation("User");

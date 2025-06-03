@@ -1,8 +1,9 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+
 using RAGNET.Domain.Entities;
-using RAGNET.Domain.Enums;
+using RAGNET.Domain.SharedKernel.Providers;
+
 using RAGNET.Infrastructure.Data;
 using RAGNET.Infrastructure.Repositories;
 

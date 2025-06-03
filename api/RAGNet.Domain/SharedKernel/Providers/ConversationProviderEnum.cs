@@ -1,4 +1,4 @@
-namespace RAGNET.Domain.Enums
+namespace RAGNET.Domain.SharedKernel.Providers
 {
     public enum ConversationProviderEnum
     {

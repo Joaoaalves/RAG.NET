@@ -1,6 +1,7 @@
+using RAGNET.Application.DTOs.Conversation;
 using RAGNET.Application.DTOs.Embedder;
 using RAGNET.Domain.Entities;
-using RAGNET.Domain.Enums;
+using RAGNET.Domain.SharedKernel.Providers;
 
 namespace RAGNET.Application.Mappers
 {

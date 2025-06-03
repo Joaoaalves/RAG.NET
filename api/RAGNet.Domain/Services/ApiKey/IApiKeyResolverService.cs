@@ -1,4 +1,5 @@
 using RAGNET.Domain.Enums;
+using RAGNET.Domain.SharedKernel.Providers;
 
 namespace RAGNET.Domain.Services.ApiKey
 {

@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 using RAGNET.Application.Converters;
-using RAGNET.Domain.Enums;
+using RAGNET.Domain.SharedKernel.Providers;
 
-namespace RAGNET.Application.DTOs.Embedder
+namespace RAGNET.Application.DTOs.Conversation
 {
     public class ConversationProviderConfigDTO
     {

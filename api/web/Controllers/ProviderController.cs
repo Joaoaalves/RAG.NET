@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
+using RAGNET.Domain.Entities;
+
 using RAGNET.Application.DTOs.ProviderApiKey;
 using RAGNET.Application.Mappers;
-using RAGNET.Application.UseCases.ProviderApiKey;
-using RAGNET.Domain.Entities;
+using RAGNET.Application.UseCases.ProviderApiKeyUseCases;
 
 namespace web.Controllers
 {

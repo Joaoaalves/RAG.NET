@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RAGNET.Domain.Entities;
-using RAGNET.Domain.Enums;
 using RAGNET.Domain.Repositories;
+using RAGNET.Domain.SharedKernel.Providers;
 using RAGNET.Infrastructure.Data;
 
 namespace RAGNET.Infrastructure.Repositories
@@ -11,13 +11,13 @@ namespace RAGNET.Infrastructure.Repositories
         public Task<bool> ExistsAsync(SupportedProvider provider, string userId)
         {
             return _context.ProviderApiKeys
-                .AnyAsync(u => u.Provider == provider && u.UserId == userId);
+                .AnyAsync(u => u.Provider.Type == provider && u.UserId == userId);
         }
 
         public async Task<ProviderApiKey?> GetByUserIdAndProviderAsync(string userId, SupportedProvider provider)
         {
             return await _context.ProviderApiKeys
-                .FirstOrDefaultAsync(u => u.UserId == userId && u.Provider == provider);
+                .FirstOrDefaultAsync(u => u.UserId == userId && u.Provider.Type == provider);
         }
 
         public async Task<IEnumerable<ProviderApiKey>> GetByUserIdAsync(string userId)

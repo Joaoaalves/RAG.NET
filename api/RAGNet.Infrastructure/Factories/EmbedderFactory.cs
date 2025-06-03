@@ -2,6 +2,7 @@ using RAGNET.Domain.Entities;
 using RAGNET.Domain.Enums;
 using RAGNET.Domain.Factories;
 using RAGNET.Domain.Services;
+using RAGNET.Domain.SharedKernel.Providers;
 using RAGNET.Infrastructure.Adapters.Embedding;
 
 namespace RAGNET.Infrastructure.Factories

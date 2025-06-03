@@ -1,6 +1,6 @@
 using RAGNET.Domain.Repositories;
 
-namespace RAGNET.Application.UseCases.ProviderApiKey
+namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
 {
     public interface IDeleteProviderApiKeyUseCase
     {
@@ -8,19 +8,19 @@ namespace RAGNET.Application.UseCases.ProviderApiKey
     }
 
     public class DeleteProviderApiKeyUseCase(
-        IProviderApiKeyRepository userApiKeyRepository
+        IProviderApiKeyRepository providerApiKeyRepository
     ) : IDeleteProviderApiKeyUseCase
     {
-        private readonly IProviderApiKeyRepository _userApiKeyRepository = userApiKeyRepository;
+        private readonly IProviderApiKeyRepository _providerApiKeyRepository = providerApiKeyRepository;
 
         public async Task<bool> ExecuteAsync(Guid userApiKeyId, string userId)
         {
             try
             {
-                var userApiKey = await _userApiKeyRepository.GetByIdAsync(userApiKeyId, userId) ??
+                var userApiKey = await _providerApiKeyRepository.GetByIdAsync(userApiKeyId, userId) ??
                     throw new Exception("User API key not found");
 
-                await _userApiKeyRepository.DeleteAsync(userApiKey, userId);
+                await _providerApiKeyRepository.DeleteAsync(userApiKey, userId);
 
                 return true;
             }
