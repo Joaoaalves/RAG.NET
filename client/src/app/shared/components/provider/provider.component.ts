@@ -1,6 +1,16 @@
 import { CommonModule } from '@angular/common';
+<<<<<<< HEAD
 import { Component, Input, OnInit } from '@angular/core';
 
+=======
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
+>>>>>>> 7e7cdfb67d420bb99549669af264fc5d683425a7
 import {
   FormBuilder,
   FormGroup,
@@ -46,8 +56,13 @@ import { getProviderImage } from '../../utils/providers-utils';
   ],
   standalone: true,
 })
+<<<<<<< HEAD
 export class ProviderComponent implements OnInit {
   @Input() provider!: Provider;
+=======
+export class ProviderComponent implements OnInit, OnChanges {
+  @Input() Provider!: Provider;
+>>>>>>> 7e7cdfb67d420bb99549669af264fc5d683425a7
 
   providerId!: number;
   form!: FormGroup;
@@ -61,29 +76,52 @@ export class ProviderComponent implements OnInit {
     private providersService: ProvidersService
   ) {}
 
+<<<<<<< HEAD
   get providerImage(): string {
     return getProviderImage(this.provider.providerId);
   }
 
   get providerTemplate(): string {
     return this.provider.prefix + '**********';
+=======
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['Provider'] && changes['Provider'].currentValue) {
+      this.initializeProvider();
+    }
+>>>>>>> 7e7cdfb67d420bb99549669af264fc5d683425a7
   }
 
   ngOnInit() {
+    this.initializeProvider();
+  }
+
+  initializeProvider() {
+    if (!this.Provider) return;
+
     this.form = this.fb.group({
       apiKey: ['', Validators.required],
     });
 
+<<<<<<< HEAD
     this.hasApiKey = !!this.provider.apiKey;
     this.providerId = this.provider.providerId;
     if (this.provider.apiKey) {
       const visibleKey =
         this.provider.prefix + '**********' + this.provider.apiKey;
 
+=======
+    this.providerData = this.providersService.mapProviderData(
+      this.Provider.provider.toLowerCase() as SupportedProvider
+    );
+
+    this.hasApiKey = !!this.Provider.apiKey;
+    this.providerId = this.Provider?.id;
+
+    if (this.Provider.apiKey && this.providerData?.keyTemplate) {
+      const visibleKey = this.providerData.keyTemplate + this.Provider.apiKey;
+>>>>>>> 7e7cdfb67d420bb99549669af264fc5d683425a7
       this.lastValidValue = visibleKey;
-
       this.form.patchValue({ apiKey: visibleKey });
-
       this.disableInput();
     }
 
