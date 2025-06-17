@@ -146,7 +146,7 @@
               <div class="mt-4" formGroupName="embeddingProvider">
                 <app-select
                   [options]="embeddingOptions$ | async"
-                  formControlName="provider"
+                  formControlName="providerId"
                   placeholder="Select Provider"
                 ></app-select>
 
@@ -206,7 +206,7 @@
               <div class="mt-4" formGroupName="conversationProvider">
                 <app-select
                   [options]="conversationOptions$ | async"
-                  formControlName="provider"
+                  formControlName="providerId"
                   placeholder="Select Provider"
                 ></app-select>
 

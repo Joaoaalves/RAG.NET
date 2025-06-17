@@ -1,7 +1,6 @@
 using RAGNET.Application.DTOs.Workflow;
-using RAGNET.Domain.Repositories;
 using RAGNET.Application.Mappers;
-using RAGNET.Application.DTOs.QueryEnhancer;
+using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.UseCases.WorkflowUseCases
 {
@@ -16,7 +15,7 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
 
         public async Task<WorkflowDetailsDTO> Execute(Guid workflowId, string userId)
         {
-            var workflow = await _workflowRepository.GetWithRelationsAsync(workflowId, userId) ?? throw new Exception("Workflow não encontrado.");
+            var workflow = await _workflowRepository.GetByIdAsync(workflowId, userId) ?? throw new Exception("Workflow não encontrado.");
 
             var chunker = workflow.Chunker ?? throw new Exception("Chunker não encontrado.");
 

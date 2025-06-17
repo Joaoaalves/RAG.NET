@@ -1,6 +1,5 @@
 using RAGNET.Application.DTOs.ContentFilter;
-using RAGNET.Domain.Entities;
-using RAGNET.Domain.Enums;
+using RAGNET.Domain.Filters;
 
 namespace RAGNET.Application.Mappers
 {
@@ -8,14 +7,14 @@ namespace RAGNET.Application.Mappers
     {
         public static Filter ToFilter(this RSECreationDTO dto, Guid workflowId, string userId)
         {
-            return new Filter
-            {
-                Strategy = FilterStrategy.RELEVANT_SEGMENT_EXTRACTION,
-                WorkflowId = workflowId,
-                IsEnabled = dto.IsEnabled ?? false,
-                MaxItems = dto.MaxItems,
-                UserId = userId,
-            };
+            return Filter.Create(
+                id: Guid.NewGuid(),
+                strategy: FilterStrategyEnum.RELEVANT_SEGMENT_EXTRACTION,
+                workflowId: workflowId,
+                isEnabled: dto.IsEnabled ?? false,
+                maxItems: dto.MaxItems,
+                userId: userId
+            );
         }
 
         public static FilterDTO ToDTO(this Filter filter)

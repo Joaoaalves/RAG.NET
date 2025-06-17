@@ -1,7 +1,8 @@
 using RAGNET.Application.DTOs.Query;
-using RAGNET.Domain.Entities;
-using RAGNET.Domain.Exceptions;
-using RAGNET.Domain.Factories;
+using RAGNET.Application.Providers;
+using RAGNET.Application.QueryEnhancers;
+
+using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.UseCases.QueryEnhancerUseCases
 {
@@ -24,9 +25,6 @@ namespace RAGNET.Application.UseCases.QueryEnhancerUseCases
             {
                 if (workflow.QueryEnhancers == null || workflow.QueryEnhancers.Count == 0)
                     return [];
-
-                if (workflow.ConversationProviderConfig == null)
-                    throw new ConversationProviderNotSetException("You must set your conversation provider before querying.");
 
                 var completionService = _chatCompletionFactory.CreateCompletionService(
                     userConversationProviderApiKey,

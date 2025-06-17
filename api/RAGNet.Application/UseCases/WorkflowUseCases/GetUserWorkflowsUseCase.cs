@@ -1,8 +1,6 @@
 using RAGNET.Application.DTOs.Workflow;
-using RAGNET.Application.DTOs.Chunker;
-using RAGNET.Domain.Repositories;
 using RAGNET.Application.Mappers;
-using RAGNET.Application.DTOs.QueryEnhancer;
+using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.UseCases.WorkflowUseCases
 {

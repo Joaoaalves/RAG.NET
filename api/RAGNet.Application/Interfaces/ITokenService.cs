@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using RAGNET.Domain.Entities;
+using RAGNET.Domain.Users;
 
 namespace RAGNET.Application.Interfaces
 {

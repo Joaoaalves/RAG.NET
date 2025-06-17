@@ -1,5 +1,6 @@
-using RAGNET.Domain.Entities;
-using RAGNET.Domain.Repositories;
+using RAGNET.Domain.QueryEnhancers;
+using RAGNET.Domain.SeedWork;
+using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.UseCases.QueryEnhancerUseCases
 {
@@ -8,19 +9,24 @@ namespace RAGNET.Application.UseCases.QueryEnhancerUseCases
         Task<QueryEnhancer> Execute(QueryEnhancer queryEnhancer, Guid workflowId, string userId);
     }
 
-    public class CreateQueryEnhancerUseCase(IQueryEnhancerRepository queryEnhancerRepository) : ICreateQueryEnhancerUseCase
+    public class CreateQueryEnhancerUseCase(
+        IQueryEnhancerRepository queryEnhancerRepository,
+        IUnitOfWork unitOfWork) : ICreateQueryEnhancerUseCase
     {
         private readonly IQueryEnhancerRepository _queryEnhancerRepository = queryEnhancerRepository;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
         public async Task<QueryEnhancer> Execute(QueryEnhancer queryEnhancer, Guid workflowId, string userId)
         {
             try
             {
                 await _queryEnhancerRepository.AddAsync(queryEnhancer);
+                await _unitOfWork.CommitAsync();
                 return queryEnhancer;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                await _unitOfWork.RevertAsync();
                 throw new Exception("Error creating query enhancer", ex);
             }
         }

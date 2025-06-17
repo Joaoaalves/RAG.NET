@@ -10,7 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 import { toast } from 'ngx-sonner';
 
 // Models
-import { Filter, FilterStrategy } from 'src/app/models/filter';
+import { Filter, FilterStrategyEnum } from 'src/app/models/filter';
 
 // Components
 import { HlmSwitchComponent } from 'libs/ui/ui-switch-helm/src/lib/hlm-switch.component';
@@ -35,7 +35,7 @@ export class FilterConfigComponent {
   @Input() description: string = '';
   @Input() filter?: Filter;
   @Input() workflowId!: string;
-  @Input() strategy!: string | FilterStrategy;
+  @Input() strategy!: string | FilterStrategyEnum;
   filterStrategies: { label: string; value: number }[] = [
     {
       label: 'Relevant Segment Extraction',
@@ -179,13 +179,13 @@ export class FilterConfigComponent {
   }
 
   mapStrategyFromStringToEnum(
-    strategy: string | FilterStrategy
-  ): FilterStrategy {
+    strategy: string | FilterStrategyEnum
+  ): FilterStrategyEnum {
     switch (strategy) {
       case 'rse':
-        return FilterStrategy.RSE;
+        return FilterStrategyEnum.RSE;
       default:
-        return FilterStrategy.RSE;
+        return FilterStrategyEnum.RSE;
     }
   }
 }

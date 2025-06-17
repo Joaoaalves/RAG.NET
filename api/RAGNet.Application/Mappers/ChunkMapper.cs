@@ -1,5 +1,5 @@
 using RAGNET.Application.DTOs.Chunk;
-using RAGNET.Domain.Entities;
+using RAGNET.Domain.Documents.Pages.Chunks;
 
 namespace RAGNET.Application.Mappers
 {
@@ -10,8 +10,8 @@ namespace RAGNET.Application.Mappers
             return new ChunkDTO
             {
                 VectorId = chunk.VectorId,
-                Text = chunk.Text,
-                Score = chunk.Score
+                Text = chunk.Text.Value,
+                Score = chunk.GetScore()
             };
         }
 

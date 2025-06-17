@@ -4,7 +4,9 @@ using RAGNET.Application.DTOs.ContentFilter;
 using RAGNET.Application.Filters;
 using RAGNET.Application.Mappers;
 using RAGNET.Application.UseCases.ContentFilterUseCases;
-using RAGNET.Domain.Entities;
+
+using RAGNET.Domain.Users;
+using RAGNET.Domain.Workflows;
 
 namespace web.Controllers.WorkflowControllers
 {
@@ -25,7 +27,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpPost("{workflowId}/content-filter/rse")]
         [ServiceFilter(typeof(WebWorkflowFilter))]
-        public async Task<IActionResult> EnableRSE([FromBody] RSECreationDTO dto, Guid workflowId)
+        public async Task<IActionResult> EnableRSE([FromBody] RSECreationDTO dto, [FromRoute] Guid workflowId)
         {
             try
             {
@@ -39,7 +41,7 @@ namespace web.Controllers.WorkflowControllers
                     return BadRequest("Relevant Segment Extraction already enabled!");
                 }
                 var filter = dto.ToFilter(workflow.Id, user.Id);
-                filter.IsEnabled = true;
+
                 var rse = await _createContentFilterUseCase.Execute(filter, workflow.Id, user.Id);
 
                 return Ok(new { Message = "Relevant Segment Extraction enabled!", Filter = rse.ToDTO() });
@@ -52,7 +54,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpPut("{workflowId}/content-filter/rse")]
         [ServiceFilter(typeof(WebWorkflowFilter))]
-        public async Task<IActionResult> UpdateRSE([FromBody] RSECreationDTO dto, Guid workflowId)
+        public async Task<IActionResult> UpdateRSE([FromBody] RSECreationDTO dto, [FromRoute] Guid workflowId)
         {
             try
             {
@@ -69,7 +71,7 @@ namespace web.Controllers.WorkflowControllers
 
                 if (dto.IsEnabled == null)
                 {
-                    filter.IsEnabled = workflow.Filter.IsEnabled;
+                    filter.SetEnableState(workflow.Filter.IsEnabled);
                 }
 
                 var rseDto = await _updateContentFilterUseCase.Execute(workflow.Filter.Id, filter, user.Id);
@@ -84,7 +86,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpDelete("{workflowId}/content-filter/rse")]
         [ServiceFilter(typeof(WebWorkflowFilter))]
-        public async Task<IActionResult> DeleteRSE(Guid workflowId)
+        public async Task<IActionResult> DeleteRSE([FromRoute] Guid workflowId)
         {
             try
             {

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authentication.BearerToken;
-using RAGNET.Domain.Entities;
-using RAGNET.Infrastructure.Data;
+using RAGNET.Domain.Users;
+using RAGNET.Infrastructure.Database;
 
 namespace web.Configurations
 {

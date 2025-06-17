@@ -1,6 +1,8 @@
-using RAGNET.Domain.Entities;
-using RAGNET.Domain.Exceptions;
-using RAGNET.Domain.Factories;
+using RAGNET.Domain.Workflows;
+
+using RAGNET.Application.Providers;
+using RAGNET.Application.Query;
+using RAGNET.Application.QueryResultFilters;
 
 namespace RAGNET.Application.UseCases.Query
 {
@@ -13,7 +15,7 @@ namespace RAGNET.Application.UseCases.Query
     public class FilterContentUseCase
     (
         IChatCompletionFactory chatCompletionFactory,
-        IContentFilterFactory contentFilterFactory
+        IQueryResultFilterFactory contentFilterFactory
     ) : IFilterContentUseCase
     {
         public async Task<List<string>> Execute(
@@ -26,9 +28,6 @@ namespace RAGNET.Application.UseCases.Query
             if (workflow.Filter == null || !workflow.Filter.IsEnabled)
                 return [];
 
-            if (workflow.ConversationProviderConfig == null)
-                throw new ConversationProviderNotSetException("You must set your conversation provider before filtering.");
-
             var completionProvider = chatCompletionFactory.CreateCompletionService(
                 userConversationProviderApiKey,
                 workflow.ConversationProviderConfig
@@ -39,4 +38,5 @@ namespace RAGNET.Application.UseCases.Query
             return await contentFilterService.FilterContent(items, query, completionProvider);
         }
     }
+
 }

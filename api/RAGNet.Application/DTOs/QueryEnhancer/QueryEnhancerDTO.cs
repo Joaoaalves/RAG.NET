@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
-using RAGNET.Application.Converters;
-using RAGNET.Domain.Enums;
+using RAGNET.Application.QueryEnhancers;
+
+using RAGNET.Domain.QueryEnhancers;
 
 namespace RAGNET.Application.DTOs.QueryEnhancer
 {

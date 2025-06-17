@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using RAGNET.Domain.Repositories;
+using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.Filters
 {
@@ -18,7 +18,7 @@ namespace RAGNET.Application.Filters
                 return;
             }
 
-            var workflow = await _workflowRepository.GetWithRelationsByApiKey(apiKey);
+            var workflow = await _workflowRepository.GetByApiKey(apiKey);
 
             if (workflow == null)
             {

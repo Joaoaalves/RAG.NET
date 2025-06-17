@@ -74,10 +74,11 @@
     <app-alert
       [id]="'deleteWorkflow' + workflow.id"
       [title]="'Delete Workflow'"
-      description="Are you sure you want to delete this workflow?"
+      description="Are you sure you want to delete this w orkflow?"
       (actionConfirmed)="deleteWorkflow()"
       (click)="$event.stopPropagation()"
       variant="destructive"
+      *ngIf="!workflow.isActive"
     >
       <div
         class="w-7 h-7 hover:bg-white hover:!text-black transition-all duration-300 cursor-pointer rounded-full flex items-center justify-center bg-neutral-900 text-lg/tight text-white"

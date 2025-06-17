@@ -1,24 +1,26 @@
 using Moq;
-using RAGNET.Domain.Documents;
-using RAGNET.Domain.Entities;
-using RAGNET.Domain.Repositories;
-using RAGNET.Infrastructure.Adapters.Documents;
 using tests.Helpers;
+
+using RAGNET.Domain.Documents;
+using RAGNET.Domain.SeedWork;
+using RAGNET.Domain.Documents.Pages;
+using RAGNET.Infrastructure.DocumentProcessors;
+
 
 namespace tests.RAGNet.Infrastructure.Tests.Adapters
 {
     public class PdfProcessingAdapterTests
     {
         private readonly Mock<IDocumentRepository> _documentRepositoryMock;
-        private readonly Mock<IPageRepository> _pageRepositoryMock;
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly PDFProcessingAdapter _adapter;
 
         public PdfProcessingAdapterTests()
         {
             _documentRepositoryMock = new Mock<IDocumentRepository>();
-            _pageRepositoryMock = new Mock<IPageRepository>();
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
 
-            _adapter = new PDFProcessingAdapter(_documentRepositoryMock.Object, _pageRepositoryMock.Object);
+            _adapter = new PDFProcessingAdapter(_documentRepositoryMock.Object, _unitOfWorkMock.Object);
         }
 
         [Fact]
@@ -27,9 +29,16 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
             // Arrange
             var title = "Documento de Teste";
             var workflowId = Guid.NewGuid();
-            var pages = new List<string> { "Página 1", "Página 2", "Página 3" };
+            var pages = new List<string> { "Page 1", "Page 2", "Page 3" };
+            var docId = Guid.NewGuid();
 
-            var createdDocument = new Document { Id = Guid.NewGuid(), Title = title, WorkflowId = workflowId };
+            var createdDocument = Document.Create(
+                id: docId,
+                title: new Text(title),
+                workflowId: workflowId,
+                pages: pages.Select(p => Page.Create(new Text(p), docId)).ToList()
+            );
+
             _documentRepositoryMock
                 .Setup(r => r.AddAsync(It.IsAny<Document>()))
                 .ReturnsAsync(createdDocument);
@@ -40,13 +49,8 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
             // Assert
             Assert.Equal(createdDocument.Id, document.Id);
             _documentRepositoryMock.Verify(r => r.AddAsync(It.Is<Document>(d =>
-                d.Title == title && d.WorkflowId == workflowId)), Times.Once);
+                d.Title.Value == title && d.WorkflowId == workflowId)), Times.Once);
 
-            foreach (var page in pages)
-            {
-                _pageRepositoryMock.Verify(r => r.AddAsync(It.Is<Page>(
-                    p => p.Text == page.Trim() && p.DocumentId == document.Id)), Times.Once);
-            }
         }
 
         [Fact]

@@ -1,13 +1,15 @@
-using RAGNET.Infrastructure.Services;
+using RAGNET.Domain.SharedKernel.Providers;
 
 using RAGNET.Application.Interfaces;
-using RAGNET.Application.Services;
+using RAGNET.Application.Auth;
+using RAGNET.Application.Query;
+using RAGNET.Application.Providers;
+using RAGNET.Application.Chunkers;
+using RAGNET.Application.ApiKeys;
 
-using RAGNET.Domain.Services;
-using RAGNET.Domain.Services.ApiKey;
-using RAGNET.Domain.Services.Query;
-using RAGNET.Domain.SharedKernel.Providers;
-using RAGNET.Application.Services.Provider;
+using RAGNET.Infrastructure.Embedders;
+using RAGNET.Infrastructure.ChatCompletions;
+using RAGNET.Infrastructure.Providers;
 
 namespace web.Configurations
 {

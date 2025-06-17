@@ -19,5 +19,9 @@ namespace RAGNET.Domain.SeedWork
                 throw new BusinessRuleValidationException(rule);
             }
         }
+        public void ClearDomainEvents()
+        {
+            _domainEvents?.Clear();
+        }
     }
 }

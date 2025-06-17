@@ -4,6 +4,7 @@ using RAGNET.Application.UseCases.Query;
 using RAGNET.Application.UseCases.QueryEnhancerUseCases;
 using RAGNET.Application.UseCases.ProviderApiKeyUseCases;
 using RAGNET.Application.UseCases.WorkflowUseCases;
+using RAGNET.Application.UseCases.Account;
 
 namespace web.Configurations
 {
@@ -11,6 +12,10 @@ namespace web.Configurations
     {
         public static IServiceCollection AddUseCaseConfiguration(this IServiceCollection services)
         {
+            // Account
+            services.AddScoped<IRegisterUser, RegisterUser>();
+            services.AddScoped<IGetUserInfo, GetUserInfo>();
+
             // User API Key
             services.AddScoped<ICreateProviderApiKeyUseCase, CreateProviderApiKeyUseCase>();
             services.AddScoped<IGetProviderApiKeysUseCase, GetProviderApiKeysUseCase>();

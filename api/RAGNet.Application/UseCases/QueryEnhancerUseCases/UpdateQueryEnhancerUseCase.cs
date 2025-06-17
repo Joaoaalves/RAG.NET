@@ -1,7 +1,7 @@
 using RAGNET.Application.DTOs.QueryEnhancer;
 using RAGNET.Application.Mappers;
-using RAGNET.Domain.Entities;
-using RAGNET.Domain.Repositories;
+using RAGNET.Domain.QueryEnhancers;
+using RAGNET.Domain.SeedWork;
 
 namespace RAGNET.Application.UseCases.QueryEnhancerUseCases
 {
@@ -10,25 +10,34 @@ namespace RAGNET.Application.UseCases.QueryEnhancerUseCases
         Task<QueryEnhancerDTO> Execute(Guid queryEnhancerId, QueryEnhancer data, string userId);
     }
 
-    public class UpdateQueryEnhancerUseCase(IQueryEnhancerRepository _repo) : IUpdateQueryEnhancerUseCase
+    public class UpdateQueryEnhancerUseCase(
+        IQueryEnhancerRepository queryEnhancerRepository,
+        IUnitOfWork unitOfWork) : IUpdateQueryEnhancerUseCase
     {
-        private readonly IQueryEnhancerRepository _repo = _repo;
+        private readonly IQueryEnhancerRepository _queryEnhancerRepository = queryEnhancerRepository;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
         public async Task<QueryEnhancerDTO> Execute(Guid queryEnhancerId, QueryEnhancer data, string userId)
         {
             try
             {
-                var qe = await _repo.GetByIdAsync(queryEnhancerId, userId) ?? throw new Exception("Query enhancer not found.");
+                var qe = await _queryEnhancerRepository.GetByIdAsync(queryEnhancerId, userId) ?? throw new Exception("Query enhancer not found.");
 
-                qe.MaxQueries = data.MaxQueries;
-                qe.Metas = data.Metas;
-                qe.IsEnabled = data.IsEnabled;
+                qe.UpdateMaxQueries(data.MaxQueries);
 
-                await _repo.UpdateAsync(qe, userId);
+                qe.UpdateMetas([.. data.Metas]);
+
+                qe.SetEnableState(data.IsEnabled);
+
+                await _queryEnhancerRepository.UpdateAsync(qe);
+
+                await _unitOfWork.CommitAsync();
+
                 return qe.ToQueryEnhancerDTO();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                await _unitOfWork.RevertAsync();
                 throw new Exception("Error updating query enhancer", ex);
             }
         }

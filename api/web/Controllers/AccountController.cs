@@ -1,17 +1,18 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RAGNET.Application.DTOs.Account;
-using RAGNET.Application.Mappers;
-using RAGNET.Domain.Entities;
+using RAGNET.Application.UseCases.Account;
 
 namespace web.Controllers
 {
     [ApiController]
     [Route("/api/")]
-    public class AccountController(UserManager<User> userManager) : ControllerBase
+    public class AccountController(
+    IRegisterUser registerUserUseCase,
+    IGetUserInfo getUserInfoUseCase) : ControllerBase
     {
-        private readonly UserManager<User> _userManager = userManager;
+        private readonly IRegisterUser _register = registerUserUseCase;
+        private readonly IGetUserInfo _getUserInfo = getUserInfoUseCase;
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDTO model)
@@ -19,35 +20,26 @@ namespace web.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = new User
-            {
-                UserName = model.Email,
-                Email = model.Email,
-                FirstName = model.FirstName,
-                LastName = model.LastName
-            };
+            var (success, errors) = await _register.ExecuteAsync(model);
 
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
+            if (!success)
             {
-                foreach (var error in result.Errors)
-                    ModelState.AddModelError(string.Empty, error.Description);
+                foreach (var error in errors)
+                    ModelState.AddModelError(string.Empty, error);
                 return BadRequest(ModelState);
             }
 
             return Ok(new { Message = "User registered successfully" });
         }
+
         [HttpGet("info")]
         [Authorize]
         public async Task<IActionResult> GetUserInfo()
         {
-            var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-                return Unauthorized();
-
-            return Ok(user.ToAccountInfoDTOFromUser());
+            var dto = await _getUserInfo.ExecuteAsync(User);
+            return dto is null ? Unauthorized() : Ok(dto);
         }
     }
 
 }
+

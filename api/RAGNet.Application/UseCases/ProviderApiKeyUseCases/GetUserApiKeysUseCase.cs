@@ -1,7 +1,9 @@
 using RAGNET.Application.DTOs.ProviderApiKey;
 using RAGNET.Application.Mappers;
-using RAGNET.Domain.Repositories;
+
+using RAGNET.Domain.ProvidersApiKeys;
 using RAGNET.Domain.SharedKernel.Providers;
+
 
 namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
 {
@@ -10,21 +12,26 @@ namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
         Task<List<ProviderApiKeyDTO>> ExecuteAsync(string userId);
     }
 
-    public class GetProviderApiKeysUseCase(IProviderApiKeyRepository providerApiKeyRepository) : IGetProviderApiKeysUseCase
+    public class GetProviderApiKeysUseCase(IProviderApiKeyRepository providerApiKeyRepository, IProviderPolicyFactory providerPolicyFactory) : IGetProviderApiKeysUseCase
     {
         private readonly IProviderApiKeyRepository _providerApiKeyRepository = providerApiKeyRepository;
+        private readonly IProviderPolicyFactory _providerPolicyFactory = providerPolicyFactory;
 
         public async Task<List<ProviderApiKeyDTO>> ExecuteAsync(string userId)
         {
             var userApiKeys = await _providerApiKeyRepository.GetByUserIdAsync(userId);
-
             var result = new List<ProviderApiKeyDTO>();
 
             foreach (var apiKey in userApiKeys)
             {
+                var provider = apiKey.Provider.Id;
+                var policy = _providerPolicyFactory.GetPolicy(provider);
+                apiKey.Provider.InitializePolicy(policy);
                 result.Add(apiKey.ToDTO());
             }
 
+            // Add missing providers
+            // Get all supported providers
             var allProviders = Enum.GetValues<SupportedProvider>();
 
             foreach (var provider in allProviders)
@@ -32,9 +39,8 @@ namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
                 bool alreadyExists = userApiKeys.Any(k => k.Provider.Id == provider);
                 if (!alreadyExists)
                 {
-                    var policy = ProviderPolicyFactory.GetPolicy(provider);
-
-                    result.Add(new ProviderApiKeyDTO
+                    var policy = _providerPolicyFactory.GetPolicy(provider);
+                    var dto = new ProviderApiKeyDTO
                     {
                         ApiKey = string.Empty,
                         ProviderId = provider,
@@ -42,7 +48,10 @@ namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
                         Prefix = policy.Prefix,
                         Pattern = policy.Pattern,
                         Url = policy.Url
-                    });
+                    };
+
+
+                    result.Add(dto);
                 }
             }
 

@@ -1,11 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
-using RAGNET.Domain.Entities;
 using RAGNET.Domain.SharedKernel.Providers;
-
-using RAGNET.Infrastructure.Data;
-using RAGNET.Infrastructure.Repositories;
+using RAGNET.Domain.Workflows;
+using RAGNET.Infrastructure.Database;
+using RAGNET.Infrastructure.Domain.Workflows;
 
 namespace tests.RAGNet.Infrastructure.Tests.Repositories
 {
@@ -28,16 +27,13 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
         public async Task ShouldCreateWithoutEmbeddingProvider()
         {
             // Arrange
-            var workflow = new Workflow
-            {
-                Id = It.IsAny<Guid>(),
-                Name = "Name",
-                UserId = It.IsAny<Guid>().ToString(),
-                ApiKey = It.IsAny<Guid>().ToString("N"),
-                CollectionId = It.IsAny<Guid>(),
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
+            var workflowId = Guid.NewGuid();
+            var workflow = new WorkflowBuilder()
+                .WithName("Name")
+                .ForUser(It.IsAny<Guid>().ToString())
+                .WithApiKey(It.IsAny<Guid>().ToString("N"))
+                .Build(workflowId);
+
 
             // Act
             var result = await _repository.AddAsync(workflow);
@@ -53,24 +49,19 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
         public async Task ShouldCreateWithEmbeddingProvider()
         {
             // Arrange
-            var embeddingProvider = new EmbeddingProviderConfig
-            {
-                Id = It.IsAny<Guid>(),
-                Provider = EmbeddingProviderEnum.OPENAI,
-                VectorSize = 1000
-            };
+            var embeddingProvider = new EmbeddingProviderConfig(
+                provider: EmbeddingProviderEnum.OPENAI,
+                model: It.IsAny<string>(),
+                vectorSize: 1000
+            );
 
-            var workflow = new Workflow
-            {
-                Id = It.IsAny<Guid>(),
-                Name = "Name",
-                UserId = It.IsAny<Guid>().ToString(),
-                ApiKey = It.IsAny<Guid>().ToString("N"),
-                CollectionId = It.IsAny<Guid>(),
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
-                EmbeddingProviderConfig = embeddingProvider
-            };
+            var workflowId = Guid.NewGuid();
+            var workflow = new WorkflowBuilder()
+                .WithName("Name")
+                .ForUser(It.IsAny<Guid>().ToString())
+                .WithApiKey(It.IsAny<Guid>().ToString("N"))
+                .WithEmbeddingProvider(embeddingProvider)
+                .Build(workflowId);
 
             // Act
             var result = await _repository.AddAsync(workflow);
@@ -86,33 +77,27 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
         public async Task ShoulReturnNullWithWrongApiKey()
         {
             // Arrange
-            string correctApiKey = Guid.NewGuid().ToString("N");
             string wrongApiKey = "wrong-api-key";
 
-            var embeddingProvider = new EmbeddingProviderConfig
-            {
-                Id = Guid.NewGuid(),
-                Provider = EmbeddingProviderEnum.OPENAI,
-                VectorSize = 1000
-            };
+            var embeddingProvider = new EmbeddingProviderConfig(
+                provider: EmbeddingProviderEnum.OPENAI,
+                model: It.IsAny<string>(),
+                vectorSize: 1000
+            );
 
-            var workflow = new Workflow
-            {
-                Id = Guid.NewGuid(),
-                Name = "Valid Workflow",
-                UserId = Guid.NewGuid().ToString(),
-                ApiKey = correctApiKey,
-                CollectionId = Guid.NewGuid(),
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
-                EmbeddingProviderConfig = embeddingProvider
-            };
+            var workflowId = Guid.NewGuid();
+            var workflow = new WorkflowBuilder()
+                .WithName("Name")
+                .ForUser(It.IsAny<Guid>().ToString())
+                .WithApiKey(It.IsAny<Guid>().ToString("N"))
+                .WithEmbeddingProvider(embeddingProvider)
+                .Build(workflowId);
 
             // Act
             await _repository.AddAsync(workflow);
             await _context.SaveChangesAsync();
 
-            var search = await _repository.GetWithRelationsByApiKey(wrongApiKey);
+            var search = await _repository.GetByApiKey(wrongApiKey);
 
             // Assert
             Assert.Null(search);
@@ -122,36 +107,30 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
         public async Task ShouldDelete()
         {
             // Arrange
-            var id = Guid.NewGuid();
             var apiKey = Guid.NewGuid().ToString("N");
 
-            var embeddingProvider = new EmbeddingProviderConfig
-            {
-                Id = Guid.NewGuid(),
-                Provider = EmbeddingProviderEnum.OPENAI,
-                VectorSize = 1000
-            };
+            var embeddingProvider = new EmbeddingProviderConfig(
+                provider: EmbeddingProviderEnum.OPENAI,
+                model: It.IsAny<string>(),
+                vectorSize: 1000
+            );
 
-            var workflow = new Workflow
-            {
-                Id = id,
-                Name = "Test Workflow",
-                UserId = Guid.NewGuid().ToString(),
-                ApiKey = apiKey,
-                CollectionId = Guid.NewGuid(),
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
-                EmbeddingProviderConfig = embeddingProvider
-            };
+            var workflowId = Guid.NewGuid();
+            var workflow = new WorkflowBuilder()
+                .WithName("Name")
+                .ForUser(It.IsAny<Guid>().ToString())
+                .WithApiKey(apiKey)
+                .WithEmbeddingProvider(embeddingProvider)
+                .Build(workflowId);
 
             // Act
             await _repository.AddAsync(workflow);
             await _context.SaveChangesAsync();
 
-            await _repository.DeleteAsync(workflow);
+            await _repository.DeleteAsync(workflow, It.IsAny<Guid>().ToString());
             await _context.SaveChangesAsync();
 
-            var result = await _repository.GetByIdAsync(id);
+            var result = await _repository.GetByIdAsync(workflowId, It.IsAny<Guid>().ToString());
 
             // Assert
             Assert.Null(result);

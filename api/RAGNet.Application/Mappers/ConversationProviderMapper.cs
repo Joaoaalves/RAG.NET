@@ -1,6 +1,7 @@
 using RAGNET.Application.DTOs.Conversation;
-using RAGNET.Domain.Entities;
+
 using RAGNET.Domain.SharedKernel.Providers;
+using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.Mappers
 {
@@ -8,12 +9,10 @@ namespace RAGNET.Application.Mappers
     {
         public static ConversationProviderConfig ToConversationProviderConfig(this ConversationProviderConfigDTO dto, Guid workflowId)
         {
-            return new ConversationProviderConfig
-            {
-                Provider = dto.ProviderId,
-                Model = dto.Model,
-                WorkflowId = workflowId
-            };
+            return new ConversationProviderConfig(
+                provider: dto.ProviderId,
+                model: dto.Model
+            );
         }
 
         public static ConversationProviderConfigDTO ToDTOFromConversationProviderConfig(this ConversationProviderConfig conversationProvider)

@@ -1,19 +1,20 @@
 using RAGNET.Application.DTOs.CallbackUrl;
-using RAGNET.Domain.Entities;
+
+using RAGNET.Domain.SharedKernel.URLs;
+using RAGNET.Domain.Workflows.CallbackUrls;
 
 namespace RAGNET.Application.Mappers
 {
     public static class CallbackUrlMapper
     {
-        public static CallbackUrl ToCallbackUrl(this CallbackUrlDTO dto, Guid workflowId, string userId)
+        public static CallbackUrl ToCallbackUrl(this CallbackUrlDTO dto, Guid workflowId)
         {
-            return new CallbackUrl
-            {
-                Id = dto.Id ?? Guid.NewGuid(),
-                Url = dto.Url,
-                WorkflowId = workflowId,
-                UserId = userId
-            };
+            var url = URL.Create(dto.Url);
+
+            return CallbackUrl.Create(
+                 url,
+                 workflowId: workflowId
+            );
         }
 
         public static CallbackUrlDTO ToDTO(this CallbackUrl callbackUrl)
@@ -25,7 +26,7 @@ namespace RAGNET.Application.Mappers
             };
         }
 
-        public static List<CallbackUrlDTO> ToDTOList(this ICollection<CallbackUrl> callbackUrlList)
+        public static List<CallbackUrlDTO> ToDTOList(this IReadOnlyCollection<CallbackUrl> callbackUrlList)
         {
             List<CallbackUrlDTO> dtoList = [];
 
@@ -35,6 +36,18 @@ namespace RAGNET.Application.Mappers
             }
 
             return dtoList;
+        }
+
+        public static List<string> ToUrlList(this List<URL> urls)
+        {
+            List<string> urlList = [];
+
+            foreach (var url in urls)
+            {
+                urlList.Add(url.Value);
+            }
+
+            return urlList;
         }
     }
 }

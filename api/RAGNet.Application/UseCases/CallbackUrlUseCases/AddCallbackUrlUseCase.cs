@@ -1,6 +1,7 @@
 using RAGNET.Application.DTOs.CallbackUrl;
 using RAGNET.Application.Mappers;
-using RAGNET.Domain.Repositories;
+using RAGNET.Domain.SeedWork;
+using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.UseCases.CallbackUrlUseCases
 {
@@ -9,14 +10,23 @@ namespace RAGNET.Application.UseCases.CallbackUrlUseCases
         Task<CallbackUrlDTO> Execute(CallbackUrlDTO dto, Guid workflowId, string userId);
     }
     public class AddCallbackUrlUseCase(
-        ICallbackUrlRepository callbackUrlRepository
+        IWorkflowRepository workflowRepository,
+        IUnitOfWork unitOfWork
     ) : IAddCallbackUrlUseCase
     {
-        private readonly ICallbackUrlRepository _callbackUrlRepository = callbackUrlRepository;
+        private readonly IWorkflowRepository _workflowRepository = workflowRepository;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         public async Task<CallbackUrlDTO> Execute(CallbackUrlDTO dto, Guid workflowId, string userId)
         {
-            var callback = await _callbackUrlRepository.AddAsync(dto.ToCallbackUrl(workflowId, userId)) ?? throw new Exception("Failed to add Callback URL to Workflow");
+            var workflow = await _workflowRepository.GetByIdAsync(workflowId, userId) ?? throw new Exception("Invalid workflow id");
+
+            var callback = dto.ToCallbackUrl(workflowId);
+
+            workflow.AddCallbackUrl(callback);
+
+            await _workflowRepository.UpdateAsync(workflow, userId);
+            await _unitOfWork.CommitAsync();
 
             return callback.ToDTO();
         }

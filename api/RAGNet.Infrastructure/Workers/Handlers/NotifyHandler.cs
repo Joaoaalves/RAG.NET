@@ -1,7 +1,6 @@
-using RAGNet.Domain.Services;
-using RAGNET.Domain.Contexts;
-using RAGNET.Domain.Entities.Jobs;
-using RAGNET.Domain.Services.Queue;
+using RAGNET.Infrastructure.Jobs;
+using RAGNET.Infrastructure.Jobs.Contexts;
+using RAGNET.Infrastructure.Jobs.Queue;
 
 namespace RAGNET.Infrastructure.Workers.Handlers
 {

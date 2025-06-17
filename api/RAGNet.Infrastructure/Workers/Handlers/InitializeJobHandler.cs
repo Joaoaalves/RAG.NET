@@ -1,6 +1,5 @@
-using RAGNet.Domain.Services;
-using RAGNET.Domain.Entities.Jobs;
-using RAGNET.Domain.Repositories;
+using RAGNET.Domain.Workflows;
+using RAGNET.Infrastructure.Jobs;
 
 namespace RAGNET.Infrastructure.Workers.Handlers
 {
@@ -10,7 +9,7 @@ namespace RAGNET.Infrastructure.Workers.Handlers
         public readonly IWorkflowRepository _workflowRepository = workflowRepository;
         public override async Task HandleAsync(EmbeddingJob job, CancellationToken ct)
         {
-            var workflow = await _workflowRepository.GetWithRelationsByApiKey(job.ApiKey) ?? throw new Exception("Workflow not found");
+            var workflow = await _workflowRepository.GetByApiKey(job.ApiKey) ?? throw new Exception("Workflow not found");
 
             job.Context.Workflow = workflow;
 

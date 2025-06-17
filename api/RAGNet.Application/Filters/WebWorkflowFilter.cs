@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using RAGNET.Domain.Repositories;
+using RAGNET.Domain.Workflows;
 using System.Security.Claims;
 
 namespace RAGNET.Application.Filters
@@ -32,7 +32,7 @@ namespace RAGNET.Application.Filters
                 return;
             }
 
-            var workflow = await _workflowRepository.GetWithRelationsAsync(workflowId, userId);
+            var workflow = await _workflowRepository.GetByIdAsync(workflowId, userId);
 
             if (workflow == null)
             {

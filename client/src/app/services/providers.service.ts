@@ -24,7 +24,6 @@ export class ProvidersService extends BaseApiService {
   }
 
   addProvider(provider: Provider, apiKey: string): Observable<AIProvider> {
-    console.log(provider);
     if (this.isValidApiKey(provider.providerId, apiKey)) {
       return this.http
         .post<AIProvider>(this.buildUrl('/api/provider'), {

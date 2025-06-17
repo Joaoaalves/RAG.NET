@@ -104,12 +104,12 @@ export class NewWorkflowComponent implements OnInit {
         ],
       }),
       embeddingProvider: this.fb.group({
-        provider: [-1, Validators.required],
+        providerId: [-1, Validators.required],
         model: [null, Validators.required],
         vectorSize: [0],
       }),
       conversationProvider: this.fb.group({
-        provider: [-1, Validators.required],
+        providerId: [-1, Validators.required],
         model: [null, Validators.required],
       }),
     });
@@ -118,7 +118,7 @@ export class NewWorkflowComponent implements OnInit {
     this.conversationOptions$ =
       this.ps.getConversationProvidersAsSelectOptions();
 
-    const embProvCtrl = this.form.get('embeddingProvider.provider')!;
+    const embProvCtrl = this.form.get('embeddingProvider.providerId')!;
     this.embeddingModels$ = embProvCtrl.valueChanges.pipe(
       startWith(embProvCtrl.value),
       switchMap((id) => this.ps.getEmbeddingModels(id)),
@@ -137,7 +137,7 @@ export class NewWorkflowComponent implements OnInit {
       )
     );
 
-    const convProvCtrl = this.form.get('conversationProvider.provider')!;
+    const convProvCtrl = this.form.get('conversationProvider.providerId')!;
     this.conversationModels$ = convProvCtrl.valueChanges.pipe(
       startWith(convProvCtrl.value),
       switchMap((id) => this.ps.getConversationModels(id)),

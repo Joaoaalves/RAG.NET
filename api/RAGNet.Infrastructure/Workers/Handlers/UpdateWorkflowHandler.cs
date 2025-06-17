@@ -1,6 +1,5 @@
-using RAGNet.Domain.Services;
-using RAGNET.Domain.Entities.Jobs;
-using RAGNET.Domain.Repositories;
+using RAGNET.Domain.Workflows;
+using RAGNET.Infrastructure.Jobs;
 
 namespace RAGNET.Infrastructure.Workers.Handlers
 {
@@ -12,7 +11,6 @@ namespace RAGNET.Infrastructure.Workers.Handlers
         {
 
             var workflow = job.Context.Workflow;
-            workflow.DocumentsCount++;
             await _workflowRepository.UpdateByApiKey(workflow, workflow.ApiKey);
             await _jobStatusRepository.MarkAsCompletedAsync(job.JobId);
 

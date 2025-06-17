@@ -1,5 +1,6 @@
-using RAGNET.Domain.Entities;
-using RAGNET.Domain.Eums;
+using RAGNET.Domain.Documents.Pages.Chunks;
+using RAGNET.Domain.Documents.Pages;
+using RAGNET.Application.Query;
 
 namespace RAGNET.Application.Mappers
 {
@@ -10,8 +11,8 @@ namespace RAGNET.Application.Mappers
             return new ContentItem
             {
                 Id = chunk.Id,
-                Text = chunk.Text,
-                Score = chunk.Score,
+                Text = chunk.Text.Value,
+                Score = chunk.GetScore(),
                 Source = ContentSourceEnum.CHUNK,
                 ChunkId = chunk.Id
             };
@@ -22,7 +23,7 @@ namespace RAGNET.Application.Mappers
             return new ContentItem
             {
                 Id = page.Id,
-                Text = page.Text,
+                Text = page.Text.Value,
                 Score = score,
                 Source = ContentSourceEnum.PAGE,
                 PageId = page.Id

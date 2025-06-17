@@ -1,8 +1,6 @@
-using RAGNet.Domain.Services;
-using RAGNET.Domain.Entities;
-using RAGNET.Domain.Entities.Jobs;
-using RAGNET.Domain.Factories;
-using RAGNET.Domain.Services.Queue;
+using RAGNET.Infrastructure.DocumentProcessors;
+using RAGNET.Infrastructure.Jobs;
+using RAGNET.Infrastructure.Jobs.Queue;
 
 namespace RAGNET.Infrastructure.Workers.Handlers
 {
@@ -10,7 +8,7 @@ namespace RAGNET.Infrastructure.Workers.Handlers
     {
         private readonly IDocumentProcessorFactory _documentProcessorFactory = documentProcessorFactory;
         public readonly IJobNotificationService _realTimeNotifier = realTimeNotifier;
-        private readonly Process _currentProcess = new()
+        private readonly ProcessDTO _currentProcess = new()
         {
             Title = "Extracting Document Pages",
             Progress = 100

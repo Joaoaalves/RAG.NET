@@ -1,5 +1,4 @@
 using RAGNET.Application.DTOs.Embedding;
-using RAGNET.Domain.Entities;
 using RAGNET.Domain.SharedKernel.Providers;
 
 namespace RAGNET.Application.Mappers
@@ -8,13 +7,10 @@ namespace RAGNET.Application.Mappers
     {
         public static EmbeddingProviderConfig ToEmbeddingProviderConfig(this EmbeddingProviderConfigDTO dto, Guid workflowId, int vectorSize = 0)
         {
-            return new EmbeddingProviderConfig
-            {
-                Provider = dto.ProviderId,
-                Model = dto.Model,
-                VectorSize = vectorSize,
-                WorkflowId = workflowId
-            };
+            return new EmbeddingProviderConfig(
+                provider: dto.ProviderId,
+                model: dto.Model,
+                vectorSize: vectorSize);
         }
 
         public static EmbeddingProviderConfigDTO ToDTOFromEmbeddingProviderConfig(this EmbeddingProviderConfig embeddingProvider)

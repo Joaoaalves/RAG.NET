@@ -1,5 +1,5 @@
 using RAGNET.Application.DTOs.Account;
-using RAGNET.Domain.Entities;
+using RAGNET.Domain.Users;
 
 namespace RAGNET.Application.Mappers
 {

@@ -2,15 +2,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
-using RAGNET.Domain.Entities;
-using RAGNET.Domain.Exceptions;
+using RAGNET.Domain.Users;
+using RAGNET.Domain.Workflows;
+
+using RAGNET.Infrastructure.Jobs.Queue;
+using RAGNET.Infrastructure.Jobs;
+using RAGNET.Infrastructure.Exceptions;
 
 using RAGNET.Application.DTOs.Workflow;
 using RAGNET.Application.UseCases.WorkflowUseCases;
 using RAGNET.Application.Filters;
-using RAGNET.Domain.Services.Queue;
-using RAGNET.Domain.Entities.Jobs;
 using RAGNET.Application.Mappers;
+
 
 namespace web.Controllers.WorkflowControllers
 {
@@ -71,7 +74,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<IActionResult> GetWorkflow(Guid id)
+        public async Task<IActionResult> GetWorkflow([FromRoute] Guid id)
         {
             var user = await _userManager.GetUserAsync(User);
 
@@ -91,7 +94,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> UpdateWorkflow([FromBody] WorkflowDetailsUpdateDTO dto, Guid id)
+        public async Task<IActionResult> UpdateWorkflow([FromBody] WorkflowDetailsUpdateDTO dto, [FromRoute] Guid id)
         {
             var user = await _userManager.GetUserAsync(User);
 
@@ -107,8 +110,8 @@ namespace web.Controllers.WorkflowControllers
                     workflow.Name,
                     workflow.Description,
                     workflow.IsActive,
-                    ConversationProvider = workflow.ConversationProviderConfig.ToDTOFromConversationProviderConfig(),
-                    EmbeddingProvider = workflow.EmbeddingProviderConfig.ToDTOFromEmbeddingProviderConfig()
+                    ConversationProvider = workflow.ConversationProviderConfig!.ToDTOFromConversationProviderConfig(),
+                    EmbeddingProvider = workflow.EmbeddingProviderConfig!.ToDTOFromEmbeddingProviderConfig()
                 });
             }
             catch (Exception ex)
@@ -118,7 +121,7 @@ namespace web.Controllers.WorkflowControllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteWorkflow(Guid id)
+        public async Task<IActionResult> DeleteWorkflow([FromRoute] Guid id)
         {
             var user = await _userManager.GetUserAsync(User);
 
@@ -161,7 +164,7 @@ namespace web.Controllers.WorkflowControllers
                     UserId = workflow.UserId,
                     FileName = file.FileName,
                     FileContent = ms.ToArray(),
-                    CallbackUrls = urls
+                    CallbackUrls = urls.ToUrlList()
                 };
 
                 await enqueuer.EnqueueAsync(job, cancellationToken);

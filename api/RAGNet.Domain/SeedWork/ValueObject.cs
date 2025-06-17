@@ -8,7 +8,7 @@ namespace RAGNET.Domain.SeedWork
         private List<PropertyInfo> _properties = [];
         private List<FieldInfo> _fields = [];
 
-        public static bool operator ==(ValueObject obj1, ValueObject obj2)
+        public static bool operator ==(ValueObject? obj1, ValueObject? obj2)
         {
             if (Equals(obj1, null))
             {

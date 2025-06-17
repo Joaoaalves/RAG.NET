@@ -1,8 +1,11 @@
+using RAGNET.Domain.Users;
+using RAGNET.Domain.SeedWork;
+
+using RAGNET.Domain.Workflows;
+
+using RAGNET.Application.Providers;
 using RAGNET.Application.DTOs.Workflow;
 using RAGNET.Application.Mappers;
-using RAGNET.Domain.Entities;
-using RAGNET.Domain.Repositories;
-using RAGNET.Domain.Services;
 
 namespace RAGNET.Application.UseCases.WorkflowUseCases
 {
@@ -14,48 +17,46 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
     public class UpdateWorkflowUseCase(
         IWorkflowRepository workflowRepository,
         IConversationProviderResolver conversationProviderResolver,
-        IEmbeddingProviderResolver embeddingProviderResolver
+        IEmbeddingProviderResolver embeddingProviderResolver,
+        IUnitOfWork unitOfWork
     ) : IUpdateWorkflowUseCase
     {
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
         private readonly IEmbeddingProviderResolver _embeddingProviderResolver = embeddingProviderResolver;
         private readonly IConversationProviderResolver _conversationProviderResolver = conversationProviderResolver;
-
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
         public async Task<Workflow> Execute(WorkflowDetailsUpdateDTO dto, Guid workflowId, User user)
         {
-            var workflow = await _workflowRepository.GetWithRelationsAsync(workflowId, user.Id)
+            var workflow = await _workflowRepository.GetByIdAsync(workflowId, user.Id)
                            ?? throw new Exception("Invalid workflow ID");
 
             if (dto.ConversationProvider is not null)
             {
-                var config = dto.ConversationProvider.ToConversationProviderConfig(Guid.NewGuid());
+                var config = dto.ConversationProvider.ToConversationProviderConfig(workflow.Id);
                 _conversationProviderResolver.Resolve(config);
-                workflow.ConversationProviderConfig = config;
+                workflow.UpdateConversationProviderConfig(config);
             }
 
             if (dto.EmbeddingProvider is not null)
             {
-                var config = dto.EmbeddingProvider.ToEmbeddingProviderConfig(Guid.NewGuid());
+                var config = dto.EmbeddingProvider.ToEmbeddingProviderConfig(workflow.Id);
                 _embeddingProviderResolver.Resolve(config);
-                workflow.EmbeddingProviderConfig = config;
+                workflow.UpdateEmbeddingProviderConfig(config);
+
             }
 
             if (!string.IsNullOrWhiteSpace(dto.Name))
-            {
-                workflow.Name = dto.Name;
-            }
+                workflow.Rename(dto.Name);
 
             if (!string.IsNullOrWhiteSpace(dto.Description))
-            {
-                workflow.Description = dto.Description;
-            }
+                workflow.UpdateDescription(dto.Description);
 
-            if (dto.IsActive.HasValue)
-            {
-                workflow.IsActive = dto.IsActive.Value;
-            }
+            if (dto.IsActive is not null)
+                workflow.SetActivationState(dto.IsActive.Value);
 
             await _workflowRepository.UpdateAsync(workflow, user.Id);
+            await _unitOfWork.CommitAsync();
+
             return workflow;
         }
     }

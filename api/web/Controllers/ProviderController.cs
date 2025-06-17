@@ -2,10 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using RAGNET.Domain.Entities;
+using RAGNET.Domain.Users;
 
 using RAGNET.Application.DTOs.ProviderApiKey;
-using RAGNET.Application.Mappers;
 using RAGNET.Application.UseCases.ProviderApiKeyUseCases;
 
 namespace web.Controllers
@@ -40,7 +39,7 @@ namespace web.Controllers
                 if (result == null)
                     return BadRequest("Error creating user API key");
 
-                return Ok(result.ToDTO());
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -60,6 +59,7 @@ namespace web.Controllers
                     return Unauthorized();
 
                 var result = await _getProviderApiKeyUseCase.ExecuteAsync(user.Id);
+
                 return Ok(result);
             }
             catch (Exception ex)
@@ -80,7 +80,8 @@ namespace web.Controllers
                     return Unauthorized();
 
                 var result = await _updateProviderApiKeyUseCase.ExecuteAsync(dto, providerId, user.Id);
-                return Ok(result.ToDTO());
+
+                return Ok(result);
             }
             catch (Exception exc)
             {

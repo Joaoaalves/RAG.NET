@@ -1,24 +1,27 @@
 using RAGNET.Application.DTOs.Chunker;
 using RAGNET.Application.DTOs.Workflow;
-using RAGNET.Domain.Entities;
+using RAGNET.Domain.Chunkers;
+using RAGNET.Domain.SharedKernel.Metas;
+using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.Mappers
 {
     public static class ChunkerMapper
     {
-        public static Chunker ToChunkerFromWorkflowCreationDTO(this WorkflowCreationDTO dto, Guid workflowId)
+        public static Chunker ToChunkerFromWorkflowCreationDTO(this WorkflowCreationDTO dto, Guid workflowId, string userId)
         {
-            return new Chunker
-            {
-                WorkflowId = workflowId,
-                StrategyType = dto.Strategy,
-                Metas =
+            return Chunker.Create(
+                id: Guid.NewGuid(),
+                strategyType: dto.Strategy,
+                workflowId: workflowId,
+                userId: userId,
+                metas:
                 [
-                    new() { Key = "threshold", Value = dto.Settings.Threshold.ToString() },
-                    new() { Key = "evaluationPrompt", Value = dto.Settings.EvaluationPrompt },
-                    new() { Key = "maxChunkSize", Value = dto.Settings.MaxChunkSize.ToString() }
+                    new Meta("threshold", dto.Settings.Threshold.ToString() ),
+                    new Meta("evaluationPrompt", dto.Settings.EvaluationPrompt),
+                    new Meta("maxChunkSize",  dto.Settings.MaxChunkSize.ToString())
                 ]
-            };
+            );
         }
 
         public static ChunkerSettingsDTO ToChunkerSettingsDTOfromDictionary(this Dictionary<string, string> meta)

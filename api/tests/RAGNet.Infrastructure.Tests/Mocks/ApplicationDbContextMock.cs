@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using RAGNET.Infrastructure.Data;
-using RAGNET.Domain.Entities;
+using RAGNET.Infrastructure.Database;
+using RAGNET.Domain.Chunkers;
 
 namespace tests.RAGNet.Infrastructure.Tests.Mocks
 {

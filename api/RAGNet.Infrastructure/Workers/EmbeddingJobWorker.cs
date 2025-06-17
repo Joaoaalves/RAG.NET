@@ -1,12 +1,12 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
-using RAGNET.Domain.Entities.Jobs;
 
-
-using RAGNET.Domain.Services.Queue;
-using RAGNET.Domain.Contexts;
 using RAGNET.Infrastructure.Workers.Handlers;
+using RAGNET.Domain.SeedWork;
+using RAGNET.Infrastructure.Jobs.Queue;
+using RAGNET.Infrastructure.Jobs.Contexts;
+using RAGNET.Infrastructure.Jobs;
 
 namespace RAGNET.Infrastructure.Workers
 {
@@ -42,6 +42,7 @@ namespace RAGNET.Infrastructure.Workers
                 var processPagesHandler = scope.ServiceProvider.GetRequiredService<ProcessPagesHandler>();
                 var updateWorkflowHanlder = scope.ServiceProvider.GetRequiredService<UpdateWorkflowHandler>();
                 var notifyHandler = scope.ServiceProvider.GetRequiredService<NotifyHandler>();
+                var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
                 initializeJobHandler.SetNext(extractHandler);
                 extractHandler.SetNext(processPagesHandler);
@@ -49,6 +50,7 @@ namespace RAGNET.Infrastructure.Workers
                 updateWorkflowHanlder.SetNext(notifyHandler);
 
                 await initializeJobHandler.HandleAsync(job, ct);
+                await unitOfWork.CommitAsync(ct);
             }
             catch (Exception ex)
             {

@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
 using RAGNET.Application.DTOs.CallbackUrl;
 using RAGNET.Application.UseCases.CallbackUrlUseCases;
-using RAGNET.Domain.Entities;
+
+using RAGNET.Domain.Users;
 
 namespace web.Controllers.WorkflowControllers
 {
@@ -22,7 +24,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddCallbackUrl([FromBody] CallbackUrlDTO dto, Guid workflowId)
+        public async Task<IActionResult> AddCallbackUrl([FromBody] CallbackUrlDTO dto, [FromRoute] Guid workflowId)
         {
             try
             {
@@ -39,7 +41,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpPut("{callbackId}")]
         [Authorize]
-        public async Task<IActionResult> UpdateCallbackUrls([FromBody] CallbackUrlDTO dto, Guid callbackId, Guid workflowId)
+        public async Task<IActionResult> UpdateCallbackUrls([FromBody] CallbackUrlDTO dto, Guid callbackId, [FromRoute] Guid workflowId)
         {
             try
             {
@@ -61,13 +63,13 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpDelete("{callbackId}")]
         [Authorize]
-        public async Task<IActionResult> DeleteCallbackUrls(Guid callbackId)
+        public async Task<IActionResult> DeleteCallbackUrls(Guid callbackId, [FromRoute] Guid workflowId)
         {
             try
             {
                 var user = await _userManager.GetUserAsync(User) ?? throw new Exception();
 
-                var id = await _deleteCallbackUrlUseCase.Execute(callbackId, user.Id);
+                var id = await _deleteCallbackUrlUseCase.Execute(callbackId, workflowId, user.Id);
                 return Ok(new { Message = "Deleted successfully", Id = callbackId });
             }
             catch (Exception exc)

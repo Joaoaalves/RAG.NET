@@ -1,11 +1,9 @@
+using RAGNET.Domain.Workflows;
+
+using RAGNET.Application.Chunkers;
 using RAGNET.Application.DTOs.Query;
-using RAGNET.Application.Mappers;
-using RAGNET.Domain.Entities;
-using RAGNET.Domain.Exceptions;
-using RAGNET.Domain.Factories;
-using RAGNET.Domain.Services;
-using RAGNET.Domain.Services.ApiKey;
-using RAGNET.Domain.Services.Query;
+using RAGNET.Application.Providers;
+using RAGNET.Application.Query;
 
 namespace RAGNET.Application.UseCases.Query
 {
@@ -36,9 +34,7 @@ namespace RAGNET.Application.UseCases.Query
             try
             {
                 // Setup
-                var embConfig = workflow.EmbeddingProviderConfig
-                    ?? throw new EmbeddingProviderNotSetException("You must set your embedding provider config");
-
+                var embConfig = workflow.EmbeddingProviderConfig;
 
                 var embedderService = _embedderFactory.CreateEmbeddingService(userEmbeddingProviderApiKey, embConfig);
 

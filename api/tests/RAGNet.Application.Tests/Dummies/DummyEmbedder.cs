@@ -1,5 +1,5 @@
-using RAGNET.Domain.Services;
-using System.Linq;
+using RAGNET.Application.Providers;
+
 namespace tests.RAGNet.Application.Tests.Dummies
 {
     public class DummyEmbedder : IEmbeddingService

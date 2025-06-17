@@ -1,13 +1,14 @@
 using System.Collections.Concurrent;
 
-using RAGNet.Domain.Services;
 using RAGNET.Domain.Documents;
-using RAGNET.Domain.Entities;
-using RAGNET.Domain.Entities.Jobs;
+using RAGNET.Domain.Documents.Pages;
+using RAGNET.Domain.Documents.Pages.Chunks;
 
-using RAGNET.Domain.Services;
-using RAGNET.Domain.Services.ApiKey;
-using RAGNET.Domain.Services.Queue;
+using RAGNET.Application.ApiKeys;
+
+using RAGNET.Infrastructure.Jobs;
+using RAGNET.Infrastructure.Jobs.Queue;
+using RAGNET.Application.Providers;
 
 namespace RAGNET.Infrastructure.Workers.Handlers
 {
@@ -17,7 +18,7 @@ namespace RAGNET.Infrastructure.Workers.Handlers
         public readonly IEmbeddingProcessingService _embeddingService = embeddingService;
         public readonly IJobNotificationService _realTimeNotifier = realTimeNotifier;
 
-        private readonly Process _currentProcess = new()
+        private readonly ProcessDTO _currentProcess = new()
         {
             Title = "Embedding Extracted Text"
         };
@@ -49,7 +50,7 @@ namespace RAGNET.Infrastructure.Workers.Handlers
 
             var convoKey = await _apiKeyResolver.ResolveForUserAsync(
                 job.UserId,
-                workflow.ConversationProviderConfig.Provider);
+                workflow.ConversationProviderConfig!.Provider);
 
             var embedKey = await _apiKeyResolver.ResolveForUserAsync(
                 job.UserId,
@@ -65,8 +66,8 @@ namespace RAGNET.Infrastructure.Workers.Handlers
                 try
                 {
                     var chunks = (await _embeddingService.ChunkTextAsync(
-                                                    page.Text,
-                                                    workflow.Chunker,
+                                                    page.Text.Value,
+                                                    workflow.Chunker!,
                                                     workflow.ConversationProviderConfig,
                                                     convoKey
                                                  )).ToList();
@@ -74,7 +75,7 @@ namespace RAGNET.Infrastructure.Workers.Handlers
                     {
                         var results = await _embeddingService.GetEmbeddingsAsync(
                                           chunks,
-                                          workflow.EmbeddingProviderConfig,
+                                          workflow.EmbeddingProviderConfig!,
                                           embedKey
                                       );
 
@@ -85,7 +86,16 @@ namespace RAGNET.Infrastructure.Workers.Handlers
                         await _embeddingService.InsertEmbeddingBatchAsync(batch, workflow.CollectionId.ToString());
 
                         foreach (var (ChunkText, VectorId, Embedding) in results)
-                            chunksBag.Add(new Chunk { PageId = page.Id, Text = ChunkText, VectorId = VectorId });
+                        {
+                            var chunk = Chunk.Create(
+                                pageId: page.Id,
+                                text: new Text(ChunkText),
+                                vectorId: VectorId,
+                                vector: new SemanticVector(Embedding)
+                            );
+
+                            chunksBag.Add(chunk);
+                        }
                     }
 
                     var finished = Interlocked.Increment(ref processedPages);

@@ -2,8 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using RAGNET.Domain.Entities;
+using RAGNET.Domain.Users;
 using RAGNET.Domain.SharedKernel.Providers;
+
 using RAGNET.Application.DTOs.Conversation;
 using RAGNET.Application.DTOs.Embedding;
 using RAGNET.Application.UseCases.ProviderApiKeyUseCases;
@@ -31,6 +32,7 @@ namespace web.Controllers
                 return Unauthorized();
 
             var providerApiKeys = await _getProviderApiKeysUseCase.ExecuteAsync(user.Id);
+
             if (providerApiKeys.Count == 0)
                 return Unauthorized("User has no API keys");
 

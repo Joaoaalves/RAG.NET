@@ -1,20 +1,21 @@
-using RAGNET.Domain.Repositories;
-using RAGNET.Domain.Services;
-using RAGNET.Domain.Services.Queue;
-using RAGNET.Domain.SharedKernel.Providers;
-using RAGNET.Infrastructure.Adapters.Chat.Anthropic;
-using RAGNET.Infrastructure.Adapters.Chat.Gemini;
-using RAGNET.Infrastructure.Adapters.Chat.OpenAi;
-using RAGNET.Infrastructure.Adapters.Embedding.Gemini;
-using RAGNET.Infrastructure.Adapters.Embedding.OpenAI;
-using RAGNET.Infrastructure.Adapters.Embedding.Voyage;
-using RAGNET.Infrastructure.Adapters.Queue;
-using RAGNET.Infrastructure.Adapters.SignalR;
-using RAGNET.Infrastructure.Adapters.Trello;
-using RAGNET.Infrastructure.Adapters.VectorDB;
-using RAGNET.Infrastructure.Services;
-using RAGNET.Infrastructure.Workers;
 using StackExchange.Redis;
+
+
+using RAGNET.Domain.SharedKernel.Providers;
+
+using RAGNET.Infrastructure.ChatCompletions;
+using RAGNET.Infrastructure.SignalR;
+using RAGNET.Infrastructure.Jobs.Queue;
+using RAGNET.Infrastructure.Qdrant;
+using RAGNET.Infrastructure.RabbitMQ;
+using RAGNET.Infrastructure.Redis;
+using RAGNET.Infrastructure.Trello;
+using RAGNET.Infrastructure.Workers;
+using RAGNET.Infrastructure.Jobs;
+using RAGNET.Infrastructure.Embedders;
+
+using RAGNET.Application.Feedback;
+using RAGNET.Application.Providers;
 
 namespace web.Configurations
 {

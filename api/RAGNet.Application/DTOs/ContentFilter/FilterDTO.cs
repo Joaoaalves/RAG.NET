@@ -1,14 +1,14 @@
 using System.Text.Json.Serialization;
-using RAGNET.Application.Converters;
-using RAGNET.Domain.Enums;
+using RAGNET.Application.QueryResultFilters;
+using RAGNET.Domain.Filters;
 
 namespace RAGNET.Application.DTOs.ContentFilter
 {
     public class FilterDTO
     {
         public Guid Id { get; set; }
-        [JsonConverter(typeof(FilterStrategyConverter))]
-        public FilterStrategy Strategy { get; set; }
+        [JsonConverter(typeof(QueryResultFilterStrategyConverter))]
+        public FilterStrategyEnum Strategy { get; set; }
         public int MaxItems { get; set; }
         public bool IsEnabled { get; set; }
     }

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+
 using RAGNET.Application.DTOs.Feedback;
-using RAGNET.Domain.Entities;
-using RAGNET.Domain.Services;
+using RAGNET.Application.Feedback;
 
 namespace web.Controllers
 {
@@ -21,13 +21,7 @@ namespace web.Controllers
             {
                 var description = $"Email: {dto.Email}\n\nMessage:\n{dto.Message}";
 
-                var card = new Card
-                {
-                    Name = dto.Name,
-                    Description = description
-                };
-
-                await _cardCreatorService.CreateCardAsync(card);
+                await _cardCreatorService.CreateCardAsync(dto.Name, description);
                 return Ok();
             }
             catch

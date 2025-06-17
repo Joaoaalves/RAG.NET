@@ -1,5 +1,11 @@
-using RAGNET.Domain.Factories;
-using RAGNET.Infrastructure.Factories;
+using RAGNET.Application.Chunkers;
+using RAGNET.Application.QueryEnhancers;
+
+using RAGNET.Infrastructure.ChatCompletions;
+using RAGNET.Infrastructure.DocumentProcessors;
+using RAGNET.Application.Providers;
+using RAGNET.Infrastructure.Embedders;
+using RAGNET.Application.QueryResultFilters;
 
 namespace web.Configurations
 {
@@ -11,7 +17,7 @@ namespace web.Configurations
             services.AddScoped<IChatCompletionFactory, ChatCompletionFactory>();
             services.AddScoped<IEmbedderFactory, EmbedderFactory>();
             services.AddScoped<IQueryEnhancerFactory, QueryEnhancerFactory>();
-            services.AddScoped<IContentFilterFactory, ContentFilterFactory>();
+            services.AddScoped<IQueryResultFilterFactory, QueryResultFilterFactory>();
             services.AddScoped<IDocumentProcessorFactory, DocumentProcessorFactory>();
             return services;
         }

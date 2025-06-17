@@ -5,7 +5,7 @@ import { catchError, map, Observable, of } from 'rxjs';
 import {
   Filter,
   FilterEnableResponse,
-  FilterStrategy,
+  FilterStrategyEnum,
   FilterUpdateResponse,
 } from '../models/filter';
 
@@ -24,7 +24,7 @@ export class FilterService {
   enableFilter(
     filter: Filter,
     workflowId: string,
-    strategy: string | FilterStrategy
+    strategy: string | FilterStrategyEnum
   ): Observable<Filter> {
     return this.httpClient
       .post<FilterEnableResponse>(
@@ -37,7 +37,7 @@ export class FilterService {
   updateFilter(
     filter: Filter,
     workflowId: string,
-    strategy: string | FilterStrategy
+    strategy: string | FilterStrategyEnum
   ): Observable<Filter> {
     return this.httpClient
       .put<FilterUpdateResponse>(
@@ -53,7 +53,7 @@ export class FilterService {
   toggleFilter(
     filter: Filter,
     workflowId: string,
-    strategy: string | FilterStrategy,
+    strategy: string | FilterStrategyEnum,
     newStatus: boolean
   ): Observable<Filter> {
     const updatedFilter = { ...filter, isEnabled: newStatus };
@@ -64,9 +64,11 @@ export class FilterService {
     );
   }
 
-  mapFilterStrategyToString(filterStrategy: FilterStrategy | string): string {
+  mapFilterStrategyToString(
+    filterStrategy: FilterStrategyEnum | string
+  ): string {
     switch (filterStrategy) {
-      case FilterStrategy.RSE:
+      case FilterStrategyEnum.RSE:
         return 'rse';
       default:
         return 'rse';

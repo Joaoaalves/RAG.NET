@@ -1,5 +1,5 @@
 using System.Text.Json;
-using RAGNET.Domain.Services;
+using RAGNET.Application.Providers;
 
 namespace tests.RAGNet.Application.Tests.Dummies
 {

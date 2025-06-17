@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+
+using RAGNET.Domain.Workflows;
+
 using RAGNET.Application.DTOs.Query;
 using RAGNET.Application.Filters;
 using RAGNET.Application.UseCases.Query;
-using RAGNET.Domain.Entities;
 
 namespace web.Controllers
 {

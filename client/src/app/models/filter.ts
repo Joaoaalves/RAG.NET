@@ -1,6 +1,6 @@
 export interface Filter {
   id?: string;
-  strategy: FilterStrategy | string;
+  strategy: FilterStrategyEnum | string;
   isEnabled: boolean;
   maxItems: number;
 }
@@ -20,6 +20,6 @@ export interface FilterUpdateResponse {
   filter: Filter;
 }
 
-export enum FilterStrategy {
+export enum FilterStrategyEnum {
   RSE = 0,
 }

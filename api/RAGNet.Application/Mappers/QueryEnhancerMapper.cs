@@ -1,74 +1,56 @@
 using RAGNET.Application.DTOs.QueryEnhancer;
-using RAGNET.Domain.Entities;
 using RAGNET.Domain.Enums;
+using RAGNET.Domain.QueryEnhancers;
+using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.Mappers
 {
     public static class QueryEnhancerMapper
     {
-        // QueryEnhancerDTO -> QueryEnhancer
+        // QueryEnhancerDTO -> QueryEnhancer via Builder
         public static QueryEnhancer ToQueryEnhancer(this QueryEnhancerDTO dto, Guid workflowId, string userId)
         {
-            return new QueryEnhancer
-            {
-                Id = dto.Id,
-                Type = dto.Type,
-                WorkflowId = workflowId,
-                MaxQueries = dto.MaxQueries,
-                IsEnabled = dto.IsEnabled,
-                UserId = userId,
-                Metas =
+            return new QueryEnhancerBuilder()
+                .WithId(dto.Id)
+                .WithType(dto.Type)
+                .WithWorkflowId(workflowId)
+                .WithMaxQueries(dto.MaxQueries)
+                .WithMetas(
                 [
-                    new() {Key = "Guidance", Value = dto.Guidance ?? ""}
-                ]
-            };
+                    new("Guidance", dto.Guidance ?? "")
+                ])
+                .Enabled(dto.IsEnabled)
+                .ForUser(userId)
+                .Build();
         }
 
-
-        // QueryEnhancerDTO -> QueryEnhancer
-        public static QueryEnhancer ToQueryEnhancer(this QueryEnhancerDTO dto, Guid workflowId)
-        {
-            return new QueryEnhancer
-            {
-                Id = dto.Id,
-                Type = dto.Type,
-                WorkflowId = workflowId,
-                MaxQueries = dto.MaxQueries,
-                IsEnabled = dto.IsEnabled,
-                Metas =
-                [
-                    new() {Key = "Guidance", Value = dto.Guidance ?? ""}
-                ]
-            };
-        }
-        // AutoQueryCreationDTO -> QueryEnhancerDTO
+        // AutoQueryCreationDTO -> QueryEnhancer via Builder style (adapted)
         public static QueryEnhancer ToQueryEnhancer(this AutoQueryCreationDTO dto, Guid workflowId, string userId)
         {
-            return new QueryEnhancer
-            {
-                Type = QueryEnhancerStrategy.AUTO_QUERY,
-                MaxQueries = dto.MaxQueries,
-                WorkflowId = workflowId,
-                IsEnabled = dto.IsEnabled ?? true,
-                UserId = userId,
-                Metas =
+            return new QueryEnhancerBuilder()
+                .WithType(QueryEnhancerStrategy.AUTO_QUERY)
+                .WithMaxQueries(dto.MaxQueries)
+
+                .WithWorkflowId(workflowId)
+                .Enabled(dto.IsEnabled ?? true)
+                .ForUser(userId)
+                .WithMetas(
                 [
-                    new() {Key = "Guidance", Value = dto.Guidance ?? ""}
-                ]
-            };
+                    new("Guidance", dto.Guidance ?? "")
+                ])
+                .Build();
         }
 
-        // HyDECreationDTO -> QueryEnhancerDTO
+        // HyDECreationDTO -> QueryEnhancer via Builder style (adapted)
         public static QueryEnhancer ToQueryEnhancer(this HyDECreationDTO dto, Guid workflowId, string userId)
         {
-            return new QueryEnhancer
-            {
-                Type = QueryEnhancerStrategy.HYPOTHETICAL_DOCUMENT_EMBEDDING,
-                WorkflowId = workflowId,
-                IsEnabled = dto.IsEnabled ?? true,
-                UserId = userId,
-                MaxQueries = dto.MaxQueries,
-            };
+            return new QueryEnhancerBuilder()
+                .WithType(QueryEnhancerStrategy.HYPOTHETICAL_DOCUMENT_EMBEDDING)
+                .WithWorkflowId(workflowId)
+                .Enabled(dto.IsEnabled ?? true)
+                .ForUser(userId)
+                .WithMaxQueries(dto.MaxQueries)
+                .Build();
         }
 
         // QueryEnhancer -> QueryEnhancerDTO
@@ -84,9 +66,9 @@ namespace RAGNET.Application.Mappers
             };
         }
 
-        public static List<QueryEnhancerDTO> ToDTOList(this ICollection<QueryEnhancer> queryEnhancers)
+        public static List<QueryEnhancerDTO> ToDTOList(this IReadOnlyCollection<QueryEnhancer> queryEnhancers)
         {
-            List<QueryEnhancerDTO> dtoList = [];
+            var dtoList = new List<QueryEnhancerDTO>();
 
             foreach (var qe in queryEnhancers)
             {
@@ -94,6 +76,5 @@ namespace RAGNET.Application.Mappers
             }
             return dtoList;
         }
-
     }
 }

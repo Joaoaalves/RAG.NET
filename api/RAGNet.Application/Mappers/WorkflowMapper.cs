@@ -4,28 +4,13 @@ using RAGNET.Application.DTOs.Conversation;
 using RAGNET.Application.DTOs.Embedding;
 using RAGNET.Application.DTOs.QueryEnhancer;
 using RAGNET.Application.DTOs.Workflow;
-using RAGNET.Domain.Entities;
-using RAGNET.Domain.Enums;
+using RAGNET.Domain.Chunkers;
+using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.Mappers
 {
     public static class WorkflowMapper
     {
-        public static Workflow ToWorkflowFromCreationDTO(this WorkflowCreationDTO dto, User user)
-        {
-            return new Workflow
-            {
-                Name = dto.Name,
-                Description = dto.Description,
-                IsActive = true,
-                DocumentsCount = 0,
-                ApiKey = Guid.NewGuid().ToString("N"),
-                UserId = user.Id,
-                CollectionId = Guid.NewGuid(),
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
-        }
 
         public static WorkflowDetailsDTO ToWorkflowDetailsDTOFromWorkflow(
             this Workflow workflow,

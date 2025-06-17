@@ -3,14 +3,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 // Domain
-using RAGNET.Domain.Entities;
+using RAGNET.Domain.Users;
 
 // Application
 using RAGNET.Application.DTOs.QueryEnhancer;
 using RAGNET.Application.Mappers;
 using RAGNET.Application.UseCases.QueryEnhancerUseCases;
 using RAGNET.Application.UseCases.WorkflowUseCases;
-using RAGNET.Domain.Enums;
+
+using RAGNET.Domain.QueryEnhancers;
 
 namespace web.Controllers.WorkflowControllers
 {
@@ -31,7 +32,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpPost("{workflowId}/query-enhancer/auto-query")]
         [Authorize]
-        public async Task<IActionResult> EnableAutoQuery([FromBody] AutoQueryCreationDTO dto, Guid workflowId)
+        public async Task<IActionResult> EnableAutoQuery([FromBody] AutoQueryCreationDTO dto, [FromRoute] Guid workflowId)
         {
             try
             {
@@ -47,9 +48,9 @@ namespace web.Controllers.WorkflowControllers
                 if (workflow.QueryEnhancers.Any(qe => qe.Type == QueryEnhancerStrategy.AUTO_QUERY))
                     return BadRequest("Auto Query already enabled!");
 
-                var qeCreationDTO = dto.ToQueryEnhancer(workflow.Id, user.Id);
+                var qeCreationDTO = dto.ToQueryEnhancer(workflowId, user.Id);
 
-                var queryEnhancer = await _createQueryEnhancerUseCase.Execute(qeCreationDTO, workflow.Id, user.Id);
+                var queryEnhancer = await _createQueryEnhancerUseCase.Execute(qeCreationDTO, workflowId, user.Id);
 
                 return Ok(new { Message = "Auto Query enabled!", QueryEnhancer = queryEnhancer.ToQueryEnhancerDTO() });
             }
@@ -61,7 +62,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpPut("{workflowId}/query-enhancer/auto-query")]
         [Authorize]
-        public async Task<IActionResult> UpdateAutoQuery([FromBody] AutoQueryCreationDTO dto, Guid workflowId)
+        public async Task<IActionResult> UpdateAutoQuery([FromBody] AutoQueryCreationDTO dto, [FromRoute] Guid workflowId)
         {
             try
             {
@@ -91,7 +92,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpDelete("{workflowId}/query-enhancer/auto-query")]
         [Authorize]
-        public async Task<IActionResult> DisableAutoQuery(Guid workflowId)
+        public async Task<IActionResult> DisableAutoQuery([FromRoute] Guid workflowId)
         {
             try
             {
@@ -111,7 +112,7 @@ namespace web.Controllers.WorkflowControllers
 
                 var result = await _deleteQueryEnhancerUseCase.Execute(qe.Id, user.Id);
 
-                if (!result)
+                if (result == null)
                     return BadRequest("Something went wrong, Auto Query was not disabled!");
 
                 return Ok(new { Message = "Auto Query disabled!" });
@@ -124,7 +125,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpPost("{workflowId}/query-enhancer/hyde")]
         [Authorize]
-        public async Task<IActionResult> EnableHyde([FromBody] HyDECreationDTO dto, Guid workflowId)
+        public async Task<IActionResult> EnableHyde([FromBody] HyDECreationDTO dto, [FromRoute] Guid workflowId)
         {
             try
             {
@@ -140,7 +141,7 @@ namespace web.Controllers.WorkflowControllers
                 if (workflow.QueryEnhancers.Any(qe => qe.Type == QueryEnhancerStrategy.HYPOTHETICAL_DOCUMENT_EMBEDDING))
                     return BadRequest("HyDE already enabled!");
 
-                var queryEnhancer = await _createQueryEnhancerUseCase.Execute(dto.ToQueryEnhancer(workflow.Id, user.Id), workflow.Id, user.Id);
+                var queryEnhancer = await _createQueryEnhancerUseCase.Execute(dto.ToQueryEnhancer(workflowId, user.Id), workflowId, user.Id);
 
                 return Ok(new { Message = "Hyde enabled!", QueryEnhancer = queryEnhancer.ToQueryEnhancerDTO() });
             }
@@ -152,7 +153,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpPut("{workflowId}/query-enhancer/hyde")]
         [Authorize]
-        public async Task<IActionResult> UpdateHyde([FromBody] HyDECreationDTO dto, Guid workflowId)
+        public async Task<IActionResult> UpdateHyde([FromBody] HyDECreationDTO dto, [FromRoute] Guid workflowId)
         {
             try
             {
@@ -170,7 +171,7 @@ namespace web.Controllers.WorkflowControllers
                 if (qe == null)
                     return BadRequest("HyDE not enabled!");
 
-                var queryEnhancer = await _updateQueryEnhancerUseCase.Execute(qe.Id, dto.ToQueryEnhancer(workflow.Id, user.Id), user.Id);
+                var queryEnhancer = await _updateQueryEnhancerUseCase.Execute(qe.Id, dto.ToQueryEnhancer(workflowId, user.Id), user.Id);
 
                 return Ok(new { Message = "Hyde updated!", queryEnhancer });
             }
@@ -182,7 +183,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpDelete("{workflowId}/query-enhancer/hyde")]
         [Authorize]
-        public async Task<IActionResult> DisableHyde(Guid workflowId)
+        public async Task<IActionResult> DisableHyde([FromRoute] Guid workflowId)
         {
             try
             {
@@ -202,7 +203,7 @@ namespace web.Controllers.WorkflowControllers
 
                 var result = await _deleteQueryEnhancerUseCase.Execute(qe.Id, user.Id);
 
-                if (!result)
+                if (result == null)
                     return BadRequest("Something went wrong, HyDE was not disabled!");
 
                 return Ok(new { Message = "Hyde disabled!" });

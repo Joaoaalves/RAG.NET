@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using RAGNET.Domain.Entities;
+using Moq;
+using RAGNET.Domain.Chunkers;
 using RAGNET.Domain.Enums;
-using RAGNET.Infrastructure.Data;
-using RAGNET.Infrastructure.Repositories;
+using RAGNET.Domain.Workflows;
+using RAGNET.Infrastructure.Database;
+using RAGNET.Infrastructure.Domain.Chunkers;
 
 
 namespace tests.RAGNet.Infrastructure.Tests.Repositories
@@ -11,7 +13,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
     {
         private readonly ApplicationDbContext _context;
         private readonly ChunkerRepository _repository;
-
+        private readonly Guid _workflowId = Guid.NewGuid();
         public ChunkerRepositoryTests()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -26,16 +28,15 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
         public async Task GetWithMeta_ShouldReturnChunkersWithMeta()
         {
             // Arrange
-            var chunker = new Chunker
-            {
-                Id = Guid.NewGuid(),
-                WorkflowId = Guid.NewGuid(),
-                StrategyType = ChunkerStrategy.SEMANTIC,
-                Metas =
+            var chunker = Chunker.Create(
+                Guid.NewGuid(),
+                ChunkerStrategy.SEMANTIC,
+                _workflowId,
+                It.IsAny<string>(),
                 [
-                    new() { Key = "key1", Value = "value1" }
+                    new( "key1", "value1")
                 ]
-            };
+            );
 
             await _context.Chunkers.AddAsync(chunker);
             await _context.SaveChangesAsync();
@@ -54,16 +55,15 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
         public async Task ShouldReturnChunkersWithMeta()
         {
             // Arrange
-            var chunker = new Chunker
-            {
-                Id = Guid.NewGuid(),
-                WorkflowId = Guid.NewGuid(),
-                StrategyType = ChunkerStrategy.PROPOSITION,
-                Metas =
+            var chunker = Chunker.Create(
+                Guid.NewGuid(),
+                ChunkerStrategy.SEMANTIC,
+                _workflowId,
+                It.IsAny<string>(),
                 [
-                    new() { Key = "key1", Value = "value1" }
+                    new("key1", "value1")
                 ]
-            };
+            );
 
             _context.Chunkers.Add(chunker);
             _context.SaveChanges();

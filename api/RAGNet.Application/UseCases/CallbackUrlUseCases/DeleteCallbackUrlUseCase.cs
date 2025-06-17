@@ -1,22 +1,26 @@
-using RAGNET.Domain.Repositories;
+using RAGNET.Domain.SeedWork;
+using RAGNET.Domain.Workflows.CallbackUrls;
 
 namespace RAGNET.Application.UseCases.CallbackUrlUseCases
 {
     public interface IDeleteCallbackUrlUseCase
     {
-        Task<Guid> Execute(Guid callbackUrlId, string userId);
+        Task<Guid> Execute(Guid callbackUrlId, Guid workflowId, string userId);
     }
     public class DeleteCallbackUrlUseCase(
-        ICallbackUrlRepository callbackUrlRepository
+        ICallbackUrlRepository callbackUrlRepository,
+        IUnitOfWork unitOfWork
     ) : IDeleteCallbackUrlUseCase
     {
         private readonly ICallbackUrlRepository _callbackUrlRepository = callbackUrlRepository;
-
-        public async Task<Guid> Execute(Guid callbackUrlId, string userId)
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        public async Task<Guid> Execute(Guid callbackUrlId, Guid workflowId, string userId)
         {
-            var callback = await _callbackUrlRepository.GetByIdAsync(callbackUrlId, userId) ?? throw new Exception("Invalid Callback URl.");
+            var callbackUrl = await _callbackUrlRepository.GetByIdAsync(callbackUrlId, workflowId) ?? throw new Exception("Invalid workflowid");
 
-            await _callbackUrlRepository.DeleteAsync(callback, userId);
+            await _callbackUrlRepository.DeleteAsync(callbackUrl, workflowId);
+
+            await _unitOfWork.CommitAsync();
 
             return callbackUrlId;
         }

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
-using RAGNET.Domain.Entities;
-using RAGNET.Infrastructure.Adapters.SignalR;
+using RAGNET.Domain.Users;
+using RAGNET.Infrastructure.SignalR;
 using web.Configurations;
 using web.Extensions;
 

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-using RAGNET.Domain.Enums;
+using RAGNET.Domain.Chunkers;
 
 using RAGNET.Application.Converters;
 using RAGNET.Application.DTOs.CallbackUrl;

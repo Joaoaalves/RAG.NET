@@ -34,7 +34,7 @@ services:
   migrations:
     build:
       context: ./api
-      dockerfile: RAGNet.Infrastructure/Persistence/Dockerfile
+      dockerfile: RAGNet.Infrastructure/Dockerfile
       target: migrations
     depends_on:
       postgres:
@@ -70,8 +70,20 @@ services:
     build:
       context: ./api
       dockerfile: web/Dockerfile
+      target: dev
     ports:
       - "5000:8080"
+    volumes:
+      - ./api:/src
+      - /src/obj
+      - /src/bin
+      - /src/RAGNet.Application/obj
+      - /src/RAGNet.Application/bin
+      - /src/RAGNet.Infrastructure/obj
+      - /src/RAGNet.Infrastructure/bin
+      - /src/RAGNet.Domain/obj
+      - /src/RAGNet.Domain/bin
+      - ~/.aspnet/https:/https:ro
     depends_on:
       migrations:
         condition: service_completed_successfully
@@ -85,11 +97,31 @@ services:
         condition: service_healthy
         restart: true
     environment:
-      - CLIENT_URL=http://localhost:4200
       - ASPNETCORE_URLS=http://0.0.0.0:8080
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=1
+      - CLIENT_URL=http://localhost:4200
       - PRODUCTION=false
 
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_SERVER_MODE: "False"
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    command: >
+      sh -c "echo 'Host=postgres;Port=5432;Database=rag_db;Username=postgres;Password=password' > /pgadmin4/config_local.py && /entrypoint.sh"
+      
 volumes:
   rabbitmq_data:
   postgres_data:
   qdrant_data:
+  pgadmin_data:
