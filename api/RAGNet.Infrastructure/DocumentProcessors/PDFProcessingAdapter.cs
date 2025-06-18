@@ -28,9 +28,13 @@ namespace RAGNET.Infrastructure.DocumentProcessors
                     // Associate the page with the document
                     document.AddPage(page);
                 }
-                catch (Exception)
+                catch (BusinessRuleValidationException)
                 {
                     Console.WriteLine("Empty chunk detected. Jumping to the next.");
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Unknow Error occurred!");
                 }
             }
 

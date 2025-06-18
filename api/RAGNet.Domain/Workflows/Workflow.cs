@@ -79,7 +79,7 @@ namespace RAGNET.Domain.Workflows
             Filter? filter = null)
         {
             return new Workflow(
-                id ?? new WorkflowId(Guid.NewGuid()),
+                id ?? new WorkflowId(),
                 name,
                 description,
                 userId,

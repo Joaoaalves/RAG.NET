@@ -10,7 +10,7 @@ namespace RAGNET.Application.Mappers
         {
             return new ContentItem
             {
-                Id = chunk.Id,
+                Id = chunk.Id.Value,
                 Text = chunk.Text.Value,
                 Score = chunk.GetScore(),
                 Source = ContentSourceEnum.CHUNK,
@@ -22,7 +22,7 @@ namespace RAGNET.Application.Mappers
         {
             return new ContentItem
             {
-                Id = page.Id,
+                Id = page.Id.Value,
                 Text = page.Text.Value,
                 Score = score,
                 Source = ContentSourceEnum.PAGE,

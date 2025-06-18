@@ -27,8 +27,8 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
         {
             // Arrange
             var title = "Documento EPUB de Teste";
-            var workflowId = new WorkflowId(Guid.NewGuid()); ;
-            var docId = Guid.NewGuid();
+            var workflowId = new WorkflowId(); ;
+            var docId = new DocumentId();
 
             var pages = new List<string> { "Page 1", "Page 2" };
 

@@ -29,9 +29,9 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
         {
             // Arrange
             var title = "Documento de Teste";
-            var workflowId = new WorkflowId(Guid.NewGuid());
+            var workflowId = new WorkflowId();
             var pages = new List<string> { "Page 1", "Page 2", "Page 3" };
-            var docId = Guid.NewGuid();
+            var docId = new DocumentId();
 
             var createdDocument = Document.Create(
                 id: docId,

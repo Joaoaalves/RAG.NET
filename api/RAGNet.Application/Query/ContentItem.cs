@@ -1,3 +1,6 @@
+using RAGNET.Domain.Documents.Pages;
+using RAGNET.Domain.Documents.Pages.Chunks;
+
 namespace RAGNET.Application.Query
 {
     public class ContentItem
@@ -6,7 +9,7 @@ namespace RAGNET.Application.Query
         public string Text { get; set; } = String.Empty;
         public double Score { get; set; }
         public ContentSourceEnum Source { get; set; }
-        public Guid? PageId { get; set; }
-        public Guid? ChunkId { get; set; }
+        public PageId? PageId { get; set; }
+        public ChunkId? ChunkId { get; set; }
     }
 }

@@ -2,12 +2,12 @@ using RAGNET.Domain.SeedWork;
 
 namespace RAGNET.Domain.Documents.Rules
 {
-    public class DocumentIdMustBeValid(Guid documentId) : IBusinessRule
+    public class DocumentIdMustBeValid(DocumentId documentId) : IBusinessRule
     {
-        private readonly Guid _documentId = documentId;
+        private readonly DocumentId _documentId = documentId;
 
         public string Message => "The document ID must be a valid GUID.";
 
-        public bool IsBroken() => _documentId == Guid.Empty;
+        public bool IsBroken() => _documentId == new DocumentId(Guid.Empty);
     }
 }

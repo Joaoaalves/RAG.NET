@@ -43,12 +43,7 @@ namespace RAGNET.Application.Providers
         {
             foreach (var chunk in chunks)
             {
-                await _chunkRepository.AddAsync(new Chunk
-                {
-                    Text = chunk.Text,
-                    VectorId = chunk.VectorId,
-                    PageId = chunk.PageId
-                });
+                await _chunkRepository.AddAsync(chunk);
             }
 
         }

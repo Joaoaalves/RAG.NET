@@ -29,7 +29,7 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         public async Task<WorkflowId> Execute(WorkflowCreationDTO dto, User user)
         {
-            var workflowId = new WorkflowId(Guid.NewGuid());
+            var workflowId = new WorkflowId();
 
             var embeddingModel = _embeddingProviderResolver.Resolve(
                 dto.EmbeddingProvider.ToEmbeddingProviderConfig()

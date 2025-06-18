@@ -81,7 +81,7 @@ namespace RAGNET.Domain.Workflows
                 _conversationProvider,
                 _embeddingProvider,
                 _chunker,
-                id ?? new WorkflowId(Guid.NewGuid()),
+                id ?? new WorkflowId(),
                 _filter
             );
         }
