@@ -106,7 +106,7 @@ namespace RAGNET.Domain.Workflows
 
             _callbackUrls.Add(callbackUrl);
         }
-        public void UpdateCallbackUrl(Guid callbackId, string newUrl)
+        public void UpdateCallbackUrl(CallbackUrlId callbackId, string newUrl)
         {
             var callback = _callbackUrls.FirstOrDefault(c => c.Id == callbackId) ?? throw new ArgumentException("Callback URL not found.", nameof(callbackId));
 

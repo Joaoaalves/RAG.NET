@@ -32,9 +32,9 @@ namespace RAGNET.Infrastructure.Domain.Workflows.CallbackUrls
                 .ToListAsync();
         }
 
-        public async Task<CallbackUrl?> GetByIdAsync(Guid id, WorkflowId workflowId)
+        public async Task<CallbackUrl?> GetByIdAsync(CallbackUrlId id, WorkflowId workflowId)
         {
-            if (id == Guid.Empty) throw new ArgumentException("Invalid ID", nameof(id));
+            if (id == new CallbackUrlId(Guid.Empty)) throw new ArgumentException("Invalid ID", nameof(id));
 
             return await _context.CallbackUrls
                 .FirstOrDefaultAsync(c => c.Id == id && (c.WorkflowId == workflowId));

@@ -22,7 +22,7 @@ namespace RAGNET.Application.Mappers
         {
             return new CallbackUrlDTO
             {
-                Id = callbackUrl.Id,
+                Id = callbackUrl.Id.Value,
                 Url = callbackUrl.Url
             };
         }

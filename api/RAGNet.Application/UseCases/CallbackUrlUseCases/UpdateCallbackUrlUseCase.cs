@@ -9,7 +9,7 @@ namespace RAGNET.Application.UseCases.CallbackUrlUseCases
 {
     public interface IUpdateCallbackUrlUseCase
     {
-        Task<CallbackUrlDTO> Execute(CallbackUrlDTO dto, Guid callbackUrlId, WorkflowId workflowId, string userId);
+        Task<CallbackUrlDTO> Execute(CallbackUrlDTO dto, CallbackUrlId callbackUrlId, WorkflowId workflowId, string userId);
     }
     public class UpdateCallbackUrlUseCase(
         ICallbackUrlRepository callbackUrlRepository,
@@ -19,7 +19,7 @@ namespace RAGNET.Application.UseCases.CallbackUrlUseCases
         private readonly ICallbackUrlRepository _callbackUrlRepository = callbackUrlRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-        public async Task<CallbackUrlDTO> Execute(CallbackUrlDTO dto, Guid callbackUrlId, WorkflowId workflowId, string userId)
+        public async Task<CallbackUrlDTO> Execute(CallbackUrlDTO dto, CallbackUrlId callbackUrlId, WorkflowId workflowId, string userId)
         {
             var callbackUrl = await _callbackUrlRepository.GetByIdAsync(callbackUrlId, workflowId)
                 ?? throw new Exception("Invalid callback URL id");
