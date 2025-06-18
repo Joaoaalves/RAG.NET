@@ -8,7 +8,7 @@ namespace RAGNET.Infrastructure.Domain.Rankers
     {
         private readonly ApplicationDbContext _dbContext = context ?? throw new ArgumentNullException(nameof(context));
 
-        public async Task<Ranker?> GetByIdAsync(Guid id, string userId)
+        public async Task<Ranker?> GetByIdAsync(RankerId id, string userId)
         {
             return await _dbContext.Rankers.Include(r => r.Metas)
                 .FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId);
