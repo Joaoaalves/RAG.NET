@@ -43,7 +43,7 @@ namespace RAGNET.Infrastructure.Domain.ProviderApiKeys
                 .AnyAsync(p => p.Provider.Id == provider && p.UserId == userId);
         }
 
-        public Task<ProviderApiKey?> GetByIdAsync(Guid id, string? userId)
+        public Task<ProviderApiKey?> GetByIdAsync(ProviderApiKeyId id, string? userId)
         {
             ArgumentNullException.ThrowIfNull(userId, nameof(userId));
             return _context.ProviderApiKeys

@@ -9,7 +9,6 @@ namespace RAGNET.Application.Mappers
         public static ProviderApiKey ToProviderApiKey(this CreateProviderApiKeyDTO dto, string userId, IProviderPolicy providerPolicy)
         {
             return ProviderApiKey.Create(
-                id: Guid.NewGuid(),
                 userId,
                 new Provider(dto.Provider, dto.ApiKey, providerPolicy)
             );
@@ -21,7 +20,7 @@ namespace RAGNET.Application.Mappers
 
             return new ProviderApiKeyDTO
             {
-                Id = userApiKey.Id,
+                Id = userApiKey.Id.Value,
                 ProviderId = prov.Id,
                 Name = prov.Name,
                 Pattern = prov.Pattern,

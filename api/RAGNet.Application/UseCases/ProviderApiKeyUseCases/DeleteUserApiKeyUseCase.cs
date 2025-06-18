@@ -5,7 +5,7 @@ namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
 {
     public interface IDeleteProviderApiKeyUseCase
     {
-        Task<bool> ExecuteAsync(Guid userApiKeyId, string userId);
+        Task<bool> ExecuteAsync(ProviderApiKeyId userApiKeyId, string userId);
     }
 
     public class DeleteProviderApiKeyUseCase(
@@ -15,7 +15,7 @@ namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
     {
         private readonly IProviderApiKeyRepository _providerApiKeyRepository = providerApiKeyRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        public async Task<bool> ExecuteAsync(Guid userApiKeyId, string userId)
+        public async Task<bool> ExecuteAsync(ProviderApiKeyId userApiKeyId, string userId)
         {
             try
             {

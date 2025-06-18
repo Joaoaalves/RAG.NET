@@ -4,7 +4,7 @@ namespace RAGNET.Domain.ProvidersApiKeys
 {
     public interface IProviderApiKeyRepository
     {
-        Task<ProviderApiKey?> GetByIdAsync(Guid id, string? userId);
+        Task<ProviderApiKey?> GetByIdAsync(ProviderApiKeyId id, string? userId);
         Task<ProviderApiKey> AddAsync(ProviderApiKey entity);
         Task UpdateAsync(ProviderApiKey entity, string? userId);
         Task DeleteAsync(ProviderApiKey entity, string? userId);

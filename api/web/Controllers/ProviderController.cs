@@ -6,6 +6,7 @@ using RAGNET.Domain.Users;
 
 using RAGNET.Application.DTOs.ProviderApiKey;
 using RAGNET.Application.UseCases.ProviderApiKeyUseCases;
+using RAGNET.Domain.ProvidersApiKeys;
 
 namespace web.Controllers
 {
@@ -79,7 +80,11 @@ namespace web.Controllers
                 if (user == null)
                     return Unauthorized();
 
-                var result = await _updateProviderApiKeyUseCase.ExecuteAsync(dto, providerId, user.Id);
+                var result = await _updateProviderApiKeyUseCase.ExecuteAsync(
+                    dto,
+                    new ProviderApiKeyId(providerId),
+                    user.Id
+                );
 
                 return Ok(result);
             }
@@ -100,7 +105,11 @@ namespace web.Controllers
                     return Unauthorized();
 
 
-                var result = await _deleteProviderApiKeyUseCase.ExecuteAsync(providerId, user.Id);
+                var result = await _deleteProviderApiKeyUseCase.ExecuteAsync(
+                    new ProviderApiKeyId(providerId),
+                    user.Id
+                );
+
                 return Ok(result);
             }
             catch (Exception exc)

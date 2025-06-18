@@ -11,7 +11,7 @@ namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
 {
     public interface IUpdateProviderApiKeyUseCase
     {
-        Task<ProviderApiKeyDTO> ExecuteAsync(UpdateProviderApiKeyDTO dto, Guid providerId, string userId);
+        Task<ProviderApiKeyDTO> ExecuteAsync(UpdateProviderApiKeyDTO dto, ProviderApiKeyId providerId, string userId);
     }
 
     public class UpdateProviderApiKeyUseCase(
@@ -27,7 +27,7 @@ namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
         private readonly IProviderPolicyFactory _providerPolicyFactory = providerPolicyFactory;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-        public async Task<ProviderApiKeyDTO> ExecuteAsync(UpdateProviderApiKeyDTO dto, Guid providerId, string userId)
+        public async Task<ProviderApiKeyDTO> ExecuteAsync(UpdateProviderApiKeyDTO dto, ProviderApiKeyId providerId, string userId)
         {
             try
             {

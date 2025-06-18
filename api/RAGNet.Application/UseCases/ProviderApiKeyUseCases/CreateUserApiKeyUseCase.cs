@@ -35,7 +35,6 @@ namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
                 var provider = new Provider(providerId: dto.Provider, apiKeyValue: encryptedApiKey, validate: false);
 
                 var providerApiKey = ProviderApiKey.Create(
-                    id: Guid.NewGuid(),
                     userId,
                     provider
                 );
