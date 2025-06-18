@@ -8,7 +8,7 @@ namespace RAGNET.Domain.QueryEnhancers
     {
         private readonly List<Meta> _metas = [];
 
-        public Guid Id { get; private init; } = default!;
+        public QueryEnhancerId Id { get; private init; } = default!;
         public QueryEnhancerStrategy Type { get; private set; }
         public bool IsEnabled { get; private set; }
         public WorkflowId WorkflowId { get; private set; } = default!;
@@ -23,7 +23,7 @@ namespace RAGNET.Domain.QueryEnhancers
         private QueryEnhancer() { }
 
         private QueryEnhancer(
-            Guid id,
+            QueryEnhancerId id,
             QueryEnhancerStrategy type,
             WorkflowId workflowId,
             string userId,
@@ -45,16 +45,16 @@ namespace RAGNET.Domain.QueryEnhancers
         }
 
         public static QueryEnhancer Create(
-            Guid id,
             QueryEnhancerStrategy type,
             WorkflowId workflowId,
             string userId,
             string prompt,
             int maxQueries,
+            QueryEnhancerId? id = null,
             IEnumerable<Meta>? metas = null,
             bool isEnabled = true)
         {
-            return new QueryEnhancer(id, type, workflowId, userId, prompt, maxQueries, metas, isEnabled);
+            return new QueryEnhancer(id ?? new QueryEnhancerId(), type, workflowId, userId, prompt, maxQueries, metas, isEnabled);
         }
 
         public void SetEnableState(bool active)

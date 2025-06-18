@@ -7,7 +7,7 @@ namespace RAGNET.Application.UseCases.QueryEnhancerUseCases
 {
     public interface IDeleteQueryEnhancerUseCase
     {
-        Task<QueryEnhancerDTO> Execute(Guid queryEnhancerId, string userId);
+        Task<QueryEnhancerDTO> Execute(QueryEnhancerId queryEnhancerId, string userId);
     }
 
     public class DeleteQueryEnhancerUseCase(
@@ -16,7 +16,7 @@ namespace RAGNET.Application.UseCases.QueryEnhancerUseCases
     {
         private readonly IQueryEnhancerRepository _queryEnhancerRepository = queryEnhancerRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        public async Task<QueryEnhancerDTO> Execute(Guid queryEnhancerId, string userId)
+        public async Task<QueryEnhancerDTO> Execute(QueryEnhancerId queryEnhancerId, string userId)
         {
             try
             {

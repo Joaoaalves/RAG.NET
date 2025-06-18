@@ -81,7 +81,11 @@ namespace web.Controllers.WorkflowControllers
                 if (qe == null)
                     return BadRequest("Auto Query not enabled!");
 
-                var queryEnhancer = await _updateQueryEnhancerUseCase.Execute(qe.Id, dto.ToQueryEnhancer(new WorkflowId(workflowId), user.Id), user.Id);
+                var queryEnhancer = await _updateQueryEnhancerUseCase.Execute(
+                    new QueryEnhancerId(qe.Id),
+                    dto.ToQueryEnhancer(new WorkflowId(workflowId), user.Id),
+                    user.Id
+                );
 
                 return Ok(new { Message = "Auto Query updated!", queryEnhancer });
             }
@@ -111,7 +115,10 @@ namespace web.Controllers.WorkflowControllers
                 if (qe == null)
                     return BadRequest("Auto Query not enabled!");
 
-                var result = await _deleteQueryEnhancerUseCase.Execute(qe.Id, user.Id);
+                var result = await _deleteQueryEnhancerUseCase.Execute(
+                    new QueryEnhancerId(qe.Id),
+                    user.Id
+                );
 
                 if (result == null)
                     return BadRequest("Something went wrong, Auto Query was not disabled!");
@@ -177,7 +184,7 @@ namespace web.Controllers.WorkflowControllers
                     return BadRequest("HyDE not enabled!");
 
                 var queryEnhancer = await _updateQueryEnhancerUseCase.Execute(
-                    qe.Id,
+                    new QueryEnhancerId(qe.Id),
                     dto.ToQueryEnhancer(new WorkflowId(workflowId), user.Id),
                     user.Id
                 );
@@ -210,7 +217,10 @@ namespace web.Controllers.WorkflowControllers
                 if (qe == null)
                     return BadRequest("HyDE not enabled!");
 
-                var result = await _deleteQueryEnhancerUseCase.Execute(qe.Id, user.Id);
+                var result = await _deleteQueryEnhancerUseCase.Execute(
+                    new QueryEnhancerId(qe.Id),
+                    user.Id
+                );
 
                 if (result == null)
                     return BadRequest("Something went wrong, HyDE was not disabled!");

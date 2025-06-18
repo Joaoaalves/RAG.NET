@@ -5,7 +5,6 @@ namespace RAGNET.Domain.QueryEnhancers
 {
     public class QueryEnhancerBuilder
     {
-        private Guid _id = Guid.NewGuid();
         private QueryEnhancerStrategy _type = QueryEnhancerStrategy.AUTO_QUERY;
         private WorkflowId _workflowId = default!;
         private string _userId = string.Empty;
@@ -13,12 +12,6 @@ namespace RAGNET.Domain.QueryEnhancers
         private int _maxQueries = 10;
         private bool _enabled = true;
         private List<Meta> _metas = [];
-
-        public QueryEnhancerBuilder WithId(Guid id)
-        {
-            _id = id;
-            return this;
-        }
 
         public QueryEnhancerBuilder WithType(QueryEnhancerStrategy type)
         {
@@ -62,15 +55,15 @@ namespace RAGNET.Domain.QueryEnhancers
             return this;
         }
 
-        public QueryEnhancer Build()
+        public QueryEnhancer Build(QueryEnhancerId? id = null)
         {
             return QueryEnhancer.Create(
-                _id,
                 _type,
                 _workflowId,
                 _userId,
                 _prompt,
                 _maxQueries,
+                id,
                 _metas,
                 _enabled
             );

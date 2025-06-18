@@ -7,7 +7,7 @@ namespace RAGNET.Application.UseCases.QueryEnhancerUseCases
 {
     public interface IUpdateQueryEnhancerUseCase
     {
-        Task<QueryEnhancerDTO> Execute(Guid queryEnhancerId, QueryEnhancer data, string userId);
+        Task<QueryEnhancerDTO> Execute(QueryEnhancerId queryEnhancerId, QueryEnhancer data, string userId);
     }
 
     public class UpdateQueryEnhancerUseCase(
@@ -16,7 +16,7 @@ namespace RAGNET.Application.UseCases.QueryEnhancerUseCases
     {
         private readonly IQueryEnhancerRepository _queryEnhancerRepository = queryEnhancerRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        public async Task<QueryEnhancerDTO> Execute(Guid queryEnhancerId, QueryEnhancer data, string userId)
+        public async Task<QueryEnhancerDTO> Execute(QueryEnhancerId queryEnhancerId, QueryEnhancer data, string userId)
         {
             try
             {

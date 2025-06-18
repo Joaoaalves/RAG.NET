@@ -10,7 +10,6 @@ namespace RAGNET.Application.Mappers
         public static QueryEnhancer ToQueryEnhancer(this QueryEnhancerDTO dto, WorkflowId workflowId, string userId)
         {
             return new QueryEnhancerBuilder()
-                .WithId(dto.Id)
                 .WithType(dto.Type)
                 .WithWorkflowId(workflowId)
                 .WithMaxQueries(dto.MaxQueries)
@@ -20,7 +19,9 @@ namespace RAGNET.Application.Mappers
                 ])
                 .Enabled(dto.IsEnabled)
                 .ForUser(userId)
-                .Build();
+                .Build(
+                    new QueryEnhancerId(dto.Id)
+                );
         }
 
         // AutoQueryCreationDTO -> QueryEnhancer via Builder style (adapted)
@@ -57,7 +58,7 @@ namespace RAGNET.Application.Mappers
         {
             return new QueryEnhancerDTO
             {
-                Id = qe.Id,
+                Id = qe.Id.Value,
                 Type = qe.Type,
                 IsEnabled = qe.IsEnabled,
                 MaxQueries = qe.MaxQueries,
