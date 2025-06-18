@@ -6,14 +6,14 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
 {
     public interface IGetWorkflowUseCase
     {
-        Task<WorkflowDetailsDTO> Execute(Guid workflowId, string userId);
+        Task<WorkflowDetailsDTO> Execute(WorkflowId workflowId, string userId);
     }
 
     public class GetWorkflowUseCase(IWorkflowRepository workflowRepository) : IGetWorkflowUseCase
     {
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
 
-        public async Task<WorkflowDetailsDTO> Execute(Guid workflowId, string userId)
+        public async Task<WorkflowDetailsDTO> Execute(WorkflowId workflowId, string userId)
         {
             var workflow = await _workflowRepository.GetByIdAsync(workflowId, userId) ?? throw new Exception("Workflow não encontrado.");
 

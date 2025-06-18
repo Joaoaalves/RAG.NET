@@ -1,11 +1,12 @@
 using RAGNET.Application.DTOs.ContentFilter;
 using RAGNET.Domain.Filters;
+using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.Mappers
 {
     public static class ContentFilterMapper
     {
-        public static Filter ToFilter(this RSECreationDTO dto, Guid workflowId, string userId)
+        public static Filter ToFilter(this RSECreationDTO dto, WorkflowId workflowId, string userId)
         {
             return Filter.Create(
                 id: Guid.NewGuid(),

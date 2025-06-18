@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using RAGNET.Domain.Workflows;
 using RAGNET.Domain.Workflows.CallbackUrls;
 using RAGNET.Infrastructure.Database;
 
@@ -16,7 +17,7 @@ namespace RAGNET.Infrastructure.Domain.Workflows.CallbackUrls
             return callbackUrl;
         }
 
-        public Task DeleteAsync(CallbackUrl callbackUrl, Guid workflowId)
+        public Task DeleteAsync(CallbackUrl callbackUrl, WorkflowId workflowId)
         {
             ArgumentNullException.ThrowIfNull(callbackUrl);
 
@@ -24,14 +25,14 @@ namespace RAGNET.Infrastructure.Domain.Workflows.CallbackUrls
             return Task.CompletedTask;
         }
 
-        public async Task<IEnumerable<CallbackUrl>> GetAllAsync(Guid workflowId)
+        public async Task<IEnumerable<CallbackUrl>> GetAllAsync(WorkflowId workflowId)
         {
             return await _context.CallbackUrls
                 .Where(c => c.WorkflowId == workflowId)
                 .ToListAsync();
         }
 
-        public async Task<CallbackUrl?> GetByIdAsync(Guid id, Guid workflowId)
+        public async Task<CallbackUrl?> GetByIdAsync(Guid id, WorkflowId workflowId)
         {
             if (id == Guid.Empty) throw new ArgumentException("Invalid ID", nameof(id));
 
@@ -39,16 +40,16 @@ namespace RAGNET.Infrastructure.Domain.Workflows.CallbackUrls
                 .FirstOrDefaultAsync(c => c.Id == id && (c.WorkflowId == workflowId));
         }
 
-        public async Task<List<CallbackUrl>> GetByWorkflowIdAsync(Guid workflowId)
+        public async Task<List<CallbackUrl>> GetByWorkflowIdAsync(WorkflowId workflowId)
         {
-            if (workflowId == Guid.Empty) throw new ArgumentException("Invalid workflow ID", nameof(workflowId));
+            if (workflowId == new WorkflowId(Guid.Empty)) throw new ArgumentException("Invalid workflow ID", nameof(workflowId));
 
             return await _context.CallbackUrls
                 .Where(c => c.WorkflowId == workflowId)
                 .ToListAsync();
         }
 
-        public Task UpdateAsync(CallbackUrl entity, Guid workflowId)
+        public Task UpdateAsync(CallbackUrl entity, WorkflowId workflowId)
         {
             ArgumentNullException.ThrowIfNull(entity);
 

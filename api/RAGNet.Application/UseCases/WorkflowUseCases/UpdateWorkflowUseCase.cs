@@ -11,7 +11,7 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
 {
     public interface IUpdateWorkflowUseCase
     {
-        Task<Workflow> Execute(WorkflowDetailsUpdateDTO dto, Guid workflowId, User user);
+        Task<Workflow> Execute(WorkflowDetailsUpdateDTO dto, WorkflowId workflowId, User user);
     }
 
     public class UpdateWorkflowUseCase(
@@ -25,21 +25,21 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
         private readonly IEmbeddingProviderResolver _embeddingProviderResolver = embeddingProviderResolver;
         private readonly IConversationProviderResolver _conversationProviderResolver = conversationProviderResolver;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        public async Task<Workflow> Execute(WorkflowDetailsUpdateDTO dto, Guid workflowId, User user)
+        public async Task<Workflow> Execute(WorkflowDetailsUpdateDTO dto, WorkflowId workflowId, User user)
         {
             var workflow = await _workflowRepository.GetByIdAsync(workflowId, user.Id)
                            ?? throw new Exception("Invalid workflow ID");
 
             if (dto.ConversationProvider is not null)
             {
-                var config = dto.ConversationProvider.ToConversationProviderConfig(workflow.Id);
+                var config = dto.ConversationProvider.ToConversationProviderConfig();
                 _conversationProviderResolver.Resolve(config);
                 workflow.UpdateConversationProviderConfig(config);
             }
 
             if (dto.EmbeddingProvider is not null)
             {
-                var config = dto.EmbeddingProvider.ToEmbeddingProviderConfig(workflow.Id);
+                var config = dto.EmbeddingProvider.ToEmbeddingProviderConfig();
                 _embeddingProviderResolver.Resolve(config);
                 workflow.UpdateEmbeddingProviderConfig(config);
 

@@ -7,7 +7,7 @@ namespace RAGNET.Application.UseCases.CallbackUrlUseCases
 {
     public interface IAddCallbackUrlUseCase
     {
-        Task<CallbackUrlDTO> Execute(CallbackUrlDTO dto, Guid workflowId, string userId);
+        Task<CallbackUrlDTO> Execute(CallbackUrlDTO dto, WorkflowId workflowId, string userId);
     }
     public class AddCallbackUrlUseCase(
         IWorkflowRepository workflowRepository,
@@ -17,7 +17,7 @@ namespace RAGNET.Application.UseCases.CallbackUrlUseCases
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-        public async Task<CallbackUrlDTO> Execute(CallbackUrlDTO dto, Guid workflowId, string userId)
+        public async Task<CallbackUrlDTO> Execute(CallbackUrlDTO dto, WorkflowId workflowId, string userId)
         {
             var workflow = await _workflowRepository.GetByIdAsync(workflowId, userId) ?? throw new Exception("Invalid workflow id");
 

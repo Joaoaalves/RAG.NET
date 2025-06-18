@@ -1,4 +1,3 @@
-using RAGNET.Domain.Enums;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.SharedKernel.Metas;
 using RAGNET.Domain.Workflows;
@@ -12,7 +11,7 @@ namespace RAGNET.Domain.QueryEnhancers
         public Guid Id { get; private init; } = default!;
         public QueryEnhancerStrategy Type { get; private set; }
         public bool IsEnabled { get; private set; }
-        public Guid WorkflowId { get; private set; } = default!;
+        public WorkflowId WorkflowId { get; private set; } = default!;
         public Workflow Workflow { get; private set; } = null!;
         public string UserId { get; set; } = string.Empty;
         public string Prompt { get; private set; } = string.Empty;
@@ -26,7 +25,7 @@ namespace RAGNET.Domain.QueryEnhancers
         private QueryEnhancer(
             Guid id,
             QueryEnhancerStrategy type,
-            Guid workflowId,
+            WorkflowId workflowId,
             string userId,
             string prompt,
             int maxQueries,
@@ -48,7 +47,7 @@ namespace RAGNET.Domain.QueryEnhancers
         public static QueryEnhancer Create(
             Guid id,
             QueryEnhancerStrategy type,
-            Guid workflowId,
+            WorkflowId workflowId,
             string userId,
             string prompt,
             int maxQueries,

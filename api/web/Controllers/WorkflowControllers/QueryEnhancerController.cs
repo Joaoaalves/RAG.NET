@@ -12,6 +12,7 @@ using RAGNET.Application.UseCases.QueryEnhancerUseCases;
 using RAGNET.Application.UseCases.WorkflowUseCases;
 
 using RAGNET.Domain.QueryEnhancers;
+using RAGNET.Domain.Workflows;
 
 namespace web.Controllers.WorkflowControllers
 {
@@ -40,7 +41,7 @@ namespace web.Controllers.WorkflowControllers
                 if (user == null)
                     return Unauthorized();
 
-                var workflow = await _getWorkflowUseCase.Execute(workflowId, user.Id);
+                var workflow = await _getWorkflowUseCase.Execute(new WorkflowId(workflowId), user.Id);
 
                 if (workflow == null)
                     return Unauthorized();
@@ -48,9 +49,9 @@ namespace web.Controllers.WorkflowControllers
                 if (workflow.QueryEnhancers.Any(qe => qe.Type == QueryEnhancerStrategy.AUTO_QUERY))
                     return BadRequest("Auto Query already enabled!");
 
-                var qeCreationDTO = dto.ToQueryEnhancer(workflowId, user.Id);
+                var qeCreationDTO = dto.ToQueryEnhancer(new WorkflowId(workflowId), user.Id);
 
-                var queryEnhancer = await _createQueryEnhancerUseCase.Execute(qeCreationDTO, workflowId, user.Id);
+                var queryEnhancer = await _createQueryEnhancerUseCase.Execute(qeCreationDTO, new WorkflowId(workflowId), user.Id);
 
                 return Ok(new { Message = "Auto Query enabled!", QueryEnhancer = queryEnhancer.ToQueryEnhancerDTO() });
             }
@@ -70,7 +71,7 @@ namespace web.Controllers.WorkflowControllers
                 if (user == null)
                     return Unauthorized();
 
-                var workflow = await _getWorkflowUseCase.Execute(workflowId, user.Id);
+                var workflow = await _getWorkflowUseCase.Execute(new WorkflowId(workflowId), user.Id);
 
                 if (workflow == null)
                     return Unauthorized();
@@ -80,7 +81,7 @@ namespace web.Controllers.WorkflowControllers
                 if (qe == null)
                     return BadRequest("Auto Query not enabled!");
 
-                var queryEnhancer = await _updateQueryEnhancerUseCase.Execute(qe.Id, dto.ToQueryEnhancer(workflowId, user.Id), user.Id);
+                var queryEnhancer = await _updateQueryEnhancerUseCase.Execute(qe.Id, dto.ToQueryEnhancer(new WorkflowId(workflowId), user.Id), user.Id);
 
                 return Ok(new { Message = "Auto Query updated!", queryEnhancer });
             }
@@ -100,7 +101,7 @@ namespace web.Controllers.WorkflowControllers
                 if (user == null)
                     return Unauthorized();
 
-                var workflow = await _getWorkflowUseCase.Execute(workflowId, user.Id);
+                var workflow = await _getWorkflowUseCase.Execute(new WorkflowId(workflowId), user.Id);
 
                 if (workflow == null)
                     return Unauthorized();
@@ -133,7 +134,7 @@ namespace web.Controllers.WorkflowControllers
                 if (user == null)
                     return Unauthorized();
 
-                var workflow = await _getWorkflowUseCase.Execute(workflowId, user.Id);
+                var workflow = await _getWorkflowUseCase.Execute(new WorkflowId(workflowId), user.Id);
 
                 if (workflow == null)
                     return Unauthorized();
@@ -141,7 +142,11 @@ namespace web.Controllers.WorkflowControllers
                 if (workflow.QueryEnhancers.Any(qe => qe.Type == QueryEnhancerStrategy.HYPOTHETICAL_DOCUMENT_EMBEDDING))
                     return BadRequest("HyDE already enabled!");
 
-                var queryEnhancer = await _createQueryEnhancerUseCase.Execute(dto.ToQueryEnhancer(workflowId, user.Id), workflowId, user.Id);
+                var queryEnhancer = await _createQueryEnhancerUseCase.Execute(
+                    dto.ToQueryEnhancer(new WorkflowId(workflowId), user.Id),
+                    new WorkflowId(workflowId),
+                    user.Id
+                );
 
                 return Ok(new { Message = "Hyde enabled!", QueryEnhancer = queryEnhancer.ToQueryEnhancerDTO() });
             }
@@ -161,7 +166,7 @@ namespace web.Controllers.WorkflowControllers
                 if (user == null)
                     return Unauthorized();
 
-                var workflow = await _getWorkflowUseCase.Execute(workflowId, user.Id);
+                var workflow = await _getWorkflowUseCase.Execute(new WorkflowId(workflowId), user.Id);
 
                 if (workflow == null)
                     return Unauthorized();
@@ -171,7 +176,11 @@ namespace web.Controllers.WorkflowControllers
                 if (qe == null)
                     return BadRequest("HyDE not enabled!");
 
-                var queryEnhancer = await _updateQueryEnhancerUseCase.Execute(qe.Id, dto.ToQueryEnhancer(workflowId, user.Id), user.Id);
+                var queryEnhancer = await _updateQueryEnhancerUseCase.Execute(
+                    qe.Id,
+                    dto.ToQueryEnhancer(new WorkflowId(workflowId), user.Id),
+                    user.Id
+                );
 
                 return Ok(new { Message = "Hyde updated!", queryEnhancer });
             }
@@ -191,7 +200,7 @@ namespace web.Controllers.WorkflowControllers
                 if (user == null)
                     return Unauthorized();
 
-                var workflow = await _getWorkflowUseCase.Execute(workflowId, user.Id);
+                var workflow = await _getWorkflowUseCase.Execute(new WorkflowId(workflowId), user.Id);
 
                 if (workflow == null)
                     return Unauthorized();

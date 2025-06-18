@@ -32,7 +32,7 @@ namespace RAGNET.Application.Filters
                 return;
             }
 
-            var workflow = await _workflowRepository.GetByIdAsync(workflowId, userId);
+            var workflow = await _workflowRepository.GetByIdAsync(new WorkflowId(workflowId), userId);
 
             if (workflow == null)
             {

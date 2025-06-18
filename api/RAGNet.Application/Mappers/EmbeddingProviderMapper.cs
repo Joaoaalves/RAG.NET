@@ -5,7 +5,7 @@ namespace RAGNET.Application.Mappers
 {
     public static class EmbeddingProviderMapper
     {
-        public static EmbeddingProviderConfig ToEmbeddingProviderConfig(this EmbeddingProviderConfigDTO dto, Guid workflowId, int vectorSize = 0)
+        public static EmbeddingProviderConfig ToEmbeddingProviderConfig(this EmbeddingProviderConfigDTO dto, int vectorSize = 0)
         {
             return new EmbeddingProviderConfig(
                 provider: dto.ProviderId,

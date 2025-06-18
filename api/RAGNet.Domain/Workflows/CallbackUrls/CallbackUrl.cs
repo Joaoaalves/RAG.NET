@@ -7,21 +7,21 @@ namespace RAGNET.Domain.Workflows.CallbackUrls
     {
         public Guid Id { get; private init; } = default!;
         public URL Url { get; private set; } = default!;
-        public Guid WorkflowId { get; private set; }
+        public WorkflowId WorkflowId { get; private set; } = null!;
 
         // EF Core
         private CallbackUrl() { }
 
-        private CallbackUrl(Guid id, URL url, Guid workflowId)
+        private CallbackUrl(Guid id, URL url, WorkflowId workflowId)
         {
             Id = id;
             Url = url;
             WorkflowId = workflowId;
         }
 
-        public static CallbackUrl Create(URL url, Guid workflowId, Guid? id = null)
+        public static CallbackUrl Create(URL url, WorkflowId workflowId, Guid? id = null)
         {
-            if (workflowId == Guid.Empty) throw new ArgumentException("Workflow ID cannot be empty.", nameof(workflowId));
+            if (workflowId == new WorkflowId(Guid.Empty)) throw new ArgumentException("Workflow ID cannot be empty.", nameof(workflowId));
 
             return new CallbackUrl(id ?? Guid.NewGuid(), url, workflowId);
         }

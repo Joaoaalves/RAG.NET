@@ -6,14 +6,14 @@ namespace RAGNET.Application.UseCases.ContentFilterUseCases
 {
     public interface ICreateContentFilterUseCase
     {
-        Task<Filter> Execute(Filter filter, Guid workflowId, string userId);
+        Task<Filter> Execute(Filter filter, WorkflowId workflowId, string userId);
     }
 
     public class CreateContentFilterUseCase(IFilterRepository filterRepository, IUnitOfWork unitOfWork) : ICreateContentFilterUseCase
     {
         private readonly IFilterRepository _filterRepository = filterRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        public async Task<Filter> Execute(Filter filter, Guid workflowId, string userId)
+        public async Task<Filter> Execute(Filter filter, WorkflowId workflowId, string userId)
         {
             try
             {

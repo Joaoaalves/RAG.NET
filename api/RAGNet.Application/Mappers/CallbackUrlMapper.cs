@@ -1,13 +1,14 @@
 using RAGNET.Application.DTOs.CallbackUrl;
 
 using RAGNET.Domain.SharedKernel.URLs;
+using RAGNET.Domain.Workflows;
 using RAGNET.Domain.Workflows.CallbackUrls;
 
 namespace RAGNET.Application.Mappers
 {
     public static class CallbackUrlMapper
     {
-        public static CallbackUrl ToCallbackUrl(this CallbackUrlDTO dto, Guid workflowId)
+        public static CallbackUrl ToCallbackUrl(this CallbackUrlDTO dto, WorkflowId workflowId)
         {
             var url = URL.Create(dto.Url);
 

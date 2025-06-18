@@ -77,13 +77,15 @@ namespace web.Controllers.WorkflowControllers
         public async Task<IActionResult> GetWorkflow([FromRoute] Guid id)
         {
             var user = await _userManager.GetUserAsync(User);
-
             if (user == null)
                 return Unauthorized();
 
             try
             {
-                var workflowDetails = await _getWorkflowUseCase.Execute(id, user.Id);
+                var workflowDetails = await _getWorkflowUseCase.Execute(
+                    new WorkflowId(id),
+                    user.Id
+                );
                 return Ok(workflowDetails);
             }
             catch (Exception ex)
@@ -103,7 +105,11 @@ namespace web.Controllers.WorkflowControllers
 
             try
             {
-                var workflow = await _updateWorkflowUseCase.Execute(dto, id, user);
+                var workflow = await _updateWorkflowUseCase.Execute(
+                    dto,
+                    new WorkflowId(id),
+                    user
+                );
 
                 return Ok(new
                 {
@@ -130,7 +136,10 @@ namespace web.Controllers.WorkflowControllers
 
             try
             {
-                var deleted = await _deleteWorkflowUseCase.Execute(id, user.Id);
+                var deleted = await _deleteWorkflowUseCase.Execute(
+                    new WorkflowId(id),
+                    user.Id
+                );
                 return Ok(deleted);
             }
             catch (Exception ex)

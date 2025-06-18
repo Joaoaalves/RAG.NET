@@ -8,7 +8,7 @@ namespace RAGNET.Application.Mappers
 {
     public static class ChunkerMapper
     {
-        public static Chunker ToChunkerFromWorkflowCreationDTO(this WorkflowCreationDTO dto, Guid workflowId, string userId)
+        public static Chunker ToChunkerFromWorkflowCreationDTO(this WorkflowCreationDTO dto, WorkflowId workflowId, string userId)
         {
             return Chunker.Create(
                 strategyType: dto.Strategy,

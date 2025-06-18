@@ -18,13 +18,13 @@ namespace RAGNET.Infrastructure.Domain.Chunkers
             return chunker;
         }
 
-        public Task DeleteAsync(Chunker chunker, Guid workflowId, string userId)
+        public Task DeleteAsync(Chunker chunker, WorkflowId workflowId, string userId)
         {
             _context.Chunkers.Remove(chunker);
             return Task.CompletedTask;
         }
 
-        public async Task<Chunker?> GetByIdAsync(ChunkerId id, Guid workflowId, string userId)
+        public async Task<Chunker?> GetByIdAsync(ChunkerId id, WorkflowId workflowId, string userId)
         {
             return await _context.Chunkers
                 .Include(c => c.Metas)
@@ -39,7 +39,7 @@ namespace RAGNET.Infrastructure.Domain.Chunkers
                 .ToListAsync();
         }
 
-        public Task UpdateAsync(Chunker chunker, Guid workflowId, string userId)
+        public Task UpdateAsync(Chunker chunker, WorkflowId workflowId, string userId)
         {
             ArgumentNullException.ThrowIfNull(chunker, nameof(chunker));
 

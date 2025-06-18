@@ -11,7 +11,7 @@ namespace RAGNET.Domain.Rankers
 
         public Guid Id { get; private init; } = default;
         public string UserId { get; set; } = string.Empty;
-        public Guid WorkflowId { get; set; }
+        public WorkflowId WorkflowId { get; set; } = null!;
         public Workflow Workflow { get; set; } = null!;
         public bool IsEnabled { get; set; } = true;
         public IReadOnlyCollection<Meta> Metas => _metas.AsReadOnly();

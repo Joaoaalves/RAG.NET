@@ -1,5 +1,4 @@
 using RAGNET.Application.DTOs.QueryEnhancer;
-using RAGNET.Domain.Enums;
 using RAGNET.Domain.QueryEnhancers;
 using RAGNET.Domain.Workflows;
 
@@ -8,7 +7,7 @@ namespace RAGNET.Application.Mappers
     public static class QueryEnhancerMapper
     {
         // QueryEnhancerDTO -> QueryEnhancer via Builder
-        public static QueryEnhancer ToQueryEnhancer(this QueryEnhancerDTO dto, Guid workflowId, string userId)
+        public static QueryEnhancer ToQueryEnhancer(this QueryEnhancerDTO dto, WorkflowId workflowId, string userId)
         {
             return new QueryEnhancerBuilder()
                 .WithId(dto.Id)
@@ -25,7 +24,7 @@ namespace RAGNET.Application.Mappers
         }
 
         // AutoQueryCreationDTO -> QueryEnhancer via Builder style (adapted)
-        public static QueryEnhancer ToQueryEnhancer(this AutoQueryCreationDTO dto, Guid workflowId, string userId)
+        public static QueryEnhancer ToQueryEnhancer(this AutoQueryCreationDTO dto, WorkflowId workflowId, string userId)
         {
             return new QueryEnhancerBuilder()
                 .WithType(QueryEnhancerStrategy.AUTO_QUERY)
@@ -42,7 +41,7 @@ namespace RAGNET.Application.Mappers
         }
 
         // HyDECreationDTO -> QueryEnhancer via Builder style (adapted)
-        public static QueryEnhancer ToQueryEnhancer(this HyDECreationDTO dto, Guid workflowId, string userId)
+        public static QueryEnhancer ToQueryEnhancer(this HyDECreationDTO dto, WorkflowId workflowId, string userId)
         {
             return new QueryEnhancerBuilder()
                 .WithType(QueryEnhancerStrategy.HYPOTHETICAL_DOCUMENT_EMBEDDING)

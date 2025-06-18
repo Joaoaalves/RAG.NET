@@ -8,7 +8,7 @@ public class WorkflowRepository(ApplicationDbContext context) : IWorkflowReposit
 {
     private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
 
-    public async Task<Workflow?> GetByIdAsync(Guid id, string? userId)
+    public async Task<Workflow?> GetByIdAsync(WorkflowId id, string? userId)
     {
         return await _context.Workflows
             .Include(w => w.Chunker).ThenInclude(c => c!.Metas)

@@ -10,7 +10,7 @@ namespace RAGNET.Domain.Documents
 
         public Guid Id { get; private init; } = default!;
         public Text Title { get; private set; } = default!;
-        public Guid WorkflowId { get; set; }
+        public WorkflowId WorkflowId { get; set; } = null!;
         public Workflow Workflow { get; set; } = null!;
 
         public IReadOnlyCollection<Page> Pages => _pages.AsReadOnly();
@@ -19,7 +19,7 @@ namespace RAGNET.Domain.Documents
 
         private Document() { }
 
-        private Document(Guid id, Text title, Guid workflowId, IEnumerable<Page>? pages = null)
+        private Document(Guid id, Text title, WorkflowId workflowId, IEnumerable<Page>? pages = null)
         {
             Id = id;
             Title = title;
@@ -29,7 +29,7 @@ namespace RAGNET.Domain.Documents
                 _pages.AddRange(pages);
         }
 
-        public static Document Create(Text title, Guid workflowId, Guid? id = null, IEnumerable<Page>? pages = null)
+        public static Document Create(Text title, WorkflowId workflowId, Guid? id = null, IEnumerable<Page>? pages = null)
         {
             return new Document(id ?? Guid.NewGuid(), title, workflowId, pages);
         }

@@ -1,4 +1,3 @@
-using RAGNET.Domain.Enums;
 using RAGNET.Domain.SharedKernel.Metas;
 using RAGNET.Domain.Workflows;
 
@@ -8,7 +7,7 @@ namespace RAGNET.Domain.QueryEnhancers
     {
         private Guid _id = Guid.NewGuid();
         private QueryEnhancerStrategy _type = QueryEnhancerStrategy.AUTO_QUERY;
-        private Guid _workflowId = default!;
+        private WorkflowId _workflowId = default!;
         private string _userId = string.Empty;
         private string _prompt = string.Empty;
         private int _maxQueries = 10;
@@ -27,7 +26,7 @@ namespace RAGNET.Domain.QueryEnhancers
             return this;
         }
 
-        public QueryEnhancerBuilder WithWorkflowId(Guid workflowId)
+        public QueryEnhancerBuilder WithWorkflowId(WorkflowId workflowId)
         {
             _workflowId = workflowId;
             return this;

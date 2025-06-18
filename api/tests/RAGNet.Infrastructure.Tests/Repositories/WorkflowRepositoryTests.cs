@@ -27,7 +27,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
         public async Task ShouldCreateWithoutEmbeddingProvider()
         {
             // Arrange
-            var workflowId = Guid.NewGuid();
+            var workflowId = new WorkflowId(Guid.NewGuid());
             var workflow = new WorkflowBuilder()
                 .WithName("Name")
                 .ForUser(It.IsAny<Guid>().ToString())
@@ -55,7 +55,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
                 vectorSize: 1000
             );
 
-            var workflowId = Guid.NewGuid();
+            var workflowId = new WorkflowId(Guid.NewGuid());
             var workflow = new WorkflowBuilder()
                 .WithName("Name")
                 .ForUser(It.IsAny<Guid>().ToString())
@@ -85,7 +85,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
                 vectorSize: 1000
             );
 
-            var workflowId = Guid.NewGuid();
+            var workflowId = new WorkflowId(Guid.NewGuid());
             var workflow = new WorkflowBuilder()
                 .WithName("Name")
                 .ForUser(It.IsAny<Guid>().ToString())
@@ -115,7 +115,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
                 vectorSize: 1000
             );
 
-            var workflowId = Guid.NewGuid();
+            var workflowId = new WorkflowId(Guid.NewGuid());
             var workflow = new WorkflowBuilder()
                 .WithName("Name")
                 .ForUser(It.IsAny<Guid>().ToString())

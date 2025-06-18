@@ -70,10 +70,9 @@ namespace RAGNET.Domain.Workflows
             return this;
         }
 
-        public Workflow Build(Guid id)
+        public Workflow Build(WorkflowId? id)
         {
             return Workflow.Create(
-                id,
                 _name,
                 _description,
                 _userId,
@@ -82,6 +81,7 @@ namespace RAGNET.Domain.Workflows
                 _conversationProvider,
                 _embeddingProvider,
                 _chunker,
+                id ?? new WorkflowId(Guid.NewGuid()),
                 _filter
             );
         }

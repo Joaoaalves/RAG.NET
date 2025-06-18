@@ -17,7 +17,7 @@ namespace RAGNET.Domain.Workflows
         private readonly List<QueryEnhancer> _queryEnhancers = [];
         private readonly List<Ranker> _rankers = [];
 
-        public Guid Id { get; private init; } = default!;
+        public WorkflowId Id { get; private init; } = default!;
         public string Name { get; private set; } = string.Empty;
         public string Description { get; private set; } = string.Empty;
         public bool IsActive { get; private set; }
@@ -42,7 +42,7 @@ namespace RAGNET.Domain.Workflows
         private Workflow() { }
 
         private Workflow(
-            Guid id,
+            WorkflowId id,
             string name,
             string description,
             string userId,
@@ -67,7 +67,6 @@ namespace RAGNET.Domain.Workflows
         }
 
         public static Workflow Create(
-            Guid id,
             string name,
             string description,
             string userId,
@@ -76,10 +75,11 @@ namespace RAGNET.Domain.Workflows
             ConversationProviderConfig conversationProviderConfig,
             EmbeddingProviderConfig embeddingProviderConfig,
             Chunker chunker,
+            WorkflowId? id = null,
             Filter? filter = null)
         {
             return new Workflow(
-                id,
+                id ?? new WorkflowId(Guid.NewGuid()),
                 name,
                 description,
                 userId,

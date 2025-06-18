@@ -5,6 +5,7 @@ using RAGNET.Domain.Documents;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.Documents.Pages;
 using RAGNET.Infrastructure.DocumentProcessors;
+using RAGNET.Domain.Workflows;
 
 
 namespace tests.RAGNet.Infrastructure.Tests.Adapters
@@ -28,7 +29,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
         {
             // Arrange
             var title = "Documento de Teste";
-            var workflowId = Guid.NewGuid();
+            var workflowId = new WorkflowId(Guid.NewGuid());
             var pages = new List<string> { "Page 1", "Page 2", "Page 3" };
             var docId = Guid.NewGuid();
 

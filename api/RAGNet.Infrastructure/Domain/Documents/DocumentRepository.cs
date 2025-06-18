@@ -24,7 +24,7 @@ namespace RAGNET.Infrastructure.Domain.Documents
             return Task.CompletedTask;
         }
 
-        public Task<Document?> GetByIdAsync(Guid id, Guid workflowId)
+        public Task<Document?> GetByIdAsync(Guid id, WorkflowId workflowId)
         {
             return _context.Documents
                 .Include(d => d.Pages)

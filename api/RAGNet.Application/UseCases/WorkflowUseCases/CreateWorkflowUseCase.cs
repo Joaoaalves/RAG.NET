@@ -12,7 +12,7 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
 {
     public interface ICreateWorkflowUseCase
     {
-        Task<Guid> Execute(WorkflowCreationDTO dto, User user);
+        Task<WorkflowId> Execute(WorkflowCreationDTO dto, User user);
     }
     public class CreateWorkflowUseCase(IWorkflowRepository workflowRepository,
         IChunkerRepository chunkerRepository,
@@ -27,25 +27,25 @@ namespace RAGNET.Application.UseCases.WorkflowUseCases
         private readonly IEmbeddingProviderResolver _embeddingProviderResolver = embeddingProviderResolver;
         private readonly IConversationProviderResolver _conversationProviderResolver = conversationProviderResolver;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        public async Task<Guid> Execute(WorkflowCreationDTO dto, User user)
+        public async Task<WorkflowId> Execute(WorkflowCreationDTO dto, User user)
         {
-            var workflowId = Guid.NewGuid();
+            var workflowId = new WorkflowId(Guid.NewGuid());
 
             var embeddingModel = _embeddingProviderResolver.Resolve(
-                dto.EmbeddingProvider.ToEmbeddingProviderConfig(workflowId)
+                dto.EmbeddingProvider.ToEmbeddingProviderConfig()
             );
 
             var vectorSize = embeddingModel.VectorSize;
 
             _conversationProviderResolver.Resolve(
-                dto.ConversationProvider.ToConversationProviderConfig(workflowId)
+                dto.ConversationProvider.ToConversationProviderConfig()
             );
 
             // Conversation Provider Config
-            var conversationProvider = dto.ConversationProvider.ToConversationProviderConfig(workflowId);
+            var conversationProvider = dto.ConversationProvider.ToConversationProviderConfig();
 
             // Embedding Provider Config
-            var embeddingProvider = dto.EmbeddingProvider.ToEmbeddingProviderConfig(workflowId, vectorSize);
+            var embeddingProvider = dto.EmbeddingProvider.ToEmbeddingProviderConfig(vectorSize);
 
             // Chunker
             var chunker = dto.ToChunkerFromWorkflowCreationDTO(workflowId, user.Id);

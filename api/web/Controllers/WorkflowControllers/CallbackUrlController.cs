@@ -6,6 +6,7 @@ using RAGNET.Application.DTOs.CallbackUrl;
 using RAGNET.Application.UseCases.CallbackUrlUseCases;
 
 using RAGNET.Domain.Users;
+using RAGNET.Domain.Workflows;
 
 namespace web.Controllers.WorkflowControllers
 {
@@ -29,7 +30,7 @@ namespace web.Controllers.WorkflowControllers
             try
             {
                 var user = await _userManager.GetUserAsync(User) ?? throw new Exception();
-                var callbackUrl = await _addCallbackUrlUseCase.Execute(dto, workflowId, user.Id);
+                var callbackUrl = await _addCallbackUrlUseCase.Execute(dto, new WorkflowId(workflowId), user.Id);
 
                 return Ok(new { url = callbackUrl });
             }
@@ -47,7 +48,7 @@ namespace web.Controllers.WorkflowControllers
             {
                 var user = await _userManager.GetUserAsync(User) ?? throw new Exception();
 
-                await _updateCallbackUrlUseCase.Execute(dto, callbackId, workflowId, user.Id);
+                await _updateCallbackUrlUseCase.Execute(dto, callbackId, new WorkflowId(workflowId), user.Id);
 
                 return Ok(new
                 {
@@ -69,7 +70,7 @@ namespace web.Controllers.WorkflowControllers
             {
                 var user = await _userManager.GetUserAsync(User) ?? throw new Exception();
 
-                var id = await _deleteCallbackUrlUseCase.Execute(callbackId, workflowId, user.Id);
+                var id = await _deleteCallbackUrlUseCase.Execute(callbackId, new WorkflowId(workflowId), user.Id);
                 return Ok(new { Message = "Deleted successfully", Id = callbackId });
             }
             catch (Exception exc)

@@ -11,7 +11,7 @@ namespace RAGNET.Domain.Filters
         public Guid Id { get; set; }
         public FilterStrategyEnum Strategy { get; private set; }
         public Workflow Workflow { get; private set; } = null!;
-        public Guid WorkflowId { get; set; }
+        public WorkflowId WorkflowId { get; set; } = null!;
         public string UserId { get; set; } = String.Empty;
         public int MaxItems { get; private set; } = 5;
         public bool IsEnabled { get; private set; } = false;
@@ -23,7 +23,7 @@ namespace RAGNET.Domain.Filters
         private Filter(
             Guid id,
             FilterStrategyEnum strategy,
-            Guid workflowId,
+            WorkflowId workflowId,
             string userId,
             int maxItems = 5,
             IEnumerable<Meta>? metas = null,
@@ -43,7 +43,7 @@ namespace RAGNET.Domain.Filters
         public static Filter Create(
             Guid id,
             FilterStrategyEnum strategy,
-            Guid workflowId,
+            WorkflowId workflowId,
             string userId,
             int maxItems = 5,
             IEnumerable<Meta>? metas = null,
