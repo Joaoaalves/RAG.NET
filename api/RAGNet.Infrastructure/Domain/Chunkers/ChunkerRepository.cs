@@ -24,14 +24,14 @@ namespace RAGNET.Infrastructure.Domain.Chunkers
             return Task.CompletedTask;
         }
 
-        public async Task<Chunker?> GetByIdAsync(Guid id, Guid workflowId, string userId)
+        public async Task<Chunker?> GetByIdAsync(ChunkerId id, Guid workflowId, string userId)
         {
             return await _context.Chunkers
                 .Include(c => c.Metas)
                 .FirstOrDefaultAsync(c => c.Id == id && c.WorkflowId == workflowId && c.UserId == userId);
         }
 
-        public async Task<IEnumerable<Chunker>> GetWithMetaAsync(Guid id)
+        public async Task<IEnumerable<Chunker>> GetWithMetaAsync(ChunkerId id)
         {
             return await _context.Chunkers
                 .Include(c => c.Metas)

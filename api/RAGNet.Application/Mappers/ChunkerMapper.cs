@@ -11,7 +11,6 @@ namespace RAGNET.Application.Mappers
         public static Chunker ToChunkerFromWorkflowCreationDTO(this WorkflowCreationDTO dto, Guid workflowId, string userId)
         {
             return Chunker.Create(
-                id: Guid.NewGuid(),
                 strategyType: dto.Strategy,
                 workflowId: workflowId,
                 userId: userId,
