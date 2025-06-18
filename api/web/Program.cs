@@ -50,10 +50,10 @@ if (isDevelopment)
 
 app.Use(async (context, next) =>
 {
-    var origin = context.Request.Headers["Origin"].ToString();
+    var origin = context.Request.Headers.Origin.ToString();
 
     if (!string.IsNullOrEmpty(origin) &&
-        (origin == "http://localhost:4200" || origin == "http://192.168.0.52:4200"))
+        (origin == "http://localhost:4200"))
     {
         context.Items["CorsPolicyName"] = "FrontendPolicy";
     }

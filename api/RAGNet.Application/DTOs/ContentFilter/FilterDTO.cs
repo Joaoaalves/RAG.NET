@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using RAGNET.Application.QueryResultFilters;
+using RAGNET.Application.UserQueriesResultFilters;
 using RAGNET.Domain.Filters;
 
 namespace RAGNET.Application.DTOs.ContentFilter

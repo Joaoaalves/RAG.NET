@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using RAGNET.Domain.Filters;
 
-namespace RAGNET.Application.QueryResultFilters
+namespace RAGNET.Application.UserQueriesResultFilters
 {
     public class QueryResultFilterStrategyConverter : JsonConverter<FilterStrategyEnum>
     {

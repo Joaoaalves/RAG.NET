@@ -1,6 +1,6 @@
 using RAGNET.Application.DTOs.Query;
 using RAGNET.Application.Providers;
-using RAGNET.Application.QueryEnhancers;
+using RAGNET.Application.UserQueriesEnhancers;
 
 using RAGNET.Domain.Workflows;
 

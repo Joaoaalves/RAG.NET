@@ -3,7 +3,7 @@ using RAGNET.Domain.Workflows;
 using RAGNET.Application.Chunkers;
 using RAGNET.Application.DTOs.Query;
 using RAGNET.Application.Providers;
-using RAGNET.Application.Query;
+using RAGNET.Application.UserQueries;
 
 namespace RAGNET.Application.UseCases.Query
 {

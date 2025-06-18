@@ -1,8 +1,8 @@
 using System.Text.Json;
 using RAGNET.Application.Providers;
-using RAGNET.Application.Query;
+using RAGNET.Application.UserQueries;
 
-namespace RAGNET.Application.QueryEnhancers.Strategies
+namespace RAGNET.Application.UserQueriesEnhancers.Strategies
 {
     public class AutoQueryStrategy(string autoQueryPrompt, int maxQueries, string guidance, IChatCompletionService completionService) : IQueryEnhancerService
     {

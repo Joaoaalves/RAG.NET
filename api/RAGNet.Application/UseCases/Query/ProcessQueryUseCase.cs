@@ -3,7 +3,7 @@ using RAGNET.Domain.Workflows;
 using RAGNET.Application.ApiKeys;
 using RAGNET.Application.DTOs.Query;
 using RAGNET.Application.Mappers;
-using RAGNET.Application.Query;
+using RAGNET.Application.UserQueries;
 using RAGNET.Application.UseCases.QueryEnhancerUseCases;
 
 namespace RAGNET.Application.UseCases.Query

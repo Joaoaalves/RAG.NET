@@ -13,6 +13,8 @@ using RAGNET.Application.DTOs.Workflow;
 using RAGNET.Application.UseCases.WorkflowUseCases;
 using RAGNET.Application.Filters;
 using RAGNET.Application.Mappers;
+using RAGNET.Application.Workflows.CreateWorkflow;
+using RAGNET.Infrastructure.Processing;
 
 
 namespace web.Controllers.WorkflowControllers
@@ -21,19 +23,18 @@ namespace web.Controllers.WorkflowControllers
     [ApiController]
     public class WorkflowController(
         IGetUserWorkflowsUseCase getUserWorkflowsUseCase,
-        ICreateWorkflowUseCase createWorkflowUseCase,
         IDeleteWorkflowUseCase deleteWorkflowUseCase,
         IGetWorkflowUseCase getWorkflowUseCase,
         IUpdateWorkflowUseCase updateWorkflowUseCase,
-        UserManager<User> userManager) : ControllerBase
+        UserManager<User> userManager,
+        CommandsExecutor commandsExecutor) : ControllerBase
     {
         private readonly IGetUserWorkflowsUseCase _getUserWorkflowsUseCase = getUserWorkflowsUseCase;
-        private readonly ICreateWorkflowUseCase _createWorkflowUseCase = createWorkflowUseCase;
         private readonly IUpdateWorkflowUseCase _updateWorkflowUseCase = updateWorkflowUseCase;
         private readonly IDeleteWorkflowUseCase _deleteWorkflowUseCase = deleteWorkflowUseCase;
         private readonly IGetWorkflowUseCase _getWorkflowUseCase = getWorkflowUseCase;
         private readonly UserManager<User> _userManager = userManager;
-
+        private readonly CommandsExecutor _commandExecutor = commandsExecutor;
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> CreateWorkflow([FromBody] WorkflowCreationDTO dto)
@@ -44,7 +45,9 @@ namespace web.Controllers.WorkflowControllers
                 if (user == null)
                     return Unauthorized();
 
-                var workflowId = await _createWorkflowUseCase.Execute(dto, user);
+                var command = new CreateWorkflowCommand(dto, user);
+                var workflowId = await _commandExecutor.Execute(command);
+
                 return Ok(new { Message = "Workflow created!", WorkflowId = workflowId });
             }
             catch (InvalidEmbeddingModelException exc)
@@ -55,7 +58,6 @@ namespace web.Controllers.WorkflowControllers
             {
                 return Problem(e.Message);
             }
-
         }
 
         [HttpGet]

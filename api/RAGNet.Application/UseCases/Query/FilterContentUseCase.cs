@@ -1,8 +1,8 @@
 using RAGNET.Domain.Workflows;
 
 using RAGNET.Application.Providers;
-using RAGNET.Application.Query;
-using RAGNET.Application.QueryResultFilters;
+using RAGNET.Application.UserQueries;
+using RAGNET.Application.UserQueriesResultFilters;
 
 namespace RAGNET.Application.UseCases.Query
 {

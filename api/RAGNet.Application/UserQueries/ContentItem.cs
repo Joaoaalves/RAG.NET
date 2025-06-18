@@ -1,7 +1,7 @@
 using RAGNET.Domain.Documents.Pages;
 using RAGNET.Domain.Documents.Pages.Chunks;
 
-namespace RAGNET.Application.Query
+namespace RAGNET.Application.UserQueries
 {
     public class ContentItem
     {

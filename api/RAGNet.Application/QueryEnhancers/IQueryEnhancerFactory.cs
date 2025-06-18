@@ -2,9 +2,9 @@
 using RAGNET.Domain.QueryEnhancers;
 
 using RAGNET.Application.Providers;
-using RAGNET.Application.Query;
+using RAGNET.Application.UserQueries;
 
-namespace RAGNET.Application.QueryEnhancers
+namespace RAGNET.Application.UserQueriesEnhancers
 {
     public interface IQueryEnhancerFactory
     {

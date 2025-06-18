@@ -1,6 +1,6 @@
 using RAGNET.Domain.Filters;
 
-namespace RAGNET.Application.QueryResultFilters
+namespace RAGNET.Application.UserQueriesResultFilters
 {
     public interface IQueryResultFilterFactory
     {

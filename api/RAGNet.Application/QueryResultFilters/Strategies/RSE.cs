@@ -2,9 +2,9 @@ using System.Text.Json;
 
 
 using RAGNET.Application.Providers;
-using RAGNET.Application.Query;
+using RAGNET.Application.UserQueries;
 
-namespace RAGNET.Application.QueryResultFilters.Strategies
+namespace RAGNET.Application.UserQueriesResultFilters.Strategies
 {
     public class RSEFilterStrategy(string prompt, int maximumItems) : IQueryResultFilterService
     {

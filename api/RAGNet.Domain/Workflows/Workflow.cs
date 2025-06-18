@@ -7,6 +7,7 @@ using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.SharedKernel.Providers;
 using RAGNET.Domain.SharedKernel.URLs;
 using RAGNET.Domain.Workflows.CallbackUrls;
+using RAGNET.Domain.Workflows.Events;
 
 namespace RAGNET.Domain.Workflows
 {
@@ -64,6 +65,8 @@ namespace RAGNET.Domain.Workflows
             ConversationProviderConfig = conversationProviderConfig;
             EmbeddingProviderConfig = embeddingProviderConfig;
             Filter = filter;
+
+            this.AddDomainEvent(new WorkflowCreatedEvent(this.Id));
         }
 
         public static Workflow Create(

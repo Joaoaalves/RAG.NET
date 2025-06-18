@@ -1,4 +1,3 @@
-using MediatR;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Infrastructure.Database;
 

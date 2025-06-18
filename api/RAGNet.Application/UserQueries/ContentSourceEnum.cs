@@ -1,4 +1,4 @@
-namespace RAGNET.Application.Query
+namespace RAGNET.Application.UserQueries
 {
     public enum ContentSourceEnum
     {

@@ -1,7 +1,7 @@
 using RAGNET.Application.Providers;
-using RAGNET.Application.Query;
+using RAGNET.Application.UserQueries;
 
-namespace RAGNET.Application.QueryResultFilters
+namespace RAGNET.Application.UserQueriesResultFilters
 {
     public interface IQueryResultFilterService
     {

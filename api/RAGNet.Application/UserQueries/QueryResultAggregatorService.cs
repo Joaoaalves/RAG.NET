@@ -1,7 +1,7 @@
 
 using RAGNET.Application.Providers;
 
-namespace RAGNET.Application.Query
+namespace RAGNET.Application.UserQueries
 {
     public class QueryResultAggregatorService : IQueryResultAggregatorService
     {

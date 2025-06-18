@@ -24,7 +24,6 @@ namespace web.Configurations
 
             // Workflow
             services.AddScoped<IGetWorkflowUseCase, GetWorkflowUseCase>();
-            services.AddScoped<ICreateWorkflowUseCase, CreateWorkflowUseCase>();
             services.AddScoped<IGetUserWorkflowsUseCase, GetUserWorkflowsUseCase>();
             services.AddScoped<IDeleteWorkflowUseCase, DeleteWorkflowUseCase>();
             services.AddScoped<IUpdateWorkflowUseCase, UpdateWorkflowUseCase>();
