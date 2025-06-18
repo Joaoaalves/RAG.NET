@@ -8,7 +8,7 @@ namespace RAGNET.Domain.Filters
     {
         private readonly List<Meta> _metas = [];
 
-        public Guid Id { get; set; }
+        public FilterId Id { get; private init; } = default!;
         public FilterStrategyEnum Strategy { get; private set; }
         public Workflow Workflow { get; private set; } = null!;
         public WorkflowId WorkflowId { get; set; } = null!;
@@ -21,7 +21,7 @@ namespace RAGNET.Domain.Filters
         private Filter() { }
 
         private Filter(
-            Guid id,
+            FilterId id,
             FilterStrategyEnum strategy,
             WorkflowId workflowId,
             string userId,
@@ -41,15 +41,15 @@ namespace RAGNET.Domain.Filters
         }
 
         public static Filter Create(
-            Guid id,
             FilterStrategyEnum strategy,
             WorkflowId workflowId,
             string userId,
             int maxItems = 5,
+            FilterId? id = null,
             IEnumerable<Meta>? metas = null,
             bool isEnabled = false)
         {
-            return new Filter(id, strategy, workflowId, userId, maxItems, metas, isEnabled);
+            return new Filter(id ?? new FilterId(), strategy, workflowId, userId, maxItems, metas, isEnabled);
         }
 
         public void UpdateMetas(List<Meta> metas)

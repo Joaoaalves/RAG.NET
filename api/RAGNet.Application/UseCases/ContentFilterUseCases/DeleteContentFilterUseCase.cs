@@ -5,18 +5,21 @@ namespace RAGNET.Application.UseCases.ContentFilterUseCases
 {
     public interface IDeleteContentFilterUseCase
     {
-        Task<bool> Execute(Guid filterId, string userId);
+        Task<bool> Execute(FilterId filterId, string userId);
     }
 
     public class DeleteContentFilterUseCase(IFilterRepository repo, IUnitOfWork unitOfWork) : IDeleteContentFilterUseCase
     {
         private readonly IFilterRepository _repo = repo;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        public async Task<bool> Execute(Guid filterId, string userId)
+        public async Task<bool> Execute(FilterId filterId, string userId)
         {
             try
             {
-                var filter = _repo.GetByIdAsync(filterId, userId).Result ?? throw new Exception("Filter not found.");
+                var filter = _repo.GetByIdAsync(
+                    filterId,
+                    userId
+                ).Result ?? throw new Exception("Filter not found.");
 
                 _repo.DeleteAsync(filter, userId).Wait();
                 await _unitOfWork.CommitAsync();

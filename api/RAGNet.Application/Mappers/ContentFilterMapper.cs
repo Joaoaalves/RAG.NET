@@ -9,7 +9,6 @@ namespace RAGNET.Application.Mappers
         public static Filter ToFilter(this RSECreationDTO dto, WorkflowId workflowId, string userId)
         {
             return Filter.Create(
-                id: Guid.NewGuid(),
                 strategy: FilterStrategyEnum.RELEVANT_SEGMENT_EXTRACTION,
                 workflowId: workflowId,
                 isEnabled: dto.IsEnabled ?? false,
@@ -22,7 +21,7 @@ namespace RAGNET.Application.Mappers
         {
             return new FilterDTO
             {
-                Id = filter.Id,
+                Id = filter.Id.Value,
                 Strategy = filter.Strategy,
                 MaxItems = filter.MaxItems,
                 IsEnabled = filter.IsEnabled

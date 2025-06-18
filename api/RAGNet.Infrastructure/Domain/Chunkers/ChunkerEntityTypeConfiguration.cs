@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RAGNET.Domain.Chunkers;
-using RAGNET.Domain.Enums;
-using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Infrastructure.Domain.Chunkers
 {

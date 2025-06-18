@@ -24,7 +24,7 @@ namespace RAGNET.Infrastructure.Domain.Filters
             return Task.CompletedTask;
         }
 
-        public async Task<Filter?> GetByIdAsync(Guid id, string? userId)
+        public async Task<Filter?> GetByIdAsync(FilterId id, string? userId)
         {
             return await _context.Filters
                 .FirstOrDefaultAsync(f => f.Id == id && (userId == null || f.UserId == userId));
