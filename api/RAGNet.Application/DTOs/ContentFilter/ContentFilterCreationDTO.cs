@@ -4,5 +4,6 @@ namespace RAGNET.Application.DTOs.ContentFilter
     {
         public int MaxItems { get; set; }
         public bool? IsEnabled { get; set; } = true;
+
     }
 }

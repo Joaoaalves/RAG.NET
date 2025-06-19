@@ -4,7 +4,6 @@ using RAGNET.Application.Providers;
 using RAGNET.Domain.Chunkers;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.Workflows;
-using RAGNET.Domain.Workflows.Events;
 
 namespace RAGNET.Application.Workflows.CreateWorkflow
 {

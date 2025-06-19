@@ -2,7 +2,6 @@ using RAGNET.Domain.Users;
 using RAGNET.Domain.Workflows;
 
 using RAGNET.Application.Configuration.Commands;
-using RAGNET.Application.DTOs.Workflow;
 
 namespace RAGNET.Application.Workflows.CreateWorkflow
 {

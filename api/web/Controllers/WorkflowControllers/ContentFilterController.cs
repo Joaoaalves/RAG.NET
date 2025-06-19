@@ -1,12 +1,15 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
 using RAGNET.Application.DTOs.ContentFilter;
 using RAGNET.Application.Filters;
 using RAGNET.Application.Mappers;
 using RAGNET.Application.UseCases.ContentFilterUseCases;
+using RAGNET.Application.QueryResultFilters;
 
 using RAGNET.Domain.Users;
 using RAGNET.Domain.Workflows;
+
 
 namespace web.Controllers.WorkflowControllers
 {
@@ -36,6 +39,7 @@ namespace web.Controllers.WorkflowControllers
                     return Unauthorized();
 
                 var workflow = HttpContext.Items["Workflow"] as Workflow ?? throw new Exception("Workflow not found in context");
+
                 if (workflow.Filter != null && workflow.Filter.IsEnabled)
                 {
                     return BadRequest("Relevant Segment Extraction already enabled!");

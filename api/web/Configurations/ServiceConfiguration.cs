@@ -11,7 +11,7 @@ using RAGNET.Application.Providers;
 using RAGNET.Application.Chunkers;
 using RAGNET.Application.ApiKeys;
 using RAGNET.Application.Configuration.Validation;
-using RAGNET.Application.Workflows.Validations;
+using RAGNET.Application.Workflows.CreateWorkflow;
 
 using RAGNET.Infrastructure.Embedders;
 using RAGNET.Infrastructure.ChatCompletions;
@@ -50,10 +50,16 @@ namespace web.Configurations
             services.AddScoped<IMediator, Mediator>();
             RegisterHandlers(services, assemblies, typeof(INotificationHandler<>));
             RegisterHandlers(services, assemblies, typeof(IRequestHandler<,>));
+
             services.AddScoped<CommandsExecutor>();
+            services.AddScoped<QueriesExecutor>();
+
             services.AddScoped(typeof(IRequestPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
             services.AddValidatorsFromAssemblyContaining<CreateWorkflowCommandValidator>();
+
             services.AddScoped<IDomainEventsDispatcher, DomainEventsDispatcher>();
+
             return services;
         }
 

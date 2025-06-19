@@ -1,7 +1,7 @@
 using RAGNET.Application.DTOs.Conversation;
 using RAGNET.Application.DTOs.Embedding;
 
-namespace RAGNET.Application.DTOs.Workflow
+namespace RAGNET.Application.Workflows.UpdateWorkflow
 {
     public class WorkflowDetailsUpdateDTO
     {

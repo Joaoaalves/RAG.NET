@@ -1,7 +1,9 @@
-using RAGNET.Application.DTOs.ContentFilter;
-using RAGNET.Application.Mappers;
 using RAGNET.Domain.Filters;
 using RAGNET.Domain.SeedWork;
+
+using RAGNET.Application.DTOs.ContentFilter;
+using RAGNET.Application.Mappers;
+using RAGNET.Application.QueryResultFilters;
 
 namespace RAGNET.Application.UseCases.ContentFilterUseCases
 {

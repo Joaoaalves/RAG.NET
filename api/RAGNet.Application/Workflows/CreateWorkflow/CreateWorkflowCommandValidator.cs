@@ -1,7 +1,6 @@
 using FluentValidation;
-using RAGNET.Application.Workflows.CreateWorkflow;
 
-namespace RAGNET.Application.Workflows.Validations
+namespace RAGNET.Application.Workflows.CreateWorkflow
 {
 
     public class CreateWorkflowCommandValidator : AbstractValidator<CreateWorkflowCommand>

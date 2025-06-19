@@ -2,9 +2,9 @@ using RAGNET.Application.DTOs.ContentFilter;
 using RAGNET.Domain.Filters;
 using RAGNET.Domain.Workflows;
 
-namespace RAGNET.Application.Mappers
+namespace RAGNET.Application.QueryResultFilters
 {
-    public static class ContentFilterMapper
+    public static class QueryResultFilterMapper
     {
         public static Filter ToFilter(this RSECreationDTO dto, WorkflowId workflowId, string userId)
         {

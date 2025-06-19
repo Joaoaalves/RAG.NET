@@ -3,7 +3,6 @@ using RAGNET.Application.UseCases.ContentFilterUseCases;
 using RAGNET.Application.UseCases.Query;
 using RAGNET.Application.UseCases.QueryEnhancerUseCases;
 using RAGNET.Application.UseCases.ProviderApiKeyUseCases;
-using RAGNET.Application.UseCases.WorkflowUseCases;
 using RAGNET.Application.UseCases.Account;
 
 namespace web.Configurations
@@ -21,12 +20,6 @@ namespace web.Configurations
             services.AddScoped<IGetProviderApiKeysUseCase, GetProviderApiKeysUseCase>();
             services.AddScoped<IUpdateProviderApiKeyUseCase, UpdateProviderApiKeyUseCase>();
             services.AddScoped<IDeleteProviderApiKeyUseCase, DeleteProviderApiKeyUseCase>();
-
-            // Workflow
-            services.AddScoped<IGetWorkflowUseCase, GetWorkflowUseCase>();
-            services.AddScoped<IGetUserWorkflowsUseCase, GetUserWorkflowsUseCase>();
-            services.AddScoped<IDeleteWorkflowUseCase, DeleteWorkflowUseCase>();
-            services.AddScoped<IUpdateWorkflowUseCase, UpdateWorkflowUseCase>();
 
             // Query Enhancer
             services.AddScoped<ICreateQueryEnhancerUseCase, CreateQueryEnhancerUseCase>();

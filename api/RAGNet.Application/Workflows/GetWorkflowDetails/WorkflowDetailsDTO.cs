@@ -10,7 +10,7 @@ using RAGNET.Application.DTOs.Conversation;
 using RAGNET.Application.DTOs.Embedding;
 using RAGNET.Application.DTOs.QueryEnhancer;
 
-namespace RAGNET.Application.DTOs.Workflow
+namespace RAGNET.Application.Workflows.GetWorkflowDetails
 {
     public class WorkflowDetailsDTO
     {

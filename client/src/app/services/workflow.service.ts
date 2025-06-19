@@ -9,6 +9,7 @@ import {
   CreateWorkflowRequest,
   CreateWorkflowResponse,
   WorkflowUpdateRequest,
+  UpdateWorkflowResponse,
 } from '../models/workflow';
 import { ProviderResponse } from '../models/provider';
 import { ConversationModel, EmbeddingModel } from '../models/models';
@@ -61,8 +62,11 @@ export class WorkflowService {
     workflowId: string
   ): Observable<Workflow> {
     return this.httpClient
-      .put<Workflow>(`${this.apiUrl}/api/workflows/${workflowId}`, data)
-      .pipe(map((response) => response));
+      .put<UpdateWorkflowResponse>(
+        `${this.apiUrl}/api/workflows/${workflowId}`,
+        data
+      )
+      .pipe(map((response) => response.workflow));
   }
 
   toggleWorkflow(isActive: boolean, workflowId: string): Observable<Workflow> {

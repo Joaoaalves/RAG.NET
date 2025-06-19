@@ -9,12 +9,14 @@ using RAGNET.Infrastructure.Jobs.Queue;
 using RAGNET.Infrastructure.Jobs;
 using RAGNET.Infrastructure.Exceptions;
 
-using RAGNET.Application.DTOs.Workflow;
-using RAGNET.Application.UseCases.WorkflowUseCases;
 using RAGNET.Application.Filters;
 using RAGNET.Application.Mappers;
 using RAGNET.Application.Workflows.CreateWorkflow;
 using RAGNET.Infrastructure.Processing;
+using RAGNET.Application.Workflows.DeleteWorkflow;
+using RAGNET.Application.Workflows.GetWorkflowDetails;
+using RAGNET.Application.Workflows.UpdateWorkflow;
+using RAGNET.Application.Workflows.GetUserWorkflows;
 
 
 namespace web.Controllers.WorkflowControllers
@@ -22,19 +24,14 @@ namespace web.Controllers.WorkflowControllers
     [Route("api/workflows")]
     [ApiController]
     public class WorkflowController(
-        IGetUserWorkflowsUseCase getUserWorkflowsUseCase,
-        IDeleteWorkflowUseCase deleteWorkflowUseCase,
-        IGetWorkflowUseCase getWorkflowUseCase,
-        IUpdateWorkflowUseCase updateWorkflowUseCase,
         UserManager<User> userManager,
-        CommandsExecutor commandsExecutor) : ControllerBase
+        CommandsExecutor commandsExecutor,
+        QueriesExecutor queriesExecutor) : ControllerBase
     {
-        private readonly IGetUserWorkflowsUseCase _getUserWorkflowsUseCase = getUserWorkflowsUseCase;
-        private readonly IUpdateWorkflowUseCase _updateWorkflowUseCase = updateWorkflowUseCase;
-        private readonly IDeleteWorkflowUseCase _deleteWorkflowUseCase = deleteWorkflowUseCase;
-        private readonly IGetWorkflowUseCase _getWorkflowUseCase = getWorkflowUseCase;
         private readonly UserManager<User> _userManager = userManager;
         private readonly CommandsExecutor _commandExecutor = commandsExecutor;
+        private readonly QueriesExecutor _queriesExecutor = queriesExecutor;
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> CreateWorkflow([FromBody] WorkflowCreationDTO dto)
@@ -69,7 +66,8 @@ namespace web.Controllers.WorkflowControllers
             if (user == null)
                 return Unauthorized();
 
-            var workflows = await _getUserWorkflowsUseCase.Execute(user.Id);
+            var query = new GetUserWorkflowsQuery(user.Id);
+            var workflows = await _queriesExecutor.Execute(query);
 
             return Ok(new { Workflows = workflows });
         }
@@ -84,10 +82,13 @@ namespace web.Controllers.WorkflowControllers
 
             try
             {
-                var workflowDetails = await _getWorkflowUseCase.Execute(
+                var query = new GetWorkflowDetailsQuery(
                     new WorkflowId(id),
                     user.Id
                 );
+
+                var workflowDetails = await _queriesExecutor.Execute(query);
+
                 return Ok(workflowDetails);
             }
             catch (Exception ex)
@@ -107,20 +108,19 @@ namespace web.Controllers.WorkflowControllers
 
             try
             {
-                var workflow = await _updateWorkflowUseCase.Execute(
-                    dto,
+                var command = new UpdateWorkflowCommand(
                     new WorkflowId(id),
-                    user
+                    user.Id,
+                    dto.Name,
+                    dto.Description,
+                    dto.IsActive,
+                    dto.EmbeddingProvider,
+                    dto.ConversationProvider
                 );
 
-                return Ok(new
-                {
-                    workflow.Name,
-                    workflow.Description,
-                    workflow.IsActive,
-                    ConversationProvider = workflow.ConversationProviderConfig!.ToDTOFromConversationProviderConfig(),
-                    EmbeddingProvider = workflow.EmbeddingProviderConfig!.ToDTOFromEmbeddingProviderConfig()
-                });
+                var workflow = await _commandExecutor.Execute(command);
+
+                return Ok(new { workflow });
             }
             catch (Exception ex)
             {
@@ -138,11 +138,14 @@ namespace web.Controllers.WorkflowControllers
 
             try
             {
-                var deleted = await _deleteWorkflowUseCase.Execute(
+                var command = new DeleteWorkflowCommand(
                     new WorkflowId(id),
                     user.Id
                 );
-                return Ok(deleted);
+
+                var deleted = await _commandExecutor.Execute(command);
+
+                return Ok(new { Message = "Workflow Deleted!", WorkflowId = id });
             }
             catch (Exception ex)
             {

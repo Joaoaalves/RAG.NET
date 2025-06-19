@@ -9,10 +9,10 @@ using RAGNET.Domain.Users;
 using RAGNET.Application.DTOs.QueryEnhancer;
 using RAGNET.Application.Mappers;
 using RAGNET.Application.UseCases.QueryEnhancerUseCases;
-using RAGNET.Application.UseCases.WorkflowUseCases;
 
 using RAGNET.Domain.QueryEnhancers;
 using RAGNET.Domain.Workflows;
+using RAGNET.Application.Filters;
 
 namespace web.Controllers.WorkflowControllers
 {
@@ -20,19 +20,18 @@ namespace web.Controllers.WorkflowControllers
     [ApiController]
     public class QueryEnhancerController(
         ICreateQueryEnhancerUseCase createQueryEnhancerUseCase,
-        IGetWorkflowUseCase getWorkflowUseCase,
         IUpdateQueryEnhancerUseCase updateQueryEnhancerUseCase,
         IDeleteQueryEnhancerUseCase deleteQueryEnhancerUseCase,
         UserManager<User> userManager) : ControllerBase
     {
         readonly ICreateQueryEnhancerUseCase _createQueryEnhancerUseCase = createQueryEnhancerUseCase;
-        readonly IGetWorkflowUseCase _getWorkflowUseCase = getWorkflowUseCase;
         readonly IUpdateQueryEnhancerUseCase _updateQueryEnhancerUseCase = updateQueryEnhancerUseCase;
         readonly IDeleteQueryEnhancerUseCase _deleteQueryEnhancerUseCase = deleteQueryEnhancerUseCase;
         readonly UserManager<User> _userManager = userManager;
 
         [HttpPost("{workflowId}/query-enhancer/auto-query")]
         [Authorize]
+        [ServiceFilter(typeof(WebWorkflowFilter))]
         public async Task<IActionResult> EnableAutoQuery([FromBody] AutoQueryCreationDTO dto, [FromRoute] Guid workflowId)
         {
             try
@@ -41,10 +40,7 @@ namespace web.Controllers.WorkflowControllers
                 if (user == null)
                     return Unauthorized();
 
-                var workflow = await _getWorkflowUseCase.Execute(new WorkflowId(workflowId), user.Id);
-
-                if (workflow == null)
-                    return Unauthorized();
+                var workflow = HttpContext.Items["Workflow"] as Workflow ?? throw new Exception("Workflow not found in context");
 
                 if (workflow.QueryEnhancers.Any(qe => qe.Type == QueryEnhancerStrategy.AUTO_QUERY))
                     return BadRequest("Auto Query already enabled!");
@@ -63,6 +59,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpPut("{workflowId}/query-enhancer/auto-query")]
         [Authorize]
+        [ServiceFilter(typeof(WebWorkflowFilter))]
         public async Task<IActionResult> UpdateAutoQuery([FromBody] AutoQueryCreationDTO dto, [FromRoute] Guid workflowId)
         {
             try
@@ -71,10 +68,7 @@ namespace web.Controllers.WorkflowControllers
                 if (user == null)
                     return Unauthorized();
 
-                var workflow = await _getWorkflowUseCase.Execute(new WorkflowId(workflowId), user.Id);
-
-                if (workflow == null)
-                    return Unauthorized();
+                var workflow = HttpContext.Items["Workflow"] as Workflow ?? throw new Exception("Workflow not found in context");
 
                 var qe = workflow.QueryEnhancers.FirstOrDefault(qe => qe.Type == QueryEnhancerStrategy.AUTO_QUERY);
 
@@ -82,7 +76,7 @@ namespace web.Controllers.WorkflowControllers
                     return BadRequest("Auto Query not enabled!");
 
                 var queryEnhancer = await _updateQueryEnhancerUseCase.Execute(
-                    new QueryEnhancerId(qe.Id),
+                    qe.Id,
                     dto.ToQueryEnhancer(new WorkflowId(workflowId), user.Id),
                     user.Id
                 );
@@ -97,6 +91,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpDelete("{workflowId}/query-enhancer/auto-query")]
         [Authorize]
+        [ServiceFilter(typeof(WebWorkflowFilter))]
         public async Task<IActionResult> DisableAutoQuery([FromRoute] Guid workflowId)
         {
             try
@@ -105,10 +100,7 @@ namespace web.Controllers.WorkflowControllers
                 if (user == null)
                     return Unauthorized();
 
-                var workflow = await _getWorkflowUseCase.Execute(new WorkflowId(workflowId), user.Id);
-
-                if (workflow == null)
-                    return Unauthorized();
+                var workflow = HttpContext.Items["Workflow"] as Workflow ?? throw new Exception("Workflow not found in context");
 
                 var qe = workflow.QueryEnhancers.FirstOrDefault(qe => qe.Type == QueryEnhancerStrategy.AUTO_QUERY);
 
@@ -116,7 +108,7 @@ namespace web.Controllers.WorkflowControllers
                     return BadRequest("Auto Query not enabled!");
 
                 var result = await _deleteQueryEnhancerUseCase.Execute(
-                    new QueryEnhancerId(qe.Id),
+                    qe.Id,
                     user.Id
                 );
 
@@ -133,6 +125,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpPost("{workflowId}/query-enhancer/hyde")]
         [Authorize]
+        [ServiceFilter(typeof(WebWorkflowFilter))]
         public async Task<IActionResult> EnableHyde([FromBody] HyDECreationDTO dto, [FromRoute] Guid workflowId)
         {
             try
@@ -141,17 +134,14 @@ namespace web.Controllers.WorkflowControllers
                 if (user == null)
                     return Unauthorized();
 
-                var workflow = await _getWorkflowUseCase.Execute(new WorkflowId(workflowId), user.Id);
-
-                if (workflow == null)
-                    return Unauthorized();
+                var workflow = HttpContext.Items["Workflow"] as Workflow ?? throw new Exception("Workflow not found in context");
 
                 if (workflow.QueryEnhancers.Any(qe => qe.Type == QueryEnhancerStrategy.HYPOTHETICAL_DOCUMENT_EMBEDDING))
                     return BadRequest("HyDE already enabled!");
 
                 var queryEnhancer = await _createQueryEnhancerUseCase.Execute(
-                    dto.ToQueryEnhancer(new WorkflowId(workflowId), user.Id),
-                    new WorkflowId(workflowId),
+                    dto.ToQueryEnhancer(workflow.Id, user.Id),
+                    workflow.Id,
                     user.Id
                 );
 
@@ -165,6 +155,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpPut("{workflowId}/query-enhancer/hyde")]
         [Authorize]
+        [ServiceFilter(typeof(WebWorkflowFilter))]
         public async Task<IActionResult> UpdateHyde([FromBody] HyDECreationDTO dto, [FromRoute] Guid workflowId)
         {
             try
@@ -173,10 +164,7 @@ namespace web.Controllers.WorkflowControllers
                 if (user == null)
                     return Unauthorized();
 
-                var workflow = await _getWorkflowUseCase.Execute(new WorkflowId(workflowId), user.Id);
-
-                if (workflow == null)
-                    return Unauthorized();
+                var workflow = HttpContext.Items["Workflow"] as Workflow ?? throw new Exception("Workflow not found in context");
 
                 var qe = workflow.QueryEnhancers.FirstOrDefault(qe => qe.Type == QueryEnhancerStrategy.HYPOTHETICAL_DOCUMENT_EMBEDDING);
 
@@ -184,7 +172,7 @@ namespace web.Controllers.WorkflowControllers
                     return BadRequest("HyDE not enabled!");
 
                 var queryEnhancer = await _updateQueryEnhancerUseCase.Execute(
-                    new QueryEnhancerId(qe.Id),
+                    qe.Id,
                     dto.ToQueryEnhancer(new WorkflowId(workflowId), user.Id),
                     user.Id
                 );
@@ -199,6 +187,7 @@ namespace web.Controllers.WorkflowControllers
 
         [HttpDelete("{workflowId}/query-enhancer/hyde")]
         [Authorize]
+        [ServiceFilter(typeof(WebWorkflowFilter))]
         public async Task<IActionResult> DisableHyde([FromRoute] Guid workflowId)
         {
             try
@@ -207,10 +196,7 @@ namespace web.Controllers.WorkflowControllers
                 if (user == null)
                     return Unauthorized();
 
-                var workflow = await _getWorkflowUseCase.Execute(new WorkflowId(workflowId), user.Id);
-
-                if (workflow == null)
-                    return Unauthorized();
+                var workflow = HttpContext.Items["Workflow"] as Workflow ?? throw new Exception("Workflow not found in context");
 
                 var qe = workflow.QueryEnhancers.FirstOrDefault(qe => qe.Type == QueryEnhancerStrategy.HYPOTHETICAL_DOCUMENT_EMBEDDING);
 
@@ -218,7 +204,7 @@ namespace web.Controllers.WorkflowControllers
                     return BadRequest("HyDE not enabled!");
 
                 var result = await _deleteQueryEnhancerUseCase.Execute(
-                    new QueryEnhancerId(qe.Id),
+                    qe.Id,
                     user.Id
                 );
 

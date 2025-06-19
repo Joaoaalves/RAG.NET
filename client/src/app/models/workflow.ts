@@ -34,6 +34,10 @@ export interface CreateWorkflowRequest {
   conversationProvider: ProviderModel;
 }
 
+export interface UpdateWorkflowResponse {
+  workflow: Workflow;
+}
+
 export interface QueryEnhancerUpdateResponse {
   message: string;
   queryEnhancer: QueryEnhancer;
