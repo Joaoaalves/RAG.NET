@@ -9,7 +9,7 @@ using RAGNET.Domain.Users;
 using RAGNET.Domain.Workflows;
 using RAGNET.Domain.Workflows.CallbackUrls;
 
-namespace web.Controllers.WorkflowControllers
+namespace web.Controllers.Workflows.CallbackUrls
 {
     [Route("api/workflows/{workflowId}/callback-urls")]
     [ApiController]

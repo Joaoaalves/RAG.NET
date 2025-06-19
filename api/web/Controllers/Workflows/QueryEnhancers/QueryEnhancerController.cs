@@ -14,7 +14,7 @@ using RAGNET.Domain.QueryEnhancers;
 using RAGNET.Domain.Workflows;
 using RAGNET.Application.Filters;
 
-namespace web.Controllers.WorkflowControllers
+namespace web.Controllers.Workflows.QueryEnhancers
 {
     [Route("api/workflows")]
     [ApiController]

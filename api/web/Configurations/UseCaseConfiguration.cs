@@ -1,5 +1,5 @@
 using RAGNET.Application.UseCases.CallbackUrlUseCases;
-using RAGNET.Application.UseCases.ContentFilterUseCases;
+using RAGNET.Application.UseCases.QueryResultFilterUseCases;
 using RAGNET.Application.UseCases.Query;
 using RAGNET.Application.UseCases.QueryEnhancerUseCases;
 using RAGNET.Application.UseCases.ProviderApiKeyUseCases;
@@ -33,11 +33,11 @@ namespace web.Configurations
             // Query
             services.AddScoped<IProcessQueryUseCase, ProcessQueryUseCase>();
 
-            // Filter
+            // QueryResultFilter
             services.AddScoped<IFilterContentUseCase, FilterContentUseCase>();
-            services.AddScoped<ICreateContentFilterUseCase, CreateContentFilterUseCase>();
-            services.AddScoped<IUpdateContentFilterUseCase, UpdateContentFilterUseCase>();
-            services.AddScoped<IDeleteContentFilterUseCase, DeleteContentFilterUseCase>();
+            services.AddScoped<ICreateQueryResultFilterUseCase, CreateQueryResultFilterUseCase>();
+            services.AddScoped<IUpdateQueryResultFilterUseCase, UpdateQueryResultFilterUseCase>();
+            services.AddScoped<IDeleteQueryResultFilterUseCase, DeleteQueryResultFilterUseCase>();
 
             // Callback URL
             services.AddScoped<IAddCallbackUrlUseCase, AddCallbackUrlUseCase>();

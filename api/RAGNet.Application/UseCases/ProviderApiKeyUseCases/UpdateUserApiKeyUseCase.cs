@@ -34,12 +34,12 @@ namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
                 var userApiKey = await _providerApiKeyRepository.GetByIdAsync(providerId, userId) ?? throw new Exception("User API key not found");
 
                 var encryptedApiKey = _cryptoService.Encrypt(dto.ApiKey);
-                var policy = _providerPolicyFactory.GetPolicy(userApiKey.Provider.Id);
+                var policy = _providerPolicyFactory.GetPolicy(userApiKey.Provider.ProviderType);
 
                 policy.Validate(dto.ApiKey);
 
                 userApiKey.Provider = new Provider(
-                    userApiKey.Provider.Id,
+                    userApiKey.Provider.ProviderType,
                     encryptedApiKey,
                     policy,
                     false

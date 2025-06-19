@@ -1,32 +1,32 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using RAGNET.Application.DTOs.ContentFilter;
+using RAGNET.Application.DTOs.QueryResultFilter;
 using RAGNET.Application.Filters;
 using RAGNET.Application.Mappers;
-using RAGNET.Application.UseCases.ContentFilterUseCases;
+using RAGNET.Application.UseCases.QueryResultFilterUseCases;
 using RAGNET.Application.QueryResultFilters;
 
 using RAGNET.Domain.Users;
 using RAGNET.Domain.Workflows;
 
 
-namespace web.Controllers.WorkflowControllers
+namespace web.Controllers.Workflows.QueryResultFilters
 {
     [Route("api/workflows")]
     [ApiController]
-    public class ContentFilterController(
-        ICreateContentFilterUseCase createContentFilterUseCase,
-        IUpdateContentFilterUseCase updateContentFilterUseCase,
-        IDeleteContentFilterUseCase deleteContentFilterUseCase,
+    public class QueryResultFilterController(
+        ICreateQueryResultFilterUseCase createQueryResultFilterUseCase,
+        IUpdateQueryResultFilterUseCase updateQueryResultFilterUseCase,
+        IDeleteQueryResultFilterUseCase deleteQueryResultFilterUseCase,
         UserManager<User> userManager
     ) : ControllerBase
     {
         readonly UserManager<User> _userManager = userManager;
 
-        readonly ICreateContentFilterUseCase _createContentFilterUseCase = createContentFilterUseCase;
-        readonly IUpdateContentFilterUseCase _updateContentFilterUseCase = updateContentFilterUseCase;
-        readonly IDeleteContentFilterUseCase _deleteContentFilterUseCase = deleteContentFilterUseCase;
+        readonly ICreateQueryResultFilterUseCase _createQueryResultFilterUseCase = createQueryResultFilterUseCase;
+        readonly IUpdateQueryResultFilterUseCase _updateQueryResultFilterUseCase = updateQueryResultFilterUseCase;
+        readonly IDeleteQueryResultFilterUseCase _deleteQueryResultFilterUseCase = deleteQueryResultFilterUseCase;
 
         [HttpPost("{workflowId}/content-filter/rse")]
         [ServiceFilter(typeof(WebWorkflowFilter))]
@@ -40,15 +40,15 @@ namespace web.Controllers.WorkflowControllers
 
                 var workflow = HttpContext.Items["Workflow"] as Workflow ?? throw new Exception("Workflow not found in context");
 
-                if (workflow.Filter != null && workflow.Filter.IsEnabled)
+                if (workflow.QueryResultFilter != null && workflow.QueryResultFilter.IsEnabled)
                 {
                     return BadRequest("Relevant Segment Extraction already enabled!");
                 }
                 var filter = dto.ToFilter(workflow.Id, user.Id);
 
-                var rse = await _createContentFilterUseCase.Execute(filter, workflow.Id, user.Id);
+                var rse = await _createQueryResultFilterUseCase.Execute(filter, workflow.Id, user.Id);
 
-                return Ok(new { Message = "Relevant Segment Extraction enabled!", Filter = rse.ToDTO() });
+                return Ok(new { Message = "Relevant Segment Extraction enabled!", QueryResultFilter = rse.ToDTO() });
             }
             catch (Exception exc)
             {
@@ -68,19 +68,19 @@ namespace web.Controllers.WorkflowControllers
 
                 var workflow = HttpContext.Items["Workflow"] as Workflow ?? throw new Exception("Workflow not found in context");
 
-                if (workflow.Filter == null)
+                if (workflow.QueryResultFilter == null)
                     return BadRequest("Relevant Segment Extraction not enabled!");
 
                 var filter = dto.ToFilter(workflow.Id, user.Id);
 
                 if (dto.IsEnabled == null)
                 {
-                    filter.SetEnableState(workflow.Filter.IsEnabled);
+                    filter.SetEnableState(workflow.QueryResultFilter.IsEnabled);
                 }
 
-                var rseDto = await _updateContentFilterUseCase.Execute(workflow.Filter.Id, filter, user.Id);
+                var rseDto = await _updateQueryResultFilterUseCase.Execute(workflow.QueryResultFilter.Id, filter, user.Id);
 
-                return Ok(new { Message = "Relevant Segment Extraction updated!", Filter = rseDto });
+                return Ok(new { Message = "Relevant Segment Extraction updated!", QueryResultFilter = rseDto });
             }
             catch (Exception exc)
             {
@@ -100,12 +100,12 @@ namespace web.Controllers.WorkflowControllers
 
                 var workflow = HttpContext.Items["Workflow"] as Workflow ?? throw new Exception("Workflow not found in context");
 
-                if (workflow.Filter == null)
+                if (workflow.QueryResultFilter == null)
                     return BadRequest("Relevant Segment Extraction not enabled!");
 
-                var rseDto = await _deleteContentFilterUseCase.Execute(workflow.Filter.Id, user.Id);
+                var rseDto = await _deleteQueryResultFilterUseCase.Execute(workflow.QueryResultFilter.Id, user.Id);
 
-                return Ok(new { Message = "Relevant Segment Extraction deleted!", Filter = rseDto });
+                return Ok(new { Message = "Relevant Segment Extraction deleted!", QueryResultFilter = rseDto });
             }
             catch (Exception exc)
             {

@@ -12,16 +12,15 @@ namespace RAGNET.Infrastructure.SeedWork
         public override IEnumerable<ValueConverterInfo> Select(Type modelClrType, Type? providerClrType = null)
         {
             foreach (var converter in base.Select(modelClrType, providerClrType))
-            {
                 yield return converter;
-            }
 
             var underlyingModelType = UnwrapNullableType(modelClrType);
             var underlyingProviderType = UnwrapNullableType(providerClrType);
 
             if (underlyingProviderType is null || underlyingProviderType == typeof(Guid))
             {
-                if (typeof(TypedIdValueBase).IsAssignableFrom(underlyingModelType))
+                if (typeof(TypedIdValueBase).IsAssignableFrom(underlyingModelType)
+                    && underlyingModelType.BaseType == typeof(TypedIdValueBase))
                 {
                     var converterType = typeof(TypedIdValueConverter<>).MakeGenericType(underlyingModelType);
 
@@ -31,7 +30,7 @@ namespace RAGNET.Infrastructure.SeedWork
                             modelClrType: modelClrType,
                             providerClrType: typeof(Guid),
                             factory: valueConverterInfo =>
-                                (ValueConverter)Activator.CreateInstance(converterType, valueConverterInfo.MappingHints)! // "!" para garantir não nulo
+                                (ValueConverter)Activator.CreateInstance(converterType, valueConverterInfo.MappingHints)!
                         )
                     );
                 }

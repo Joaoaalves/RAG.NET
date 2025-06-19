@@ -1,5 +1,5 @@
 using RAGNET.Domain.Chunkers;
-using RAGNET.Domain.Filters;
+using RAGNET.Domain.QueryResultFilters;
 using RAGNET.Domain.SharedKernel.Providers;
 
 namespace RAGNET.Domain.Workflows
@@ -14,7 +14,7 @@ namespace RAGNET.Domain.Workflows
         private Chunker _chunker = null!;
         private ConversationProviderConfig _conversationProvider = null!;
         private EmbeddingProviderConfig _embeddingProvider = null!;
-        private Filter? _filter;
+        private QueryResultFilter? _filter;
 
         public WorkflowBuilder WithName(string name)
         {
@@ -64,7 +64,7 @@ namespace RAGNET.Domain.Workflows
             return this;
         }
 
-        public WorkflowBuilder WithFilter(Filter? filter)
+        public WorkflowBuilder WithFilter(QueryResultFilter? filter)
         {
             _filter = filter;
             return this;

@@ -21,7 +21,7 @@ namespace RAGNET.Application.Mappers
             return new ProviderApiKeyDTO
             {
                 Id = userApiKey.Id.Value,
-                ProviderId = prov.Id,
+                ProviderId = prov.ProviderType,
                 Name = prov.Name,
                 Pattern = prov.Pattern,
                 Prefix = prov.Prefix,

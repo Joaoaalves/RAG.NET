@@ -1,22 +1,22 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using RAGNET.Domain.Filters;
+using RAGNET.Domain.QueryResultFilters;
 
 namespace RAGNET.Application.UserQueriesResultFilters
 {
-    public class QueryResultFilterStrategyConverter : JsonConverter<FilterStrategyEnum>
+    public class QueryResultFilterStrategyConverter : JsonConverter<QueryResultFilterStrategyEnum>
     {
-        public override FilterStrategyEnum Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override QueryResultFilterStrategyEnum Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var value = reader.GetString();
             return value switch
             {
-                "Relevant Segment Extraction" => FilterStrategyEnum.RELEVANT_SEGMENT_EXTRACTION,
-                _ => throw new ArgumentOutOfRangeException("Invalid Filter Strategy.")
+                "Relevant Segment Extraction" => QueryResultFilterStrategyEnum.RELEVANT_SEGMENT_EXTRACTION,
+                _ => throw new ArgumentOutOfRangeException("Invalid QueryResultFilter Strategy.")
             };
         }
 
-        public override void Write(Utf8JsonWriter writer, FilterStrategyEnum value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, QueryResultFilterStrategyEnum value, JsonSerializerOptions options)
         {
             var stringValue = value.ToString();
             writer.WriteStringValue(stringValue);

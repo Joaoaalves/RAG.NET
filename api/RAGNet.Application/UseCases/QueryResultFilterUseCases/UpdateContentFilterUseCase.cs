@@ -1,29 +1,29 @@
-using RAGNET.Domain.Filters;
+using RAGNET.Domain.QueryResultFilters;
 using RAGNET.Domain.SeedWork;
 
-using RAGNET.Application.DTOs.ContentFilter;
+using RAGNET.Application.DTOs.QueryResultFilter;
 using RAGNET.Application.Mappers;
 using RAGNET.Application.QueryResultFilters;
 
-namespace RAGNET.Application.UseCases.ContentFilterUseCases
+namespace RAGNET.Application.UseCases.QueryResultFilterUseCases
 {
-    public interface IUpdateContentFilterUseCase
+    public interface IUpdateQueryResultFilterUseCase
     {
-        Task<FilterDTO> Execute(FilterId filterId, Filter data, string userId);
+        Task<QueryResultFilterDTO> Execute(QueryResultFilterId filterId, QueryResultFilter data, string userId);
     }
 
-    public class UpdateContentFilterUseCase(IFilterRepository _repo, IUnitOfWork unitOfWork) : IUpdateContentFilterUseCase
+    public class UpdateQueryResultFilterUseCase(IQueryResultFilterRepository _repo, IUnitOfWork unitOfWork) : IUpdateQueryResultFilterUseCase
     {
-        private readonly IFilterRepository _repo = _repo;
+        private readonly IQueryResultFilterRepository _repo = _repo;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        public async Task<FilterDTO> Execute(FilterId filterId, Filter data, string userId)
+        public async Task<QueryResultFilterDTO> Execute(QueryResultFilterId filterId, QueryResultFilter data, string userId)
         {
             try
             {
                 var filter = await _repo.GetByIdAsync(
                     filterId,
                     userId
-                ) ?? throw new Exception("Filter not found.");
+                ) ?? throw new Exception("QueryResultFilter not found.");
 
                 filter.UpdateMaxItems(data.MaxItems);
                 filter.UpdateMetas([.. data.Metas]);

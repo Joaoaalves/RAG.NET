@@ -13,7 +13,7 @@ public class WorkflowRepository(ApplicationDbContext context) : IWorkflowReposit
         return await _context.Workflows
             .Include(w => w.Chunker).ThenInclude(c => c!.Metas)
             .Include(w => w.QueryEnhancers).ThenInclude(q => q.Metas)
-            .Include(w => w.Filter)!.ThenInclude(f => f!.Metas)
+            .Include(w => w.QueryResultFilter)!.ThenInclude(f => f!.Metas)
             .Include(w => w.Rankers).ThenInclude(r => r.Metas)
             .Include(w => w.ConversationProviderConfig)
             .Include(w => w.Documents)
@@ -27,7 +27,7 @@ public class WorkflowRepository(ApplicationDbContext context) : IWorkflowReposit
         return await _context.Workflows
             .Include(w => w.Chunker).ThenInclude(c => c!.Metas)
             .Include(w => w.QueryEnhancers).ThenInclude(q => q.Metas)
-            .Include(w => w.Filter)!.ThenInclude(f => f!.Metas)
+            .Include(w => w.QueryResultFilter)!.ThenInclude(f => f!.Metas)
             .Include(w => w.Rankers).ThenInclude(r => r.Metas)
             .Include(w => w.ConversationProviderConfig)
             .Include(w => w.Documents)
@@ -68,7 +68,7 @@ public class WorkflowRepository(ApplicationDbContext context) : IWorkflowReposit
         return await _context.Workflows
             .Include(w => w.Chunker).ThenInclude(c => c!.Metas)
             .Include(w => w.QueryEnhancers).ThenInclude(q => q.Metas)
-            .Include(w => w.Filter)!.ThenInclude(f => f!.Metas)
+            .Include(w => w.QueryResultFilter)!.ThenInclude(f => f!.Metas)
             .Include(w => w.Rankers).ThenInclude(r => r.Metas)
             .Include(w => w.ConversationProviderConfig)
             .Include(w => w.EmbeddingProviderConfig)
@@ -82,7 +82,7 @@ public class WorkflowRepository(ApplicationDbContext context) : IWorkflowReposit
         return await _context.Workflows
             .Include(w => w.Chunker).ThenInclude(c => c!.Metas)
             .Include(w => w.QueryEnhancers).ThenInclude(q => q.Metas)
-            .Include(w => w.Filter)!.ThenInclude(f => f!.Metas)
+            .Include(w => w.QueryResultFilter)!.ThenInclude(f => f!.Metas)
             .Include(w => w.Rankers).ThenInclude(r => r.Metas)
             .Include(w => w.ConversationProviderConfig)
             .Include(w => w.EmbeddingProviderConfig)

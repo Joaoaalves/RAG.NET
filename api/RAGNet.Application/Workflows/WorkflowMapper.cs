@@ -33,7 +33,7 @@ namespace RAGNET.Application.Workflows
                 Settings = chunkerSettings,
                 EmbeddingProvider = workflow.EmbeddingProviderConfig.ToDTOFromEmbeddingProviderConfig(),
                 ConversationProvider = workflow.ConversationProviderConfig.ToDTOFromConversationProviderConfig(),
-                Filter = workflow.Filter?.ToDTO(),
+                QueryResultFilter = workflow.QueryResultFilter?.ToDTO(),
                 CallbackUrls = workflow.CallbackUrls.ToDTOList() ?? [],
                 QueryEnhancers = workflow.QueryEnhancers.ToDTOList() ?? []
             };

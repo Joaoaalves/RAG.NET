@@ -19,7 +19,7 @@ using RAGNET.Application.Workflows.UpdateWorkflow;
 using RAGNET.Application.Workflows.GetUserWorkflows;
 
 
-namespace web.Controllers.WorkflowControllers
+namespace web.Controllers.Workflows
 {
     [Route("api/workflows")]
     [ApiController]

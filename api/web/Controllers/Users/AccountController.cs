@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RAGNET.Application.DTOs.Account;
 using RAGNET.Application.UseCases.Account;
 
-namespace web.Controllers
+namespace web.Controllers.Users
 {
     [ApiController]
     [Route("/api/")]

@@ -5,7 +5,7 @@ namespace RAGNET.Domain.ProvidersApiKeys
 {
     public class ProviderApiKey : Entity, IUserOwned
     {
-        public ProviderApiKeyId Id { get; private init; } = default!;
+        public ProviderApiKeyId Id { get; private set; } = default!;
         public Provider Provider { get; set; } = null!;
         public string UserId { get; set; } = String.Empty;
 

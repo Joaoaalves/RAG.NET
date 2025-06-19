@@ -1,4 +1,4 @@
-using RAGNET.Domain.Filters;
+using RAGNET.Domain.QueryResultFilters;
 
 using RAGNET.Application.Providers;
 using RAGNET.Application.UserQueriesResultFilters.Strategies;
@@ -8,7 +8,7 @@ namespace RAGNET.Application.UserQueriesResultFilters
     public class QueryResultFilterFactory(IPromptService promptService) : IQueryResultFilterFactory
     {
         private readonly IPromptService _promptService = promptService;
-        public IQueryResultFilterService CreateContentFilter(Filter filter)
+        public IQueryResultFilterService CreateQueryResultFilter(QueryResultFilter filter)
         {
             int maximumItems = 5;
             if (filter.Metas != null && filter.Metas.Count != 0)
@@ -20,7 +20,7 @@ namespace RAGNET.Application.UserQueriesResultFilters
 
             return filter.Strategy switch
             {
-                FilterStrategyEnum.RELEVANT_SEGMENT_EXTRACTION => new RSEFilterStrategy(
+                QueryResultFilterStrategyEnum.RELEVANT_SEGMENT_EXTRACTION => new RSEFilterStrategy(
                     _promptService.GetPrompt("Filters", "rse"),
                     maximumItems
                 ),

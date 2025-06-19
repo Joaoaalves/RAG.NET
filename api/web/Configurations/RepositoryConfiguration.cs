@@ -1,6 +1,6 @@
 using RAGNET.Domain.Chunkers;
 using RAGNET.Domain.Documents;
-using RAGNET.Domain.Filters;
+using RAGNET.Domain.QueryResultFilters;
 using RAGNET.Domain.ProvidersApiKeys;
 using RAGNET.Domain.QueryEnhancers;
 using RAGNET.Domain.Rankers;
@@ -13,7 +13,7 @@ using RAGNET.Infrastructure.Domain.ProviderApiKeys;
 using RAGNET.Infrastructure.Domain.QueryEnhancers;
 using RAGNET.Infrastructure.Domain.Rankers;
 using RAGNET.Infrastructure.Domain.Workflows;
-using RAGNET.Infrastructure.Domain.Filters;
+using RAGNET.Infrastructure.Domain.QueryResultFilters;
 using RAGNET.Infrastructure.Domain.Workflows.CallbackUrls;
 using RAGNET.Domain.Documents.Pages.Chunks;
 using RAGNET.Infrastructure.Domain.Documents.Pages.Chunks;
@@ -30,7 +30,7 @@ namespace web.Configurations
             services.AddScoped<IProviderApiKeyRepository, ProviderApiKeyRepository>();
             services.AddScoped<IChunkerRepository, ChunkerRepository>();
             services.AddScoped<IQueryEnhancerRepository, QueryEnhancerRepository>();
-            services.AddScoped<IFilterRepository, FilterRepository>();
+            services.AddScoped<IQueryResultFilterRepository, QueryResultFilterRepository>();
             services.AddScoped<IRankerRepository, RankerRepository>();
             services.AddScoped<IChunkRepository, ChunkRepository>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();

@@ -1,13 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RAGNET.Domain.Filters;
-using RAGNET.Domain.Workflows;
+using RAGNET.Domain.QueryResultFilters;
 
-namespace RAGNET.Infrastructure.Domain.Filters
+namespace RAGNET.Infrastructure.Domain.QueryResultFilters
 {
-    internal sealed class FilterEntityTypeConfiguration : IEntityTypeConfiguration<Filter>
+    internal sealed class FilterEntityTypeConfiguration : IEntityTypeConfiguration<QueryResultFilter>
     {
-        public void Configure(EntityTypeBuilder<Filter> builder)
+        public void Configure(EntityTypeBuilder<QueryResultFilter> builder)
         {
             builder.ToTable("Filters");
 

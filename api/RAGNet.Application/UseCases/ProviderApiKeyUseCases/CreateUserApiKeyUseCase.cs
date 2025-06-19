@@ -33,7 +33,6 @@ namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
 
                 // Create encrypted provider
                 var provider = new Provider(providerId: dto.Provider, apiKeyValue: encryptedApiKey, validate: false);
-
                 var providerApiKey = ProviderApiKey.Create(
                     userId,
                     provider

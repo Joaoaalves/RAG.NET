@@ -5,7 +5,7 @@ using RAGNET.Domain.Chunkers;
 using RAGNET.Domain.Documents;
 using RAGNET.Domain.Documents.Pages;
 using RAGNET.Domain.Documents.Pages.Chunks;
-using RAGNET.Domain.Filters;
+using RAGNET.Domain.QueryResultFilters;
 using RAGNET.Domain.ProvidersApiKeys;
 using RAGNET.Domain.QueryEnhancers;
 using RAGNET.Domain.Rankers;
@@ -22,7 +22,7 @@ namespace RAGNET.Infrastructure.Database
         public DbSet<ProviderApiKey> ProviderApiKeys { get; set; }
         public DbSet<Chunker> Chunkers { get; set; }
         public DbSet<QueryEnhancer> QueryEnhancers { get; set; }
-        public DbSet<Filter> Filters { get; set; }
+        public DbSet<QueryResultFilter> Filters { get; set; }
         public DbSet<Ranker> Rankers { get; set; }
         public DbSet<Document> Documents { get; set; }
         public DbSet<Page> Pages { get; set; }

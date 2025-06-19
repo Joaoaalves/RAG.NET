@@ -1,9 +1,9 @@
-using RAGNET.Domain.Filters;
+using RAGNET.Domain.QueryResultFilters;
 
 namespace RAGNET.Application.UserQueriesResultFilters
 {
     public interface IQueryResultFilterFactory
     {
-        IQueryResultFilterService CreateContentFilter(Filter filter);
+        IQueryResultFilterService CreateQueryResultFilter(QueryResultFilter filter);
     }
 }

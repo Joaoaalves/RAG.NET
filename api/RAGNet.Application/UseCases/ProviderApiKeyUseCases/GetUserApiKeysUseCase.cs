@@ -24,7 +24,7 @@ namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
 
             foreach (var apiKey in userApiKeys)
             {
-                var provider = apiKey.Provider.Id;
+                var provider = apiKey.Provider.ProviderType;
                 var policy = _providerPolicyFactory.GetPolicy(provider);
                 apiKey.Provider.InitializePolicy(policy);
                 result.Add(apiKey.ToDTO());
@@ -36,7 +36,7 @@ namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
 
             foreach (var provider in allProviders)
             {
-                bool alreadyExists = userApiKeys.Any(k => k.Provider.Id == provider);
+                bool alreadyExists = userApiKeys.Any(k => k.Provider.ProviderType == provider);
                 if (!alreadyExists)
                 {
                     var policy = _providerPolicyFactory.GetPolicy(provider);

@@ -1,4 +1,4 @@
-namespace RAGNET.Application.DTOs.ContentFilter
+namespace RAGNET.Application.DTOs.QueryResultFilter
 {
     public class RSECreationDTO
     {

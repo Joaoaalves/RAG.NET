@@ -40,7 +40,7 @@ namespace RAGNET.Infrastructure.Domain.ProviderApiKeys
         public async Task<bool> ExistsAsync(SupportedProvider provider, string userId)
         {
             return await _context.ProviderApiKeys
-                .AnyAsync(p => p.Provider.Id == provider && p.UserId == userId);
+                .AnyAsync(p => p.Provider.ProviderType == provider && p.UserId == userId);
         }
 
         public Task<ProviderApiKey?> GetByIdAsync(ProviderApiKeyId id, string? userId)
@@ -54,7 +54,7 @@ namespace RAGNET.Infrastructure.Domain.ProviderApiKeys
         public Task<ProviderApiKey?> GetByUserIdAndProviderAsync(string userId, SupportedProvider provider)
         {
             return _context.ProviderApiKeys
-                .FirstOrDefaultAsync(p => p.UserId == userId && p.Provider.Id == provider);
+                .FirstOrDefaultAsync(p => p.UserId == userId && p.Provider.ProviderType == provider);
         }
 
         public Task<IEnumerable<ProviderApiKey>> GetByUserIdAsync(string userId)

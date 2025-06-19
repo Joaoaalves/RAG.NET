@@ -5,7 +5,7 @@ using RAGNET.Domain.Chunkers;
 using RAGNET.Application.Converters;
 using RAGNET.Application.DTOs.CallbackUrl;
 using RAGNET.Application.DTOs.Chunker;
-using RAGNET.Application.DTOs.ContentFilter;
+using RAGNET.Application.DTOs.QueryResultFilter;
 using RAGNET.Application.DTOs.Conversation;
 using RAGNET.Application.DTOs.Embedding;
 using RAGNET.Application.DTOs.QueryEnhancer;
@@ -28,6 +28,6 @@ namespace RAGNET.Application.Workflows.GetWorkflowDetails
         public ConversationProviderConfigDTO? ConversationProvider { get; set; }
         public ICollection<QueryEnhancerDTO> QueryEnhancers { get; set; } = [];
         public ICollection<CallbackUrlDTO> CallbackUrls { get; set; } = [];
-        public FilterDTO? Filter { get; set; }
+        public QueryResultFilterDTO? QueryResultFilter { get; set; }
     }
 }

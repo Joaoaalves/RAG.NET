@@ -9,7 +9,7 @@ using RAGNET.Application.DTOs.Conversation;
 using RAGNET.Application.DTOs.Embedding;
 using RAGNET.Application.UseCases.ProviderApiKeyUseCases;
 
-namespace web.Controllers
+namespace web.Controllers.Providers
 {
     [Route("api/models")]
     [ApiController]

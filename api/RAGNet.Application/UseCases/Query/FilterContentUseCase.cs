@@ -15,7 +15,7 @@ namespace RAGNET.Application.UseCases.Query
     public class FilterContentUseCase
     (
         IChatCompletionFactory chatCompletionFactory,
-        IQueryResultFilterFactory contentFilterFactory
+        IQueryResultFilterFactory QueryResultFilterFactory
     ) : IFilterContentUseCase
     {
         public async Task<List<string>> Execute(
@@ -25,7 +25,7 @@ namespace RAGNET.Application.UseCases.Query
             string userConversationProviderApiKey
         )
         {
-            if (workflow.Filter == null || !workflow.Filter.IsEnabled)
+            if (workflow.QueryResultFilter == null || !workflow.QueryResultFilter.IsEnabled)
                 return [];
 
             var completionProvider = chatCompletionFactory.CreateCompletionService(
@@ -33,9 +33,9 @@ namespace RAGNET.Application.UseCases.Query
                 workflow.ConversationProviderConfig
             );
 
-            var contentFilterService = contentFilterFactory.CreateContentFilter(workflow.Filter);
+            var QueryResultFilterService = QueryResultFilterFactory.CreateQueryResultFilter(workflow.QueryResultFilter);
 
-            return await contentFilterService.FilterContent(items, query, completionProvider);
+            return await QueryResultFilterService.FilterContent(items, query, completionProvider);
         }
     }
 

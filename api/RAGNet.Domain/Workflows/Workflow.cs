@@ -1,6 +1,6 @@
 using RAGNET.Domain.Chunkers;
 using RAGNET.Domain.Documents;
-using RAGNET.Domain.Filters;
+using RAGNET.Domain.QueryResultFilters;
 using RAGNET.Domain.QueryEnhancers;
 using RAGNET.Domain.Rankers;
 using RAGNET.Domain.SeedWork;
@@ -37,7 +37,7 @@ namespace RAGNET.Domain.Workflows
         public Chunker? Chunker { get; private set; }
         public ConversationProviderConfig ConversationProviderConfig { get; private set; } = null!;
         public EmbeddingProviderConfig EmbeddingProviderConfig { get; private set; } = null!;
-        public Filter? Filter { get; private set; }
+        public QueryResultFilter? QueryResultFilter { get; private set; }
 
         // EF Core
         private Workflow() { }
@@ -52,7 +52,7 @@ namespace RAGNET.Domain.Workflows
             Chunker? chunker,
             ConversationProviderConfig conversationProviderConfig,
             EmbeddingProviderConfig embeddingProviderConfig,
-            Filter? filter = null)
+            QueryResultFilter? filter = null)
         {
             Id = id;
             Name = name;
@@ -64,7 +64,7 @@ namespace RAGNET.Domain.Workflows
             Chunker = chunker;
             ConversationProviderConfig = conversationProviderConfig;
             EmbeddingProviderConfig = embeddingProviderConfig;
-            Filter = filter;
+            QueryResultFilter = filter;
 
             this.AddDomainEvent(new WorkflowCreatedEvent(this.Id));
         }
@@ -79,7 +79,7 @@ namespace RAGNET.Domain.Workflows
             EmbeddingProviderConfig embeddingProviderConfig,
             Chunker chunker,
             WorkflowId? id = null,
-            Filter? filter = null)
+            QueryResultFilter? filter = null)
         {
             return new Workflow(
                 id ?? new WorkflowId(),

@@ -2,14 +2,14 @@ using RAGNET.Domain.Workflows;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.SharedKernel.Metas;
 
-namespace RAGNET.Domain.Filters
+namespace RAGNET.Domain.QueryResultFilters
 {
-    public class Filter : Entity, IUserOwned
+    public class QueryResultFilter : Entity, IUserOwned
     {
         private readonly List<Meta> _metas = [];
 
-        public FilterId Id { get; private init; } = default!;
-        public FilterStrategyEnum Strategy { get; private set; }
+        public QueryResultFilterId Id { get; private init; } = default!;
+        public QueryResultFilterStrategyEnum Strategy { get; private set; }
         public Workflow Workflow { get; private set; } = null!;
         public WorkflowId WorkflowId { get; set; } = null!;
         public string UserId { get; set; } = String.Empty;
@@ -18,11 +18,11 @@ namespace RAGNET.Domain.Filters
         public IReadOnlyCollection<Meta> Metas { get; set; } = [];
 
         // EF Core Ctor
-        private Filter() { }
+        private QueryResultFilter() { }
 
-        private Filter(
-            FilterId id,
-            FilterStrategyEnum strategy,
+        private QueryResultFilter(
+            QueryResultFilterId id,
+            QueryResultFilterStrategyEnum strategy,
             WorkflowId workflowId,
             string userId,
             int maxItems = 5,
@@ -40,16 +40,16 @@ namespace RAGNET.Domain.Filters
                 _metas.AddRange(metas);
         }
 
-        public static Filter Create(
-            FilterStrategyEnum strategy,
+        public static QueryResultFilter Create(
+            QueryResultFilterStrategyEnum strategy,
             WorkflowId workflowId,
             string userId,
             int maxItems = 5,
-            FilterId? id = null,
+            QueryResultFilterId? id = null,
             IEnumerable<Meta>? metas = null,
             bool isEnabled = false)
         {
-            return new Filter(id ?? new FilterId(), strategy, workflowId, userId, maxItems, metas, isEnabled);
+            return new QueryResultFilter(id ?? new QueryResultFilterId(), strategy, workflowId, userId, maxItems, metas, isEnabled);
         }
 
         public void UpdateMetas(List<Meta> metas)
@@ -77,7 +77,7 @@ namespace RAGNET.Domain.Filters
             MaxItems = maxItems;
         }
 
-        public void UpdateStrategy(FilterStrategyEnum strategy)
+        public void UpdateStrategy(QueryResultFilterStrategyEnum strategy)
         {
             if (!Enum.IsDefined(strategy))
             {

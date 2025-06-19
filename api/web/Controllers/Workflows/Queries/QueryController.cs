@@ -6,7 +6,7 @@ using RAGNET.Application.DTOs.Query;
 using RAGNET.Application.Filters;
 using RAGNET.Application.UseCases.Query;
 
-namespace web.Controllers
+namespace web.Controllers.Workflows.Queries
 {
     [Route("/api/")]
     [ApiController]

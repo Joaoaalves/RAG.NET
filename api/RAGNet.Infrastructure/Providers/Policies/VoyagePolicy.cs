@@ -13,7 +13,7 @@ namespace RAGNET.Infrastructure.Providers.Policies
         public string Url => "https://voyage.ai/account/settings";
         public static SupportedProvider Id => SupportedProvider.OpenAI;
 
-        SupportedProvider IProviderPolicy.Id => throw new NotImplementedException();
+        SupportedProvider IProviderPolicy.ProviderType => throw new NotImplementedException();
 
         public void Validate(string apiKey)
         {

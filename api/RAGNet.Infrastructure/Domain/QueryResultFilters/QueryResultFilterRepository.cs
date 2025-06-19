@@ -1,19 +1,19 @@
 using Microsoft.EntityFrameworkCore;
-using RAGNET.Domain.Filters;
+using RAGNET.Domain.QueryResultFilters;
 using RAGNET.Infrastructure.Database;
 
-namespace RAGNET.Infrastructure.Domain.Filters
+namespace RAGNET.Infrastructure.Domain.QueryResultFilters
 {
-    public class FilterRepository(ApplicationDbContext context) : IFilterRepository
+    public class QueryResultFilterRepository(ApplicationDbContext context) : IQueryResultFilterRepository
     {
         private readonly ApplicationDbContext _context = context;
-        public async Task<Filter> AddAsync(Filter entity)
+        public async Task<QueryResultFilter> AddAsync(QueryResultFilter entity)
         {
             await _context.Filters.AddAsync(entity);
             return entity;
         }
 
-        public Task DeleteAsync(Filter entity, string? userId)
+        public Task DeleteAsync(QueryResultFilter entity, string? userId)
         {
             if (userId != null && entity.UserId != userId)
             {
@@ -24,13 +24,13 @@ namespace RAGNET.Infrastructure.Domain.Filters
             return Task.CompletedTask;
         }
 
-        public async Task<Filter?> GetByIdAsync(FilterId id, string? userId)
+        public async Task<QueryResultFilter?> GetByIdAsync(QueryResultFilterId id, string? userId)
         {
             return await _context.Filters
                 .FirstOrDefaultAsync(f => f.Id == id && (userId == null || f.UserId == userId));
         }
 
-        public Task UpdateAsync(Filter entity, string? userId)
+        public Task UpdateAsync(QueryResultFilter entity, string? userId)
         {
             _context.Filters.Update(entity);
             return Task.CompletedTask;

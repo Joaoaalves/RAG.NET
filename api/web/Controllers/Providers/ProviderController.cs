@@ -8,7 +8,7 @@ using RAGNET.Application.DTOs.ProviderApiKey;
 using RAGNET.Application.UseCases.ProviderApiKeyUseCases;
 using RAGNET.Domain.ProvidersApiKeys;
 
-namespace web.Controllers
+namespace web.Controllers.Providers
 {
     public class ProviderController(
         ICreateProviderApiKeyUseCase createProviderApiKeyUseCase,
