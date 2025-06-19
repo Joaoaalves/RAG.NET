@@ -7,7 +7,8 @@ using RAGNET.Domain.SharedKernel.Providers;
 
 using RAGNET.Application.DTOs.Conversation;
 using RAGNET.Application.DTOs.Embedding;
-using RAGNET.Application.UseCases.ProviderApiKeyUseCases;
+using RAGNET.Infrastructure.Processing;
+using RAGNET.Application.ProviderApiKeys.GetUserProviderApiKeys;
 
 namespace web.Controllers.Providers
 {
@@ -15,12 +16,12 @@ namespace web.Controllers.Providers
     [ApiController]
     public class AvailableModelsController(
         UserManager<User> userManager,
-        IGetProviderApiKeysUseCase getProviderApiKeysUseCase,
+        QueriesExecutor queriesExecutor,
         IProviderModelCatalogService providerModelCatalogService
     ) : ControllerBase
     {
+        private readonly QueriesExecutor _queriesExecutor = queriesExecutor;
         private readonly UserManager<User> _userManager = userManager;
-        private readonly IGetProviderApiKeysUseCase _getProviderApiKeysUseCase = getProviderApiKeysUseCase;
         private readonly IProviderModelCatalogService _providerModelCatalogService = providerModelCatalogService;
 
         [HttpGet("conversation")]
@@ -31,7 +32,8 @@ namespace web.Controllers.Providers
             if (user is null)
                 return Unauthorized();
 
-            var providerApiKeys = await _getProviderApiKeysUseCase.ExecuteAsync(user.Id);
+            var userProviderApiQuery = new GetUserProviderApiKeysQuery(user.Id);
+            var providerApiKeys = await _queriesExecutor.Execute(userProviderApiQuery);
 
             if (providerApiKeys.Count == 0)
                 return Unauthorized("User has no API keys");
@@ -66,7 +68,9 @@ namespace web.Controllers.Providers
             if (user is null)
                 return Unauthorized();
 
-            var providerApiKeys = await _getProviderApiKeysUseCase.ExecuteAsync(user.Id);
+            var userProviderApiQuery = new GetUserProviderApiKeysQuery(user.Id);
+            var providerApiKeys = await _queriesExecutor.Execute(userProviderApiQuery);
+
             if (providerApiKeys.Count == 0)
                 return Unauthorized("User has no API keys");
 

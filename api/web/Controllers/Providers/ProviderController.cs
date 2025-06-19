@@ -4,29 +4,28 @@ using Microsoft.AspNetCore.Mvc;
 
 using RAGNET.Domain.Users;
 
-using RAGNET.Application.DTOs.ProviderApiKey;
-using RAGNET.Application.UseCases.ProviderApiKeyUseCases;
 using RAGNET.Domain.ProvidersApiKeys;
+using RAGNET.Infrastructure.Processing;
+using RAGNET.Application.ProviderApiKeys.CreateProviderApiKey;
+using RAGNET.Application.ProviderApiKeys.GetUserProviderApiKeys;
+using RAGNET.Application.ProviderApiKeys.UpdateProviderApiKey;
+using RAGNET.Application.ProviderApiKeys.DeleteProviderApiKey;
 
 namespace web.Controllers.Providers
 {
     public class ProviderController(
-        ICreateProviderApiKeyUseCase createProviderApiKeyUseCase,
-        IGetProviderApiKeysUseCase getProviderApiKeyUseCase,
-        IUpdateProviderApiKeyUseCase updateProviderApiKeyUseCase,
-        IDeleteProviderApiKeyUseCase deleteProviderApiKeyUseCase,
+        CommandsExecutor commandsExecutor,
+        QueriesExecutor queriesExecutor,
         UserManager<User> userManager
     ) : ControllerBase
     {
-        private readonly ICreateProviderApiKeyUseCase _createProviderApiKeyUseCase = createProviderApiKeyUseCase;
-        private readonly IGetProviderApiKeysUseCase _getProviderApiKeyUseCase = getProviderApiKeyUseCase;
-        private readonly IUpdateProviderApiKeyUseCase _updateProviderApiKeyUseCase = updateProviderApiKeyUseCase;
-        private readonly IDeleteProviderApiKeyUseCase _deleteProviderApiKeyUseCase = deleteProviderApiKeyUseCase;
+        private readonly CommandsExecutor _commandsExecutor = commandsExecutor;
+        private readonly QueriesExecutor _queriesExecutor = queriesExecutor;
         readonly UserManager<User> _userManager = userManager;
 
         [HttpPost("/api/provider")]
         [Authorize]
-        public async Task<IActionResult> CreateProviderApiKey([FromBody] CreateProviderApiKeyDTO dto)
+        public async Task<IActionResult> CreateProviderApiKey([FromBody] CreateProviderApiKeyRequest request)
         {
             try
             {
@@ -35,7 +34,13 @@ namespace web.Controllers.Providers
                 if (user == null)
                     return Unauthorized();
 
-                var result = await _createProviderApiKeyUseCase.ExecuteAsync(dto, user.Id);
+                var command = new CreateProviderApiKeyCommand(
+                    user.Id,
+                    request.Provider,
+                    request.ApiKey
+                );
+
+                var result = await _commandsExecutor.Execute(command);
 
                 if (result == null)
                     return BadRequest("Error creating user API key");
@@ -59,7 +64,11 @@ namespace web.Controllers.Providers
                 if (user == null)
                     return Unauthorized();
 
-                var result = await _getProviderApiKeyUseCase.ExecuteAsync(user.Id);
+                var query = new GetUserProviderApiKeysQuery(
+                    user.Id
+                );
+
+                var result = await _queriesExecutor.Execute(query);
 
                 return Ok(result);
             }
@@ -71,7 +80,7 @@ namespace web.Controllers.Providers
 
         [HttpPut("/api/provider/{providerId}")]
         [Authorize]
-        public async Task<IActionResult> UpdateProviderApiKey([FromBody] UpdateProviderApiKeyDTO dto, [FromRoute] Guid providerId)
+        public async Task<IActionResult> UpdateProviderApiKey([FromBody] UpdateProviderApiKeyRequest request, [FromRoute] Guid providerId)
         {
             try
             {
@@ -80,11 +89,13 @@ namespace web.Controllers.Providers
                 if (user == null)
                     return Unauthorized();
 
-                var result = await _updateProviderApiKeyUseCase.ExecuteAsync(
-                    dto,
+                var command = new UpdateProviderApiKeyCommand(
+                    user.Id,
                     new ProviderApiKeyId(providerId),
-                    user.Id
+                    request.ApiKey
                 );
+
+                var result = await _commandsExecutor.Execute(command);
 
                 return Ok(result);
             }
@@ -104,11 +115,12 @@ namespace web.Controllers.Providers
                 if (user == null)
                     return Unauthorized();
 
-
-                var result = await _deleteProviderApiKeyUseCase.ExecuteAsync(
-                    new ProviderApiKeyId(providerId),
-                    user.Id
+                var command = new DeleteProviderApiKeyCommand(
+                    user.Id,
+                    new ProviderApiKeyId(providerId)
                 );
+
+                var result = await _commandsExecutor.Execute(command);
 
                 return Ok(result);
             }

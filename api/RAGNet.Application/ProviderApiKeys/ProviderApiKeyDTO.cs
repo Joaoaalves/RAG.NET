@@ -1,6 +1,6 @@
 using RAGNET.Domain.SharedKernel.Providers;
 
-namespace RAGNET.Application.DTOs.ProviderApiKey
+namespace RAGNET.Application.ProviderApiKeys
 {
     public class ProviderApiKeyDTO
     {

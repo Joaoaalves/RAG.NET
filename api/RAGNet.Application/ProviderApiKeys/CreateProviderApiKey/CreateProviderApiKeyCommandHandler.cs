@@ -1,40 +1,36 @@
+using RAGNET.Application.Configuration.Commands;
 using RAGNET.Domain.ProvidersApiKeys;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.SharedKernel.Providers;
 
-using RAGNET.Application.ProviderApiKeys;
-using RAGNET.Application.DTOs.ProviderApiKey;
-using RAGNET.Application.Mappers;
-
-namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
+namespace RAGNET.Application.ProviderApiKeys.CreateProviderApiKey
 {
-    public interface ICreateProviderApiKeyUseCase
-    {
-        Task<ProviderApiKeyDTO> ExecuteAsync(CreateProviderApiKeyDTO dto, string userId);
-    }
-
-    public class CreateProviderApiKeyUseCase(IProviderApiKeyRepository providerApiKeyRepository, ICryptoService cryptoService, IUnitOfWork unitOfWork, IProviderPolicyFactory providerPolicyFactory) : ICreateProviderApiKeyUseCase
+    public class CreateProviderApiKeyCommandHandlero(
+        IProviderApiKeyRepository providerApiKeyRepository,
+        ICryptoService cryptoService,
+        IUnitOfWork unitOfWork,
+        IProviderPolicyFactory providerPolicyFactory
+    ) : ICommandHandler<CreateProviderApiKeyCommand, ProviderApiKeyDTO>
     {
         private readonly IProviderApiKeyRepository _providerApiKeyRepository = providerApiKeyRepository;
         private readonly ICryptoService _cryptoService = cryptoService;
         private readonly IProviderPolicyFactory _providerPolicyFactory = providerPolicyFactory;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-
-        public async Task<ProviderApiKeyDTO> ExecuteAsync(CreateProviderApiKeyDTO dto, string userId)
+        public async Task<ProviderApiKeyDTO> Handle(CreateProviderApiKeyCommand request, CancellationToken cancellationToken)
         {
             try
             {
                 // Validate ApiKey
-                var policy = _providerPolicyFactory.GetPolicy(dto.Provider);
-                policy.Validate(dto.ApiKey);
+                var policy = _providerPolicyFactory.GetPolicy(request.Provider);
+                policy.Validate(request.ApiKey);
 
                 // Hash
-                var encryptedApiKey = _cryptoService.Encrypt(dto.ApiKey);
+                var encryptedApiKey = _cryptoService.Encrypt(request.ApiKey);
 
                 // Create encrypted provider
-                var provider = new Provider(providerId: dto.Provider, apiKeyValue: encryptedApiKey, validate: false);
+                var provider = new Provider(providerId: request.Provider, apiKeyValue: encryptedApiKey, validate: false);
                 var providerApiKey = ProviderApiKey.Create(
-                    userId,
+                    request.UserId,
                     provider
                 );
 

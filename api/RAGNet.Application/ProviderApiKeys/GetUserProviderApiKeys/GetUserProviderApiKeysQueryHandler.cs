@@ -1,25 +1,19 @@
-using RAGNET.Application.DTOs.ProviderApiKey;
-using RAGNET.Application.Mappers;
-
+using RAGNET.Application.Configuration.Queries;
 using RAGNET.Domain.ProvidersApiKeys;
 using RAGNET.Domain.SharedKernel.Providers;
 
-
-namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
+namespace RAGNET.Application.ProviderApiKeys.GetUserProviderApiKeys
 {
-    public interface IGetProviderApiKeysUseCase
-    {
-        Task<List<ProviderApiKeyDTO>> ExecuteAsync(string userId);
-    }
-
-    public class GetProviderApiKeysUseCase(IProviderApiKeyRepository providerApiKeyRepository, IProviderPolicyFactory providerPolicyFactory) : IGetProviderApiKeysUseCase
+    public class GetUserProviderApiKeysQueryHandler(
+        IProviderApiKeyRepository providerApiKeyRepository,
+        IProviderPolicyFactory providerPolicyFactory
+    ) : IQueryHandler<GetUserProviderApiKeysQuery, List<ProviderApiKeyDTO>>
     {
         private readonly IProviderApiKeyRepository _providerApiKeyRepository = providerApiKeyRepository;
         private readonly IProviderPolicyFactory _providerPolicyFactory = providerPolicyFactory;
-
-        public async Task<List<ProviderApiKeyDTO>> ExecuteAsync(string userId)
+        public async Task<List<ProviderApiKeyDTO>> Handle(GetUserProviderApiKeysQuery request, CancellationToken cancellationToken)
         {
-            var userApiKeys = await _providerApiKeyRepository.GetByUserIdAsync(userId);
+            var userApiKeys = await _providerApiKeyRepository.GetByUserIdAsync(request.UserId);
             var result = new List<ProviderApiKeyDTO>();
 
             foreach (var apiKey in userApiKeys)

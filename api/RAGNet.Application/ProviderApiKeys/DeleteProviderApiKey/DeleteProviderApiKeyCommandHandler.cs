@@ -1,29 +1,25 @@
+using RAGNET.Application.Configuration.Commands;
 using RAGNET.Domain.ProvidersApiKeys;
 using RAGNET.Domain.SeedWork;
 
-namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
+namespace RAGNET.Application.ProviderApiKeys.DeleteProviderApiKey
 {
-    public interface IDeleteProviderApiKeyUseCase
-    {
-        Task<bool> ExecuteAsync(ProviderApiKeyId userApiKeyId, string userId);
-    }
-
-    public class DeleteProviderApiKeyUseCase(
+    public class DeleteProviderApiKeyCommandHandler(
         IUnitOfWork unitOfWork,
         IProviderApiKeyRepository providerApiKeyRepository
-    ) : IDeleteProviderApiKeyUseCase
+    ) : ICommandHandler<DeleteProviderApiKeyCommand, bool>
     {
         private readonly IProviderApiKeyRepository _providerApiKeyRepository = providerApiKeyRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        public async Task<bool> ExecuteAsync(ProviderApiKeyId userApiKeyId, string userId)
+        public async Task<bool> Handle(DeleteProviderApiKeyCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var userApiKey = await _providerApiKeyRepository.GetByIdAsync(userApiKeyId, userId) ??
+                var userApiKey = await _providerApiKeyRepository.GetByIdAsync(request.ProviderApiKeyId, request.UserId) ??
                     throw new Exception("User API key not found");
 
-                await _providerApiKeyRepository.DeleteAsync(userApiKey, userId);
-                await _unitOfWork.CommitAsync();
+                await _providerApiKeyRepository.DeleteAsync(userApiKey, request.UserId);
+                await _unitOfWork.CommitAsync(cancellationToken);
                 return true;
             }
             catch (Exception ex)
@@ -34,5 +30,4 @@ namespace RAGNET.Application.UseCases.ProviderApiKeyUseCases
             }
         }
     }
-
 }
