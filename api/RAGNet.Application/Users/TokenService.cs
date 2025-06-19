@@ -7,9 +7,7 @@ using Microsoft.Extensions.Configuration;
 
 using RAGNET.Domain.Users;
 
-using RAGNET.Application.Interfaces;
-
-namespace RAGNET.Application.Auth
+namespace RAGNET.Application.Users
 {
     public class TokenService : ITokenService
     {

@@ -4,8 +4,7 @@ using FluentValidation;
 using RAGNET.Domain.SharedKernel.Providers;
 using RAGNET.Domain.SeedWork;
 
-using RAGNET.Application.Interfaces;
-using RAGNET.Application.Auth;
+using RAGNET.Application.Users;
 using RAGNET.Application.UserQueries;
 using RAGNET.Application.Providers;
 using RAGNET.Application.Chunkers;

@@ -31,7 +31,7 @@ namespace RAGNET.Infrastructure.Workers
 
 
         private async Task HandleJobAsync(EmbeddingJob job, CancellationToken ct)
-        {
+        {   
             using var scope = _scopeFactory.CreateScope();
             job.Context = new EmbeddingJobContext(scope);
 

@@ -14,7 +14,7 @@ namespace RAGNET.Domain.SharedKernel.Users.Rules
 
         public string Message => "The name must be at least 3 characters long and contain only letters, and spaces.";
 
-        [GeneratedRegex(@"^[a-zA-Z0]+$")]
+        [GeneratedRegex(@"^([a-zA-Z0]+ ?)*$")]
         private static partial Regex NameRegex();
     }
 }

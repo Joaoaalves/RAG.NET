@@ -1,26 +1,31 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RAGNET.Application.DTOs.Account;
-using RAGNET.Application.UseCases.Account;
+
+using RAGNET.Application.Users.GetUserDetails;
+using RAGNET.Application.Users.RegisterUser;
+
+using RAGNET.Infrastructure.Processing;
 
 namespace web.Controllers.Users
 {
     [ApiController]
     [Route("/api/")]
     public class AccountController(
-    IRegisterUser registerUserUseCase,
-    IGetUserInfo getUserInfoUseCase) : ControllerBase
+        QueriesExecutor queriesExecutor,
+        CommandsExecutor commandsExecutor
+    ) : ControllerBase
     {
-        private readonly IRegisterUser _register = registerUserUseCase;
-        private readonly IGetUserInfo _getUserInfo = getUserInfoUseCase;
-
+        private readonly QueriesExecutor _queriesExecutor = queriesExecutor;
+        private readonly CommandsExecutor _commandsExecutor = commandsExecutor;
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDTO model)
+        public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var (success, errors) = await _register.ExecuteAsync(model);
+            var command = new RegisterUserCommand(request.FirstName, request.LastName, request.Email, request.Password);
+
+            var (success, errors) = await _commandsExecutor.Execute(command);
 
             if (!success)
             {
@@ -36,7 +41,10 @@ namespace web.Controllers.Users
         [Authorize]
         public async Task<IActionResult> GetUserInfo()
         {
-            var dto = await _getUserInfo.ExecuteAsync(User);
+            var query = new GetUserDetailsQuery(User);
+
+            var dto = await _queriesExecutor.Execute(query);
+
             return dto is null ? Unauthorized() : Ok(dto);
         }
     }

@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using RAGNET.Domain.Users;
 
-namespace RAGNET.Application.Interfaces
+namespace RAGNET.Application.Users
 {
     public interface ITokenService
     {
