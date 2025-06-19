@@ -1,30 +1,33 @@
-using RAGNET.Application.DTOs.Query;
+using RAGNET.Application.Configuration.Commands;
+using RAGNET.Application.Mappers;
+using RAGNET.Application.ProviderApiKeys;
 using RAGNET.Application.Providers;
 using RAGNET.Application.UserQueriesEnhancers;
 
-using RAGNET.Domain.Workflows;
-
-namespace RAGNET.Application.UseCases.QueryEnhancerUseCases
+namespace RAGNET.Application.QueryEnhancers.EnhanceQuery
 {
-    public interface IEnhanceQueryUseCase
-    {
-        Task<List<string>> Execute(Workflow workflow, QueryDTO queryDTO, string userConversationProviderApiKey);
-    }
-
-    public class EnhanceQueryUseCase(
+    public class EnhanceQueryCommandHandler(
         IQueryEnhancerFactory queryEnhancerFactory,
-        IChatCompletionFactory chatCompletionFactory
-    ) : IEnhanceQueryUseCase
+        IChatCompletionFactory chatCompletionFactory,
+        IApiKeyResolverService apiKeyResolverService
+    ) : ICommandHandler<EnhanceQueryCommand, List<string>>
     {
         private readonly IQueryEnhancerFactory _queryEnhancerFactory = queryEnhancerFactory;
         private readonly IChatCompletionFactory _chatCompletionFactory = chatCompletionFactory;
-
-        public async Task<List<string>> Execute(Workflow workflow, QueryDTO queryDTO, string userConversationProviderApiKey)
+        private readonly IApiKeyResolverService _apiKeyResolverService = apiKeyResolverService;
+        public async Task<List<string>> Handle(EnhanceQueryCommand request, CancellationToken cancellationToken)
         {
+            var workflow = request.Workflow;
+
             try
             {
                 if (workflow.QueryEnhancers == null || workflow.QueryEnhancers.Count == 0)
                     return [];
+
+                var userConversationProviderApiKey = await _apiKeyResolverService.ResolveForUserAsync(
+                    workflow.UserId,
+                    workflow.ConversationProviderConfig.Provider.ToSupportedProvider()
+                );
 
                 var completionService = _chatCompletionFactory.CreateCompletionService(
                     userConversationProviderApiKey,
@@ -36,7 +39,7 @@ namespace RAGNET.Application.UseCases.QueryEnhancerUseCases
                     if (qeConfig.IsEnabled)
                     {
                         var queryEnhancer = _queryEnhancerFactory.CreateQueryEnhancer(qeConfig, completionService);
-                        return await queryEnhancer.GenerateQueries(queryDTO.Query);
+                        return await queryEnhancer.GenerateQueries(request.QueryDTO.Query);
                     }
 
                     return null;

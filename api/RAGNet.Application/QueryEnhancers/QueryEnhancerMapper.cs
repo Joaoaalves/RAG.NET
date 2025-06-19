@@ -1,8 +1,9 @@
-using RAGNET.Application.DTOs.QueryEnhancer;
+using RAGNET.Application.QueryEnhancers.CreateQueryEnhancer;
+using RAGNET.Application.QueryEnhancers.UpdateQueryEnhancer;
 using RAGNET.Domain.QueryEnhancers;
 using RAGNET.Domain.Workflows;
 
-namespace RAGNET.Application.Mappers
+namespace RAGNET.Application.QueryEnhancers
 {
     public static class QueryEnhancerMapper
     {
@@ -24,8 +25,8 @@ namespace RAGNET.Application.Mappers
                 );
         }
 
-        // AutoQueryCreationDTO -> QueryEnhancer via Builder style (adapted)
-        public static QueryEnhancer ToQueryEnhancer(this AutoQueryCreationDTO dto, WorkflowId workflowId, string userId)
+        // CreateAutoQueryRequest -> QueryEnhancer via Builder style (adapted)
+        public static QueryEnhancer ToQueryEnhancer(this CreateAutoQueryRequest dto, WorkflowId workflowId, string userId)
         {
             return new QueryEnhancerBuilder()
                 .WithType(QueryEnhancerStrategy.AUTO_QUERY)
@@ -41,8 +42,8 @@ namespace RAGNET.Application.Mappers
                 .Build();
         }
 
-        // HyDECreationDTO -> QueryEnhancer via Builder style (adapted)
-        public static QueryEnhancer ToQueryEnhancer(this HyDECreationDTO dto, WorkflowId workflowId, string userId)
+        // CreateHyDERequest -> QueryEnhancer via Builder style (adapted)
+        public static QueryEnhancer ToQueryEnhancer(this CreateHyDERequest dto, WorkflowId workflowId, string userId)
         {
             return new QueryEnhancerBuilder()
                 .WithType(QueryEnhancerStrategy.HYPOTHETICAL_DOCUMENT_EMBEDDING)
@@ -54,7 +55,7 @@ namespace RAGNET.Application.Mappers
         }
 
         // QueryEnhancer -> QueryEnhancerDTO
-        public static QueryEnhancerDTO ToQueryEnhancerDTO(this QueryEnhancer qe)
+        public static QueryEnhancerDTO ToDTO(this QueryEnhancer qe)
         {
             return new QueryEnhancerDTO
             {
@@ -72,7 +73,7 @@ namespace RAGNET.Application.Mappers
 
             foreach (var qe in queryEnhancers)
             {
-                dtoList.Add(qe.ToQueryEnhancerDTO());
+                dtoList.Add(qe.ToDTO());
             }
             return dtoList;
         }

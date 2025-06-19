@@ -4,23 +4,21 @@ using RAGNET.Application.ProviderApiKeys;
 using RAGNET.Application.DTOs.Query;
 using RAGNET.Application.Mappers;
 using RAGNET.Application.UserQueries;
-using RAGNET.Application.UseCases.QueryEnhancerUseCases;
 
 namespace RAGNET.Application.UseCases.Query
 {
     public interface IProcessQueryUseCase
     {
-        Task<(List<ContentItem>, List<string>)> Execute(Workflow workflow, QueryDTO queryDTO);
+        Task<(List<ContentItem>, List<string>)> Execute(Workflow workflow, QueryDTO queryDTO, List<string> queries);
     }
 
     public class ProcessQueryUseCase(
-        IEnhanceQueryUseCase enhanceQueryUseCase,
         IQueryChunksUseCase queryChunksUseCase,
         IFilterContentUseCase filterContentUseCase,
         IApiKeyResolverService apiKeyResolverService
     ) : IProcessQueryUseCase
     {
-        public async Task<(List<ContentItem>, List<string>)> Execute(Workflow workflow, QueryDTO queryDTO)
+        public async Task<(List<ContentItem>, List<string>)> Execute(Workflow workflow, QueryDTO queryDTO, List<string> queries)
         {
             // Validate workflow
             if (workflow.EmbeddingProviderConfig == null)
@@ -39,8 +37,6 @@ namespace RAGNET.Application.UseCases.Query
                 workflow.UserId,
                 workflow.ConversationProviderConfig.Provider.ToSupportedProvider()
             );
-
-            var queries = await enhanceQueryUseCase.Execute(workflow, queryDTO, userConversationProviderApiKey);
 
             // Fallback if no queries was generated
             if (queries.Count == 0)

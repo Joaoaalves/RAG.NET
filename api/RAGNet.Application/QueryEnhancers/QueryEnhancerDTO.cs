@@ -3,7 +3,7 @@ using RAGNET.Application.UserQueriesEnhancers;
 
 using RAGNET.Domain.QueryEnhancers;
 
-namespace RAGNET.Application.DTOs.QueryEnhancer
+namespace RAGNET.Application.QueryEnhancers
 {
     public class QueryEnhancerDTO
     {

@@ -16,6 +16,8 @@ using RAGNET.Infrastructure.Embedders;
 using RAGNET.Infrastructure.ChatCompletions;
 using RAGNET.Infrastructure.Providers;
 using RAGNET.Infrastructure.Processing;
+using RAGNET.Application.Configuration.Commands;
+using RAGNET.Application.QueryEnhancers.UpdateQueryEnhancer;
 
 namespace web.Configurations
 {
@@ -56,6 +58,7 @@ namespace web.Configurations
             services.AddScoped(typeof(IRequestPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             services.AddValidatorsFromAssemblyContaining<CreateWorkflowCommandValidator>();
+            services.AddScoped(typeof(ICommandHandler<,>), typeof(UpdateQueryEnhancerCommandHandler<>));
 
             services.AddScoped<IDomainEventsDispatcher, DomainEventsDispatcher>();
 

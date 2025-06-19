@@ -4,6 +4,7 @@ using RAGNET.Application.Workflows.GetWorkflowDetails;
 using RAGNET.Application.QueryResultFilters;
 using RAGNET.Application.Mappers;
 using RAGNET.Application.Workflows.CallbackUrls;
+using RAGNET.Application.QueryEnhancers;
 
 namespace RAGNET.Application.Workflows
 {
