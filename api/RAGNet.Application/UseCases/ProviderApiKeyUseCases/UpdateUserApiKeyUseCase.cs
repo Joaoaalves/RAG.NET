@@ -1,4 +1,4 @@
-using RAGNET.Application.ApiKeys;
+using RAGNET.Application.ProviderApiKeys;
 using RAGNET.Application.DTOs.ProviderApiKey;
 using RAGNET.Application.Mappers;
 

@@ -2,7 +2,7 @@ using RAGNET.Domain.ProvidersApiKeys;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.SharedKernel.Providers;
 
-using RAGNET.Application.ApiKeys;
+using RAGNET.Application.ProviderApiKeys;
 using RAGNET.Application.DTOs.ProviderApiKey;
 using RAGNET.Application.Mappers;
 

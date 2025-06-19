@@ -8,7 +8,7 @@ using RAGNET.Application.Users;
 using RAGNET.Application.UserQueries;
 using RAGNET.Application.Providers;
 using RAGNET.Application.Chunkers;
-using RAGNET.Application.ApiKeys;
+using RAGNET.Application.ProviderApiKeys;
 using RAGNET.Application.Configuration.Validation;
 using RAGNET.Application.Workflows.CreateWorkflow;
 

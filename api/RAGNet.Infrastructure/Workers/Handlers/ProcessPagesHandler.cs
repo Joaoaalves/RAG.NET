@@ -4,7 +4,7 @@ using RAGNET.Domain.Documents;
 using RAGNET.Domain.Documents.Pages;
 using RAGNET.Domain.Documents.Pages.Chunks;
 
-using RAGNET.Application.ApiKeys;
+using RAGNET.Application.ProviderApiKeys;
 
 using RAGNET.Infrastructure.Jobs;
 using RAGNET.Infrastructure.Jobs.Queue;

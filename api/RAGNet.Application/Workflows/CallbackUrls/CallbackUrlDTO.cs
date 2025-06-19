@@ -1,4 +1,4 @@
-namespace RAGNET.Application.DTOs.CallbackUrl
+namespace RAGNET.Application.Workflows.CallbackUrls
 {
     public class CallbackUrlDTO
     {

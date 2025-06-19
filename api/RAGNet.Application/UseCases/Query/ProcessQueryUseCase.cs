@@ -1,6 +1,6 @@
 using RAGNET.Domain.Workflows;
 
-using RAGNET.Application.ApiKeys;
+using RAGNET.Application.ProviderApiKeys;
 using RAGNET.Application.DTOs.Query;
 using RAGNET.Application.Mappers;
 using RAGNET.Application.UserQueries;

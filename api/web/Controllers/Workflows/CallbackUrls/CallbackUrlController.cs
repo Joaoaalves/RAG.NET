@@ -2,36 +2,42 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using RAGNET.Application.DTOs.CallbackUrl;
-using RAGNET.Application.UseCases.CallbackUrlUseCases;
-
+using RAGNET.Application.Workflows.CallbackUrls.CreateCallbackUrl;
+using RAGNET.Application.Workflows.CallbackUrls.DeleteCallbackUrl;
+using RAGNET.Application.Workflows.CallbackUrls.UpdateCallbackUrl;
+using RAGNET.Application.Workflows.CreateWorkflow;
+using RAGNET.Domain.SharedKernel.URLs;
 using RAGNET.Domain.Users;
 using RAGNET.Domain.Workflows;
 using RAGNET.Domain.Workflows.CallbackUrls;
+using RAGNET.Infrastructure.Processing;
 
 namespace web.Controllers.Workflows.CallbackUrls
 {
     [Route("api/workflows/{workflowId}/callback-urls")]
     [ApiController]
     public class CallbackUrlController(
-        IAddCallbackUrlUseCase addCallbackUrlUseCase,
-        IUpdateCallbackUrlUseCase updateCallbackUrlUseCase,
-        IDeleteCallbackUrlUseCase deleteCallbackUrlUseCase,
+        CommandsExecutor commandsExecutor,
         UserManager<User> userManager) : ControllerBase
     {
-        private readonly IAddCallbackUrlUseCase _addCallbackUrlUseCase = addCallbackUrlUseCase;
-        private readonly IUpdateCallbackUrlUseCase _updateCallbackUrlUseCase = updateCallbackUrlUseCase;
-        private readonly IDeleteCallbackUrlUseCase _deleteCallbackUrlUseCase = deleteCallbackUrlUseCase;
-        private readonly UserManager<User> _userManager = userManager;
+        private readonly CommandsExecutor _commandsExecutor = commandsExecutor; private readonly UserManager<User> _userManager = userManager;
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AddCallbackUrl([FromBody] CallbackUrlDTO dto, [FromRoute] Guid workflowId)
+        public async Task<IActionResult> AddCallbackUrl([FromBody] CreateCallbackUrlRequest request, [FromRoute] Guid workflowId)
         {
             try
             {
                 var user = await _userManager.GetUserAsync(User) ?? throw new Exception();
-                var callbackUrl = await _addCallbackUrlUseCase.Execute(dto, new WorkflowId(workflowId), user.Id);
+                var command = new CreateCallbackUrlCommand(
+                    new WorkflowId(workflowId),
+                    user.Id,
+                    request.Url
+                );
+
+                var callbackUrl = await _commandsExecutor.Execute(
+                    command
+                );
 
                 return Ok(new { url = callbackUrl });
             }
@@ -43,18 +49,20 @@ namespace web.Controllers.Workflows.CallbackUrls
 
         [HttpPut("{callbackId}")]
         [Authorize]
-        public async Task<IActionResult> UpdateCallbackUrls([FromBody] CallbackUrlDTO dto, Guid callbackId, [FromRoute] Guid workflowId)
+        public async Task<IActionResult> UpdateCallbackUrls([FromBody] UpdateCallbackUrlRequest request, Guid callbackId, [FromRoute] Guid workflowId)
         {
             try
             {
                 var user = await _userManager.GetUserAsync(User) ?? throw new Exception();
 
-                await _updateCallbackUrlUseCase.Execute(
-                    dto,
-                    new CallbackUrlId(callbackId),
+                var command = new UpdateCallbackUrlCommand(
                     new WorkflowId(workflowId),
-                    user.Id
+                    user.Id,
+                    new CallbackUrlId(callbackId),
+                    URL.Create(request.Url)
                 );
+
+                var dto = await _commandsExecutor.Execute(command);
 
                 return Ok(new
                 {
@@ -76,11 +84,13 @@ namespace web.Controllers.Workflows.CallbackUrls
             {
                 var user = await _userManager.GetUserAsync(User) ?? throw new Exception();
 
-                var id = await _deleteCallbackUrlUseCase.Execute(
-                    new CallbackUrlId(callbackId),
-                    new WorkflowId(workflowId),
-                    user.Id
+                var command = new DeleteCallbackUrlCommand(
+                    new WorkflowId(callbackId),
+                    user.Id,
+                    new CallbackUrlId(callbackId)
                 );
+
+                await _commandsExecutor.Execute(command);
 
                 return Ok(new { Message = "Deleted successfully", Id = callbackId });
             }

@@ -1,4 +1,4 @@
-namespace RAGNET.Application.ApiKeys
+namespace RAGNET.Application.ProviderApiKeys
 {
     public interface ICryptoService
     {

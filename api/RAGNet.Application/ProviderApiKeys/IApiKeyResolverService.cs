@@ -1,6 +1,6 @@
 using RAGNET.Domain.SharedKernel.Providers;
 
-namespace RAGNET.Application.ApiKeys
+namespace RAGNET.Application.ProviderApiKeys
 {
     public interface IApiKeyResolverService
     {

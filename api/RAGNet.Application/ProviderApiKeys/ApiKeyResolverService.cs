@@ -2,7 +2,7 @@ using RAGNET.Application.Mappers;
 using RAGNET.Domain.ProvidersApiKeys;
 using RAGNET.Domain.SharedKernel.Providers;
 
-namespace RAGNET.Application.ApiKeys
+namespace RAGNET.Application.ProviderApiKeys
 {
     public class ApiKeyResolverService(IProviderApiKeyRepository providerApiKeyRepository, ICryptoService cryptoService) : IApiKeyResolverService
     {
