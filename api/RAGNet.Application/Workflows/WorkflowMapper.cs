@@ -5,6 +5,8 @@ using RAGNET.Application.QueryResultFilters;
 using RAGNET.Application.Mappers;
 using RAGNET.Application.Workflows.CallbackUrls;
 using RAGNET.Application.QueryEnhancers;
+using RAGNET.Application.Providers.Embedding;
+using RAGNET.Application.Providers.Conversation;
 
 namespace RAGNET.Application.Workflows
 {

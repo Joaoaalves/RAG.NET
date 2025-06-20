@@ -1,9 +1,9 @@
 using RAGNET.Domain.QueryResultFilters;
 
 using RAGNET.Application.Providers;
-using RAGNET.Application.UserQueriesResultFilters.Strategies;
+using RAGNET.Application.QueryResultFilters.Strategies;
 
-namespace RAGNET.Application.UserQueriesResultFilters
+namespace RAGNET.Application.QueryResultFilters
 {
     public class QueryResultFilterFactory(IPromptService promptService) : IQueryResultFilterFactory
     {

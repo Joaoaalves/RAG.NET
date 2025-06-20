@@ -1,4 +1,4 @@
-namespace RAGNET.Application.DTOs.Feedback
+namespace RAGNET.Application.Feedbacks
 {
     public class FeedbackRequestDTO
     {

@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using RAGNET.Domain.Users;
 using RAGNET.Domain.SharedKernel.Providers;
 
-using RAGNET.Application.DTOs.Conversation;
-using RAGNET.Application.DTOs.Embedding;
 using RAGNET.Infrastructure.Processing;
 using RAGNET.Application.ProviderApiKeys.GetUserProviderApiKeys;
+using RAGNET.Application.Providers.Conversation;
+using RAGNET.Application.Providers.Embedding;
 
 namespace web.Controllers.Providers
 {

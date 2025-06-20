@@ -3,7 +3,7 @@ using RAGNET.Application.Converters;
 using RAGNET.Domain.SharedKernel.Models;
 using RAGNET.Domain.SharedKernel.Providers;
 
-namespace RAGNET.Application.DTOs.Conversation
+namespace RAGNET.Application.Providers.Conversation
 {
     public class ConversationProviderDTO
     {

@@ -1,7 +1,7 @@
 using System.Text.Json;
 using OpenAI.Chat;
 
-using RAGNET.Application.Providers;
+using RAGNET.Application.Providers.Conversation;
 
 namespace RAGNET.Infrastructure.ChatCompletions
 {

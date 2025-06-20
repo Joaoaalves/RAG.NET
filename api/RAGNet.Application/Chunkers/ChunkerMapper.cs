@@ -1,4 +1,4 @@
-using RAGNET.Application.DTOs.Chunker;
+using RAGNET.Application.Chunkers;
 using RAGNET.Application.Workflows.CreateWorkflow;
 using RAGNET.Domain.Chunkers;
 using RAGNET.Domain.SharedKernel.Metas;

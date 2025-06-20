@@ -1,8 +1,8 @@
 using RAGNET.Domain.Chunkers;
 
-using RAGNET.Application.DTOs.Chunker;
-using RAGNET.Application.DTOs.Conversation;
-using RAGNET.Application.DTOs.Embedding;
+using RAGNET.Application.Chunkers;
+using RAGNET.Application.Providers.Embedding;
+using RAGNET.Application.Providers.Conversation;
 
 namespace RAGNET.Application.Workflows.CreateWorkflow
 {

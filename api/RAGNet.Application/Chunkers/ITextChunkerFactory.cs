@@ -1,6 +1,6 @@
+using RAGNET.Application.Providers.Conversation;
 using RAGNET.Domain.Chunkers;
 
-using RAGNET.Application.Providers;
 
 namespace RAGNET.Application.Chunkers
 {

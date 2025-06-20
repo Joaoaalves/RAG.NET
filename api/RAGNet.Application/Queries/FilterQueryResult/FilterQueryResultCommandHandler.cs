@@ -1,7 +1,7 @@
 using RAGNET.Application.Configuration.Commands;
 using RAGNET.Application.ProviderApiKeys;
-using RAGNET.Application.Providers;
-using RAGNET.Application.UserQueriesResultFilters;
+using RAGNET.Application.Providers.Conversation;
+using RAGNET.Application.QueryResultFilters;
 
 namespace RAGNET.Application.Queries.FilterQueryResult
 {

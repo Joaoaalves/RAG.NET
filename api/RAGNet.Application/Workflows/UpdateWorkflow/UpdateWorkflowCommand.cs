@@ -1,6 +1,6 @@
 using RAGNET.Application.Configuration.Commands;
-using RAGNET.Application.DTOs.Conversation;
-using RAGNET.Application.DTOs.Embedding;
+using RAGNET.Application.Providers.Conversation;
+using RAGNET.Application.Providers.Embedding;
 using RAGNET.Application.Workflows.GetWorkflowDetails;
 using RAGNET.Domain.Workflows;
 

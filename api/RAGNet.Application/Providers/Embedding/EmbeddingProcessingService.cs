@@ -1,10 +1,11 @@
 using RAGNET.Application.Chunkers;
+using RAGNET.Application.Providers.Conversation;
 using RAGNET.Domain.Chunkers;
 using RAGNET.Domain.Documents.Pages.Chunks;
 
 using RAGNET.Domain.SharedKernel.Providers;
 
-namespace RAGNET.Application.Providers
+namespace RAGNET.Application.Providers.Embedding
 {
     public interface IEmbeddingProcessingService
     {

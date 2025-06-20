@@ -1,9 +1,9 @@
 using System.Text.Json;
-using RAGNET.Application.Providers;
+using RAGNET.Application.Providers.Conversation;
 using RAGNET.Application.Queries;
 
 
-namespace RAGNET.Application.UserQueriesEnhancers.Strategies
+namespace RAGNET.Application.QueryEnhancers.Strategies
 {
     public class HYDEStrategy(string hydePrompt, int maxQueries, IChatCompletionService completionService) : IQueryEnhancerService
     {

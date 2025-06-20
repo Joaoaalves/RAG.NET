@@ -1,4 +1,5 @@
-using RAGNET.Application.Mappers;
+using RAGNET.Application.Providers.Conversation;
+using RAGNET.Application.Providers.Embedding;
 using RAGNET.Domain.ProvidersApiKeys;
 using RAGNET.Domain.SharedKernel.Providers;
 

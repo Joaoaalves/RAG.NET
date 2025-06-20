@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using RAGNET.Application.Providers;
+using RAGNET.Application.Providers.Conversation;
 
 
 namespace RAGNET.Application.Chunkers

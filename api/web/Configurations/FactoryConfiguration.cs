@@ -1,11 +1,13 @@
 using RAGNET.Application.Chunkers;
-using RAGNET.Application.UserQueriesEnhancers;
 
 using RAGNET.Infrastructure.ChatCompletions;
 using RAGNET.Infrastructure.DocumentProcessors;
-using RAGNET.Application.Providers;
 using RAGNET.Infrastructure.Embedders;
-using RAGNET.Application.UserQueriesResultFilters;
+
+using RAGNET.Application.QueryResultFilters;
+using RAGNET.Application.Providers.Conversation;
+using RAGNET.Application.Providers.Embedding;
+using RAGNET.Application.QueryEnhancers;
 
 namespace web.Configurations
 {

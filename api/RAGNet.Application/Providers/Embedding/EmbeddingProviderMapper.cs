@@ -1,7 +1,6 @@
-using RAGNET.Application.DTOs.Embedding;
 using RAGNET.Domain.SharedKernel.Providers;
 
-namespace RAGNET.Application.Mappers
+namespace RAGNET.Application.Providers.Embedding
 {
     public static class EmbeddingProviderMapper
     {

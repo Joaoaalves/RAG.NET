@@ -1,8 +1,7 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
 
-
-using RAGNET.Application.Providers;
+using RAGNET.Application.Providers.Conversation;
 
 namespace RAGNET.Application.Chunkers
 {

@@ -3,7 +3,7 @@ using System.Text.Json;
 
 using RAGNET.Infrastructure.Exceptions.Adapters;
 
-using RAGNET.Application.Providers;
+using RAGNET.Application.Providers.Conversation;
 
 namespace RAGNET.Infrastructure.ChatCompletions
 {

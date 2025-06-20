@@ -1,8 +1,8 @@
 using RAGNET.Application.Chunkers;
 using RAGNET.Application.Configuration.Commands;
-using RAGNET.Application.Mappers;
 using RAGNET.Application.ProviderApiKeys;
 using RAGNET.Application.Providers;
+using RAGNET.Application.Providers.Embedding;
 
 namespace RAGNET.Application.Queries.QueryChunks
 {

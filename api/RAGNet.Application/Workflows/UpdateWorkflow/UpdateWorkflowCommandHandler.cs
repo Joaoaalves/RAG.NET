@@ -1,6 +1,6 @@
 using RAGNET.Application.Configuration.Commands;
-using RAGNET.Application.Mappers;
-using RAGNET.Application.Providers;
+using RAGNET.Application.Providers.Conversation;
+using RAGNET.Application.Providers.Embedding;
 using RAGNET.Application.Workflows.GetWorkflowDetails;
 
 using RAGNET.Domain.SeedWork;

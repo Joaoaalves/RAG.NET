@@ -1,10 +1,10 @@
 
 using RAGNET.Domain.QueryEnhancers;
 
-using RAGNET.Application.Providers;
 using RAGNET.Application.Queries;
+using RAGNET.Application.Providers.Conversation;
 
-namespace RAGNET.Application.UserQueriesEnhancers
+namespace RAGNET.Application.QueryEnhancers
 {
     public interface IQueryEnhancerFactory
     {

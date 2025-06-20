@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace RAGNET.Application.DTOs.Embedding
+namespace RAGNET.Application.Providers.Embedding
 {
     public class EmbeddingProgressDTO
     {

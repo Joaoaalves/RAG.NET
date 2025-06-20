@@ -1,8 +1,6 @@
 using System.Text;
 using System.Text.Json;
-using RAGNET.Application.Providers;
-
-
+using RAGNET.Application.Providers.Embedding;
 
 namespace RAGNET.Infrastructure.Embedders
 {

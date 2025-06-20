@@ -1,9 +1,6 @@
-using RAGNET.Application.DTOs.Conversation;
-
 using RAGNET.Domain.SharedKernel.Providers;
-using RAGNET.Domain.Workflows;
 
-namespace RAGNET.Application.Mappers
+namespace RAGNET.Application.Providers.Conversation
 {
     public static class ConversationProviderMapper
     {

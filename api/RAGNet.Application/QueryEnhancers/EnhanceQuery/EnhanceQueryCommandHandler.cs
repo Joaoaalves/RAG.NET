@@ -1,8 +1,6 @@
 using RAGNET.Application.Configuration.Commands;
-using RAGNET.Application.Mappers;
 using RAGNET.Application.ProviderApiKeys;
-using RAGNET.Application.Providers;
-using RAGNET.Application.UserQueriesEnhancers;
+using RAGNET.Application.Providers.Conversation;
 
 namespace RAGNET.Application.QueryEnhancers.EnhanceQuery
 {

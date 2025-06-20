@@ -1,4 +1,4 @@
-namespace RAGNET.Application.DTOs.Chunker
+namespace RAGNET.Application.Chunkers
 {
     public class ChunkerSettingsDTO
     {

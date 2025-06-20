@@ -3,12 +3,12 @@ using System.Text.Json.Serialization;
 using RAGNET.Domain.Chunkers;
 
 using RAGNET.Application.Converters;
-using RAGNET.Application.DTOs.Chunker;
-using RAGNET.Application.DTOs.Conversation;
-using RAGNET.Application.DTOs.Embedding;
 using RAGNET.Application.Workflows.CallbackUrls;
 using RAGNET.Application.QueryEnhancers;
 using RAGNET.Application.QueryResultFilters;
+using RAGNET.Application.Chunkers;
+using RAGNET.Application.Providers.Conversation;
+using RAGNET.Application.Providers.Embedding;
 
 namespace RAGNET.Application.Workflows.GetWorkflowDetails
 {

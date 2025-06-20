@@ -3,7 +3,8 @@ using Anthropic.SDK;
 using Anthropic.SDK.Constants;
 using Anthropic.SDK.Messaging;
 
-using RAGNET.Application.Providers;
+using RAGNET.Application.Providers.Conversation;
+
 using RAGNET.Infrastructure.Exceptions.Adapters;
 
 namespace RAGNET.Infrastructure.ChatCompletions

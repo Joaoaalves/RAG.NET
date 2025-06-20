@@ -1,5 +1,5 @@
-using RAGNET.Application.DTOs.Conversation;
-using RAGNET.Application.DTOs.Embedding;
+using RAGNET.Application.Providers.Conversation;
+using RAGNET.Application.Providers.Embedding;
 
 namespace RAGNET.Application.Workflows.UpdateWorkflow
 {

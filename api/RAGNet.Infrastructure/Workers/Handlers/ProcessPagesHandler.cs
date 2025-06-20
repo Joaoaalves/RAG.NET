@@ -8,7 +8,7 @@ using RAGNET.Application.ProviderApiKeys;
 
 using RAGNET.Infrastructure.Jobs;
 using RAGNET.Infrastructure.Jobs.Queue;
-using RAGNET.Application.Providers;
+using RAGNET.Application.Providers.Embedding;
 
 namespace RAGNET.Infrastructure.Workers.Handlers
 {

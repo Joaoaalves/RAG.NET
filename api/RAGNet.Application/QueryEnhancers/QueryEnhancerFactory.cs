@@ -1,10 +1,11 @@
 using RAGNET.Domain.QueryEnhancers;
 
-using RAGNET.Application.UserQueriesEnhancers.Strategies;
 using RAGNET.Application.Queries;
 using RAGNET.Application.Providers;
+using RAGNET.Application.Providers.Conversation;
+using RAGNET.Application.QueryEnhancers.Strategies;
 
-namespace RAGNET.Application.UserQueriesEnhancers
+namespace RAGNET.Application.QueryEnhancers
 {
     public class QueryEnhancerFactory(IPromptService promptService) : IQueryEnhancerFactory
     {

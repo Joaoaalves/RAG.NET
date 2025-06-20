@@ -1,4 +1,4 @@
-namespace RAGNET.Application.Feedback
+namespace RAGNET.Application.Feedbacks
 {
     public interface ICardCreatorService
     {

@@ -1,10 +1,10 @@
 using System.Text.Json;
 
 
-using RAGNET.Application.Providers;
+using RAGNET.Application.Providers.Conversation;
 using RAGNET.Application.Queries;
 
-namespace RAGNET.Application.UserQueriesResultFilters.Strategies
+namespace RAGNET.Application.QueryResultFilters.Strategies
 {
     public class RSEFilterStrategy(string prompt, int maximumItems) : IQueryResultFilterService
     {

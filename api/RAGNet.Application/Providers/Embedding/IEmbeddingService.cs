@@ -1,4 +1,4 @@
-namespace RAGNET.Application.Providers
+namespace RAGNET.Application.Providers.Embedding
 {
     public interface IEmbeddingService
     {

@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace RAGNET.Application.Providers
+namespace RAGNET.Application.Providers.Conversation
 {
     public interface IChatCompletionService
     {
