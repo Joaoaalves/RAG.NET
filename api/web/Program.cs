@@ -34,7 +34,6 @@ builder.Services.AddRepositoryConfiguration();
 builder.Services.AddServiceConfiguration();
 builder.Services.AddAdapterConfiguration(builder.Configuration);
 builder.Services.AddFilterConfiguration();
-builder.Services.AddUseCaseConfiguration();
 builder.Services.AddFactoryConfiguration();
 
 // Hub

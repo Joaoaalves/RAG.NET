@@ -1,5 +1,4 @@
 using RAGNET.Application.Configuration.Commands;
-using RAGNET.Application.DTOs.Query;
 using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.Queries.QueryChunks

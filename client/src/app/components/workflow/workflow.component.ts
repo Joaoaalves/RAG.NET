@@ -107,7 +107,7 @@ export class WorkflowComponent {
         (qe) => qe.type === 'HYPOTHETICAL_DOCUMENT_EMBEDDING'
       );
 
-      this.filter = workflow.filter;
+      this.filter = workflow.queryResultFilter;
 
       this.loadProvidersIds();
     });

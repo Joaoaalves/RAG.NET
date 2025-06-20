@@ -7,17 +7,17 @@ export interface Filter {
 
 export interface FilterEnableResponse {
   message: string;
-  filter: Filter;
+  queryResultFilter: Filter;
 }
 
 export interface FilterEnableResponse {
   message: string;
-  filter: Filter;
+  queryResultFilter: Filter;
 }
 
 export interface FilterUpdateResponse {
   message: string;
-  filter: Filter;
+  queryResultFilter: Filter;
 }
 
 export enum FilterStrategyEnum {

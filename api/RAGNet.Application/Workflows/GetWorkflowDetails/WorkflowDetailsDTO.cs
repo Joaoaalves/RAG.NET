@@ -4,11 +4,11 @@ using RAGNET.Domain.Chunkers;
 
 using RAGNET.Application.Converters;
 using RAGNET.Application.DTOs.Chunker;
-using RAGNET.Application.DTOs.QueryResultFilter;
 using RAGNET.Application.DTOs.Conversation;
 using RAGNET.Application.DTOs.Embedding;
 using RAGNET.Application.Workflows.CallbackUrls;
 using RAGNET.Application.QueryEnhancers;
+using RAGNET.Application.QueryResultFilters;
 
 namespace RAGNET.Application.Workflows.GetWorkflowDetails
 {

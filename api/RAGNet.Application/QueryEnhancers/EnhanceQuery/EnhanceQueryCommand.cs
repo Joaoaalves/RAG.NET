@@ -1,5 +1,5 @@
 using RAGNET.Application.Configuration.Commands;
-using RAGNET.Application.DTOs.Query;
+using RAGNET.Application.Queries;
 using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.QueryEnhancers.EnhanceQuery

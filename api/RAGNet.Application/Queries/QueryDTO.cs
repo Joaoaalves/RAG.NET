@@ -1,4 +1,4 @@
-namespace RAGNET.Application.DTOs.Query
+namespace RAGNET.Application.Queries
 {
     public class QueryDTO
     {

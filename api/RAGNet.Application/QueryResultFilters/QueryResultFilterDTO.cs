@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 using RAGNET.Application.UserQueriesResultFilters;
 using RAGNET.Domain.QueryResultFilters;
 
-namespace RAGNET.Application.DTOs.QueryResultFilter
+namespace RAGNET.Application.QueryResultFilters
 {
     public class QueryResultFilterDTO
     {

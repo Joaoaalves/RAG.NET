@@ -2,12 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 
 using RAGNET.Domain.Workflows;
 
-using RAGNET.Application.DTOs.Query;
 using RAGNET.Application.Filters;
 using RAGNET.Infrastructure.Processing;
 using RAGNET.Application.QueryEnhancers.EnhanceQuery;
 using RAGNET.Application.Queries.QueryChunks;
 using RAGNET.Application.Queries.FilterQueryResult;
+using RAGNET.Application.Queries;
 
 namespace web.Controllers.Workflows.Queries
 {

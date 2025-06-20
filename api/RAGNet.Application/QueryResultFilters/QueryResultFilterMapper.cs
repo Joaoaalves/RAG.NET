@@ -1,4 +1,5 @@
-using RAGNET.Application.DTOs.QueryResultFilter;
+using RAGNET.Application.QueryResultFilters.CreateQueryResultFilter;
+using RAGNET.Application.QueryResultFilters.UpdateQueryResultFilter;
 using RAGNET.Domain.QueryResultFilters;
 using RAGNET.Domain.Workflows;
 
@@ -6,13 +7,12 @@ namespace RAGNET.Application.QueryResultFilters
 {
     public static class QueryResultFilterMapper
     {
-        public static QueryResultFilter ToFilter(this RSECreationDTO dto, WorkflowId workflowId, string userId)
+        public static QueryResultFilter ToFilter(this RSECreationRequest request, WorkflowId workflowId, string userId)
         {
             return QueryResultFilter.Create(
                 strategy: QueryResultFilterStrategyEnum.RELEVANT_SEGMENT_EXTRACTION,
                 workflowId: workflowId,
-                isEnabled: dto.IsEnabled ?? false,
-                maxItems: dto.MaxItems,
+                maxItems: request.MaxItems,
                 userId: userId
             );
         }

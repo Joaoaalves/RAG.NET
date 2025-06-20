@@ -17,7 +17,7 @@ export interface Workflow {
   embeddingProvider: ProviderModel;
   conversationProvider: ProviderModel;
   queryEnhancers: QueryEnhancer[];
-  filter?: Filter;
+  queryResultFilter?: Filter;
   callbackUrls?: CallbackUrl[];
 }
 
