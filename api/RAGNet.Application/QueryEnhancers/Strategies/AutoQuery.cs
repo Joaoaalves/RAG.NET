@@ -1,6 +1,6 @@
 using System.Text.Json;
 using RAGNET.Application.Providers;
-using RAGNET.Application.UserQueries;
+using RAGNET.Application.Queries;
 
 namespace RAGNET.Application.UserQueriesEnhancers.Strategies
 {

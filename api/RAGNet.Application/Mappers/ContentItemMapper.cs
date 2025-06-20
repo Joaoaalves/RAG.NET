@@ -1,6 +1,6 @@
 using RAGNET.Domain.Documents.Pages.Chunks;
 using RAGNET.Domain.Documents.Pages;
-using RAGNET.Application.UserQueries;
+using RAGNET.Application.Queries;
 
 namespace RAGNET.Application.Mappers
 {

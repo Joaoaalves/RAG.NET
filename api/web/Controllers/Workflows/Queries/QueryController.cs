@@ -4,19 +4,18 @@ using RAGNET.Domain.Workflows;
 
 using RAGNET.Application.DTOs.Query;
 using RAGNET.Application.Filters;
-using RAGNET.Application.UseCases.Query;
 using RAGNET.Infrastructure.Processing;
 using RAGNET.Application.QueryEnhancers.EnhanceQuery;
+using RAGNET.Application.Queries.QueryChunks;
+using RAGNET.Application.Queries.FilterQueryResult;
 
 namespace web.Controllers.Workflows.Queries
 {
     [Route("/api/")]
     [ApiController]
     public class QueryController(
-        CommandsExecutor commandsExecutor,
-        IProcessQueryUseCase processQueryUseCase) : ControllerBase
+        CommandsExecutor commandsExecutor) : ControllerBase
     {
-        private readonly IProcessQueryUseCase _processsQueryUseCase = processQueryUseCase;
         private readonly CommandsExecutor _commandsExecutor = commandsExecutor;
 
         [HttpPost("query")]
@@ -27,6 +26,7 @@ namespace web.Controllers.Workflows.Queries
             {
                 var workflow = HttpContext.Items["Workflow"] as Workflow
                     ?? throw new Exception("Workflow not found in context.");
+
                 var enhanceQueryCommand = new EnhanceQueryCommand(
                     workflow,
                     queryDTO
@@ -34,7 +34,21 @@ namespace web.Controllers.Workflows.Queries
 
                 var queries = await _commandsExecutor.Execute(enhanceQueryCommand);
 
-                var (chunks, filteredContent) = await _processsQueryUseCase.Execute(workflow, queryDTO, queries);
+                var queryChunksCommand = new QueryChunksCommand(
+                    workflow,
+                    queries,
+                    queryDTO
+                );
+
+                var chunks = await _commandsExecutor.Execute(queryChunksCommand);
+                Console.WriteLine($"Chunks length: {chunks.Count}");
+                var filterQueryResult = new FilterQueryResultCommand(
+                    chunks,
+                    workflow,
+                    queryDTO.Query
+                );
+
+                var filteredContent = await _commandsExecutor.Execute(filterQueryResult);
 
                 return Ok(new { Chunks = chunks, FilteredContent = filteredContent });
             }

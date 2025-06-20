@@ -74,10 +74,13 @@ namespace web.Controllers.Workflows.QueryEnhancers
                 if (qe == null)
                     return BadRequest("Auto Query not enabled!");
 
-                var command = new UpdateQueryEnhancerCommand<UpdateAutoQueryRequest>(
+                var command = new UpdateQueryEnhancerCommand(
                     user.Id,
                     qe.Id,
-                    request
+                    QueryEnhancerStrategy.AUTO_QUERY,
+                    request.MaxQueries,
+                    request.IsEnabled,
+                    request.Guidance
                 );
 
                 var queryEnhancer = await _commandsExecutor.Execute(command);
@@ -173,10 +176,12 @@ namespace web.Controllers.Workflows.QueryEnhancers
                 if (qe == null)
                     return BadRequest("HyDE not enabled!");
 
-                var command = new UpdateQueryEnhancerCommand<UpdateHyDERequest>(
+                var command = new UpdateQueryEnhancerCommand(
                     user.Id,
                     qe.Id,
-                    request
+                    QueryEnhancerStrategy.HYPOTHETICAL_DOCUMENT_EMBEDDING,
+                    request.MaxQueries,
+                    request.IsEnabled
                 );
 
                 var queryEnhancer = await _commandsExecutor.Execute(command);

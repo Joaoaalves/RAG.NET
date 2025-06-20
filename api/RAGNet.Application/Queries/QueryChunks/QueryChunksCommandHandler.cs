@@ -1,45 +1,44 @@
-using RAGNET.Domain.Workflows;
-
 using RAGNET.Application.Chunkers;
-using RAGNET.Application.DTOs.Query;
+using RAGNET.Application.Configuration.Commands;
+using RAGNET.Application.Mappers;
+using RAGNET.Application.ProviderApiKeys;
 using RAGNET.Application.Providers;
-using RAGNET.Application.UserQueries;
 
-namespace RAGNET.Application.UseCases.Query
+namespace RAGNET.Application.Queries.QueryChunks
 {
-    public interface IQueryChunksUseCase
-    {
-        Task<List<ContentItem>> Execute(Workflow workflow, List<string> queries, QueryDTO queryDTO, string userEmbeddingProviderApiKey);
-    }
-
-    public class QueryChunksUseCase(
+    public class QueryChunksCommandHandler(
         IVectorDatabaseService vectorDatabaseService,
         IQueryResultAggregatorService queryResultAggregatorService,
         IEmbedderFactory embedderFactory,
         IScoreNormalizerService scoreNormalizerService,
-        IChunkRetrieverService chunkRetrieverService
-    ) : IQueryChunksUseCase
+        IChunkRetrieverService chunkRetrieverService,
+        IApiKeyResolverService apiKeyResolverService
+    ) : ICommandHandler<QueryChunksCommand, List<ContentItem>>
     {
         private readonly IVectorDatabaseService _vectorDatabaseService = vectorDatabaseService;
         private readonly IQueryResultAggregatorService _queryResultAggregatorService = queryResultAggregatorService;
         private readonly IEmbedderFactory _embedderFactory = embedderFactory;
         private readonly IScoreNormalizerService _scoreNormalizerService = scoreNormalizerService;
         private readonly IChunkRetrieverService _chunkRetrieverService = chunkRetrieverService;
-        public async Task<List<ContentItem>> Execute(
-            Workflow workflow,
-            List<string> queries,
-            QueryDTO queryDTO,
-            string userEmbeddingProviderApiKey)
+        private readonly IApiKeyResolverService _apiKeyResolverService = apiKeyResolverService;
+        public async Task<List<ContentItem>> Handle(QueryChunksCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                // Setup
+                var workflow = request.Workflow;
+                var queryDTO = request.QueryDTO;
                 var embConfig = workflow.EmbeddingProviderConfig;
+
+                var userEmbeddingProviderApiKey = await _apiKeyResolverService.ResolveForUserAsync(
+                    workflow.UserId,
+                    workflow.EmbeddingProviderConfig.Provider.ToSupportedProvider()
+                );
 
                 var embedderService = _embedderFactory.CreateEmbeddingService(userEmbeddingProviderApiKey, embConfig);
 
                 // Embedd All
-                var embeddings = await embedderService.GetMultipleEmbeddingAsync(queries);
+                var embeddings = await embedderService.GetMultipleEmbeddingAsync(request.Queries);
+
                 var queryResults = await _vectorDatabaseService.QueryMultipleAsync
                 (
                     embeddings,
@@ -47,6 +46,7 @@ namespace RAGNET.Application.UseCases.Query
                     queryDTO.TopK
                 );
 
+                Console.WriteLine($"Found ${queryResults.Count}");
                 // Aggregate and rank topK results
                 List<VectorQueryResult> aggregatedResults = _queryResultAggregatorService.AggregateResults(queryResults,
                     queryDTO.MinScore,

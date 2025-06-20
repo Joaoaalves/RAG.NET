@@ -1,4 +1,4 @@
-using RAGNET.Application.UserQueries;
+using RAGNET.Application.Queries;
 
 namespace RAGNET.Application.DTOs.Chunker
 {

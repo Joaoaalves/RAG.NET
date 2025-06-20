@@ -1,4 +1,4 @@
-namespace RAGNET.Application.UserQueries
+namespace RAGNET.Application.Queries
 {
     public interface IQueryEnhancerService
     {

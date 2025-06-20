@@ -35,7 +35,7 @@ namespace RAGNET.Application.ProviderApiKeys.CreateProviderApiKey
                 );
 
                 await _providerApiKeyRepository.AddAsync(providerApiKey);
-                await _unitOfWork.CommitAsync();
+                await _unitOfWork.CommitAsync(cancellationToken);
                 return providerApiKey.ToDTO();
             }
             catch (Exception)

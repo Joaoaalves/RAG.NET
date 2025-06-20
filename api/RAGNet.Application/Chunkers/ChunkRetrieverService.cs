@@ -3,7 +3,7 @@ using RAGNET.Domain.Documents.Pages.Chunks;
 
 using RAGNET.Application.Mappers;
 using RAGNET.Application.Providers;
-using RAGNET.Application.UserQueries;
+using RAGNET.Application.Queries;
 
 namespace RAGNET.Application.Chunkers
 {

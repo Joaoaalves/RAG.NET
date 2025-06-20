@@ -99,7 +99,6 @@ namespace RAGNET.Infrastructure.Qdrant
         public async Task<List<VectorQueryResult>> QueryMultipleAsync(List<float[]> vectors, string collectionName, int topK)
         {
             var tasks = vectors.Select(vector => QueryAsync(vector, collectionName, topK));
-
             var results = await Task.WhenAll(tasks);
 
             return [.. results.SelectMany(r => r)];

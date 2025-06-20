@@ -5,7 +5,7 @@ using RAGNET.Domain.SharedKernel.Providers;
 using RAGNET.Domain.SeedWork;
 
 using RAGNET.Application.Users;
-using RAGNET.Application.UserQueries;
+using RAGNET.Application.Queries;
 using RAGNET.Application.Providers;
 using RAGNET.Application.Chunkers;
 using RAGNET.Application.ProviderApiKeys;
@@ -58,7 +58,6 @@ namespace web.Configurations
             services.AddScoped(typeof(IRequestPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             services.AddValidatorsFromAssemblyContaining<CreateWorkflowCommandValidator>();
-            services.AddScoped(typeof(ICommandHandler<,>), typeof(UpdateQueryEnhancerCommandHandler<>));
 
             services.AddScoped<IDomainEventsDispatcher, DomainEventsDispatcher>();
 
@@ -113,5 +112,6 @@ namespace web.Configurations
                 }
             }
         }
+
     }
 }

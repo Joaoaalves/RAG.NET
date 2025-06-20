@@ -1,7 +1,7 @@
 using RAGNET.Domain.QueryEnhancers;
 
 using RAGNET.Application.UserQueriesEnhancers.Strategies;
-using RAGNET.Application.UserQueries;
+using RAGNET.Application.Queries;
 using RAGNET.Application.Providers;
 
 namespace RAGNET.Application.UserQueriesEnhancers

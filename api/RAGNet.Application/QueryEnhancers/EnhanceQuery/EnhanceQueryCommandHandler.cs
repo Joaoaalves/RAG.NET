@@ -18,11 +18,12 @@ namespace RAGNET.Application.QueryEnhancers.EnhanceQuery
         public async Task<List<string>> Handle(EnhanceQueryCommand request, CancellationToken cancellationToken)
         {
             var workflow = request.Workflow;
-
             try
             {
                 if (workflow.QueryEnhancers == null || workflow.QueryEnhancers.Count == 0)
-                    return [];
+                    return [
+                        request.QueryDTO.Query
+                    ];
 
                 var userConversationProviderApiKey = await _apiKeyResolverService.ResolveForUserAsync(
                     workflow.UserId,

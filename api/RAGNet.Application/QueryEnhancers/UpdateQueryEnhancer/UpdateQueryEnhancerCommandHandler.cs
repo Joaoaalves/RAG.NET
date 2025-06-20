@@ -4,30 +4,28 @@ using RAGNET.Domain.SeedWork;
 
 namespace RAGNET.Application.QueryEnhancers.UpdateQueryEnhancer
 {
-    public class UpdateQueryEnhancerCommandHandler<TData>(
+    public class UpdateQueryEnhancerCommandHandler(
         IQueryEnhancerRepository queryEnhancerRepository,
         IUnitOfWork unitOfWork
-    ) : ICommandHandler<UpdateQueryEnhancerCommand<TData>, QueryEnhancerDTO>
-    where TData : UpdateQueryEnhancerRequest
+    ) : ICommandHandler<UpdateQueryEnhancerCommand, QueryEnhancerDTO>
     {
         private readonly IQueryEnhancerRepository _queryEnhancerRepository = queryEnhancerRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        public async Task<QueryEnhancerDTO> Handle(UpdateQueryEnhancerCommand<TData> request, CancellationToken cancellationToken)
+        public async Task<QueryEnhancerDTO> Handle(UpdateQueryEnhancerCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var data = request.Data;
                 var qe = await _queryEnhancerRepository.GetByIdAsync(request.QueryEnhancerId, request.UserId) ?? throw new Exception("Invalid Query Enhancer.");
 
-                if (data is UpdateAutoQueryRequest auto)
+                if (request.Strategy == QueryEnhancerStrategy.AUTO_QUERY && request.Guidance != null)
                 {
-                    qe.UpdatePrompt(auto.Guidance);
+                    qe.UpdatePrompt(request.Guidance);
                 }
 
-                qe.UpdateMaxQueries(data.MaxQueries);
+                qe.UpdateMaxQueries(request.MaxQueries);
 
-                if (data.IsEnabled != null)
-                    qe.SetEnableState(data.IsEnabled.Value);
+                if (request.IsEnabled != null)
+                    qe.SetEnableState(request.IsEnabled.Value);
 
                 await _queryEnhancerRepository.UpdateAsync(qe);
 
