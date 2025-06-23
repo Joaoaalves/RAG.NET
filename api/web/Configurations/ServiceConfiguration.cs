@@ -21,6 +21,16 @@ using RAGNET.Infrastructure.Processing;
 using RAGNET.Application.Queries.Services;
 
 using web.Identity;
+using RAGNET.Application.ProviderApiKeys.Commands.CreateProviderApiKey;
+using RAGNET.Application.ProviderApiKeys.Commands.DeleteProviderApiKey;
+using RAGNET.Application.ProviderApiKeys.Commands.UpdateProviderApiKey;
+using RAGNET.Application.Queries.Commands.FilterQueryResult;
+using RAGNET.Application.Queries.Commands.QueryChunks;
+using RAGNET.Application.QueryEnhancers.Commands.CreateQueryEnhancer;
+using RAGNET.Application.QueryEnhancers.Commands.EnhanceQuery;
+using RAGNET.Application.QueryEnhancers.Commands.UpdateQueryEnhancer;
+using RAGNET.Application.QueryResultFilters.Commands.UpdateQueryResultFilter;
+using RAGNET.Application.Workflows.CallbackUrls.Commands.CreateCallbackUrl;
 
 namespace web.Configurations
 {
@@ -61,6 +71,15 @@ namespace web.Configurations
             services.AddScoped(typeof(IRequestPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             services.AddValidatorsFromAssemblyContaining<CreateWorkflowCommandValidator>();
+            services.AddValidatorsFromAssemblyContaining<CreateProviderApiKeyCommandValidator>();
+            services.AddValidatorsFromAssemblyContaining<DeleteProviderApiKeyCommandValidator>();
+            services.AddValidatorsFromAssemblyContaining<UpdateProviderApiKeyCommandValidator>();
+            services.AddValidatorsFromAssemblyContaining<FilterQueryResultCommandValidator>();
+            services.AddValidatorsFromAssemblyContaining<QueryChunksCommandValidator>();
+            services.AddValidatorsFromAssemblyContaining<CreateQueryEnhancerCommandValidator>();
+            services.AddValidatorsFromAssemblyContaining<EnhanceQueryCommandValidator>();
+            services.AddValidatorsFromAssemblyContaining<UpdateQueryEnhancerCommandValidator>();
+            services.AddValidatorsFromAssemblyContaining<UpdateQueryResultFilterCommandValidator>();
 
             services.AddScoped<IDomainEventsDispatcher, DomainEventsDispatcher>();
 

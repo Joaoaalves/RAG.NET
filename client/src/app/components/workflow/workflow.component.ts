@@ -108,7 +108,6 @@ export class WorkflowComponent {
       );
 
       this.filter = workflow.queryResultFilter;
-
       this.loadProvidersIds();
     });
   }

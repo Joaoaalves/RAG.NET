@@ -33,6 +33,9 @@ namespace web.Controllers.Workflows
         {
             try
             {
+                Console.WriteLine(
+                    dto.EmbeddingProvider.VectorSize
+                );
                 var command = new CreateWorkflowCommand(dto);
                 var workflowId = await _commandExecutor.Execute(command);
 

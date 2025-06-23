@@ -15,18 +15,17 @@ namespace RAGNET.Infrastructure.Processing
 
             var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-            // Busca behaviors específicos para esse comando
+            // Search specific behaviors
             var behaviorsType = typeof(ICommandPipelineBehavior<,>).MakeGenericType(command.GetType(), typeof(TResult));
             var behaviors = scope.ServiceProvider.GetServices(behaviorsType)
                 .Cast<dynamic>()
                 .Reverse()
                 .ToList();
 
-            Func<dynamic, Task<TResult>> handlerDelegate = (cmd) => mediator.Send((ICommand<TResult>)cmd);
+            Task<TResult> handlerDelegate(dynamic cmd) => mediator.Send((ICommand<TResult>)cmd);
 
-            // Encadeia os behaviors
             var pipeline = behaviors.Aggregate(
-                handlerDelegate,
+            handlerDelegate,
                 (next, behavior) => (cmd) => behavior.Handle(cmd, next, CancellationToken.None)
             );
 

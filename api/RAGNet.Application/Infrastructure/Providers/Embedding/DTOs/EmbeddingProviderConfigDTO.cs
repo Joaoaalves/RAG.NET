@@ -12,6 +12,6 @@ namespace RAGNET.Application.Infrastructure.Providers.Embedding.DTOs
         public EmbeddingProviderEnum ProviderName { get; set; }
         public string Model { get; set; } = String.Empty;
         [JsonIgnore]
-        public int VectorSize { get; set; } = 0;
+        public int VectorSize { get; set; }
     }
 }
