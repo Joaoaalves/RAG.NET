@@ -2,11 +2,11 @@ using RAGNET.Domain.Workflows;
 
 using RAGNET.Application.Workflows.GetWorkflowDetails;
 using RAGNET.Application.QueryResultFilters;
-using RAGNET.Application.Mappers;
 using RAGNET.Application.Workflows.CallbackUrls;
 using RAGNET.Application.QueryEnhancers;
 using RAGNET.Application.Providers.Embedding;
 using RAGNET.Application.Providers.Conversation;
+using RAGNET.Application.Chunkers;
 
 namespace RAGNET.Application.Workflows
 {
@@ -16,7 +16,7 @@ namespace RAGNET.Application.Workflows
         public static WorkflowDetailsDTO ToWorkflowDetailsDTO(
             this Workflow workflow)
         {
-            var chunkerSettings = workflow.Chunker!.Metas.ToDictionary(m => m.Key, m => m.Value).ToChunkerSettingsDTOfromDictionary();
+            var chunkerSettings = workflow.Chunker!.Metas.ToDictionary(m => m.Key, m => m.Value).ToChunkerSettingsDTO();
 
             return new WorkflowDetailsDTO
             {

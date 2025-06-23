@@ -5,11 +5,11 @@ using RAGNET.Application.Queries;
 
 namespace RAGNET.Application.QueryEnhancers.Strategies
 {
-    public class HYDEStrategy(string hydePrompt, int maxQueries, IChatCompletionService completionService) : IQueryEnhancerService
+    public class HYDEStrategy(string hydePrompt, int maxQueries, IConversationProviderService completionService) : IQueryEnhancerService
     {
         private readonly string _hydePrompt = hydePrompt;
         private readonly int _maxQueries = maxQueries;
-        private readonly IChatCompletionService _completionService = completionService;
+        private readonly IConversationProviderService _completionService = completionService;
         public async Task<List<string>> GenerateQueries(string text)
         {
             List<string> queries = [];

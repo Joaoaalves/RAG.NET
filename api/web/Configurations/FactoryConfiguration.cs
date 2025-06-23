@@ -16,7 +16,7 @@ namespace web.Configurations
         public static IServiceCollection AddFactoryConfiguration(this IServiceCollection services)
         {
             services.AddScoped<ITextChunkerFactory, TextChunkerFactory>();
-            services.AddScoped<IChatCompletionFactory, ChatCompletionFactory>();
+            services.AddScoped<IConversationProviderFactory, ChatCompletionFactory>();
             services.AddScoped<IEmbedderFactory, EmbedderFactory>();
             services.AddScoped<IQueryEnhancerFactory, QueryEnhancerFactory>();
             services.AddScoped<IQueryResultFilterFactory, QueryResultFilterFactory>();

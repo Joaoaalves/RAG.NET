@@ -6,12 +6,12 @@ namespace RAGNET.Application.QueryEnhancers.EnhanceQuery
 {
     public class EnhanceQueryCommandHandler(
         IQueryEnhancerFactory queryEnhancerFactory,
-        IChatCompletionFactory chatCompletionFactory,
+        IConversationProviderFactory chatCompletionFactory,
         IApiKeyResolverService apiKeyResolverService
     ) : ICommandHandler<EnhanceQueryCommand, List<string>>
     {
         private readonly IQueryEnhancerFactory _queryEnhancerFactory = queryEnhancerFactory;
-        private readonly IChatCompletionFactory _chatCompletionFactory = chatCompletionFactory;
+        private readonly IConversationProviderFactory _chatCompletionFactory = chatCompletionFactory;
         private readonly IApiKeyResolverService _apiKeyResolverService = apiKeyResolverService;
         public async Task<List<string>> Handle(EnhanceQueryCommand request, CancellationToken cancellationToken)
         {

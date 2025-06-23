@@ -8,7 +8,7 @@ namespace RAGNET.Application.QueryResultFilters.Strategies
 {
     public class RSEFilterStrategy(string prompt, int maximumItems) : IQueryResultFilterService
     {
-        public async Task<List<string>> FilterContent(List<ContentItem> contentItems, string query, IChatCompletionService completionProvider)
+        public async Task<List<string>> FilterContent(List<ContentItem> contentItems, string query, IConversationProviderService completionProvider)
         {
             prompt = prompt.Replace("{user_query}", query);
 

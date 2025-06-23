@@ -1,5 +1,5 @@
+using RAGNET.Application.Chunkers;
 using RAGNET.Application.Configuration.Commands;
-using RAGNET.Application.Mappers;
 using RAGNET.Application.Providers;
 using RAGNET.Application.Providers.Conversation;
 using RAGNET.Application.Providers.Embedding;
@@ -41,7 +41,7 @@ namespace RAGNET.Application.Workflows.CreateWorkflow
             var conversationProvider = dto.ConversationProvider.ToConversationProviderConfig();
             var embeddingProvider = dto.EmbeddingProvider.ToEmbeddingProviderConfig(vectorSize);
 
-            var chunker = dto.ToChunkerFromWorkflowCreationDTO(workflowId, user.Id);
+            var chunker = dto.ToChunker(workflowId, user.Id);
             await _chunkerRepository.AddAsync(chunker);
 
             var workflow = new WorkflowBuilder()

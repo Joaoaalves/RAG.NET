@@ -1,7 +1,6 @@
 using RAGNET.Domain.Documents.Pages;
 using RAGNET.Domain.Documents.Pages.Chunks;
 
-using RAGNET.Application.Mappers;
 using RAGNET.Application.Providers;
 using RAGNET.Application.Queries;
 

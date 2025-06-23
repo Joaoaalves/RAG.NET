@@ -7,7 +7,7 @@ using RAGNET.Application.Providers.Conversation;
 
 namespace RAGNET.Infrastructure.ChatCompletions
 {
-    public class GeminiChatAdapter : IChatCompletionService
+    public class GeminiChatAdapter : IConversationProviderService
     {
         private readonly HttpClient _httpClient;
         private readonly string _model;

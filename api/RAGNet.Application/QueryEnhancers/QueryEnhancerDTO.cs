@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using RAGNET.Application.UserQueriesEnhancers;
 
 using RAGNET.Domain.QueryEnhancers;
 

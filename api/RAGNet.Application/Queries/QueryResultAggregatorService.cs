@@ -1,4 +1,3 @@
-
 using RAGNET.Application.Providers;
 
 namespace RAGNET.Application.Queries

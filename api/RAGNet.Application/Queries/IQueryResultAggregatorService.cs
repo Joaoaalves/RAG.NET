@@ -1,4 +1,6 @@
-namespace RAGNET.Application.Providers
+using RAGNET.Application.Providers;
+
+namespace RAGNET.Application.Queries
 {
     public interface IQueryResultAggregatorService
     {

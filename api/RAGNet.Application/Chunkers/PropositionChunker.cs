@@ -5,12 +5,12 @@ using RAGNET.Application.Providers.Conversation;
 
 namespace RAGNET.Application.Chunkers
 {
-    public class PropositionChunker(float threshold, string chunkPrompt, string evaluationPrompt, IChatCompletionService completionService) : ITextChunkerService
+    public class PropositionChunker(float threshold, string chunkPrompt, string evaluationPrompt, IConversationProviderService completionService) : ITextChunkerService
     {
         private readonly float _threshold = threshold;
         private readonly string _chunkPrompt = chunkPrompt;
         private readonly string _evaluationPrompt = evaluationPrompt;
-        private readonly IChatCompletionService _completionService = completionService;
+        private readonly IConversationProviderService _completionService = completionService;
 
         public async Task<IEnumerable<string>> ChunkText(string text)
         {

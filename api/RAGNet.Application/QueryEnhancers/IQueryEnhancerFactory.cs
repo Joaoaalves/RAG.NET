@@ -1,4 +1,3 @@
-
 using RAGNET.Domain.QueryEnhancers;
 
 using RAGNET.Application.Queries;
@@ -8,6 +7,6 @@ namespace RAGNET.Application.QueryEnhancers
 {
     public interface IQueryEnhancerFactory
     {
-        IQueryEnhancerService CreateQueryEnhancer(QueryEnhancer enhancerConfig, IChatCompletionService completionService);
+        IQueryEnhancerService CreateQueryEnhancer(QueryEnhancer enhancerConfig, IConversationProviderService completionService);
     }
 }

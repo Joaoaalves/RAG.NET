@@ -1,8 +1,7 @@
 using RAGNET.Domain.Documents.Pages.Chunks;
 using RAGNET.Domain.Documents.Pages;
-using RAGNET.Application.Queries;
 
-namespace RAGNET.Application.Mappers
+namespace RAGNET.Application.Queries
 {
     public static class ContentItemMapper
     {

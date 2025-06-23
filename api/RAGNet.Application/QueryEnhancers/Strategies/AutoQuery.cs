@@ -4,12 +4,12 @@ using RAGNET.Application.Queries;
 
 namespace RAGNET.Application.QueryEnhancers.Strategies
 {
-    public class AutoQueryStrategy(string autoQueryPrompt, int maxQueries, string guidance, IChatCompletionService completionService) : IQueryEnhancerService
+    public class AutoQueryStrategy(string autoQueryPrompt, int maxQueries, string guidance, IConversationProviderService completionService) : IQueryEnhancerService
     {
         private readonly string _autoQueryPrompt = autoQueryPrompt;
         private readonly int _maxQueries = maxQueries;
         private readonly string _guidance = guidance;
-        private readonly IChatCompletionService _completionService = completionService;
+        private readonly IConversationProviderService _completionService = completionService;
         public async Task<List<string>> GenerateQueries(string text)
         {
             List<string> queries = [];

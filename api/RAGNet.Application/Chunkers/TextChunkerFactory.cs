@@ -9,7 +9,7 @@ namespace RAGNET.Application.Chunkers
     {
         private readonly IPromptService _promptService = promptService;
 
-        public ITextChunkerService CreateChunker(Chunker chunkerConfig, IChatCompletionService completionService)
+        public ITextChunkerService CreateChunker(Chunker chunkerConfig, IConversationProviderService completionService)
         {
             int chunkSize = 600;
             int overlap = 100;

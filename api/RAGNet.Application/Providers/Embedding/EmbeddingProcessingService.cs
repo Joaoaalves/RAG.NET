@@ -29,14 +29,14 @@ namespace RAGNET.Application.Providers.Embedding
     public class EmbeddingProcessingService(
         IEmbedderFactory embedderFactory,
         ITextChunkerFactory chunkerFactory,
-        IChatCompletionFactory chatCompletionFactory,
+        IConversationProviderFactory chatCompletionFactory,
         IChunkRepository chunkRepository,
         IVectorDatabaseService vectorDatabaseService
     ) : IEmbeddingProcessingService
     {
         private readonly IEmbedderFactory _embedderFactory = embedderFactory;
         private readonly ITextChunkerFactory _chunkerFactory = chunkerFactory;
-        private readonly IChatCompletionFactory _chatCompletionFactory = chatCompletionFactory;
+        private readonly IConversationProviderFactory _chatCompletionFactory = chatCompletionFactory;
         private readonly IChunkRepository _chunkRepository = chunkRepository;
         private readonly IVectorDatabaseService _vectorDatabaseService = vectorDatabaseService;
 

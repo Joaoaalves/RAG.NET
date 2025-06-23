@@ -6,12 +6,12 @@ using RAGNET.Application.QueryResultFilters;
 namespace RAGNET.Application.Queries.FilterQueryResult
 {
     public class FilterQueryResultCommandHandler(
-        IChatCompletionFactory chatCompletionFactory,
+        IConversationProviderFactory chatCompletionFactory,
         IQueryResultFilterFactory queryResultFilterFactory,
         IApiKeyResolverService apiKeyResolverService
     ) : ICommandHandler<FilterQueryResultCommand, List<string>>
     {
-        private readonly IChatCompletionFactory _chatCompletionFactory = chatCompletionFactory;
+        private readonly IConversationProviderFactory _chatCompletionFactory = chatCompletionFactory;
         private readonly IQueryResultFilterFactory _queryResultFilterFactory = queryResultFilterFactory;
         private readonly IApiKeyResolverService _apiKeyResolverService = apiKeyResolverService;
         public async Task<List<string>> Handle(

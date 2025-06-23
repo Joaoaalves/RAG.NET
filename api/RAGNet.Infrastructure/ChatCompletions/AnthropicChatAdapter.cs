@@ -9,7 +9,7 @@ using RAGNET.Infrastructure.Exceptions.Adapters;
 
 namespace RAGNET.Infrastructure.ChatCompletions
 {
-    public class AnthropicChatAdapter(string apiKey, string model) : IChatCompletionService
+    public class AnthropicChatAdapter(string apiKey, string model) : IConversationProviderService
     {
         private readonly AnthropicClient _chatClient = new(apiKey);
         private readonly string _model = model ?? AnthropicModels.Claude3Haiku;

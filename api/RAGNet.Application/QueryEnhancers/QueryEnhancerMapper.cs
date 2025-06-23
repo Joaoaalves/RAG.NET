@@ -1,5 +1,4 @@
 using RAGNET.Application.QueryEnhancers.CreateQueryEnhancer;
-using RAGNET.Application.QueryEnhancers.UpdateQueryEnhancer;
 using RAGNET.Domain.QueryEnhancers;
 using RAGNET.Domain.Workflows;
 

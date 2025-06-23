@@ -1,14 +1,13 @@
-using RAGNET.Application.Chunkers;
 using RAGNET.Application.Workflows.CreateWorkflow;
 using RAGNET.Domain.Chunkers;
 using RAGNET.Domain.SharedKernel.Metas;
 using RAGNET.Domain.Workflows;
 
-namespace RAGNET.Application.Mappers
+namespace RAGNET.Application.Chunkers
 {
     public static class ChunkerMapper
     {
-        public static Chunker ToChunkerFromWorkflowCreationDTO(this WorkflowCreationDTO dto, WorkflowId workflowId, string userId)
+        public static Chunker ToChunker(this WorkflowCreationDTO dto, WorkflowId workflowId, string userId)
         {
             return Chunker.Create(
                 strategyType: dto.Strategy,
@@ -23,7 +22,7 @@ namespace RAGNET.Application.Mappers
             );
         }
 
-        public static ChunkerSettingsDTO ToChunkerSettingsDTOfromDictionary(this Dictionary<string, string> meta)
+        public static ChunkerSettingsDTO ToChunkerSettingsDTO(this Dictionary<string, string> meta)
         {
             return new ChunkerSettingsDTO
             {

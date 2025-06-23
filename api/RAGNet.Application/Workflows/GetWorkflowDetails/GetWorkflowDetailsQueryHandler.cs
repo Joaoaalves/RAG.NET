@@ -1,5 +1,4 @@
 using RAGNET.Application.Configuration.Queries;
-using RAGNET.Application.Mappers;
 using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.Workflows.GetWorkflowDetails

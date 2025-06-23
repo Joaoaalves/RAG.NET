@@ -6,10 +6,10 @@ using RAGNET.Application.Providers.Conversation;
 
 namespace RAGNET.Application.Chunkers
 {
-    public partial class SemanticChunker(float threshold, IChatCompletionService completionService) : ITextChunkerService
+    public partial class SemanticChunker(float threshold, IConversationProviderService completionService) : ITextChunkerService
     {
         private readonly float _threshold = threshold;
-        private readonly IChatCompletionService _completionService = completionService;
+        private readonly IConversationProviderService _completionService = completionService;
 
         public async Task<IEnumerable<string>> ChunkText(string text)
         {

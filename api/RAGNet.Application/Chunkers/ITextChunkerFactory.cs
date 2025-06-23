@@ -6,6 +6,6 @@ namespace RAGNET.Application.Chunkers
 {
     public interface ITextChunkerFactory
     {
-        ITextChunkerService CreateChunker(Chunker chunkerConfig, IChatCompletionService completionService);
+        ITextChunkerService CreateChunker(Chunker chunkerConfig, IConversationProviderService completionService);
     }
 }

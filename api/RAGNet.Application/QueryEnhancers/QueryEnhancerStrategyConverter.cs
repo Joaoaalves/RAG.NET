@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 using RAGNET.Domain.QueryEnhancers;
 
-namespace RAGNET.Application.UserQueriesEnhancers
+namespace RAGNET.Application.QueryEnhancers
 {
     public class QueryEnhancerStrategyConverter : JsonConverter<QueryEnhancerStrategy>
     {
