@@ -1,4 +1,3 @@
-using RAGNET.Domain.Enums;
 using RAGNET.Domain.SharedKernel.Metas;
 using RAGNET.Domain.Workflows;
 
@@ -6,20 +5,13 @@ namespace RAGNET.Domain.QueryEnhancers
 {
     public class QueryEnhancerBuilder
     {
-        private Guid _id = Guid.NewGuid();
         private QueryEnhancerStrategy _type = QueryEnhancerStrategy.AUTO_QUERY;
-        private Guid _workflowId = default!;
+        private WorkflowId _workflowId = default!;
         private string _userId = string.Empty;
         private string _prompt = string.Empty;
         private int _maxQueries = 10;
         private bool _enabled = true;
         private List<Meta> _metas = [];
-
-        public QueryEnhancerBuilder WithId(Guid id)
-        {
-            _id = id;
-            return this;
-        }
 
         public QueryEnhancerBuilder WithType(QueryEnhancerStrategy type)
         {
@@ -27,7 +19,7 @@ namespace RAGNET.Domain.QueryEnhancers
             return this;
         }
 
-        public QueryEnhancerBuilder WithWorkflowId(Guid workflowId)
+        public QueryEnhancerBuilder WithWorkflowId(WorkflowId workflowId)
         {
             _workflowId = workflowId;
             return this;
@@ -63,15 +55,15 @@ namespace RAGNET.Domain.QueryEnhancers
             return this;
         }
 
-        public QueryEnhancer Build()
+        public QueryEnhancer Build(QueryEnhancerId? id = null)
         {
             return QueryEnhancer.Create(
-                _id,
                 _type,
                 _workflowId,
                 _userId,
                 _prompt,
                 _maxQueries,
+                id,
                 _metas,
                 _enabled
             );

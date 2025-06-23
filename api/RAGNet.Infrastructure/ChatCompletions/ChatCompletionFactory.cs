@@ -1,11 +1,11 @@
-using RAGNET.Application.Providers;
+using RAGNET.Application.Infrastructure.Providers.Conversation;
 using RAGNET.Domain.SharedKernel.Providers;
 
 namespace RAGNET.Infrastructure.ChatCompletions
 {
-    public class ChatCompletionFactory : IChatCompletionFactory
+    public class ChatCompletionFactory : IConversationProviderFactory
     {
-        public IChatCompletionService CreateCompletionService(string userApiKey, ConversationProviderConfig config)
+        public IConversationProviderService CreateCompletionService(string userApiKey, ConversationProviderConfig config)
         {
 
             return config.Provider switch

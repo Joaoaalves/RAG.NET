@@ -3,11 +3,11 @@ using System.Text.Json;
 
 using RAGNET.Infrastructure.Exceptions.Adapters;
 
-using RAGNET.Application.Providers;
+using RAGNET.Application.Infrastructure.Providers.Conversation;
 
 namespace RAGNET.Infrastructure.ChatCompletions
 {
-    public class GeminiChatAdapter : IChatCompletionService
+    public class GeminiChatAdapter : IConversationProviderService
     {
         private readonly HttpClient _httpClient;
         private readonly string _model;

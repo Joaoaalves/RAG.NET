@@ -9,11 +9,9 @@ namespace RAGNET.Infrastructure.Workers.Handlers
         public readonly IJobStatusRepository _jobStatusRepository = jobStatusRepository;
         public override async Task HandleAsync(EmbeddingJob job, CancellationToken ct)
         {
-
             var workflow = job.Context.Workflow;
             await _workflowRepository.UpdateByApiKey(workflow, workflow.ApiKey);
             await _jobStatusRepository.MarkAsCompletedAsync(job.JobId);
-
             await base.HandleAsync(job, ct);
         }
     }

@@ -34,7 +34,6 @@ builder.Services.AddRepositoryConfiguration();
 builder.Services.AddServiceConfiguration();
 builder.Services.AddAdapterConfiguration(builder.Configuration);
 builder.Services.AddFilterConfiguration();
-builder.Services.AddUseCaseConfiguration();
 builder.Services.AddFactoryConfiguration();
 
 // Hub
@@ -50,10 +49,10 @@ if (isDevelopment)
 
 app.Use(async (context, next) =>
 {
-    var origin = context.Request.Headers["Origin"].ToString();
+    var origin = context.Request.Headers.Origin.ToString();
 
     if (!string.IsNullOrEmpty(origin) &&
-        (origin == "http://localhost:4200" || origin == "http://192.168.0.52:4200"))
+        (origin == "http://localhost:4200"))
     {
         context.Items["CorsPolicyName"] = "FrontendPolicy";
     }

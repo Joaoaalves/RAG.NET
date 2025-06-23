@@ -205,7 +205,6 @@ namespace RAGNet.Infrastructure.Migrations
             modelBuilder.Entity("RAGNET.Domain.Documents.Pages.Chunks.Chunk", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("Id");
 
@@ -233,7 +232,6 @@ namespace RAGNet.Infrastructure.Migrations
             modelBuilder.Entity("RAGNET.Domain.Documents.Pages.Page", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("Id");
 
@@ -254,7 +252,58 @@ namespace RAGNet.Infrastructure.Migrations
                     b.ToTable("Pages", (string)null);
                 });
 
-            modelBuilder.Entity("RAGNET.Domain.Filters.Filter", b =>
+            modelBuilder.Entity("RAGNET.Domain.ProvidersApiKeys.ProviderApiKey", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ProviderApiKeys", (string)null);
+                });
+
+            modelBuilder.Entity("RAGNET.Domain.QueryEnhancers.QueryEnhancer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("MaxQueries")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Prompt")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("WorkflowId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("WorkflowId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkflowId");
+
+                    b.ToTable("QueryEnhancers", (string)null);
+                });
+
+            modelBuilder.Entity("RAGNET.Domain.QueryResultFilters.QueryResultFilter", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -290,63 +339,9 @@ namespace RAGNet.Infrastructure.Migrations
                     b.ToTable("Filters", (string)null);
                 });
 
-            modelBuilder.Entity("RAGNET.Domain.ProvidersApiKeys.ProviderApiKey", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ProviderApiKeys", (string)null);
-                });
-
-            modelBuilder.Entity("RAGNET.Domain.QueryEnhancers.QueryEnhancer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("MaxQueries")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Prompt")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<Guid>("WorkflowId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("WorkflowId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WorkflowId");
-
-                    b.ToTable("QueryEnhancers", (string)null);
-                });
-
             modelBuilder.Entity("RAGNET.Domain.Rankers.Ranker", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsEnabled")
@@ -465,7 +460,6 @@ namespace RAGNet.Infrastructure.Migrations
             modelBuilder.Entity("RAGNET.Domain.Workflows.Workflow", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("ApiKey")
@@ -623,48 +617,6 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Navigation("Document");
                 });
 
-            modelBuilder.Entity("RAGNET.Domain.Filters.Filter", b =>
-                {
-                    b.HasOne("RAGNET.Domain.Workflows.Workflow", "Workflow")
-                        .WithOne("Filter")
-                        .HasForeignKey("RAGNET.Domain.Filters.Filter", "WorkflowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.OwnsMany("RAGNET.Domain.SharedKernel.Metas.Meta", "Metas", b1 =>
-                        {
-                            b1.Property<Guid>("FilterId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer");
-
-                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
-
-                            b1.Property<string>("Key")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("character varying(100)");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(1000)
-                                .HasColumnType("character varying(1000)");
-
-                            b1.HasKey("FilterId", "Id");
-
-                            b1.ToTable("FilterMetas", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("FilterId");
-                        });
-
-                    b.Navigation("Metas");
-
-                    b.Navigation("Workflow");
-                });
-
             modelBuilder.Entity("RAGNET.Domain.ProvidersApiKeys.ProviderApiKey", b =>
                 {
                     b.HasOne("RAGNET.Domain.Users.User", null)
@@ -678,7 +630,7 @@ namespace RAGNet.Infrastructure.Migrations
                             b1.Property<Guid>("ProviderApiKeyId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<string>("Id")
+                            b1.Property<string>("ProviderType")
                                 .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("Provider");
@@ -752,6 +704,48 @@ namespace RAGNet.Infrastructure.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("QueryEnhancerId");
+                        });
+
+                    b.Navigation("Metas");
+
+                    b.Navigation("Workflow");
+                });
+
+            modelBuilder.Entity("RAGNET.Domain.QueryResultFilters.QueryResultFilter", b =>
+                {
+                    b.HasOne("RAGNET.Domain.Workflows.Workflow", "Workflow")
+                        .WithOne("QueryResultFilter")
+                        .HasForeignKey("RAGNET.Domain.QueryResultFilters.QueryResultFilter", "WorkflowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsMany("RAGNET.Domain.SharedKernel.Metas.Meta", "Metas", b1 =>
+                        {
+                            b1.Property<Guid>("FilterId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+
+                            b1.Property<string>("Key")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(1000)
+                                .HasColumnType("character varying(1000)");
+
+                            b1.HasKey("FilterId", "Id");
+
+                            b1.ToTable("FilterMetas", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("FilterId");
                         });
 
                     b.Navigation("Metas");
@@ -898,9 +892,9 @@ namespace RAGNet.Infrastructure.Migrations
 
                     b.Navigation("Documents");
 
-                    b.Navigation("Filter");
-
                     b.Navigation("QueryEnhancers");
+
+                    b.Navigation("QueryResultFilter");
 
                     b.Navigation("Rankers");
                 });

@@ -9,9 +9,9 @@ namespace RAGNET.Domain.Rankers
 
         private readonly List<Meta> _metas = [];
 
-        public Guid Id { get; private init; } = default;
+        public RankerId Id { get; private init; } = default!;
         public string UserId { get; set; } = string.Empty;
-        public Guid WorkflowId { get; set; }
+        public WorkflowId WorkflowId { get; set; } = null!;
         public Workflow Workflow { get; set; } = null!;
         public bool IsEnabled { get; set; } = true;
         public IReadOnlyCollection<Meta> Metas => _metas.AsReadOnly();
@@ -20,7 +20,7 @@ namespace RAGNET.Domain.Rankers
         private Ranker() { }
 
         private Ranker(
-            Guid id,
+            RankerId id,
             string userId,
             bool isEnabled,
             IEnumerable<Meta>? metas = null
@@ -35,13 +35,13 @@ namespace RAGNET.Domain.Rankers
         }
 
         public static Ranker Create(
-            Guid id,
             string userId,
             bool isEnabled,
+            RankerId? id = null,
             IEnumerable<Meta>? metas = null
         )
         {
-            return new Ranker(id, userId, isEnabled, metas);
+            return new Ranker(id ?? new RankerId(), userId, isEnabled, metas);
         }
 
         public void SetEnableState(bool active)

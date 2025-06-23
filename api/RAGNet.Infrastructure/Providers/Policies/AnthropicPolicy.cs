@@ -12,7 +12,7 @@ namespace RAGNET.Infrastructure.Providers.Policies
         public string Url => "https://console.anthropic.com/settings/keys";
         public static SupportedProvider Id => SupportedProvider.Anthropic;
 
-        SupportedProvider IProviderPolicy.Id => throw new NotImplementedException();
+        SupportedProvider IProviderPolicy.ProviderType => throw new NotImplementedException();
 
 
         public void Validate(string apiKey)

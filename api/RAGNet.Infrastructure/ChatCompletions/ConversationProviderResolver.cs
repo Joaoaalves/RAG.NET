@@ -1,9 +1,8 @@
 using RAGNET.Domain.SharedKernel.Models;
 using RAGNET.Domain.SharedKernel.Providers;
 
-using RAGNET.Application.Providers;
-
 using RAGNET.Infrastructure.Exceptions;
+using RAGNET.Application.Infrastructure.Providers.Conversation;
 
 namespace RAGNET.Infrastructure.ChatCompletions
 {

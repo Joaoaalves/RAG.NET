@@ -21,7 +21,7 @@ namespace RAGNET.Infrastructure.Domain.QueryEnhancers
             return Task.CompletedTask;
         }
 
-        public async Task<QueryEnhancer?> GetByIdAsync(Guid id, string userId)
+        public async Task<QueryEnhancer?> GetByIdAsync(QueryEnhancerId id, string userId)
         {
             return await _context.QueryEnhancers
                 .Include(qe => qe.Metas)

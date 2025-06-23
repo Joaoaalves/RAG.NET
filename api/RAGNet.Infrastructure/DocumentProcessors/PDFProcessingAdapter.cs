@@ -2,7 +2,8 @@ using UglyToad.PdfPig;
 
 using RAGNET.Domain.Documents;
 using RAGNET.Domain.Documents.Pages;
-using RAGNET.Domain.SeedWork; // Should use the Document from here
+using RAGNET.Domain.SeedWork;
+using RAGNET.Domain.Workflows; // Should use the Document from here
 
 namespace RAGNET.Infrastructure.DocumentProcessors
 {
@@ -10,7 +11,7 @@ namespace RAGNET.Infrastructure.DocumentProcessors
     {
         private readonly IDocumentRepository _documentRepository = documentRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        public async Task<Document> CreateDocumentWithPagesAsync(string title, Guid workflowId, List<string> pages)
+        public async Task<Document> CreateDocumentWithPagesAsync(string title, WorkflowId workflowId, List<string> pages)
         {
             var document = Document.Create(new Text(title), workflowId);
 
@@ -27,9 +28,13 @@ namespace RAGNET.Infrastructure.DocumentProcessors
                     // Associate the page with the document
                     document.AddPage(page);
                 }
-                catch (Exception)
+                catch (BusinessRuleValidationException)
                 {
                     Console.WriteLine("Empty chunk detected. Jumping to the next.");
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Unknow Error occurred!");
                 }
             }
 

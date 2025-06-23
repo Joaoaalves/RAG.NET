@@ -74,7 +74,7 @@
     <app-alert
       [id]="'deleteWorkflow' + workflow.id"
       [title]="'Delete Workflow'"
-      description="Are you sure you want to delete this w orkflow?"
+      description="Are you sure you want to delete this workflow?"
       (actionConfirmed)="deleteWorkflow()"
       (click)="$event.stopPropagation()"
       variant="destructive"

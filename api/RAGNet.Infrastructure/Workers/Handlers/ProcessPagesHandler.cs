@@ -4,11 +4,11 @@ using RAGNET.Domain.Documents;
 using RAGNET.Domain.Documents.Pages;
 using RAGNET.Domain.Documents.Pages.Chunks;
 
-using RAGNET.Application.ApiKeys;
+using RAGNET.Application.ProviderApiKeys.Services;
 
 using RAGNET.Infrastructure.Jobs;
 using RAGNET.Infrastructure.Jobs.Queue;
-using RAGNET.Application.Providers;
+using RAGNET.Application.Infrastructure.Providers.Embedding;
 
 namespace RAGNET.Infrastructure.Workers.Handlers
 {

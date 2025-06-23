@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using RAGNET.Domain.Documents;
 using RAGNET.Domain.Documents.Pages;
 using RAGNET.Infrastructure.Database;
 
@@ -8,7 +9,7 @@ namespace RAGNET.Infrastructure.Domain.Documents.Pages
     {
         private readonly ApplicationDbContext _context = context;
 
-        public async Task<List<Page>> GetManyByDocumentId(Guid documentId)
+        public async Task<List<Page>> GetManyByDocumentId(DocumentId documentId)
         {
             return await _context.Pages
                 .Where(p => p.DocumentId == documentId)
@@ -16,7 +17,7 @@ namespace RAGNET.Infrastructure.Domain.Documents.Pages
                 .ToListAsync();
         }
 
-        public async Task<List<Page>> GetManyAsync(Guid[] pageIds)
+        public async Task<List<Page>> GetManyAsync(PageId[] pageIds)
         {
             return await _context.Pages
                 .Where(p => pageIds.Contains(p.Id))

@@ -17,7 +17,7 @@ export interface Workflow {
   embeddingProvider: ProviderModel;
   conversationProvider: ProviderModel;
   queryEnhancers: QueryEnhancer[];
-  filter?: Filter;
+  queryResultFilter?: Filter;
   callbackUrls?: CallbackUrl[];
 }
 
@@ -32,6 +32,10 @@ export interface CreateWorkflowRequest {
   settings: ChunkerSettings;
   embeddingProvider: EmbeddingProvider;
   conversationProvider: ProviderModel;
+}
+
+export interface UpdateWorkflowResponse {
+  workflow: Workflow;
 }
 
 export interface QueryEnhancerUpdateResponse {

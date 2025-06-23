@@ -7,10 +7,10 @@ namespace RAGNET.Domain.Chunkers
     public class Chunker : Entity, IUserOwned
     {
         public readonly List<Meta> _metas = [];
-        public Guid Id { get; set; }
+        public ChunkerId Id { get; private set; } = null!;
         public ChunkerStrategy StrategyType { get; set; }
 
-        public Guid WorkflowId { get; set; }
+        public WorkflowId WorkflowId { get; set; } = null!;
         public Workflow Workflow { get; set; } = null!;
         public string UserId { get; set; } = String.Empty;
 
@@ -19,7 +19,7 @@ namespace RAGNET.Domain.Chunkers
         // EF Core ctor
         private Chunker() { }
 
-        private Chunker(Guid id, ChunkerStrategy strategyType, Guid workflowId, string userId, IEnumerable<Meta>? metas = null)
+        private Chunker(ChunkerId id, ChunkerStrategy strategyType, WorkflowId workflowId, string userId, IEnumerable<Meta>? metas = null)
         {
             Id = id;
             StrategyType = strategyType;
@@ -30,9 +30,10 @@ namespace RAGNET.Domain.Chunkers
                 _metas.AddRange(metas);
         }
 
-        public static Chunker Create(Guid id, ChunkerStrategy strategyType, Guid workflowId, string userId, IEnumerable<Meta>? metas = null)
+        public static Chunker Create(ChunkerStrategy strategyType, WorkflowId workflowId, string userId, IEnumerable<Meta>? metas = null, ChunkerId? chunkerId = null)
         {
-            return new Chunker(id, strategyType, workflowId, userId, metas);
+
+            return new Chunker(chunkerId ?? new ChunkerId(Guid.NewGuid()), strategyType, workflowId, userId, metas);
         }
 
         public void UpdateMetas(List<Meta> newMetas)

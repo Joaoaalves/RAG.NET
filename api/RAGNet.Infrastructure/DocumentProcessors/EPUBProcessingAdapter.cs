@@ -5,6 +5,7 @@ using System.Text;
 using RAGNET.Domain.Documents;
 using RAGNET.Domain.Documents.Pages;
 using RAGNET.Domain.SeedWork;
+using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Infrastructure.DocumentProcessors
 {
@@ -39,7 +40,7 @@ namespace RAGNET.Infrastructure.DocumentProcessors
             return result;
         }
 
-        public async Task<Document> CreateDocumentWithPagesAsync(string title, Guid workflowId, List<string> pages)
+        public async Task<Document> CreateDocumentWithPagesAsync(string title, WorkflowId workflowId, List<string> pages)
         {
             var document = Document.Create(new Text(title), workflowId);
 

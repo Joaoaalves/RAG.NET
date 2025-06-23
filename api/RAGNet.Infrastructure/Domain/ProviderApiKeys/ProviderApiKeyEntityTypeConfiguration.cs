@@ -17,7 +17,10 @@ namespace RAGNET.Infrastructure.Domain.ProviderApiKeys
 
             builder.OwnsOne(x => x.Provider, provider =>
             {
-                provider.Property(p => p.Id)
+                provider.WithOwner().HasForeignKey("ProviderApiKeyId");
+                provider.Ignore(p => p.Policy);
+
+                provider.Property(p => p.ProviderType)
                     .HasColumnName("Provider")
                     .HasConversion<string>()
                     .IsRequired();

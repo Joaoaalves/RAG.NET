@@ -1,4 +1,5 @@
 using RAGNET.Application.Chunkers;
+using RAGNET.Application.Chunkers.Services;
 
 namespace tests.RAGNet.Application.Tests.Dummies
 {

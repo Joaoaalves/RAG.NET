@@ -31,24 +31,23 @@ namespace RAGNET.Infrastructure.Workers
 
 
         private async Task HandleJobAsync(EmbeddingJob job, CancellationToken ct)
-        {
+        {   
+            using var scope = _scopeFactory.CreateScope();
+            job.Context = new EmbeddingJobContext(scope);
+
+            var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+            var initializeJobHandler = scope.ServiceProvider.GetRequiredService<InitializeJobHandler>();
+            var extractHandler = scope.ServiceProvider.GetRequiredService<ExtractTextHandler>();
+            var processPagesHandler = scope.ServiceProvider.GetRequiredService<ProcessPagesHandler>();
+            var updateWorkflowHanlder = scope.ServiceProvider.GetRequiredService<UpdateWorkflowHandler>();
+            var notifyHandler = scope.ServiceProvider.GetRequiredService<NotifyHandler>();
+
             try
             {
-                using var scope = _scopeFactory.CreateScope();
-                job.Context = new EmbeddingJobContext(scope);
-
-                var initializeJobHandler = scope.ServiceProvider.GetRequiredService<InitializeJobHandler>();
-                var extractHandler = scope.ServiceProvider.GetRequiredService<ExtractTextHandler>();
-                var processPagesHandler = scope.ServiceProvider.GetRequiredService<ProcessPagesHandler>();
-                var updateWorkflowHanlder = scope.ServiceProvider.GetRequiredService<UpdateWorkflowHandler>();
-                var notifyHandler = scope.ServiceProvider.GetRequiredService<NotifyHandler>();
-                var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-
                 initializeJobHandler.SetNext(extractHandler);
                 extractHandler.SetNext(processPagesHandler);
                 processPagesHandler.SetNext(updateWorkflowHanlder);
                 updateWorkflowHanlder.SetNext(notifyHandler);
-
                 await initializeJobHandler.HandleAsync(job, ct);
                 await unitOfWork.CommitAsync(ct);
             }
@@ -56,6 +55,7 @@ namespace RAGNET.Infrastructure.Workers
             {
                 await _callbackNotificationService
               .NotifyFailureAsync(job, ex.Message, ct);
+                await unitOfWork.RevertAsync();
                 throw;
             }
         }

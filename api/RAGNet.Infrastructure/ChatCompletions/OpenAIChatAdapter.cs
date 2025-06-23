@@ -1,11 +1,11 @@
 using System.Text.Json;
 using OpenAI.Chat;
 
-using RAGNET.Application.Providers;
+using RAGNET.Application.Infrastructure.Providers.Conversation;
 
 namespace RAGNET.Infrastructure.ChatCompletions
 {
-    public class OpenAIChatAdapter(string apiKey, string model) : IChatCompletionService
+    public class OpenAIChatAdapter(string apiKey, string model) : IConversationProviderService
     {
         private readonly ChatClient _chatClient = new(model, apiKey);
 

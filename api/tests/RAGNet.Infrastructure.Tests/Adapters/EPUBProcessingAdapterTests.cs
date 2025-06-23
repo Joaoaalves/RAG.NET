@@ -2,6 +2,7 @@ using Moq;
 using RAGNET.Domain.Documents;
 using RAGNET.Domain.Documents.Pages;
 using RAGNET.Domain.SeedWork;
+using RAGNET.Domain.Workflows;
 using RAGNET.Infrastructure.DocumentProcessors;
 using tests.Helpers;
 
@@ -26,8 +27,8 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
         {
             // Arrange
             var title = "Documento EPUB de Teste";
-            var workflowId = Guid.NewGuid();
-            var docId = Guid.NewGuid();
+            var workflowId = new WorkflowId(); ;
+            var docId = new DocumentId();
 
             var pages = new List<string> { "Page 1", "Page 2" };
 

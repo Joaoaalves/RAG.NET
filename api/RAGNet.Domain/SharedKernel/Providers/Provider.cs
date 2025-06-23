@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations.Schema;
+using RAGNET.Domain.ProvidersApiKeys;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.Users.ApiKeys;
 
@@ -6,28 +6,30 @@ namespace RAGNET.Domain.SharedKernel.Providers
 {
     public class Provider : ValueObject
     {
-        public SupportedProvider Id { get; }
+        public SupportedProvider ProviderType { get; }
         public ApiKey ApiKey { get; } = null!;
-        [NotMapped]
         public IProviderPolicy? Policy { get; private set; }
+        public ProviderApiKeyId ProviderApiKeyId { get; private init; } = null!;
         public string Name => Policy?.Name ?? "";
         public string Prefix => Policy?.Prefix ?? "";
         public string Pattern => Policy?.Pattern ?? "";
         public string Url => Policy?.Url ?? "";
 
-        private Provider() { }
+        private Provider()
+        {
+        }
         public Provider(SupportedProvider providerId, string apiKeyValue, IProviderPolicy? policy = null, bool validate = true)
         {
             if (policy != null && validate)
             {
                 // validate provider ID
-                CheckRule(new Rules.ProviderIdMustMatchRule(providerId, policy.Id));
+                CheckRule(new Rules.ProviderIdMustMatchRule(providerId, policy.ProviderType));
 
                 // validates via policy
                 policy.Validate(apiKeyValue);
             }
 
-            Id = providerId;
+            ProviderType = providerId;
             ApiKey = new ApiKey(apiKeyValue);
             Policy = policy;
         }

@@ -3,12 +3,13 @@ using Anthropic.SDK;
 using Anthropic.SDK.Constants;
 using Anthropic.SDK.Messaging;
 
-using RAGNET.Application.Providers;
+using RAGNET.Application.Infrastructure.Providers.Conversation;
+
 using RAGNET.Infrastructure.Exceptions.Adapters;
 
 namespace RAGNET.Infrastructure.ChatCompletions
 {
-    public class AnthropicChatAdapter(string apiKey, string model) : IChatCompletionService
+    public class AnthropicChatAdapter(string apiKey, string model) : IConversationProviderService
     {
         private readonly AnthropicClient _chatClient = new(apiKey);
         private readonly string _model = model ?? AnthropicModels.Claude3Haiku;

@@ -1,12 +1,13 @@
 using RAGNET.Domain.Chunkers;
 using RAGNET.Domain.Documents;
-using RAGNET.Domain.Filters;
+using RAGNET.Domain.QueryResultFilters;
 using RAGNET.Domain.QueryEnhancers;
 using RAGNET.Domain.Rankers;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.SharedKernel.Providers;
 using RAGNET.Domain.SharedKernel.URLs;
 using RAGNET.Domain.Workflows.CallbackUrls;
+using RAGNET.Domain.Workflows.Events;
 
 namespace RAGNET.Domain.Workflows
 {
@@ -17,7 +18,7 @@ namespace RAGNET.Domain.Workflows
         private readonly List<QueryEnhancer> _queryEnhancers = [];
         private readonly List<Ranker> _rankers = [];
 
-        public Guid Id { get; private init; } = default!;
+        public WorkflowId Id { get; private init; } = default!;
         public string Name { get; private set; } = string.Empty;
         public string Description { get; private set; } = string.Empty;
         public bool IsActive { get; private set; }
@@ -36,13 +37,13 @@ namespace RAGNET.Domain.Workflows
         public Chunker? Chunker { get; private set; }
         public ConversationProviderConfig ConversationProviderConfig { get; private set; } = null!;
         public EmbeddingProviderConfig EmbeddingProviderConfig { get; private set; } = null!;
-        public Filter? Filter { get; private set; }
+        public QueryResultFilter? QueryResultFilter { get; private set; }
 
         // EF Core
         private Workflow() { }
 
         private Workflow(
-            Guid id,
+            WorkflowId id,
             string name,
             string description,
             string userId,
@@ -51,7 +52,7 @@ namespace RAGNET.Domain.Workflows
             Chunker? chunker,
             ConversationProviderConfig conversationProviderConfig,
             EmbeddingProviderConfig embeddingProviderConfig,
-            Filter? filter = null)
+            QueryResultFilter? filter = null)
         {
             Id = id;
             Name = name;
@@ -63,11 +64,12 @@ namespace RAGNET.Domain.Workflows
             Chunker = chunker;
             ConversationProviderConfig = conversationProviderConfig;
             EmbeddingProviderConfig = embeddingProviderConfig;
-            Filter = filter;
+            QueryResultFilter = filter;
+
+            this.AddDomainEvent(new WorkflowCreatedEvent(this.Id));
         }
 
         public static Workflow Create(
-            Guid id,
             string name,
             string description,
             string userId,
@@ -76,10 +78,11 @@ namespace RAGNET.Domain.Workflows
             ConversationProviderConfig conversationProviderConfig,
             EmbeddingProviderConfig embeddingProviderConfig,
             Chunker chunker,
-            Filter? filter = null)
+            WorkflowId? id = null,
+            QueryResultFilter? filter = null)
         {
             return new Workflow(
-                id,
+                id ?? new WorkflowId(),
                 name,
                 description,
                 userId,
@@ -106,7 +109,7 @@ namespace RAGNET.Domain.Workflows
 
             _callbackUrls.Add(callbackUrl);
         }
-        public void UpdateCallbackUrl(Guid callbackId, string newUrl)
+        public void UpdateCallbackUrl(CallbackUrlId callbackId, string newUrl)
         {
             var callback = _callbackUrls.FirstOrDefault(c => c.Id == callbackId) ?? throw new ArgumentException("Callback URL not found.", nameof(callbackId));
 

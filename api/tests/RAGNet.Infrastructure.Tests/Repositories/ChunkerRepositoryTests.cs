@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using RAGNET.Domain.Chunkers;
-using RAGNET.Domain.Enums;
 using RAGNET.Domain.Workflows;
 using RAGNET.Infrastructure.Database;
 using RAGNET.Infrastructure.Domain.Chunkers;
@@ -13,7 +12,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
     {
         private readonly ApplicationDbContext _context;
         private readonly ChunkerRepository _repository;
-        private readonly Guid _workflowId = Guid.NewGuid();
+        private readonly WorkflowId _workflowId = new(Guid.NewGuid());
         public ChunkerRepositoryTests()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -29,7 +28,6 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
         {
             // Arrange
             var chunker = Chunker.Create(
-                Guid.NewGuid(),
                 ChunkerStrategy.SEMANTIC,
                 _workflowId,
                 It.IsAny<string>(),
@@ -56,7 +54,6 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
         {
             // Arrange
             var chunker = Chunker.Create(
-                Guid.NewGuid(),
                 ChunkerStrategy.SEMANTIC,
                 _workflowId,
                 It.IsAny<string>(),

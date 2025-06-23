@@ -2,7 +2,7 @@ namespace RAGNET.Domain.Workflows
 {
     public interface IWorkflowRepository
     {
-        Task<Workflow?> GetByIdAsync(Guid id, string? userId);
+        Task<Workflow?> GetByIdAsync(WorkflowId id, string? userId);
         Task<IEnumerable<Workflow>> GetAllAsync(string? userId);
         Task<Workflow> AddAsync(Workflow workflow);
         Task UpdateAsync(Workflow workflow, string? userId);

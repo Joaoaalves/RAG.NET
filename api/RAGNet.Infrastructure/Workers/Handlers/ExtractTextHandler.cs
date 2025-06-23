@@ -16,7 +16,6 @@ namespace RAGNET.Infrastructure.Workers.Handlers
 
         public override async Task HandleAsync(EmbeddingJob job, CancellationToken ct)
         {
-
             await using var ms = new MemoryStream(job.FileContent);
 
             var ext = Path.GetExtension(job.FileName).ToLowerInvariant();

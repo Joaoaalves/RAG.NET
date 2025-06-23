@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RAGNET.Domain.Chunkers;
-using RAGNET.Domain.Filters;
+using RAGNET.Domain.QueryResultFilters;
 using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Infrastructure.Domain.Workflows
@@ -61,9 +61,9 @@ namespace RAGNET.Infrastructure.Domain.Workflows
                 cfg.Property(c => c.VectorSize).HasColumnName("VectorSize").IsRequired();
             });
 
-            builder.HasOne(w => w.Filter)
+            builder.HasOne(w => w.QueryResultFilter)
                 .WithOne(f => f.Workflow)
-                .HasForeignKey<Filter>(f => f.WorkflowId)
+                .HasForeignKey<QueryResultFilter>(f => f.WorkflowId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

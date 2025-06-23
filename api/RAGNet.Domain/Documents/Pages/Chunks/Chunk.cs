@@ -2,10 +2,10 @@ namespace RAGNET.Domain.Documents.Pages.Chunks
 {
     public class Chunk
     {
-        public Guid Id { get; set; }
+        public ChunkId Id { get; private init; } = default!;
         public Text Text { get; set; } = default!;
         public string VectorId { get; set; } = String.Empty;
-        public Guid PageId { get; set; } = default!;
+        public PageId PageId { get; set; } = default!;
         public Page Page { get; set; } = null!;
 
         // Not mapped to the database
@@ -15,7 +15,7 @@ namespace RAGNET.Domain.Documents.Pages.Chunks
         // EF Core ctor
         public Chunk() { }
 
-        public Chunk(Guid id, Text text, string vectorId, Guid pageId, SemanticVector vector, Score score)
+        public Chunk(ChunkId id, Text text, string vectorId, PageId pageId, SemanticVector vector, Score score)
         {
             Id = id;
             Text = text;
@@ -25,10 +25,10 @@ namespace RAGNET.Domain.Documents.Pages.Chunks
             Score = score;
         }
 
-        public static Chunk Create(Text text, string vectorId, Guid pageId, Guid? id = null, SemanticVector? vector = null, Score? score = null)
+        public static Chunk Create(Text text, string vectorId, PageId pageId, ChunkId? id = null, SemanticVector? vector = null, Score? score = null)
         {
             return new Chunk(
-                id ?? Guid.NewGuid(),
+                id ?? new ChunkId(),
                 text,
                 vectorId,
                 pageId,
