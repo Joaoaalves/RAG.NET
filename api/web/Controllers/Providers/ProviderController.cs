@@ -1,27 +1,24 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using RAGNET.Domain.Users;
-
 using RAGNET.Domain.ProvidersApiKeys;
-using RAGNET.Infrastructure.Processing;
+
 using RAGNET.Application.ProviderApiKeys.CreateProviderApiKey;
 using RAGNET.Application.ProviderApiKeys.GetUserProviderApiKeys;
 using RAGNET.Application.ProviderApiKeys.UpdateProviderApiKey;
 using RAGNET.Application.ProviderApiKeys.DeleteProviderApiKey;
 
+using RAGNET.Infrastructure.Processing;
+
 namespace web.Controllers.Providers
 {
     public class ProviderController(
         CommandsExecutor commandsExecutor,
-        QueriesExecutor queriesExecutor,
-        UserManager<User> userManager
+        QueriesExecutor queriesExecutor
     ) : ControllerBase
     {
         private readonly CommandsExecutor _commandsExecutor = commandsExecutor;
         private readonly QueriesExecutor _queriesExecutor = queriesExecutor;
-        readonly UserManager<User> _userManager = userManager;
 
         [HttpPost("/api/provider")]
         [Authorize]
@@ -29,13 +26,7 @@ namespace web.Controllers.Providers
         {
             try
             {
-                var user = await _userManager.GetUserAsync(User);
-
-                if (user == null)
-                    return Unauthorized();
-
                 var command = new CreateProviderApiKeyCommand(
-                    user.Id,
                     request.Provider,
                     request.ApiKey
                 );
@@ -59,14 +50,7 @@ namespace web.Controllers.Providers
         {
             try
             {
-                var user = await _userManager.GetUserAsync(User);
-
-                if (user == null)
-                    return Unauthorized();
-
-                var query = new GetUserProviderApiKeysQuery(
-                    user.Id
-                );
+                var query = new GetUserProviderApiKeysQuery();
 
                 var result = await _queriesExecutor.Execute(query);
 
@@ -84,13 +68,7 @@ namespace web.Controllers.Providers
         {
             try
             {
-                var user = await _userManager.GetUserAsync(User);
-
-                if (user == null)
-                    return Unauthorized();
-
                 var command = new UpdateProviderApiKeyCommand(
-                    user.Id,
                     new ProviderApiKeyId(providerId),
                     request.ApiKey
                 );
@@ -111,12 +89,7 @@ namespace web.Controllers.Providers
         {
             try
             {
-                var user = await _userManager.GetUserAsync(User);
-                if (user == null)
-                    return Unauthorized();
-
                 var command = new DeleteProviderApiKeyCommand(
-                    user.Id,
                     new ProviderApiKeyId(providerId)
                 );
 

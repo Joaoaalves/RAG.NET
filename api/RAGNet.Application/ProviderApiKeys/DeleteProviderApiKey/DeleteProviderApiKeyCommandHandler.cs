@@ -15,10 +15,10 @@ namespace RAGNET.Application.ProviderApiKeys.DeleteProviderApiKey
         {
             try
             {
-                var userApiKey = await _providerApiKeyRepository.GetByIdAsync(request.ProviderApiKeyId, request.UserId) ??
+                var userApiKey = await _providerApiKeyRepository.GetByIdAsync(request.ProviderApiKeyId, request.User.Id) ??
                     throw new Exception("User API key not found");
 
-                await _providerApiKeyRepository.DeleteAsync(userApiKey, request.UserId);
+                await _providerApiKeyRepository.DeleteAsync(userApiKey, request.User.Id);
                 await _unitOfWork.CommitAsync(cancellationToken);
                 return true;
             }

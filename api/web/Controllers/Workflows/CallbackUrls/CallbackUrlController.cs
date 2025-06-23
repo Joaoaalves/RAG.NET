@@ -1,15 +1,15 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
+using RAGNET.Domain.SharedKernel.URLs;
+using RAGNET.Domain.Workflows;
+using RAGNET.Domain.Workflows.CallbackUrls;
 
 using RAGNET.Application.Workflows.CallbackUrls.CreateCallbackUrl;
 using RAGNET.Application.Workflows.CallbackUrls.DeleteCallbackUrl;
 using RAGNET.Application.Workflows.CallbackUrls.UpdateCallbackUrl;
 using RAGNET.Application.Workflows.CreateWorkflow;
-using RAGNET.Domain.SharedKernel.URLs;
-using RAGNET.Domain.Users;
-using RAGNET.Domain.Workflows;
-using RAGNET.Domain.Workflows.CallbackUrls;
+
 using RAGNET.Infrastructure.Processing;
 
 namespace web.Controllers.Workflows.CallbackUrls
@@ -17,10 +17,9 @@ namespace web.Controllers.Workflows.CallbackUrls
     [Route("api/workflows/{workflowId}/callback-urls")]
     [ApiController]
     public class CallbackUrlController(
-        CommandsExecutor commandsExecutor,
-        UserManager<User> userManager) : ControllerBase
+        CommandsExecutor commandsExecutor) : ControllerBase
     {
-        private readonly CommandsExecutor _commandsExecutor = commandsExecutor; private readonly UserManager<User> _userManager = userManager;
+        private readonly CommandsExecutor _commandsExecutor = commandsExecutor;
 
         [HttpPost]
         [Authorize]
@@ -28,10 +27,8 @@ namespace web.Controllers.Workflows.CallbackUrls
         {
             try
             {
-                var user = await _userManager.GetUserAsync(User) ?? throw new Exception();
                 var command = new CreateCallbackUrlCommand(
                     new WorkflowId(workflowId),
-                    user.Id,
                     request.Url
                 );
 
@@ -53,11 +50,8 @@ namespace web.Controllers.Workflows.CallbackUrls
         {
             try
             {
-                var user = await _userManager.GetUserAsync(User) ?? throw new Exception();
-
                 var command = new UpdateCallbackUrlCommand(
                     new WorkflowId(workflowId),
-                    user.Id,
                     new CallbackUrlId(callbackId),
                     URL.Create(request.Url)
                 );
@@ -82,11 +76,8 @@ namespace web.Controllers.Workflows.CallbackUrls
         {
             try
             {
-                var user = await _userManager.GetUserAsync(User) ?? throw new Exception();
-
                 var command = new DeleteCallbackUrlCommand(
                     new WorkflowId(callbackId),
-                    user.Id,
                     new CallbackUrlId(callbackId)
                 );
 

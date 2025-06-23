@@ -18,6 +18,8 @@ using RAGNET.Infrastructure.Embedders;
 using RAGNET.Infrastructure.ChatCompletions;
 using RAGNET.Infrastructure.Providers;
 using RAGNET.Infrastructure.Processing;
+using RAGNET.Application.Configuration.Commands.Behaviors;
+using RAGNET.Application.Configuration.Queries.Behaviors;
 
 namespace web.Configurations
 {
@@ -60,6 +62,13 @@ namespace web.Configurations
             services.AddValidatorsFromAssemblyContaining<CreateWorkflowCommandValidator>();
 
             services.AddScoped<IDomainEventsDispatcher, DomainEventsDispatcher>();
+
+            services.AddScoped(typeof(ICommandPipelineBehavior<,>), typeof(WorkflowInjectionBehavior<,>));
+            services.AddScoped(typeof(ICommandPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+            services.AddScoped(typeof(ICommandPipelineBehavior<,>), typeof(UserInjectionCommandBehavior<,>));
+            services.AddScoped(typeof(IRequestPipelineBehavior<,>), typeof(UserInjectionQueryBehavior<,>));
+
+            services.AddHttpContextAccessor();
 
             return services;
         }

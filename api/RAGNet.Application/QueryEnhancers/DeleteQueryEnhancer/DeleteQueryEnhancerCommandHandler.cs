@@ -15,9 +15,14 @@ namespace RAGNET.Application.QueryEnhancers.DeleteQueryEnhancer
         {
             try
             {
-                var queryEnhancer = _queryEnhancerRepository.GetByIdAsync(request.QueryEnhancerId, request.UserId).Result ?? throw new Exception("Query enhancer not found.");
+                var workflow = request.Workflow;
+
+                var qe = workflow.QueryEnhancers.FirstOrDefault(qe => qe.Type == request.Strategy) ?? throw new Exception("Query Enhancer is not enabled!");
+
+                var queryEnhancer = _queryEnhancerRepository.GetByIdAsync(qe.Id, request.User.Id).Result ?? throw new Exception("Query enhancer not found.");
 
                 await _queryEnhancerRepository.DeleteAsync(queryEnhancer);
+
                 await _unitOfWork.CommitAsync(cancellationToken);
 
                 return true;

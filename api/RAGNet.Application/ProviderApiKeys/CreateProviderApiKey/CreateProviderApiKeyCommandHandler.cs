@@ -30,7 +30,7 @@ namespace RAGNET.Application.ProviderApiKeys.CreateProviderApiKey
                 // Create encrypted provider
                 var provider = new Provider(providerId: request.Provider, apiKeyValue: encryptedApiKey, validate: false);
                 var providerApiKey = ProviderApiKey.Create(
-                    request.UserId,
+                    request.User.Id,
                     provider
                 );
 

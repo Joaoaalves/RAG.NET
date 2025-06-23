@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using RAGNET.Domain.SharedKernel.Providers;
 
-namespace RAGNET.Application.Converters
+namespace RAGNET.Application.Providers
 {
     public class SupportedProviderConverter : JsonConverter<SupportedProvider>
     {

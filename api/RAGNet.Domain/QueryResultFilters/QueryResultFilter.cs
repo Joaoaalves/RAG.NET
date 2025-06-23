@@ -9,7 +9,7 @@ namespace RAGNET.Domain.QueryResultFilters
         private readonly List<Meta> _metas = [];
 
         public QueryResultFilterId Id { get; private init; } = default!;
-        public QueryResultFilterStrategyEnum Strategy { get; private set; }
+        public QueryResultFilterStrategy Strategy { get; private set; }
         public Workflow Workflow { get; private set; } = null!;
         public WorkflowId WorkflowId { get; set; } = null!;
         public string UserId { get; set; } = String.Empty;
@@ -22,7 +22,7 @@ namespace RAGNET.Domain.QueryResultFilters
 
         private QueryResultFilter(
             QueryResultFilterId id,
-            QueryResultFilterStrategyEnum strategy,
+            QueryResultFilterStrategy strategy,
             WorkflowId workflowId,
             string userId,
             int maxItems = 5,
@@ -41,7 +41,7 @@ namespace RAGNET.Domain.QueryResultFilters
         }
 
         public static QueryResultFilter Create(
-            QueryResultFilterStrategyEnum strategy,
+            QueryResultFilterStrategy strategy,
             WorkflowId workflowId,
             string userId,
             int maxItems = 5,
@@ -77,7 +77,7 @@ namespace RAGNET.Domain.QueryResultFilters
             MaxItems = maxItems;
         }
 
-        public void UpdateStrategy(QueryResultFilterStrategyEnum strategy)
+        public void UpdateStrategy(QueryResultFilterStrategy strategy)
         {
             if (!Enum.IsDefined(strategy))
             {

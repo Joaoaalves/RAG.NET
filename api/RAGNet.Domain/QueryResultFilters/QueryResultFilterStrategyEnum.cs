@@ -1,6 +1,6 @@
 namespace RAGNET.Domain.QueryResultFilters
 {
-    public enum QueryResultFilterStrategyEnum
+    public enum QueryResultFilterStrategy
     {
         RELEVANT_SEGMENT_EXTRACTION,
         MULTIPLE_SCORE_FILTER

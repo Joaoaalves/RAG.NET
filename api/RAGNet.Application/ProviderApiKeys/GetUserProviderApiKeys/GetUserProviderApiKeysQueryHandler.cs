@@ -13,7 +13,7 @@ namespace RAGNET.Application.ProviderApiKeys.GetUserProviderApiKeys
         private readonly IProviderPolicyFactory _providerPolicyFactory = providerPolicyFactory;
         public async Task<List<ProviderApiKeyDTO>> Handle(GetUserProviderApiKeysQuery request, CancellationToken cancellationToken)
         {
-            var userApiKeys = await _providerApiKeyRepository.GetByUserIdAsync(request.UserId);
+            var userApiKeys = await _providerApiKeyRepository.GetByUserIdAsync(request.User.Id);
             var result = new List<ProviderApiKeyDTO>();
 
             foreach (var apiKey in userApiKeys)

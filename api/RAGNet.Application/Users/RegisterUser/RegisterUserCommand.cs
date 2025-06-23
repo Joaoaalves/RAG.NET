@@ -7,9 +7,8 @@ namespace RAGNET.Application.Users.RegisterUser
         string lastName,
         string email,
         string password
-    ) : ICommand<(bool sucess, IEnumerable<string> Errors)>
+    ) : BaseCommand<(bool sucess, IEnumerable<string> Errors)>
     {
-        public Guid Id { get; } = Guid.NewGuid();
         public string FirstName { get; set; } = firstName;
         public string LastName { get; set; } = lastName;
         public string Email { get; set; } = email;

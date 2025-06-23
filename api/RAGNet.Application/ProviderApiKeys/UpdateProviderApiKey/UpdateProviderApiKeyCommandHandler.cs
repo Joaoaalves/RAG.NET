@@ -22,7 +22,7 @@ namespace RAGNET.Application.ProviderApiKeys.UpdateProviderApiKey
         {
             try
             {
-                var userApiKey = await _providerApiKeyRepository.GetByIdAsync(request.ProviderApiKeyId, request.UserId) ?? throw new Exception("User API key not found");
+                var userApiKey = await _providerApiKeyRepository.GetByIdAsync(request.ProviderApiKeyId, request.User.Id) ?? throw new Exception("User API key not found");
 
                 var encryptedApiKey = _cryptoService.Encrypt(request.ApiKey);
                 var policy = _providerPolicyFactory.GetPolicy(userApiKey.Provider.ProviderType);
@@ -36,14 +36,14 @@ namespace RAGNET.Application.ProviderApiKeys.UpdateProviderApiKey
                     false
                 );
 
-                await _providerApiKeyRepository.UpdateAsync(userApiKey, request.UserId);
-                await _unitOfWork.CommitAsync();
+                await _providerApiKeyRepository.UpdateAsync(userApiKey, request.User.Id);
+                await _unitOfWork.CommitAsync(cancellationToken);
                 return userApiKey.ToDTO();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await _unitOfWork.RevertAsync();
-                throw new Exception("Error updating user API key", ex);
+                throw;
             }
         }
     }

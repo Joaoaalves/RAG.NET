@@ -15,7 +15,7 @@ namespace RAGNET.Application.Workflows.CallbackUrls.CreateCallbackUrl
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         public async Task<CallbackUrlDTO> Handle(CreateCallbackUrlCommand request, CancellationToken cancellationToken)
         {
-            var workflow = await _workflowRepository.GetByIdAsync(request.WorkflowId, request.UserId) ?? throw new Exception("Invalid workflow id");
+            var workflow = await _workflowRepository.GetByIdAsync(request.WorkflowId, request.User.Id) ?? throw new Exception("Invalid workflow id");
 
             var url = URL.Create(request.Url);
 

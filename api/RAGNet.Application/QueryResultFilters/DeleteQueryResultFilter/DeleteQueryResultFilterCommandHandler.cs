@@ -15,20 +15,22 @@ namespace RAGNET.Application.QueryResultFilters.DeleteQueryResultFilter
         {
             try
             {
+                var workflow = request.Workflow;
+                var filterId = workflow.QueryResultFilter?.Id ?? throw new Exception("Query Result Filter not found!");
+
                 var filter = _repo.GetByIdAsync(
-                    request.FilterId,
-                    request.UserId
+                    filterId,
+                    request.User.Id
                 ).Result ?? throw new Exception("QueryResultFilter not found.");
 
-                await _repo.DeleteAsync(filter, request.UserId);
+                await _repo.DeleteAsync(filter, request.User.Id);
                 await _unitOfWork.CommitAsync(cancellationToken);
                 return true;
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 await _unitOfWork.RevertAsync();
-                Console.WriteLine(exc.Message);
-                throw new Exception("Error deleting QueryResultFilter", exc);
+                throw;
             }
         }
     }

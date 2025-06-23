@@ -4,12 +4,9 @@ using RAGNET.Domain.QueryResultFilters;
 namespace RAGNET.Application.QueryResultFilters.DeleteQueryResultFilter
 {
     public class DeleteQueryResultFilterCommand(
-        QueryResultFilterId filterId,
-        string userId
-    ) : ICommand<bool>
+        QueryResultFilterStrategy strategy
+    ) : WorkflowAndUserAwareCommand<bool>
     {
-        public Guid Id { get; } = Guid.NewGuid();
-        public QueryResultFilterId FilterId { get; } = filterId;
-        public string UserId { get; } = userId;
+        public QueryResultFilterStrategy Strategy { get; } = strategy;
     }
 }

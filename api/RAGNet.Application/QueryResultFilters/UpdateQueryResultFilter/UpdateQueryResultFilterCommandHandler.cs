@@ -15,9 +15,12 @@ namespace RAGNET.Application.QueryResultFilters.UpdateQueryResultFilter
         {
             try
             {
+                var workflow = request.Workflow;
+                var filterId = workflow.QueryResultFilter?.Id ?? throw new Exception("Filter not enabled!");
+
                 var filter = await _repo.GetByIdAsync(
-                    request.FilterId,
-                    request.UserId
+                    filterId,
+                    request.User.Id
                 ) ?? throw new Exception("QueryResultFilter not found.");
 
                 filter.UpdateMaxItems(request.Data.MaxItems);
@@ -25,16 +28,15 @@ namespace RAGNET.Application.QueryResultFilters.UpdateQueryResultFilter
                 if (request.Data.IsEnabled != null)
                     filter.SetEnableState(request.Data.IsEnabled.Value);
 
-                await _repo.UpdateAsync(filter, request.UserId);
+                await _repo.UpdateAsync(filter, request.User.Id);
                 await _unitOfWork.CommitAsync(cancellationToken);
 
                 return filter.ToDTO();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);
                 await _unitOfWork.RevertAsync();
-                throw new Exception("Error updating content filter.", ex);
+                throw;
             }
         }
     }

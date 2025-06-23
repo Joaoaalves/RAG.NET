@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 
-using RAGNET.Domain.Users;
 using RAGNET.Domain.Workflows;
 
 using RAGNET.Infrastructure.Jobs.Queue;
@@ -23,11 +21,9 @@ namespace web.Controllers.Workflows
     [Route("api/workflows")]
     [ApiController]
     public class WorkflowController(
-        UserManager<User> userManager,
         CommandsExecutor commandsExecutor,
         QueriesExecutor queriesExecutor) : ControllerBase
     {
-        private readonly UserManager<User> _userManager = userManager;
         private readonly CommandsExecutor _commandExecutor = commandsExecutor;
         private readonly QueriesExecutor _queriesExecutor = queriesExecutor;
 
@@ -37,11 +33,7 @@ namespace web.Controllers.Workflows
         {
             try
             {
-                var user = await _userManager.GetUserAsync(User);
-                if (user == null)
-                    return Unauthorized();
-
-                var command = new CreateWorkflowCommand(dto, user);
+                var command = new CreateWorkflowCommand(dto);
                 var workflowId = await _commandExecutor.Execute(command);
 
                 return Ok(new { Message = "Workflow created!", WorkflowId = workflowId });
@@ -60,12 +52,7 @@ namespace web.Controllers.Workflows
         [Authorize]
         public async Task<IActionResult> GetWorkflows()
         {
-            var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-                return Unauthorized();
-
-            var query = new GetUserWorkflowsQuery(user.Id);
+            var query = new GetUserWorkflowsQuery();
             var workflows = await _queriesExecutor.Execute(query);
 
             return Ok(new { Workflows = workflows });
@@ -75,15 +62,10 @@ namespace web.Controllers.Workflows
         [Authorize]
         public async Task<IActionResult> GetWorkflow([FromRoute] Guid id)
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-                return Unauthorized();
-
             try
             {
                 var query = new GetWorkflowDetailsQuery(
-                    new WorkflowId(id),
-                    user.Id
+                    new WorkflowId(id)
                 );
 
                 var workflowDetails = await _queriesExecutor.Execute(query);
@@ -100,16 +82,10 @@ namespace web.Controllers.Workflows
         [Authorize]
         public async Task<IActionResult> UpdateWorkflow([FromBody] WorkflowDetailsUpdateDTO dto, [FromRoute] Guid id)
         {
-            var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-                return Unauthorized();
-
             try
             {
                 var command = new UpdateWorkflowCommand(
                     new WorkflowId(id),
-                    user.Id,
                     dto.Name,
                     dto.Description,
                     dto.IsActive,
@@ -130,16 +106,10 @@ namespace web.Controllers.Workflows
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteWorkflow([FromRoute] Guid id)
         {
-            var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-                return Unauthorized();
-
             try
             {
                 var command = new DeleteWorkflowCommand(
-                    new WorkflowId(id),
-                    user.Id
+                    new WorkflowId(id)
                 );
 
                 var deleted = await _commandExecutor.Execute(command);

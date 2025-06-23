@@ -2,7 +2,6 @@ using System.Text.Json.Serialization;
 
 using RAGNET.Domain.Chunkers;
 
-using RAGNET.Application.Converters;
 using RAGNET.Application.Workflows.CallbackUrls;
 using RAGNET.Application.QueryEnhancers;
 using RAGNET.Application.QueryResultFilters;

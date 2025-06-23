@@ -22,7 +22,7 @@ namespace RAGNET.Application.Workflows.UpdateWorkflow
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         public async Task<WorkflowDetailsDTO> Handle(UpdateWorkflowCommand request, CancellationToken cancellationToken)
         {
-            var workflow = await _workflowRepository.GetByIdAsync(request.WorkflowId, request.UserId)
+            var workflow = await _workflowRepository.GetByIdAsync(request.WorkflowId, request.User.Id)
                                       ?? throw new Exception("Invalid workflow ID");
 
             if (request.ConversationProviderConfig is not null)
@@ -49,10 +49,10 @@ namespace RAGNET.Application.Workflows.UpdateWorkflow
             if (request.IsActive is not null)
                 workflow.SetActivationState(request.IsActive.Value);
 
-            await _workflowRepository.UpdateAsync(workflow, request.UserId);
+            await _workflowRepository.UpdateAsync(workflow, request.User.Id);
             await _unitOfWork.CommitAsync(cancellationToken);
 
-            return workflow.ToWorkflowDetailsDTOFromWorkflow();
+            return workflow.ToWorkflowDetailsDTO();
         }
     }
 }

@@ -5,11 +5,8 @@ using RAGNET.Application.Configuration.Commands;
 
 namespace RAGNET.Application.Workflows.CreateWorkflow
 {
-    public class CreateWorkflowCommand(WorkflowCreationDTO dto, User user) : ICommand<WorkflowId>
+    public class CreateWorkflowCommand(WorkflowCreationDTO dto) : UserAwareCommand<WorkflowId>
     {
-        public Guid Id { get; } = Guid.NewGuid();
-
         public WorkflowCreationDTO Dto { get; } = dto;
-        public User User { get; } = user;
     }
 }

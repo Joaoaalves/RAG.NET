@@ -12,8 +12,8 @@ namespace RAGNET.Application.Workflows.DeleteWorkflow
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         public async Task<bool> Handle(DeleteWorkflowCommand request, CancellationToken cancellationToken)
         {
-            var workflow = await _workflowRepository.GetByIdAsync(request.WorkflowId, request.UserId) ?? throw new Exception("Workflow not found");
-            await _workflowRepository.DeleteAsync(workflow, request.UserId);
+            var workflow = await _workflowRepository.GetByIdAsync(request.WorkflowId, request.User.Id) ?? throw new Exception("Workflow not found");
+            await _workflowRepository.DeleteAsync(workflow, request.User.Id);
             await _unitOfWork.CommitAsync(cancellationToken);
             return true;
         }

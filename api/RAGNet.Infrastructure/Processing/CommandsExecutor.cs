@@ -1,25 +1,44 @@
 using Microsoft.Extensions.DependencyInjection;
 using RAGNET.Application.Configuration.Commands;
+using RAGNET.Application.Configuration.Commands.Behaviors;
 using RAGNET.Domain.SeedWork;
 
 namespace RAGNET.Infrastructure.Processing
 {
-    public class CommandsExecutor(IServiceScopeFactory scopeFactory)
+    public class CommandsExecutor(IServiceProvider provider)
     {
-        private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
-
-        public async Task Execute(ICommand command)
-        {
-            using var scope = _scopeFactory.CreateScope();
-            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-            await mediator.Send(command);
-        }
+        private readonly IServiceProvider _provider = provider;
 
         public async Task<TResult> Execute<TResult>(ICommand<TResult> command)
         {
-            using var scope = _scopeFactory.CreateScope();
+            using var scope = _provider.CreateScope();
+
             var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-            return await mediator.Send(command);
+
+            // Busca behaviors específicos para esse comando
+            var behaviorsType = typeof(ICommandPipelineBehavior<,>).MakeGenericType(command.GetType(), typeof(TResult));
+            var behaviors = scope.ServiceProvider.GetServices(behaviorsType)
+                .Cast<dynamic>()
+                .Reverse()
+                .ToList();
+
+            Func<dynamic, Task<TResult>> handlerDelegate = (cmd) => mediator.Send((ICommand<TResult>)cmd);
+
+            // Encadeia os behaviors
+            var pipeline = behaviors.Aggregate(
+                handlerDelegate,
+                (next, behavior) => (cmd) => behavior.Handle(cmd, next, CancellationToken.None)
+            );
+
+            return await pipeline(command);
+        }
+
+        public async Task Execute(ICommand command)
+        {
+            using var scope = _provider.CreateScope();
+
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            await mediator.Send(command);
         }
     }
 }

@@ -7,15 +7,11 @@ namespace RAGNET.Application.Workflows.CallbackUrls.UpdateCallbackUrl
 {
     public class UpdateCallbackUrlCommand(
         WorkflowId workflowId,
-        string userId,
         CallbackUrlId callbackUrlId,
         URL url
-    ) : ICommand<CallbackUrlDTO>
+    ) : UserAwareCommand<CallbackUrlDTO>
     {
-        public Guid Id { get; } = Guid.NewGuid();
-
         public WorkflowId WorkflowId { get; } = workflowId;
-        public string UserId { get; } = userId;
         public CallbackUrlId CallbackUrlId { get; } = callbackUrlId;
         public URL Url { get; } = url;
     }

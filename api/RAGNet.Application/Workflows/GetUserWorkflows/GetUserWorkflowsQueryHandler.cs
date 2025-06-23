@@ -11,11 +11,11 @@ namespace RAGNET.Application.Workflows.GetUserWorkflows
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
         public async Task<List<WorkflowDetailsDTO>> Handle(GetUserWorkflowsQuery request, CancellationToken cancellationToken)
         {
-            var workflows = await _workflowRepository.GetUserWorkflows(request.UserId);
+            var workflows = await _workflowRepository.GetUserWorkflows(request.User.Id);
             var workflowsDTO = new List<WorkflowDetailsDTO>();
 
             foreach (var workflow in workflows)
-                workflowsDTO.Add(workflow.ToWorkflowDetailsDTOFromWorkflow());
+                workflowsDTO.Add(workflow.ToWorkflowDetailsDTO());
 
             return workflowsDTO;
         }

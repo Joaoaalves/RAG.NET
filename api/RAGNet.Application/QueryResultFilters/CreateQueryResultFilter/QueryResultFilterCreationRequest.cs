@@ -1,6 +1,6 @@
 namespace RAGNET.Application.QueryResultFilters.CreateQueryResultFilter
 {
-    public class RSECreationRequest
+    public class QueryResultFilterCreationRequest
     {
         public int MaxItems { get; set; }
     }

@@ -20,7 +20,7 @@ namespace RAGNET.Application.QueryResultFilters
 
             return filter.Strategy switch
             {
-                QueryResultFilterStrategyEnum.RELEVANT_SEGMENT_EXTRACTION => new RSEFilterStrategy(
+                QueryResultFilterStrategy.RELEVANT_SEGMENT_EXTRACTION => new RSEFilterStrategy(
                     _promptService.GetPrompt("Filters", "rse"),
                     maximumItems
                 ),

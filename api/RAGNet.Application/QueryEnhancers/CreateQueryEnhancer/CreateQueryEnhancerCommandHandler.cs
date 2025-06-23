@@ -15,7 +15,21 @@ namespace RAGNET.Application.QueryEnhancers.CreateQueryEnhancer
         {
             try
             {
-                var queryEnhancer = await _queryEnhancerRepository.AddAsync(request.QueryEnhancer);
+                var user = request.User;
+                var workflow = request.Workflow;
+
+                if (workflow.QueryEnhancers.Any(qe => qe.Type == request.Type))
+                    throw new Exception("Query Enhancer already enabled!");
+
+                var queryEnhancer = QueryEnhancer.Create(
+                    type: request.Type,
+                    workflowId: workflow.Id,
+                    userId: user.Id,
+                    prompt: request.Prompt,
+                    maxQueries: request.MaxQueries
+                );
+
+                await _queryEnhancerRepository.AddAsync(queryEnhancer);
                 await _unitOfWork.CommitAsync(cancellationToken);
 
                 return queryEnhancer.ToDTO();

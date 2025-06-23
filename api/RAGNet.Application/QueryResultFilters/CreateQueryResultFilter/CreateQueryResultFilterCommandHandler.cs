@@ -17,15 +17,23 @@ namespace RAGNET.Application.QueryResultFilters.CreateQueryResultFilter
         {
             try
             {
-                var filter = await _filterRepository.AddAsync(request.Filter);
+                var workflow = request.Workflow;
+
+                if (workflow.QueryResultFilter != null && workflow.QueryResultFilter.IsEnabled)
+                    throw new Exception("Relevant Segment Extraction already enabled!");
+
+                var filterData = request.Data.ToFilter(workflow.Id, request.User.Id);
+
+                var filter = await _filterRepository.AddAsync(filterData);
+
                 await _unitOfWork.CommitAsync(cancellationToken);
+
                 return filter.ToDTO();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex.Message);
                 await _unitOfWork.RevertAsync();
-                throw new Exception("Error creating query enhancer", ex);
+                throw;
             }
         }
     }

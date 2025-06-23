@@ -13,7 +13,7 @@ namespace RAGNET.Application.Workflows
     public static class WorkflowMapper
     {
 
-        public static WorkflowDetailsDTO ToWorkflowDetailsDTOFromWorkflow(
+        public static WorkflowDetailsDTO ToWorkflowDetailsDTO(
             this Workflow workflow)
         {
             var chunkerSettings = workflow.Chunker!.Metas.ToDictionary(m => m.Key, m => m.Value).ToChunkerSettingsDTOfromDictionary();

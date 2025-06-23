@@ -15,23 +15,27 @@ namespace RAGNET.Application.QueryEnhancers.UpdateQueryEnhancer
         {
             try
             {
-                var qe = await _queryEnhancerRepository.GetByIdAsync(request.QueryEnhancerId, request.UserId) ?? throw new Exception("Invalid Query Enhancer.");
+                var workflow = request.Workflow;
+
+                var qe = workflow.QueryEnhancers.FirstOrDefault(qe => qe.Type == request.Strategy) ?? throw new Exception("Query Enhancer not enabled!");
+
+                var queryEnhancer = await _queryEnhancerRepository.GetByIdAsync(qe.Id, request.User.Id) ?? throw new Exception("Invalid Query Enhancer.");
 
                 if (request.Strategy == QueryEnhancerStrategy.AUTO_QUERY && request.Guidance != null)
                 {
-                    qe.UpdatePrompt(request.Guidance);
+                    queryEnhancer.UpdatePrompt(request.Guidance);
                 }
 
-                qe.UpdateMaxQueries(request.MaxQueries);
+                queryEnhancer.UpdateMaxQueries(request.MaxQueries);
 
                 if (request.IsEnabled != null)
-                    qe.SetEnableState(request.IsEnabled.Value);
+                    queryEnhancer.SetEnableState(request.IsEnabled.Value);
 
-                await _queryEnhancerRepository.UpdateAsync(qe);
+                await _queryEnhancerRepository.UpdateAsync(queryEnhancer);
 
                 await _unitOfWork.CommitAsync(cancellationToken);
 
-                return qe.ToDTO();
+                return queryEnhancer.ToDTO();
             }
             catch (Exception ex)
             {

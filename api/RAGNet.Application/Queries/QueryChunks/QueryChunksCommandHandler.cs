@@ -46,7 +46,6 @@ namespace RAGNET.Application.Queries.QueryChunks
                     queryDTO.TopK
                 );
 
-                Console.WriteLine($"Found ${queryResults.Count}");
                 // Aggregate and rank topK results
                 List<VectorQueryResult> aggregatedResults = _queryResultAggregatorService.AggregateResults(queryResults,
                     queryDTO.MinScore,

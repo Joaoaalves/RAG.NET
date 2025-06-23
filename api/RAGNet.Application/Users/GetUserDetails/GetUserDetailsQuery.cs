@@ -7,7 +7,6 @@ namespace RAGNET.Application.Users.GetUserDetails
         ClaimsPrincipal claimsPrincipal
     ) : IQuery<UserDetailsDTO>
     {
-        public Guid Id { get; } = Guid.NewGuid();
         public ClaimsPrincipal Principal { get; } = claimsPrincipal;
     }
 }

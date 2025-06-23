@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 
-using RAGNET.Domain.Workflows;
 
 using RAGNET.Application.Filters;
-using RAGNET.Infrastructure.Processing;
 using RAGNET.Application.QueryEnhancers.EnhanceQuery;
 using RAGNET.Application.Queries.QueryChunks;
 using RAGNET.Application.Queries.FilterQueryResult;
 using RAGNET.Application.Queries;
+
+using RAGNET.Infrastructure.Processing;
 
 namespace web.Controllers.Workflows.Queries
 {
@@ -24,31 +24,14 @@ namespace web.Controllers.Workflows.Queries
         {
             try
             {
-                var workflow = HttpContext.Items["Workflow"] as Workflow
-                    ?? throw new Exception("Workflow not found in context.");
+                var enhanceQuery = new EnhanceQueryCommand(queryDTO);
+                var queries = await _commandsExecutor.Execute(enhanceQuery);
 
-                var enhanceQueryCommand = new EnhanceQueryCommand(
-                    workflow,
-                    queryDTO
-                );
+                var chunkQuery = new QueryChunksCommand(queries, queryDTO);
+                var chunks = await _commandsExecutor.Execute(chunkQuery);
 
-                var queries = await _commandsExecutor.Execute(enhanceQueryCommand);
-
-                var queryChunksCommand = new QueryChunksCommand(
-                    workflow,
-                    queries,
-                    queryDTO
-                );
-
-                var chunks = await _commandsExecutor.Execute(queryChunksCommand);
-                Console.WriteLine($"Chunks length: {chunks.Count}");
-                var filterQueryResult = new FilterQueryResultCommand(
-                    chunks,
-                    workflow,
-                    queryDTO.Query
-                );
-
-                var filteredContent = await _commandsExecutor.Execute(filterQueryResult);
+                var filterQuery = new FilterQueryResultCommand(chunks, queryDTO.Query);
+                var filteredContent = await _commandsExecutor.Execute(filterQuery);
 
                 return Ok(new { Chunks = chunks, FilteredContent = filteredContent });
             }

@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using RAGNET.Domain.Chunkers;
 
-namespace RAGNET.Application.Converters
+namespace RAGNET.Application.Chunkers
 {
     public class ChunkerStrategyConverter : JsonConverter<ChunkerStrategy>
     {

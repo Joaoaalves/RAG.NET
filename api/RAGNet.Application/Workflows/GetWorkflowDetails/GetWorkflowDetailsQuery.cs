@@ -3,9 +3,10 @@ using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.Workflows.GetWorkflowDetails
 {
-    public class GetWorkflowDetailsQuery(WorkflowId workflowId, string userId) : IQuery<WorkflowDetailsDTO>
+    public class GetWorkflowDetailsQuery(
+        WorkflowId workflowId
+    ) : UserAwareQuery<WorkflowDetailsDTO>
     {
         public WorkflowId WorkflowId { get; } = workflowId;
-        public string UserId { get; } = userId;
     }
 }

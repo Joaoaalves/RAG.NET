@@ -8,17 +8,14 @@ namespace RAGNET.Application.Workflows.UpdateWorkflow
 {
     public class UpdateWorkflowCommand(
         WorkflowId workflowId,
-        string userId,
         string? name,
         string? description,
         bool? isActive,
         EmbeddingProviderConfigDTO? embeddingProviderConfig,
         ConversationProviderConfigDTO? conversationProviderConfig
-    ) : ICommand<WorkflowDetailsDTO>
+    ) : UserAwareCommand<WorkflowDetailsDTO>
     {
-        public Guid Id => Guid.NewGuid();
         public WorkflowId WorkflowId { get; } = workflowId;
-        public string UserId { get; } = userId;
         public string? Name { get; } = name;
         public string? Description { get; } = description;
         public bool? IsActive { get; } = isActive;

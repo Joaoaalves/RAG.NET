@@ -4,19 +4,19 @@ using RAGNET.Domain.QueryResultFilters;
 
 namespace RAGNET.Application.QueryResultFilters
 {
-    public class QueryResultFilterStrategyConverter : JsonConverter<QueryResultFilterStrategyEnum>
+    public class QueryResultFilterStrategyConverter : JsonConverter<QueryResultFilterStrategy>
     {
-        public override QueryResultFilterStrategyEnum Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override QueryResultFilterStrategy Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var value = reader.GetString();
             return value switch
             {
-                "Relevant Segment Extraction" => QueryResultFilterStrategyEnum.RELEVANT_SEGMENT_EXTRACTION,
+                "Relevant Segment Extraction" => QueryResultFilterStrategy.RELEVANT_SEGMENT_EXTRACTION,
                 _ => throw new ArgumentOutOfRangeException("Invalid QueryResultFilter Strategy.")
             };
         }
 
-        public override void Write(Utf8JsonWriter writer, QueryResultFilterStrategyEnum value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, QueryResultFilterStrategy value, JsonSerializerOptions options)
         {
             var stringValue = value.ToString();
             writer.WriteStringValue(stringValue);
