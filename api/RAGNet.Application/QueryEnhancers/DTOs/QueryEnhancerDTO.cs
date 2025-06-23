@@ -1,0 +1,16 @@
+using System.Text.Json.Serialization;
+
+using RAGNET.Domain.QueryEnhancers;
+
+namespace RAGNET.Application.QueryEnhancers.DTOs
+{
+    public class QueryEnhancerDTO
+    {
+        public Guid Id { get; set; }
+        [JsonConverter(typeof(QueryEnhancerStrategyConverter))]
+        public QueryEnhancerStrategy Type { get; set; }
+        public int MaxQueries { get; set; }
+        public bool IsEnabled { get; set; } = true;
+        public string? Guidance { get; set; }
+    }
+}

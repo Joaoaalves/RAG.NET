@@ -1,6 +1,6 @@
 using System.Web;
 using Microsoft.Extensions.Configuration;
-using RAGNET.Application.Feedbacks;
+using RAGNET.Application.Feedbacks.Services;
 
 
 namespace RAGNET.Infrastructure.Trello

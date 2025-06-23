@@ -5,10 +5,10 @@ using RAGNET.Domain.SharedKernel.URLs;
 using RAGNET.Domain.Workflows;
 using RAGNET.Domain.Workflows.CallbackUrls;
 
-using RAGNET.Application.Workflows.CallbackUrls.CreateCallbackUrl;
-using RAGNET.Application.Workflows.CallbackUrls.DeleteCallbackUrl;
-using RAGNET.Application.Workflows.CallbackUrls.UpdateCallbackUrl;
-using RAGNET.Application.Workflows.CreateWorkflow;
+using RAGNET.Application.Workflows.CallbackUrls.Commands.CreateCallbackUrl;
+using RAGNET.Application.Workflows.CallbackUrls.Commands.DeleteCallbackUrl;
+using RAGNET.Application.Workflows.CallbackUrls.Commands.UpdateCallbackUrl;
+using RAGNET.Application.Workflows.Commands.CreateWorkflow;
 
 using RAGNET.Infrastructure.Processing;
 

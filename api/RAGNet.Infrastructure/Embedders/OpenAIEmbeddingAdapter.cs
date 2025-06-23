@@ -1,5 +1,5 @@
 using OpenAI.Embeddings;
-using RAGNET.Application.Providers.Embedding;
+using RAGNET.Application.Infrastructure.Providers.Embedding;
 
 namespace RAGNET.Infrastructure.Embedders
 {

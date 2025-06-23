@@ -1,4 +1,4 @@
-using RAGNET.Application.Providers.Conversation;
+using RAGNET.Application.Infrastructure.Providers.Conversation;
 using RAGNET.Domain.SharedKernel.Providers;
 
 namespace RAGNET.Infrastructure.ChatCompletions

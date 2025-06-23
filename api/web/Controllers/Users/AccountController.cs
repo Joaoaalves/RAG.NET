@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using RAGNET.Application.Users.GetUserDetails;
-using RAGNET.Application.Users.RegisterUser;
+using RAGNET.Application.Users.Queries.GetUserDetails;
+using RAGNET.Application.Users.Commands.RegisterUser;
 
 using RAGNET.Infrastructure.Processing;
 

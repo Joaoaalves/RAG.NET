@@ -2,7 +2,7 @@ using RAGNET.Domain.SharedKernel.Models;
 using RAGNET.Domain.SharedKernel.Providers;
 
 using RAGNET.Infrastructure.Exceptions;
-using RAGNET.Application.Providers.Embedding;
+using RAGNET.Application.Infrastructure.Providers.Embedding;
 
 namespace RAGNET.Infrastructure.Embedders
 {

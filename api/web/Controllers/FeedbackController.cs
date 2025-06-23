@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 
-using RAGNET.Application.Feedbacks;
+using RAGNET.Application.Feedbacks.DTOs;
+using RAGNET.Application.Feedbacks.Services;
 
 namespace web.Controllers
 {

@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 // Domain
 using RAGNET.Domain.QueryEnhancers;
 
-using RAGNET.Application.Filters;
-using RAGNET.Application.QueryEnhancers.CreateQueryEnhancer;
-using RAGNET.Application.QueryEnhancers.UpdateQueryEnhancer;
-using RAGNET.Application.QueryEnhancers.DeleteQueryEnhancer;
+using web.Filters;
+using RAGNET.Application.QueryEnhancers.Commands.CreateQueryEnhancer;
+using RAGNET.Application.QueryEnhancers.Commands.UpdateQueryEnhancer;
+using RAGNET.Application.QueryEnhancers.Commands.DeleteQueryEnhancer;
 
 using RAGNET.Infrastructure.Processing;
 

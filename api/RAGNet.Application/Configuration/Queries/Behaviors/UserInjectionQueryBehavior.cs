@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using RAGNET.Application.Configuration.ExecutionContext;
-using RAGNET.Domain.Users;
 using RAGNET.Domain.SeedWork;
+using RAGNET.Domain.Users;
 
 namespace RAGNET.Application.Configuration.Queries.Behaviors
 {

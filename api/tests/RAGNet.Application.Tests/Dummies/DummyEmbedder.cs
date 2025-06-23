@@ -1,4 +1,4 @@
-using RAGNET.Application.Providers.Embedding;
+using RAGNET.Application.Infrastructure.Providers.Embedding;
 
 namespace tests.RAGNet.Application.Tests.Dummies
 {

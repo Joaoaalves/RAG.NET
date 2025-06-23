@@ -1,7 +1,7 @@
 using Qdrant.Client;
 using Qdrant.Client.Grpc;
 
-using RAGNET.Application.Providers;
+using RAGNET.Application.Infrastructure.Providers;
 
 namespace RAGNET.Infrastructure.Qdrant
 {

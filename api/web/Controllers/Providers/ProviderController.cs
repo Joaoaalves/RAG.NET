@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 
 using RAGNET.Domain.ProvidersApiKeys;
 
-using RAGNET.Application.ProviderApiKeys.CreateProviderApiKey;
-using RAGNET.Application.ProviderApiKeys.GetUserProviderApiKeys;
-using RAGNET.Application.ProviderApiKeys.UpdateProviderApiKey;
-using RAGNET.Application.ProviderApiKeys.DeleteProviderApiKey;
+using RAGNET.Application.ProviderApiKeys.Commands.CreateProviderApiKey;
+using RAGNET.Application.ProviderApiKeys.Queries.GetUserProviderApiKeys;
+using RAGNET.Application.ProviderApiKeys.Commands.UpdateProviderApiKey;
+using RAGNET.Application.ProviderApiKeys.Commands.DeleteProviderApiKey;
 
 using RAGNET.Infrastructure.Processing;
 

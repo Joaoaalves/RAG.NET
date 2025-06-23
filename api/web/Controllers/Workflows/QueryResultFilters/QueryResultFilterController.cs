@@ -1,15 +1,11 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-using RAGNET.Application.Filters;
-using RAGNET.Application.QueryResultFilters;
+using web.Filters;
 
-using RAGNET.Domain.Users;
-using RAGNET.Domain.Workflows;
 using RAGNET.Infrastructure.Processing;
-using RAGNET.Application.QueryResultFilters.CreateQueryResultFilter;
-using RAGNET.Application.QueryResultFilters.UpdateQueryResultFilter;
-using RAGNET.Application.QueryResultFilters.DeleteQueryResultFilter;
+using RAGNET.Application.QueryResultFilters.Commands.CreateQueryResultFilter;
+using RAGNET.Application.QueryResultFilters.Commands.UpdateQueryResultFilter;
+using RAGNET.Application.QueryResultFilters.Commands.DeleteQueryResultFilter;
 using RAGNET.Domain.QueryResultFilters;
 
 

@@ -4,22 +4,23 @@ using FluentValidation;
 using RAGNET.Domain.SharedKernel.Providers;
 using RAGNET.Domain.SeedWork;
 
-using RAGNET.Application.Users;
-using RAGNET.Application.Queries;
-using RAGNET.Application.Providers;
-using RAGNET.Application.Chunkers;
-using RAGNET.Application.ProviderApiKeys;
+using RAGNET.Application.Infrastructure.Providers;
 using RAGNET.Application.Configuration.Validation;
-using RAGNET.Application.Workflows.CreateWorkflow;
-using RAGNET.Application.Providers.Embedding;
-using RAGNET.Application.Providers.Conversation;
+using RAGNET.Application.Workflows.Commands.CreateWorkflow;
+using RAGNET.Application.Infrastructure.Providers.Embedding;
+using RAGNET.Application.Infrastructure.Providers.Conversation;
+using RAGNET.Application.Configuration.Commands.Behaviors;
+using RAGNET.Application.Configuration.Queries.Behaviors;
+using RAGNET.Application.Chunkers.Services;
+using RAGNET.Application.ProviderApiKeys.Services;
 
 using RAGNET.Infrastructure.Embedders;
 using RAGNET.Infrastructure.ChatCompletions;
 using RAGNET.Infrastructure.Providers;
 using RAGNET.Infrastructure.Processing;
-using RAGNET.Application.Configuration.Commands.Behaviors;
-using RAGNET.Application.Configuration.Queries.Behaviors;
+using RAGNET.Application.Queries.Services;
+
+using web.Identity;
 
 namespace web.Configurations
 {

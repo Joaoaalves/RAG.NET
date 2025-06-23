@@ -8,13 +8,13 @@ using RAGNET.Infrastructure.Jobs;
 using RAGNET.Infrastructure.Exceptions;
 using RAGNET.Infrastructure.Processing;
 
-using RAGNET.Application.Filters;
-using RAGNET.Application.Workflows.CreateWorkflow;
-using RAGNET.Application.Workflows.DeleteWorkflow;
-using RAGNET.Application.Workflows.GetWorkflowDetails;
-using RAGNET.Application.Workflows.UpdateWorkflow;
-using RAGNET.Application.Workflows.GetUserWorkflows;
-using RAGNET.Application.Workflows.CallbackUrls;
+using web.Filters;
+using RAGNET.Application.Workflows.Commands.CreateWorkflow;
+using RAGNET.Application.Workflows.Commands.DeleteWorkflow;
+using RAGNET.Application.Workflows.Queries.GetWorkflowDetails;
+using RAGNET.Application.Workflows.Commands.UpdateWorkflow;
+using RAGNET.Application.Workflows.Queries.GetUserWorkflows;
+using RAGNET.Application.Workflows.CallbackUrls.Mappers;
 
 namespace web.Controllers.Workflows
 {

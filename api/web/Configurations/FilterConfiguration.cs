@@ -1,4 +1,4 @@
-using RAGNET.Application.Filters;
+using web.Filters;
 
 namespace web.Configurations
 {

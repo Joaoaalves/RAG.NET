@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using RAGNET.Domain.SharedKernel.Providers;
 
 using RAGNET.Infrastructure.Processing;
-using RAGNET.Application.ProviderApiKeys.GetUserProviderApiKeys;
-using RAGNET.Application.Providers.Conversation;
-using RAGNET.Application.Providers.Embedding;
+using RAGNET.Application.ProviderApiKeys.Queries.GetUserProviderApiKeys;
+using RAGNET.Application.Infrastructure.Providers.Embedding.DTOs;
+using RAGNET.Application.Infrastructure.Providers.Conversation.DTOs;
 
 namespace web.Controllers.Providers
 {

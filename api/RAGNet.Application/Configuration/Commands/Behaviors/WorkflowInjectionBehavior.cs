@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Http;
-using RAGNET.Application.Configuration.ExecutionContext;
+using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.Configuration.Commands.Behaviors

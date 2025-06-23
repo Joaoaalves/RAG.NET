@@ -1,5 +1,5 @@
-using RAGNET.Application.Providers;
-using RAGNET.Application.Providers.Embedding;
+using RAGNET.Application.Infrastructure.Providers;
+using RAGNET.Application.Infrastructure.Providers.Embedding;
 using RAGNET.Domain.SharedKernel.Providers;
 
 namespace RAGNET.Infrastructure.Embedders

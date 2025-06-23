@@ -14,8 +14,8 @@ using RAGNET.Infrastructure.Workers;
 using RAGNET.Infrastructure.Jobs;
 using RAGNET.Infrastructure.Embedders;
 
-using RAGNET.Application.Feedbacks;
-using RAGNET.Application.Providers;
+using RAGNET.Application.Feedbacks.Services;
+using RAGNET.Application.Infrastructure.Providers;
 
 namespace web.Configurations
 {

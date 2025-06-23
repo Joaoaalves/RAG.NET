@@ -3,7 +3,7 @@ using Anthropic.SDK;
 using Anthropic.SDK.Constants;
 using Anthropic.SDK.Messaging;
 
-using RAGNET.Application.Providers.Conversation;
+using RAGNET.Application.Infrastructure.Providers.Conversation;
 
 using RAGNET.Infrastructure.Exceptions.Adapters;
 
