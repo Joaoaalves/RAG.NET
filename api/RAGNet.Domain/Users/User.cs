@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using RAGNET.Domain.ProvidersApiKeys;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.SharedKernel.Users;
+using RAGNET.Domain.TokenWallets;
 using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Domain.Users
@@ -13,6 +14,7 @@ namespace RAGNET.Domain.Users
 
         public string FirstName { get; private set; } = null!;
         public string LastName { get; private set; } = null!;
+        public TokenWallet TokenWallet { get; private set; } = null!;
 
         public IReadOnlyCollection<Workflow> Workflows => _workflows.AsReadOnly();
         public IReadOnlyCollection<ProviderApiKey> ApiKeys => _apiKeys.AsReadOnly();

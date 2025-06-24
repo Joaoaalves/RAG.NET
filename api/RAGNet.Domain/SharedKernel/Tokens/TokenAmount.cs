@@ -9,12 +9,8 @@ namespace RAGNET.Domain.SharedKernel.Tokens
 
         public static readonly TokenAmount Zero = new(0);
 
-        public TokenAmount(decimal tokens)
-        {
-            CheckRule(new TokensMustBeGreaterThanOrEqualToZero((long)tokens / 1000));
-            Value = (long)(tokens * 1000m);
-        }
-
+        // EF Core
+        private TokenAmount() { }
         private TokenAmount(long militokens)
         {
             CheckRule(new TokensMustBeGreaterThanOrEqualToZero(militokens));
@@ -23,7 +19,8 @@ namespace RAGNET.Domain.SharedKernel.Tokens
         }
 
         public static TokenAmount FromMilitokens(long militokens) => new(militokens);
-
+        public static TokenAmount FromDecimal(decimal tokens)
+            => new((long)(tokens * 1000m));
         public decimal ToDecimal() => Value / 1000m;
 
         public static TokenAmount operator +(TokenAmount a, TokenAmount b)

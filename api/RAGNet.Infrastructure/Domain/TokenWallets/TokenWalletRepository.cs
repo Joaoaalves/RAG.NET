@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using RAGNET.Domain.TokenWallets;
 using RAGNET.Infrastructure.Database;
 
