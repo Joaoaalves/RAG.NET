@@ -140,5 +140,7 @@ namespace RAGNET.Application.Chunkers.Services
             }";
             return JsonDocument.Parse(evaluationSchemaString);
         }
+
+        public decimal GetCostMultiplier() => 5m;
     }
 }

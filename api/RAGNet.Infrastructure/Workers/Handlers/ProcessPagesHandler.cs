@@ -9,14 +9,26 @@ using RAGNET.Application.ProviderApiKeys.Services;
 using RAGNET.Infrastructure.Jobs;
 using RAGNET.Infrastructure.Jobs.Queue;
 using RAGNET.Application.Infrastructure.Providers.Embedding;
+using RAGNET.Domain.TokenWallets;
+using RAGNET.Domain.SeedWork;
+using RAGNET.Application.TokenWallets.Services;
 
 namespace RAGNET.Infrastructure.Workers.Handlers
 {
-    public class ProcessPagesHandler(IApiKeyResolverService apiKeyResolver, IEmbeddingProcessingService embeddingService, IJobNotificationService realTimeNotifier) : BaseJobProcessingHandler
+    public class ProcessPagesHandler(
+        IApiKeyResolverService apiKeyResolver,
+        IEmbeddingProcessingService embeddingService,
+        IJobNotificationService realTimeNotifier,
+        ITokenWalletRepository tokenWalletRepository,
+        ITokenCostCalculator tokenCostCalculator,
+        IUnitOfWork unitOfWork) : BaseJobProcessingHandler
     {
         public readonly IApiKeyResolverService _apiKeyResolver = apiKeyResolver;
         public readonly IEmbeddingProcessingService _embeddingService = embeddingService;
         public readonly IJobNotificationService _realTimeNotifier = realTimeNotifier;
+        public readonly ITokenWalletRepository _tokenWalletRepository = tokenWalletRepository;
+        public readonly ITokenCostCalculator _tokenCostCalculator = tokenCostCalculator;
+        public readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         private readonly ProcessDTO _currentProcess = new()
         {
@@ -46,7 +58,10 @@ namespace RAGNET.Infrastructure.Workers.Handlers
         {
             var workflow = job.Context.Workflow;
 
+            var wallet = await _tokenWalletRepository.GetByUserIdAsync(workflow.UserId) ?? throw new Exception("Wallet not Found");
+
             var document = job.Context.Document ?? throw new Exception("Document is not set");
+
             await NotifyProgress(job, document, ct);
 
             var convoKey = await _apiKeyResolver.ResolveForUserAsync(
@@ -61,15 +76,30 @@ namespace RAGNET.Infrastructure.Workers.Handlers
             var totalPages = document.Pages.Count;
             int processedPages = 0;
 
+            var chunker = _embeddingService.GetChunker(
+                workflow.Chunker!,
+                workflow.ConversationProviderConfig,
+                convoKey
+            );
+
+            var estimatedCost = _tokenCostCalculator.Calculate(chunker, totalPages);
+
+            wallet.Consume(
+                estimatedCost,
+                "Document Embedding",
+                $"WorkflowId={workflow.Id.Value};Chunker={workflow.Chunker!.StrategyType}"
+            );
+
+            await _tokenWalletRepository.UpdateAsync(wallet);
+
             var chunksBag = new ConcurrentBag<Chunk>();
+
             var counts = await Task.WhenAll(document.Pages.Select(async page =>
             {
                 try
                 {
                     var chunks = (await _embeddingService.ChunkTextAsync(
-                                                    page.Text.Value,
-                                                    workflow.Chunker!,
-                                                    workflow.ConversationProviderConfig,
+                                                    chunker,
                                                     convoKey
                                                  )).ToList();
 
@@ -114,6 +144,8 @@ namespace RAGNET.Infrastructure.Workers.Handlers
                 }
 
             }));
+
+            await _unitOfWork.CommitAsync(ct);
 
             await StoreVectors(chunksBag, job, document, ct);
 

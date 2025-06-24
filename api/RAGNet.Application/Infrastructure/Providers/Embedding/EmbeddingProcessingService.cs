@@ -1,4 +1,5 @@
 using RAGNET.Application.Chunkers.Factories;
+using RAGNET.Application.Chunkers.Services;
 using RAGNET.Application.Infrastructure.Providers.Conversation;
 using RAGNET.Domain.Chunkers;
 using RAGNET.Domain.Documents.Pages.Chunks;
@@ -11,7 +12,10 @@ namespace RAGNET.Application.Infrastructure.Providers.Embedding
     {
         Task<IEnumerable<string>> ChunkTextAsync
         (
-            string text,
+            ITextChunkerService chunker,
+            string text
+        );
+        ITextChunkerService GetChunker(
             Chunker chunkerConfig,
             ConversationProviderConfig conversationProviderConfig,
             string userConversationProviderApiKey
@@ -49,11 +53,11 @@ namespace RAGNET.Application.Infrastructure.Providers.Embedding
 
         }
 
-        public Task<IEnumerable<string>> ChunkTextAsync(
-            string text,
+        public ITextChunkerService GetChunker(
             Chunker chunkerConfig,
             ConversationProviderConfig conversationProviderConfig,
-            string userConversationProviderApiKey)
+            string userConversationProviderApiKey
+        )
         {
             var completionService = _chatCompletionFactory.CreateCompletionService
             (
@@ -61,7 +65,14 @@ namespace RAGNET.Application.Infrastructure.Providers.Embedding
                 conversationProviderConfig
             );
 
-            var chunker = _chunkerFactory.CreateChunker(chunkerConfig, completionService);
+            return _chunkerFactory.CreateChunker(chunkerConfig, completionService);
+        }
+
+        public Task<IEnumerable<string>> ChunkTextAsync(
+            ITextChunkerService chunker,
+            string text
+        )
+        {
             return chunker.ChunkText(text);
         }
 

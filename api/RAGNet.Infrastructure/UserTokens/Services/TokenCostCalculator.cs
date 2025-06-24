@@ -1,3 +1,4 @@
+using RAGNET.Application.Chunkers.Services;
 using RAGNET.Application.Queries.DTOs;
 using RAGNET.Application.Queries.Services;
 using RAGNET.Application.QueryResultFilters.Services;
@@ -9,6 +10,7 @@ namespace RAGNET.Infrastructure.UserTokens.Services
     public class TokenCostCalculator : ITokenCostCalculator
     {
         public readonly int WordsPerPage = 300;
+        public readonly decimal ChunkCostPerPage = 0.02m;
         public TokenAmount Calculate(IQueryEnhancerService queryEnhancer, int maxQueries)
         {
             return TokenAmount.FromDecimal(queryEnhancer.GetCostMultiplier() * maxQueries);
@@ -22,6 +24,13 @@ namespace RAGNET.Infrastructure.UserTokens.Services
             int pages = (int)Math.Ceiling((double)totalWords / WordsPerPage);
 
             return TokenAmount.FromDecimal(queryResultFilterService.GetCostMultiplier() * pages);
+        }
+
+        public TokenAmount Calculate(ITextChunkerService chunkerService, int pages)
+        {
+            return TokenAmount.FromDecimal(
+                chunkerService.GetCostMultiplier() * pages * ChunkCostPerPage
+            );
         }
     }
 }

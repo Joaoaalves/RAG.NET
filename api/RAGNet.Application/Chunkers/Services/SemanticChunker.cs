@@ -62,6 +62,7 @@ namespace RAGNET.Application.Chunkers.Services
             return chunks;
         }
 
+        public decimal GetCostMultiplier() => 4m;
         private JsonDocument GetSchema()
         {
             string schemaString = @"

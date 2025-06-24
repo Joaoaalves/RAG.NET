@@ -30,5 +30,7 @@ namespace RAGNET.Application.Chunkers.Services
                 yield return paragraph.Substring(i, Math.Min(chunkSize, paragraph.Length - i));
             }
         }
+
+        public decimal GetCostMultiplier() => 1;
     }
 }

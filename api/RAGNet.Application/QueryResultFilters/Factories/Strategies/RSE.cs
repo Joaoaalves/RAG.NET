@@ -39,7 +39,7 @@ namespace RAGNET.Application.QueryResultFilters.Factories.Strategies
 
             return chunks;
         }
-        public decimal GetCostMultiplier() => 2m;
+        public decimal GetCostMultiplier() => 4m;
 
         private JsonDocument FilterSchema()
         {
