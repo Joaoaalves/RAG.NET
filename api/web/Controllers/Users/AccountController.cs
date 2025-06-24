@@ -25,9 +25,9 @@ namespace web.Controllers.Users
 
             var command = new RegisterUserCommand(request.FirstName, request.LastName, request.Email, request.Password);
 
-            var (success, errors) = await _commandsExecutor.Execute(command);
+            var (userId, errors) = await _commandsExecutor.Execute(command);
 
-            if (!success)
+            if (string.IsNullOrEmpty(userId))
             {
                 foreach (var error in errors)
                     ModelState.AddModelError(string.Empty, error);

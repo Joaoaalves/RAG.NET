@@ -38,8 +38,8 @@ namespace RAGNET.Domain.TokenWallets
             string userId,
             TokenAmount freeTokens,
             TokenAmount paidTokens,
-            TokenWalletId? tokenWalletId,
-            DateTime? lastFreeTokenResetAt
+            TokenWalletId? tokenWalletId = null,
+            DateTime? lastFreeTokenResetAt = null
         )
         {
             return new TokenWallet(
@@ -47,7 +47,7 @@ namespace RAGNET.Domain.TokenWallets
                 userId,
                 freeTokens,
                 paidTokens,
-                lastFreeTokenResetAt ?? DateTime.Now
+                lastFreeTokenResetAt ?? DateTime.UtcNow
             );
         }
 

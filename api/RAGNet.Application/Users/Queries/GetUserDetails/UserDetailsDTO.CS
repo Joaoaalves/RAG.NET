@@ -1,3 +1,5 @@
+using RAGNET.Application.TokenWallets.DTOs;
+
 namespace RAGNET.Application.Users.Queries.GetUserDetails
 {
     public class UserDetailsDTO
@@ -5,5 +7,6 @@ namespace RAGNET.Application.Users.Queries.GetUserDetails
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
         public required string Email { get; set; }
+        public required TokenWalletDTO TokenWallet { get; set; }
     }
 }

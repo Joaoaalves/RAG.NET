@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-
+using Microsoft.EntityFrameworkCore;
 using RAGNET.Application.Configuration.Queries;
 using RAGNET.Application.Users.Mappers;
 using RAGNET.Domain.Users;
@@ -14,8 +14,9 @@ namespace RAGNET.Application.Users.Queries.GetUserDetails
 
         public async Task<UserDetailsDTO> Handle(GetUserDetailsQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.GetUserAsync(request.Principal) ?? throw new Exception("Invalid user!");
-
+            var user = await _userManager.Users
+                .Include(u => u.TokenWallet)
+                .FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(request.Principal), cancellationToken: cancellationToken) ?? throw new Exception("Invalid user!");
             return user.ToUserDetailsDTO();
         }
     }

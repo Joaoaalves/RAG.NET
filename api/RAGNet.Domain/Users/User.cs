@@ -52,6 +52,11 @@ namespace RAGNET.Domain.Users
             apiKey.UserId = Id;
         }
 
+        public void AddWallet(TokenWallet wallet)
+        {
+            ArgumentNullException.ThrowIfNull(wallet);
+            TokenWallet = wallet;
+        }
         public void RemoveWorkflow(Workflow workflow)
         {
             ArgumentNullException.ThrowIfNull(workflow);

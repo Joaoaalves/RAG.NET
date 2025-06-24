@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RAGNET.Domain.TokenWallets.TokenTransactions;
+using RAGNET.Infrastructure.SeedWork;
 
 namespace RAGNET.Infrastructure.Domain.TokenWallets.TokenTransactions
 {
@@ -18,17 +19,15 @@ namespace RAGNET.Infrastructure.Domain.TokenWallets.TokenTransactions
             builder.Property(t => t.TimeStamp).IsRequired();
             builder.Property(t => t.Source).IsRequired();
 
+            builder.Property(t => t.Cost)
+                   .HasConversion(new TokenAmountConverter())
+                   .HasColumnName("Cost")
+                   .IsRequired();
+
             builder.HasOne(t => t.TokenWallet)
                    .WithMany(w => w.Transactions)
                    .HasForeignKey(t => t.TokenWalletId)
                    .OnDelete(DeleteBehavior.Cascade);
-
-            builder.OwnsOne(t => t.Cost, cost =>
-            {
-                cost.Property(c => c.Value)
-                    .HasColumnName("Cost")
-                    .IsRequired();
-            });
         }
     }
 }
