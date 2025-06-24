@@ -1,4 +1,3 @@
-using RAGNET.Application.Chunkers;
 using RAGNET.Application.Chunkers.Services;
 
 namespace tests.RAGNet.Application.Tests.Dummies
@@ -15,5 +14,7 @@ namespace tests.RAGNet.Application.Tests.Dummies
 
             return Task.FromResult(result.AsEnumerable());
         }
+
+        public decimal GetCostMultiplier() => 1;
     }
 }

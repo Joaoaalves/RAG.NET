@@ -4,7 +4,8 @@ using RAGNET.Application.Infrastructure.Providers.Conversation.Mappers;
 using RAGNET.Application.ProviderApiKeys.Services;
 using RAGNET.Application.QueryEnhancers.Factories;
 using RAGNET.Application.TokenWallets.Services;
-
+using RAGNET.Application.TokenWallets.Services.Consumption;
+using RAGNET.Application.TokenWallets.Services.Consumption.Strategies;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.TokenWallets;
 
@@ -13,30 +14,25 @@ namespace RAGNET.Application.QueryEnhancers.Commands.EnhanceQuery
     public class EnhanceQueryCommandHandler(
         IQueryEnhancerFactory queryEnhancerFactory,
         IConversationProviderFactory chatCompletionFactory,
-        ITokenWalletRepository tokenWalletRepository,
-        ITokenCostCalculator tokenCostCalculator,
-        IUnitOfWork unitOfWork,
-        IApiKeyResolverService apiKeyResolverService
+        IApiKeyResolverService apiKeyResolverService,
+        ITokenConsumerContext tokenConsumerContext
     ) : ICommandHandler<EnhanceQueryCommand, List<string>>
     {
         private readonly IQueryEnhancerFactory _queryEnhancerFactory = queryEnhancerFactory;
         private readonly IConversationProviderFactory _chatCompletionFactory = chatCompletionFactory;
         private readonly IApiKeyResolverService _apiKeyResolverService = apiKeyResolverService;
-        private readonly ITokenCostCalculator _tokenCostCalculator = tokenCostCalculator;
-        private readonly ITokenWalletRepository _tokenWalletRepository = tokenWalletRepository;
-        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly ITokenConsumerContext _tokenConsumerContext = tokenConsumerContext;
 
         public async Task<List<string>> Handle(EnhanceQueryCommand request, CancellationToken cancellationToken)
         {
             var workflow = request.Workflow;
+            var wallet = request.TokenWallet;
             try
             {
                 if (workflow.QueryEnhancers == null || workflow.QueryEnhancers.Count == 0)
                     return [
                         request.QueryDTO.Query
                     ];
-
-                var wallet = await _tokenWalletRepository.GetByUserIdAsync(workflow.UserId) ?? throw new Exception("Wallet not found!");
 
                 var userConversationProviderApiKey = await _apiKeyResolverService.ResolveForUserAsync(
                     workflow.UserId,
@@ -54,9 +50,15 @@ namespace RAGNET.Application.QueryEnhancers.Commands.EnhanceQuery
                     {
                         var queryEnhancer = _queryEnhancerFactory.CreateQueryEnhancer(qeConfig, completionService);
 
-                        var estimatedCost = _tokenCostCalculator.Calculate(queryEnhancer, qeConfig.MaxQueries);
+                        var tokenConsumptionStrategy = new QueryEnhancerConsumptionStrategy(
+                            workflow.UserId,
+                            workflow.Id,
+                            queryEnhancer,
+                            qeConfig.Type.ToString(),
+                            qeConfig.MaxQueries
+                        );
 
-                        wallet.Consume(estimatedCost, "Query Enhancer", $"workflowId={workflow.Id.Value};QueryEnhancer={qeConfig.Type}");
+                        await _tokenConsumerContext.ConsumeAsync(tokenConsumptionStrategy, wallet, cancellationToken);
 
                         return await queryEnhancer.GenerateQueries(request.QueryDTO.Query);
                     }
@@ -66,8 +68,6 @@ namespace RAGNET.Application.QueryEnhancers.Commands.EnhanceQuery
                 }).ToList();
 
                 var results = await Task.WhenAll(tasks);
-                await _tokenWalletRepository.UpdateAsync(wallet);
-                await _unitOfWork.CommitAsync(cancellationToken);
 
                 return results
                     .Where(result => result != null)

@@ -4,6 +4,8 @@ using RAGNET.Application.Infrastructure.Providers.Conversation;
 using RAGNET.Application.ProviderApiKeys.Services;
 using RAGNET.Application.QueryResultFilters.Factories;
 using RAGNET.Application.TokenWallets.Services;
+using RAGNET.Application.TokenWallets.Services.Consumption;
+using RAGNET.Application.TokenWallets.Services.Consumption.Strategies;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.TokenWallets;
 
@@ -12,18 +14,15 @@ namespace RAGNET.Application.Queries.Commands.FilterQueryResult
     public class FilterQueryResultCommandHandler(
         IConversationProviderFactory chatCompletionFactory,
         IQueryResultFilterFactory queryResultFilterFactory,
-        ITokenCostCalculator tokenCostCalculator,
-        ITokenWalletRepository tokenWalletRepository,
         IApiKeyResolverService apiKeyResolverService,
-        IUnitOfWork unitOfWork
+        ITokenConsumerContext tokenConsumerContext
     ) : ICommandHandler<FilterQueryResultCommand, List<string>>
     {
         private readonly IConversationProviderFactory _chatCompletionFactory = chatCompletionFactory;
         private readonly IQueryResultFilterFactory _queryResultFilterFactory = queryResultFilterFactory;
         private readonly IApiKeyResolverService _apiKeyResolverService = apiKeyResolverService;
-        private readonly ITokenCostCalculator _tokenCostCalculator = tokenCostCalculator;
-        private readonly ITokenWalletRepository _tokenWalletRepository = tokenWalletRepository;
-        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly ITokenConsumerContext _tokenConsumerContext = tokenConsumerContext;
+
         public async Task<List<string>> Handle(
             FilterQueryResultCommand request,
             CancellationToken cancellationToken
@@ -49,17 +48,19 @@ namespace RAGNET.Application.Queries.Commands.FilterQueryResult
             .CreateQueryResultFilter(workflow.QueryResultFilter);
 
             // Costs
-            var estimatedCost = _tokenCostCalculator.Calculate(queryResultFilterService, request.Items);
-
-            wallet.Consume(
-                estimatedCost,
-                "Query Filter",
-                $"WorkflowId={workflow.Id.Value};QueryFilter={workflow.QueryResultFilter.Strategy}"
+            var tokenConsumptionStrategy = new QueryFilterConsumptionStrategy(
+                userId: workflow.UserId,
+                workflowId: workflow.Id,
+                filterService: queryResultFilterService,
+                strategyName: workflow.QueryResultFilter.Strategy.ToString(),
+                contentItems: request.Items
             );
 
-            await _tokenWalletRepository.UpdateAsync(wallet);
-
-            await _unitOfWork.CommitAsync(cancellationToken);
+            await _tokenConsumerContext.ConsumeAsync(
+                tokenConsumptionStrategy,
+                wallet,
+                cancellationToken
+            );
 
             return await queryResultFilterService.FilterContent(
                 request.Items,

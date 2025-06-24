@@ -12,6 +12,8 @@ using RAGNET.Application.Infrastructure.Providers.Embedding;
 using RAGNET.Domain.TokenWallets;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Application.TokenWallets.Services;
+using RAGNET.Application.TokenWallets.Services.Consumption;
+using RAGNET.Application.TokenWallets.Services.Consumption.Strategies;
 
 namespace RAGNET.Infrastructure.Workers.Handlers
 {
@@ -19,16 +21,15 @@ namespace RAGNET.Infrastructure.Workers.Handlers
         IApiKeyResolverService apiKeyResolver,
         IEmbeddingProcessingService embeddingService,
         IJobNotificationService realTimeNotifier,
-        ITokenWalletRepository tokenWalletRepository,
-        ITokenCostCalculator tokenCostCalculator,
-        IUnitOfWork unitOfWork) : BaseJobProcessingHandler
+        ITokenConsumerContext tokenConsumerContext,
+        ITokenWalletRepository tokenWalletRepository) : BaseJobProcessingHandler
     {
-        public readonly IApiKeyResolverService _apiKeyResolver = apiKeyResolver;
-        public readonly IEmbeddingProcessingService _embeddingService = embeddingService;
-        public readonly IJobNotificationService _realTimeNotifier = realTimeNotifier;
-        public readonly ITokenWalletRepository _tokenWalletRepository = tokenWalletRepository;
-        public readonly ITokenCostCalculator _tokenCostCalculator = tokenCostCalculator;
-        public readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IApiKeyResolverService _apiKeyResolver = apiKeyResolver;
+        private readonly IEmbeddingProcessingService _embeddingService = embeddingService;
+        private readonly IJobNotificationService _realTimeNotifier = realTimeNotifier;
+
+        private readonly ITokenConsumerContext _tokenConsumerContext = tokenConsumerContext;
+        private readonly ITokenWalletRepository _tokenWalletRepository = tokenWalletRepository;
 
         private readonly ProcessDTO _currentProcess = new()
         {
@@ -45,14 +46,14 @@ namespace RAGNET.Infrastructure.Workers.Handlers
             _currentProcess.Title = "Storing Vectors";
             _currentProcess.Progress = 0;
             await NotifyProgress(job, document, ct);
-            Console.WriteLine($"Adding {chunksBag.Count} pages to Vector DB");
+
             await _embeddingService.AddChunksAsync([.. chunksBag]);
+
             _currentProcess.Title = "Storing Vectors";
             _currentProcess.Progress = 100;
+
             await NotifyProgress(job, document, ct);
-
         }
-
 
         public override async Task HandleAsync(EmbeddingJob job, CancellationToken ct)
         {
@@ -82,15 +83,15 @@ namespace RAGNET.Infrastructure.Workers.Handlers
                 convoKey
             );
 
-            var estimatedCost = _tokenCostCalculator.Calculate(chunker, totalPages);
-
-            wallet.Consume(
-                estimatedCost,
-                "Document Embedding",
-                $"WorkflowId={workflow.Id.Value};Chunker={workflow.Chunker!.StrategyType}"
+            var tokenConsumptionStrategy = new ChunkerConsumptionStrategy(
+                workflow.UserId,
+                workflow.Id,
+                chunker,
+                workflow.Chunker!.StrategyType.ToString(),
+                totalPages
             );
 
-            await _tokenWalletRepository.UpdateAsync(wallet);
+            await _tokenConsumerContext.ConsumeAsync(tokenConsumptionStrategy, wallet, ct);
 
             var chunksBag = new ConcurrentBag<Chunk>();
 
@@ -144,8 +145,6 @@ namespace RAGNET.Infrastructure.Workers.Handlers
                 }
 
             }));
-
-            await _unitOfWork.CommitAsync(ct);
 
             await StoreVectors(chunksBag, job, document, ct);
 
