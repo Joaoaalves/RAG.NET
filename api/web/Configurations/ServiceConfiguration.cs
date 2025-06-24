@@ -88,10 +88,10 @@ namespace web.Configurations
             services.AddScoped<IDomainEventsDispatcher, DomainEventsDispatcher>();
 
             services.AddScoped(typeof(ICommandPipelineBehavior<,>), typeof(WorkflowInjectionBehavior<,>));
+            services.AddScoped(typeof(ICommandPipelineBehavior<,>), typeof(WalletInjectionBehavior<,>));
             services.AddScoped(typeof(ICommandPipelineBehavior<,>), typeof(LoggingBehavior<,>));
             services.AddScoped(typeof(ICommandPipelineBehavior<,>), typeof(UserInjectionCommandBehavior<,>));
             services.AddScoped(typeof(IRequestPipelineBehavior<,>), typeof(UserInjectionQueryBehavior<,>));
-
             services.AddHttpContextAccessor();
 
             return services;

@@ -5,10 +5,10 @@ using RAGNET.Domain.TokenWallets.TokenTransactions;
 
 namespace RAGNET.Application.TokenWallets.Events
 {
-    public class TokenConsumedNotificationHandler(ITokenWalletRepository repo, IUnitOfWork uow) : INotificationHandler<TokenConsumedEvent>
+    public class TokenConsumedNotificationHandler(ITokenWalletRepository tokenWalletRepository, IUnitOfWork unitOfWork) : INotificationHandler<TokenConsumedEvent>
     {
-        private readonly ITokenWalletRepository _repo = repo;
-        private readonly IUnitOfWork _uow = uow;
+        private readonly ITokenWalletRepository _tokenWalletRepository = tokenWalletRepository;
+        private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
         public async Task Handle(TokenConsumedEvent notification, CancellationToken cancellationToken)
         {
@@ -21,12 +21,12 @@ namespace RAGNET.Application.TokenWallets.Events
                 notification.Source
             );
 
-            var wallet = await _repo.GetByUserIdAsync(notification.UserId) ?? throw new Exception("Wallet not found");
+            var wallet = await _tokenWalletRepository.GetByUserIdAsync(notification.UserId) ?? throw new Exception("Wallet not found");
 
             wallet.AddTransaction(transaction);
 
-            await _repo.UpdateAsync(wallet);
-            await _uow.CommitAsync(cancellationToken);
+            await _tokenWalletRepository.UpdateAsync(wallet);
+            await _unitOfWork.CommitAsync(cancellationToken);
         }
     }
 
