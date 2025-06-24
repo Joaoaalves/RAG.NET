@@ -1,5 +1,6 @@
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.SharedKernel.Tokens;
+using RAGNET.Domain.TokenWallets.Events;
 using RAGNET.Domain.TokenWallets.Rules;
 using RAGNET.Domain.TokenWallets.TokenTransactions;
 
@@ -51,9 +52,11 @@ namespace RAGNET.Domain.TokenWallets
             );
         }
 
-        public void Consume(TokenAmount amount)
+        public void Consume(TokenAmount amount, string operation, string contextInfo)
         {
             CheckRule(new MustHaveSufficientTokensRule(this, amount));
+            var source = TokenSource.Free;
+
             if (FreeTokens.Value >= amount.Value)
             {
                 FreeTokens = TokenAmount.FromMilitokens(FreeTokens.Value - amount.Value);
@@ -63,7 +66,24 @@ namespace RAGNET.Domain.TokenWallets
                 var remaining = amount.Value - FreeTokens.Value;
                 FreeTokens = TokenAmount.Zero;
                 PaidTokens = TokenAmount.FromMilitokens(PaidTokens.Value - remaining);
+                source = TokenSource.Paid;
             }
+
+            AddDomainEvent(
+                new TokenConsumedEvent(
+                    Id,
+                    UserId,
+                    amount,
+                    operation,
+                    contextInfo,
+                    source
+                )
+            );
+        }
+
+        public void AddTransaction(TokenTransaction transaction)
+        {
+            _transactions.Add(transaction);
         }
 
         public void AddPaidTokens(TokenAmount amount)

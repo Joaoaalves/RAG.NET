@@ -30,6 +30,8 @@ using RAGNET.Infrastructure.Processing;
 using RAGNET.Application.Queries.Services;
 
 using web.Identity;
+using RAGNET.Application.TokenWallets.Services;
+using RAGNET.Infrastructure.UserTokens.Services;
 
 namespace web.Configurations
 {
@@ -51,6 +53,9 @@ namespace web.Configurations
             services.AddScoped<IChunkRetrieverService, ChunkRetrieverService>();
 
             services.AddScoped<IScoreNormalizerService, ScoreNormalizerService>();
+
+            // TokenWallet
+            services.AddScoped<ITokenCostCalculator, TokenCostCalculator>();
 
             // ApiKey
             services.AddScoped<IApiKeyResolverService, ApiKeyResolverService>();

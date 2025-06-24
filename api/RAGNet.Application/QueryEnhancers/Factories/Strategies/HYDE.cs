@@ -33,6 +33,8 @@ namespace RAGNET.Application.QueryEnhancers.Factories.Strategies
             return [.. queries.Take(_maxQueries)];
         }
 
+        public decimal GetCostMultiplier() => 1.01m;
+
         private JsonDocument QuerySchema()
         {
             string querySchemaString = @"

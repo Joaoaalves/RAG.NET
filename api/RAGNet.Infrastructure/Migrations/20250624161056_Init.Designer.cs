@@ -12,8 +12,8 @@ using RAGNET.Infrastructure.Database;
 namespace RAGNet.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250624003032_AddTokenWallet")]
-    partial class AddTokenWallet
+    [Migration("20250624161056_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -375,6 +375,10 @@ namespace RAGNet.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<long>("Cost")
+                        .HasColumnType("bigint")
+                        .HasColumnName("Cost");
+
                     b.Property<string>("OperationName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -386,10 +390,8 @@ namespace RAGNet.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("TokenWalletId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TokenWalletId1")
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("TokenWalletId");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -399,8 +401,6 @@ namespace RAGNet.Infrastructure.Migrations
 
                     b.HasIndex("TokenWalletId");
 
-                    b.HasIndex("TokenWalletId1");
-
                     b.ToTable("TokenTransactions", (string)null);
                 });
 
@@ -409,8 +409,16 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
+                    b.Property<long>("FreeTokens")
+                        .HasColumnType("bigint")
+                        .HasColumnName("FreeTokens");
+
                     b.Property<DateTime>("LastFreeTokenResetAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("PaidTokens")
+                        .HasColumnType("bigint")
+                        .HasColumnName("PaidTokens");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -858,36 +866,10 @@ namespace RAGNet.Infrastructure.Migrations
 
             modelBuilder.Entity("RAGNET.Domain.TokenWallets.TokenTransactions.TokenTransaction", b =>
                 {
-                    b.HasOne("RAGNET.Domain.TokenWallets.TokenWallet", null)
+                    b.HasOne("RAGNET.Domain.TokenWallets.TokenWallet", "TokenWallet")
                         .WithMany("Transactions")
                         .HasForeignKey("TokenWalletId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RAGNET.Domain.TokenWallets.TokenWallet", "TokenWallet")
-                        .WithMany()
-                        .HasForeignKey("TokenWalletId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.OwnsOne("RAGNET.Domain.SharedKernel.Tokens.TokenAmount", "Cost", b1 =>
-                        {
-                            b1.Property<Guid>("TokenTransactionId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<long>("Value")
-                                .HasColumnType("bigint")
-                                .HasColumnName("Cost");
-
-                            b1.HasKey("TokenTransactionId");
-
-                            b1.ToTable("TokenTransactions");
-
-                            b1.WithOwner()
-                                .HasForeignKey("TokenTransactionId");
-                        });
-
-                    b.Navigation("Cost")
                         .IsRequired();
 
                     b.Navigation("TokenWallet");
@@ -899,46 +881,6 @@ namespace RAGNet.Infrastructure.Migrations
                         .WithOne("TokenWallet")
                         .HasForeignKey("RAGNET.Domain.TokenWallets.TokenWallet", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.OwnsOne("RAGNET.Domain.SharedKernel.Tokens.TokenAmount", "FreeTokens", b1 =>
-                        {
-                            b1.Property<Guid>("TokenWalletId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<long>("Value")
-                                .HasColumnType("bigint")
-                                .HasColumnName("FreeTokens");
-
-                            b1.HasKey("TokenWalletId");
-
-                            b1.ToTable("TokenWallets");
-
-                            b1.WithOwner()
-                                .HasForeignKey("TokenWalletId");
-                        });
-
-                    b.OwnsOne("RAGNET.Domain.SharedKernel.Tokens.TokenAmount", "PaidTokens", b1 =>
-                        {
-                            b1.Property<Guid>("TokenWalletId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<long>("Value")
-                                .HasColumnType("bigint")
-                                .HasColumnName("PaidTokens");
-
-                            b1.HasKey("TokenWalletId");
-
-                            b1.ToTable("TokenWallets");
-
-                            b1.WithOwner()
-                                .HasForeignKey("TokenWalletId");
-                        });
-
-                    b.Navigation("FreeTokens")
-                        .IsRequired();
-
-                    b.Navigation("PaidTokens")
                         .IsRequired();
                 });
 

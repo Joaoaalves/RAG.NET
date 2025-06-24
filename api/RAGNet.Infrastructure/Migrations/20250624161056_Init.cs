@@ -180,6 +180,27 @@ namespace RAGNet.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TokenWallets",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    FreeTokens = table.Column<long>(type: "bigint", nullable: false),
+                    PaidTokens = table.Column<long>(type: "bigint", nullable: false),
+                    LastFreeTokenResetAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TokenWallets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TokenWallets_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Workflows",
                 columns: table => new
                 {
@@ -203,6 +224,30 @@ namespace RAGNet.Infrastructure.Migrations
                         name: "FK_Workflows_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TokenTransactions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    OperationName = table.Column<string>(type: "text", nullable: false),
+                    ContextInfo = table.Column<string>(type: "text", nullable: false),
+                    Cost = table.Column<long>(type: "bigint", nullable: false),
+                    TimeStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Source = table.Column<int>(type: "integer", nullable: false),
+                    TokenWalletId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TokenTransactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TokenTransactions_TokenWallets_TokenWalletId",
+                        column: x => x.TokenWalletId,
+                        principalTable: "TokenWallets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -538,6 +583,17 @@ namespace RAGNet.Infrastructure.Migrations
                 column: "WorkflowId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TokenTransactions_TokenWalletId",
+                table: "TokenTransactions",
+                column: "TokenWalletId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TokenWallets_UserId",
+                table: "TokenWallets",
+                column: "UserId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Workflows_UserId",
                 table: "Workflows",
                 column: "UserId");
@@ -583,6 +639,9 @@ namespace RAGNet.Infrastructure.Migrations
                 name: "RankerMetas");
 
             migrationBuilder.DropTable(
+                name: "TokenTransactions");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -599,6 +658,9 @@ namespace RAGNet.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Rankers");
+
+            migrationBuilder.DropTable(
+                name: "TokenWallets");
 
             migrationBuilder.DropTable(
                 name: "Documents");

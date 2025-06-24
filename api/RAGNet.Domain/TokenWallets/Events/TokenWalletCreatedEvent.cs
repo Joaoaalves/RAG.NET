@@ -8,7 +8,6 @@ namespace RAGNET.Domain.TokenWallets.Events
 
         public TokenWalletCreatedEvent(TokenWalletId id)
         {
-            Console.WriteLine("Token Wallet created!");
             TokenWalletId = id;
         }
     }

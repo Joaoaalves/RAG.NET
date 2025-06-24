@@ -31,7 +31,6 @@ namespace RAGNET.Infrastructure.Workers.Handlers
 
             job.Context.ExtractResult = extract;
             job.Context.Document = document;
-
             await _realTimeNotifier.NotifyProgress(job.JobId, job.UserId, document, _currentProcess, ct);
             await base.HandleAsync(job, ct);
         }

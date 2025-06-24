@@ -26,12 +26,9 @@ namespace RAGNET.Infrastructure.Domain.TokenWallets
                 .HasColumnName("PaidTokens")
                 .IsRequired();
 
-            builder.Navigation(w => w.Transactions)
-                .UsePropertyAccessMode(PropertyAccessMode.Field);
-
             builder.HasMany(w => w.Transactions)
-                .WithOne()
-                .HasForeignKey("TokenWalletId")
+                .WithOne(t => t.TokenWallet)
+                .HasForeignKey(t => t.TokenWalletId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

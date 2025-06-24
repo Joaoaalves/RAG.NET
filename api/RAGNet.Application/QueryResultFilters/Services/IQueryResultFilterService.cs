@@ -6,5 +6,6 @@ namespace RAGNET.Application.QueryResultFilters.Services
     public interface IQueryResultFilterService
     {
         Task<List<string>> FilterContent(List<ContentItemDTO> contentItems, string query, IConversationProviderService completionProvider);
+        decimal GetCostMultiplier();
     }
 }

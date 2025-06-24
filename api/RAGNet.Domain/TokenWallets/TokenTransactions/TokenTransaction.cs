@@ -56,7 +56,7 @@ namespace RAGNET.Domain.TokenWallets.TokenTransactions
                 operationName,
                 contextInfo,
                 cost,
-                DateTime.Now,
+                DateTime.UtcNow,
                 source
             );
         }

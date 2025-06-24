@@ -33,6 +33,7 @@ namespace RAGNET.Infrastructure.Workers.Handlers
             _currentProcess.Title = "Storing Vectors";
             _currentProcess.Progress = 0;
             await NotifyProgress(job, document, ct);
+            Console.WriteLine($"Adding {chunksBag.Count} pages to Vector DB");
             await _embeddingService.AddChunksAsync([.. chunksBag]);
             _currentProcess.Title = "Storing Vectors";
             _currentProcess.Progress = 100;
@@ -71,6 +72,7 @@ namespace RAGNET.Infrastructure.Workers.Handlers
                                                     workflow.ConversationProviderConfig,
                                                     convoKey
                                                  )).ToList();
+
                     if (chunks.Count > 0)
                     {
                         var results = await _embeddingService.GetEmbeddingsAsync(
@@ -105,8 +107,9 @@ namespace RAGNET.Infrastructure.Workers.Handlers
 
                     return chunks.Count;
                 }
-                catch
+                catch (Exception exc)
                 {
+                    Console.WriteLine(exc.Message);
                     return 0;
                 }
 

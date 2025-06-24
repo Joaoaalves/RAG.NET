@@ -41,10 +41,5 @@ namespace RAGNET.Application.Chunkers.Factories
                 _ => throw new NotSupportedException("Estratégia de chunking não suportada."),
             };
         }
-
-        ITextChunkerService ITextChunkerFactory.CreateChunker(Chunker chunkerConfig, IConversationProviderService completionService)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
