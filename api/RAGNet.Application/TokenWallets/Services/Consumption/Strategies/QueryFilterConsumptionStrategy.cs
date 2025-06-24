@@ -6,19 +6,17 @@ using RAGNET.Domain.Workflows;
 namespace RAGNET.Application.TokenWallets.Services.Consumption.Strategies
 {
     public class QueryFilterConsumptionStrategy(
-        string userId,
-        WorkflowId workflowId,
+        Workflow workflow,
         IQueryResultFilterService filterService,
-        string strategyName,
         List<ContentItemDTO> contentItems
     ) : ITokenConsumptionStrategy
     {
         public string Operation => "Query Filter";
         private readonly int WordsPerPage = 300;
         public string GetContextInfo()
-            => $"workflowId={workflowId.Value};QueryFilter={strategyName}";
+            => $"workflowId={workflow.Id.Value};QueryFilter={workflow.QueryResultFilter!.Strategy}";
 
-        public string GetUserId() => userId;
+        public string GetUserId() => workflow.UserId;
 
         public TokenAmount CalculateCost()
         {

@@ -51,14 +51,17 @@ namespace RAGNET.Application.QueryEnhancers.Commands.EnhanceQuery
                         var queryEnhancer = _queryEnhancerFactory.CreateQueryEnhancer(qeConfig, completionService);
 
                         var tokenConsumptionStrategy = new QueryEnhancerConsumptionStrategy(
-                            workflow.UserId,
-                            workflow.Id,
+                            workflow,
                             queryEnhancer,
-                            qeConfig.Type.ToString(),
                             qeConfig.MaxQueries
                         );
 
-                        await _tokenConsumerContext.ConsumeAsync(tokenConsumptionStrategy, wallet, cancellationToken);
+                        await _tokenConsumerContext.ConsumeAsync(
+                            workflow,
+                            wallet,
+                            tokenConsumptionStrategy,
+                            cancellationToken
+                        );
 
                         return await queryEnhancer.GenerateQueries(request.QueryDTO.Query);
                     }

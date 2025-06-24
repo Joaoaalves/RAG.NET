@@ -11,8 +11,8 @@ public class WorkflowRepository(ApplicationDbContext context) : IWorkflowReposit
     public async Task<Workflow?> GetByIdAsync(WorkflowId id, string? userId)
     {
         return await _context.Workflows
-            .Include(w => w.Chunker).ThenInclude(c => c!.Metas)
-            .Include(w => w.QueryEnhancers).ThenInclude(q => q.Metas)
+            .Include(w => w.Chunker).ThenInclude(c => c.Metas)
+            .Include(w => w.QueryEnhancers).ThenInclude(q => q!.Metas)
             .Include(w => w.QueryResultFilter)!.ThenInclude(f => f!.Metas)
             .Include(w => w.Rankers).ThenInclude(r => r.Metas)
             .Include(w => w.ConversationProviderConfig)

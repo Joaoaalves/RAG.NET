@@ -49,16 +49,15 @@ namespace RAGNET.Application.Queries.Commands.FilterQueryResult
 
             // Costs
             var tokenConsumptionStrategy = new QueryFilterConsumptionStrategy(
-                userId: workflow.UserId,
-                workflowId: workflow.Id,
-                filterService: queryResultFilterService,
-                strategyName: workflow.QueryResultFilter.Strategy.ToString(),
-                contentItems: request.Items
+                workflow,
+                queryResultFilterService,
+                request.Items
             );
 
             await _tokenConsumerContext.ConsumeAsync(
-                tokenConsumptionStrategy,
+                workflow,
                 wallet,
+                tokenConsumptionStrategy,
                 cancellationToken
             );
 

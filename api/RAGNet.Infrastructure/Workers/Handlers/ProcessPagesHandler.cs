@@ -10,8 +10,6 @@ using RAGNET.Infrastructure.Jobs;
 using RAGNET.Infrastructure.Jobs.Queue;
 using RAGNET.Application.Infrastructure.Providers.Embedding;
 using RAGNET.Domain.TokenWallets;
-using RAGNET.Domain.SeedWork;
-using RAGNET.Application.TokenWallets.Services;
 using RAGNET.Application.TokenWallets.Services.Consumption;
 using RAGNET.Application.TokenWallets.Services.Consumption.Strategies;
 
@@ -84,14 +82,17 @@ namespace RAGNET.Infrastructure.Workers.Handlers
             );
 
             var tokenConsumptionStrategy = new ChunkerConsumptionStrategy(
-                workflow.UserId,
-                workflow.Id,
+                workflow,
                 chunker,
-                workflow.Chunker!.StrategyType.ToString(),
                 totalPages
             );
 
-            await _tokenConsumerContext.ConsumeAsync(tokenConsumptionStrategy, wallet, ct);
+            await _tokenConsumerContext.ConsumeAsync(
+                workflow,
+                wallet,
+                tokenConsumptionStrategy,
+                ct
+            );
 
             var chunksBag = new ConcurrentBag<Chunk>();
 

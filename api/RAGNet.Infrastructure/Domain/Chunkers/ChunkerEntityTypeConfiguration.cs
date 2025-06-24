@@ -32,6 +32,8 @@ namespace RAGNET.Infrastructure.Domain.Chunkers
                 meta.WithOwner().HasForeignKey("ChunkerId");
                 meta.ToTable("ChunkerMetas");
 
+                meta.HasKey("ChunkerId", "Key");
+
                 meta.Property(m => m.Key)
                     .IsRequired()
                     .HasMaxLength(100);
@@ -39,6 +41,7 @@ namespace RAGNET.Infrastructure.Domain.Chunkers
                 meta.Property(m => m.Value)
                     .HasMaxLength(1000);
             });
+
         }
     }
 }

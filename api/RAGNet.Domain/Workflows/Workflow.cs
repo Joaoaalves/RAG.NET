@@ -8,6 +8,7 @@ using RAGNET.Domain.SharedKernel.Providers;
 using RAGNET.Domain.SharedKernel.URLs;
 using RAGNET.Domain.Workflows.CallbackUrls;
 using RAGNET.Domain.Workflows.Events;
+using RAGNET.Domain.SharedKernel.Tokens;
 
 namespace RAGNET.Domain.Workflows
 {
@@ -22,19 +23,21 @@ namespace RAGNET.Domain.Workflows
         public string Name { get; private set; } = string.Empty;
         public string Description { get; private set; } = string.Empty;
         public bool IsActive { get; private set; }
-
+        public TokenAmount TokenUsage { get; private set; } = TokenAmount.FromDecimal(0);
         public int DocumentsCount => _documents.Count;
 
         public string UserId { get; set; } = string.Empty;
         public string ApiKey { get; private set; } = string.Empty;
         public Guid CollectionId { get; private set; }
+        public DateTime? LastEmbeddedDocumentDate { get; private set; }
+        public DateTime? LastQueryDate { get; private set; }
 
         public IReadOnlyCollection<CallbackUrl> CallbackUrls => _callbackUrls;
         public IReadOnlyCollection<Document> Documents => _documents;
         public IReadOnlyCollection<QueryEnhancer> QueryEnhancers => _queryEnhancers;
         public IReadOnlyCollection<Ranker> Rankers => _rankers;
 
-        public Chunker? Chunker { get; private set; }
+        public Chunker Chunker { get; private set; } = null!;
         public ConversationProviderConfig ConversationProviderConfig { get; private set; } = null!;
         public EmbeddingProviderConfig EmbeddingProviderConfig { get; private set; } = null!;
         public QueryResultFilter? QueryResultFilter { get; private set; }
@@ -126,6 +129,10 @@ namespace RAGNET.Domain.Workflows
         public void AddRanker(Ranker ranker) => _rankers.Add(ranker);
         public void UpdateConversationProviderConfig(ConversationProviderConfig cfg) => ConversationProviderConfig = cfg;
         public void UpdateEmbeddingProviderConfig(EmbeddingProviderConfig cfg) => EmbeddingProviderConfig = cfg;
+        public void IncreaseTokenUsage(TokenAmount usage)
+        {
+            TokenUsage += usage;
+        }
     }
 
 }

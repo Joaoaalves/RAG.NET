@@ -6,20 +6,18 @@ using RAGNET.Domain.Workflows;
 namespace RAGNET.Application.TokenWallets.Services.Consumption.Strategies
 {
     public class ChunkerConsumptionStrategy(
-           string userId,
-           WorkflowId workflowId,
-           ITextChunkerService chunkerService,
-           string chunkerType,
-           int pageCount
-       ) : ITokenConsumptionStrategy
+        Workflow workflow,
+        ITextChunkerService chunkerService,
+        int pageCount
+    ) : ITokenConsumptionStrategy
     {
         private readonly decimal CostPerPage = 0.02m;
         public string Operation => "Chunk";
 
         public string GetContextInfo()
-            => $"workflowId={workflowId.Value};Chunker={chunkerType};pages={pageCount}";
+            => $"workflowId={workflow.Id.Value};Chunker={workflow.Chunker!.StrategyType};pages={pageCount}";
 
-        public string GetUserId() => userId;
+        public string GetUserId() => workflow.UserId;
 
         public TokenAmount CalculateCost()
         {
