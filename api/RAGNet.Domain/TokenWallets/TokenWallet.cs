@@ -1,17 +1,20 @@
-using System;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.SharedKernel.Tokens;
 using RAGNET.Domain.TokenWallets.Rules;
+using RAGNET.Domain.TokenWallets.TokenTransactions;
 
 namespace RAGNET.Domain.TokenWallets
 {
-    public class TokenWallet : Entity, IUserOwned
+    public class TokenWallet : Entity, IAggregateRoot, IUserOwned
     {
+        private readonly List<TokenTransaction> _transactions = [];
         public TokenWalletId Id { get; private init; } = default!;
         public string UserId { get; set; } = string.Empty;
         public TokenAmount FreeTokens { get; private set; } = default!;
         public TokenAmount PaidTokens { get; private set; } = default!;
         public DateTime LastFreeTokenResetAt { get; private set; }
+
+        public IReadOnlyCollection<TokenTransaction> Transactions => _transactions;
 
         // EF Core
         private TokenWallet() { }
