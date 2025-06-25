@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using RAGNET.Domain.Workflows;
 using RAGNET.Infrastructure.Database;
@@ -101,5 +102,14 @@ public class WorkflowRepository(ApplicationDbContext context) : IWorkflowReposit
         }
 
         _context.Workflows.Update(workflow);
+    }
+
+    public async Task<long> GetTotalTokenSpent(WorkflowId workflowId)
+    {
+        var militokens = await _context.TokenTransactions.Where(
+            t => t.WorkflowId == workflowId
+        ).Select(t => EF.Property<long>(t, "CostValue")).SumAsync();
+
+        return militokens / 1000;
     }
 }

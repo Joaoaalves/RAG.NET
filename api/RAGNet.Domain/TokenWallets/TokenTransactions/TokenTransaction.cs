@@ -6,17 +6,26 @@ namespace RAGNET.Domain.TokenWallets.TokenTransactions
 {
     public class TokenTransaction : Entity, IUserOwned
     {
+        private TokenAmount _cost = default!;
+
         public TokenTransactionId Id { get; private init; } = default!;
         public string UserId { get; set; } = string.Empty;
         public string OperationName { get; private set; } = string.Empty;
         public string ContextInfo { get; private set; } = string.Empty;
-        public TokenAmount Cost { get; private set; } = default!;
+        public TokenAmount Cost => _cost;
         public DateTime TimeStamp { get; private set; }
         public TokenSource Source { get; private set; }
 
         public WorkflowId WorkflowId { get; set; } = null!;
         public TokenWalletId TokenWalletId { get; set; } = null!;
         public TokenWallet TokenWallet { get; set; } = null!;
+
+        // Necessary due to LINQ
+        public long CostValue
+        {
+            get => _cost.Value;
+            private set => _cost = TokenAmount.FromMilitokens(value);
+        }
 
         // EF Core ctor
         private TokenTransaction() { }
@@ -39,7 +48,7 @@ namespace RAGNET.Domain.TokenWallets.TokenTransactions
             TokenWalletId = tokenWalletId;
             OperationName = operationName;
             ContextInfo = contextInfo;
-            Cost = cost;
+            _cost = cost;
             TimeStamp = timeStamp;
             Source = source;
         }

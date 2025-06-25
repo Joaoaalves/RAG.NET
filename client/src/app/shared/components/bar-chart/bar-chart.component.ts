@@ -56,6 +56,7 @@ export class BarChartComponent implements AfterViewInit {
   public chartOptions: ChartOptions<'bar'> = {
     responsive: true,
     maintainAspectRatio: false,
+
     scales: {
       x: {
         ticks: {
@@ -88,7 +89,7 @@ export class BarChartComponent implements AfterViewInit {
           label: (context: TooltipItem<'bar'>) => {
             const label = context.dataset.label ?? '';
             const value = context.raw as number;
-            return `${label}: ${value.toLocaleString()}`;
+            return `${label}: ${value.toFixed(1)}`;
           },
           title: (items) => items[0].label ?? '',
         },

@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RAGNET.Domain.TokenWallets;
 using RAGNET.Domain.TokenWallets.TokenTransactions;
 using RAGNET.Infrastructure.SeedWork;
 
@@ -21,10 +20,9 @@ namespace RAGNET.Infrastructure.Domain.TokenWallets.TokenTransactions
             builder.Property(t => t.Source).IsRequired();
             builder.Property(t => t.WorkflowId).IsRequired();
 
-            builder.Property(t => t.Cost)
-                   .HasConversion(new TokenAmountConverter())
-                   .HasColumnName("Cost")
-                   .IsRequired();
+            builder.Property<long>("CostValue")
+                .HasColumnName("Cost")
+                .IsRequired();
 
             builder.Property(t => t.TokenWalletId)
                 .HasColumnName("TokenWalletId")

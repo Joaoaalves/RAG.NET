@@ -29,54 +29,22 @@ namespace RAGNET.Infrastructure.Domain.TokenWallets
         }
         public async Task<List<TransactionDailyAggregation>> GetTransactionDailyAggregations(DateTime start, DateTime end, string userId)
         {
-            // This should be optimized; 
-            // Loading all data into memory can lead to high memory consumption.
-
-            // This approach was necessary because LINQ was unable to translate 
-            // the query into SQL correctly.
-            var freeTokens = await _context.TokenTransactions
-                .Where(
-                    t => t.TimeStamp >= start &&
-                                        t.TimeStamp <= end &&
-                                        t.UserId == userId &&
-                                        t.Source == TokenSource.Free
-                )
-                .Select(
-                    t => new
-                    {
-                        t.TimeStamp,
-                        Cost = t.Cost.Value
-                    })
-                .ToListAsync();
-
-            var paidTokens = await _context.TokenTransactions
-                .Where(
-                    t => t.TimeStamp >= start &&
-                         t.TimeStamp <= end &&
-                         t.UserId == userId &&
-                         t.Source == TokenSource.Paid
-                )
-                .Select(
-                    t => new
-                    {
-                        t.TimeStamp,
-                        Cost = t.Cost.Value
-                    })
-                .ToListAsync();
-
-            // Combine the data, group by date, and calculate sums in-memory
-            var result = freeTokens
-                .Concat(paidTokens)
-                .GroupBy(x => x.TimeStamp.Date)
+            var query = await _context.TokenTransactions
+                .Where(t => t.TimeStamp >= start &&
+                            t.TimeStamp <= end &&
+                            t.UserId == userId)
+                .GroupBy(t => t.TimeStamp.Date)
                 .Select(g => new TransactionDailyAggregation
                 {
                     Date = g.Key,
-                    FreeTokensConsumed = g.Where(x => x.Cost > 0).Sum(x => x.Cost),
-                    PaidTokensConsumed = g.Where(x => x.Cost < 0).Sum(x => x.Cost)
+                    FreeTokensConsumed = (double)g.Where(t => t.Source == TokenSource.Free)
+                                          .Sum(t => EF.Property<long>(t, "CostValue") / 1000.0),
+                    PaidTokensConsumed = (double)g.Where(t => t.Source == TokenSource.Paid)
+                                          .Sum(t => EF.Property<long>(t, "CostValue") / 1000.0),
                 })
-                .ToList();
+                .ToListAsync();
 
-            return result;
+            return query;
         }
 
     }
