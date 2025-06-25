@@ -11,7 +11,7 @@ export interface Transaction {
   operationName: string;
   contextInfo: string;
   cost: number;
-  timesTamp: Date;
+  timeStamp: Date;
   source: TransactionSource;
 }
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Workflow, WorkflowUpdateRequest } from 'src/app/models/workflow';
 import { QueryEnhancer } from 'src/app/models/query-enhancer';
 import { CommonModule } from '@angular/common';
@@ -19,6 +19,7 @@ import { FilterConfigComponent } from 'src/app/shared/components/filter-config/f
 // Services
 import { WorkflowService } from 'src/app/services/workflow.service';
 import { ProviderModel } from 'src/app/models/provider';
+import { catchError, of } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -57,7 +58,8 @@ export class WorkflowComponent {
 
   constructor(
     private workflowService: WorkflowService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.route.paramMap.subscribe((params) => {
       const id = params.get('workflowId');
@@ -96,20 +98,33 @@ export class WorkflowComponent {
   }
 
   private loadWorkflow(id: string): void {
-    this.workflowService.getWorkflow(id).subscribe((workflow) => {
-      this.workflow = workflow;
+    this.workflowService
+      .getWorkflow(id)
+      .pipe(
+        catchError((err) => {
+          toast.error('Workflow not found', {
+            description: 'You were redirected to the workflows list.',
+          });
+          this.router.navigate(['/dashboard/workflows']);
+          return of(null);
+        })
+      )
+      .subscribe((workflow) => {
+        if (!workflow) return;
 
-      this.autoQueryEnhancer = workflow.queryEnhancers.find(
-        (qe) => qe.type === 'AUTO_QUERY'
-      );
+        this.workflow = workflow;
 
-      this.hydeEnhancer = workflow.queryEnhancers.find(
-        (qe) => qe.type === 'HYPOTHETICAL_DOCUMENT_EMBEDDING'
-      );
+        this.autoQueryEnhancer = workflow.queryEnhancers.find(
+          (qe) => qe.type === 'AUTO_QUERY'
+        );
 
-      this.filter = workflow.queryResultFilter;
-      this.loadProvidersIds();
-    });
+        this.hydeEnhancer = workflow.queryEnhancers.find(
+          (qe) => qe.type === 'HYPOTHETICAL_DOCUMENT_EMBEDDING'
+        );
+
+        this.filter = workflow.queryResultFilter;
+        this.loadProvidersIds();
+      });
   }
 
   private loadProvidersIds() {

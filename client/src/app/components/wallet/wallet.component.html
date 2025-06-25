@@ -60,5 +60,10 @@
         [datasets]="barChartDatasets"
       />
     </div>
+
+    <app-transactions-table
+      *ngIf="wallet"
+      [transactions]="wallet.transactions"
+    ></app-transactions-table>
   </div>
 </div>

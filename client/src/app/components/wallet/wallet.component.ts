@@ -9,10 +9,16 @@ import {
 } from 'src/app/models/wallet';
 import { WalletService } from 'src/app/services/wallet.service';
 import { BarChartComponent } from 'src/app/shared/components/bar-chart/bar-chart.component';
+import { TransactionsTableComponent } from 'src/app/shared/components/transaction-table/transactions-table.component';
 
 @Component({
   templateUrl: './wallet.component.html',
-  imports: [NgIcon, BarChartComponent, CommonModule],
+  imports: [
+    NgIcon,
+    BarChartComponent,
+    TransactionsTableComponent,
+    CommonModule,
+  ],
   providers: [provideIcons({ lucideInfo })],
   standalone: true,
 })
