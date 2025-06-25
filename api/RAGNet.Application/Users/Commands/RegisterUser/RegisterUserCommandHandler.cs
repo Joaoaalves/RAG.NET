@@ -22,9 +22,7 @@ namespace RAGNET.Application.Users.Commands.RegisterUser
             var user = User.Create(firstName, lastName, userName, email);
 
             var wallet = TokenWallet.Create(
-                user.Id,
-                TokenAmount.FromDecimal(500),
-                TokenAmount.FromDecimal(0)
+                user.Id
             );
 
             user.AddWallet(wallet);

@@ -38,8 +38,6 @@ namespace RAGNET.Domain.TokenWallets
 
         public static TokenWallet Create(
             string userId,
-            TokenAmount freeTokens,
-            TokenAmount paidTokens,
             TokenWalletId? tokenWalletId = null,
             DateTime? lastFreeTokenResetAt = null
         )
@@ -47,15 +45,18 @@ namespace RAGNET.Domain.TokenWallets
             return new TokenWallet(
                 tokenWalletId ?? new TokenWalletId(Guid.NewGuid()),
                 userId,
-                freeTokens,
-                paidTokens,
+                TokenAmount.MonthlyFreeQuota,
+                TokenAmount.Zero,
                 lastFreeTokenResetAt ?? DateTime.UtcNow
             );
         }
 
         public void Consume(TokenAmount amount, WorkflowId workflowId, string operation, string contextInfo)
         {
+            ResetFreeTokensIfExpired();
+
             CheckRule(new MustHaveSufficientTokensRule(this, amount));
+
             var source = TokenSource.Free;
 
             if (FreeTokens.Value >= amount.Value)
@@ -82,10 +83,21 @@ namespace RAGNET.Domain.TokenWallets
                 )
             );
         }
+        private void ResetFreeTokensIfExpired()
+        {
+            const int ResetIntervalDays = 30;
+
+            var now = DateTime.UtcNow;
+            var daysSinceLastReset = (now - LastFreeTokenResetAt).TotalDays;
+
+            if (daysSinceLastReset >= ResetIntervalDays)
+            {
+                ResetFreeTokens(TokenAmount.MonthlyFreeQuota);
+            }
+        }
 
         public void AddTransaction(TokenTransaction transaction)
         {
-
             _transactions.Add(transaction);
         }
 

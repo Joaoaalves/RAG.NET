@@ -17,7 +17,7 @@ namespace RAGNET.Domain.SharedKernel.Tokens
 
             Value = militokens;
         }
-
+        public static readonly TokenAmount MonthlyFreeQuota = FromMilitokens(500000);
         public static TokenAmount FromMilitokens(long militokens) => new(militokens);
         public static TokenAmount FromDecimal(decimal tokens)
             => new((long)(tokens * 1000m));
