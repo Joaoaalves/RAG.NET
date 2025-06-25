@@ -52,6 +52,7 @@ namespace RAGNET.Application.QueryEnhancers.Commands.EnhanceQuery
 
                         var tokenConsumptionStrategy = new QueryEnhancerConsumptionStrategy(
                             workflow,
+                            qeConfig.Type,
                             queryEnhancer,
                             qeConfig.MaxQueries
                         );

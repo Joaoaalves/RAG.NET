@@ -14,7 +14,7 @@ namespace RAGNET.Application.TokenWallets.Services.Consumption.Strategies
         public string Operation => "Query Filter";
         private readonly int WordsPerPage = 300;
         public string GetContextInfo()
-            => $"workflowId={workflow.Id.Value};QueryFilter={workflow.QueryResultFilter!.Strategy}";
+            => $"QueryFilter={workflow.QueryResultFilter!.Strategy}";
 
         public string GetUserId() => workflow.UserId;
 

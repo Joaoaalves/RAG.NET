@@ -15,7 +15,7 @@ namespace RAGNET.Application.TokenWallets.Services.Consumption.Strategies
         public string Operation => "Chunk";
 
         public string GetContextInfo()
-            => $"workflowId={workflow.Id.Value};Chunker={workflow.Chunker!.StrategyType};pages={pageCount}";
+            => $"Chunker={workflow.Chunker!.StrategyType};pages={pageCount}";
 
         public string GetUserId() => workflow.UserId;
 

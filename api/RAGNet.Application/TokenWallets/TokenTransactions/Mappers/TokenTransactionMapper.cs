@@ -15,6 +15,7 @@ namespace RAGNET.Application.TokenWallets.TokenTransactions.Mappers
                     new TokenTransactionDTO
                     {
                         Id = transaction.Id.Value,
+                        WorkflowId = transaction.WorkflowId.Value,
                         OperationName = transaction.OperationName,
                         ContextInfo = transaction.ContextInfo,
                         Cost = transaction.Cost.Value,

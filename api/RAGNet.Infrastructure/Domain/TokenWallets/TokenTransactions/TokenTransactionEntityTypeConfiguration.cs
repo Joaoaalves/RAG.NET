@@ -19,6 +19,7 @@ namespace RAGNET.Infrastructure.Domain.TokenWallets.TokenTransactions
             builder.Property(t => t.ContextInfo).IsRequired();
             builder.Property(t => t.TimeStamp).IsRequired();
             builder.Property(t => t.Source).IsRequired();
+            builder.Property(t => t.WorkflowId).IsRequired();
 
             builder.Property(t => t.Cost)
                    .HasConversion(new TokenAmountConverter())

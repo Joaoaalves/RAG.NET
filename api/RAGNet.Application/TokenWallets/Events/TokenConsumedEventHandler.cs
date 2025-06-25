@@ -14,6 +14,7 @@ namespace RAGNET.Application.TokenWallets.Events
         {
             var transaction = TokenTransaction.Create(
                 notification.UserId,
+                notification.WorkflowId,
                 notification.TokenWalletId,
                 notification.Operation,
                 notification.ContextInfo,

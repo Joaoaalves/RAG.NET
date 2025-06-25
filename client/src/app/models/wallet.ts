@@ -7,6 +7,7 @@ export interface Wallet {
 
 export interface Transaction {
   id: string;
+  workflowId: string;
   operationName: string;
   contextInfo: string;
   cost: number;

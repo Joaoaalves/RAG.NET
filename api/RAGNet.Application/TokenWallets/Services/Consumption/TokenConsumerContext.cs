@@ -23,7 +23,13 @@ namespace RAGNET.Application.TokenWallets.Services.Consumption
         {
             var cost = strategy.CalculateCost();
 
-            wallet.Consume(cost, strategy.Operation, strategy.GetContextInfo());
+            wallet.Consume(
+                cost,
+                workflow.Id,
+                strategy.Operation,
+                strategy.GetContextInfo()
+            );
+
             workflow.IncreaseTokenUsage(cost);
 
             await _walletRepository.UpdateAsync(wallet);

@@ -1,5 +1,6 @@
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.SharedKernel.Tokens;
+using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Domain.TokenWallets.TokenTransactions
 {
@@ -13,6 +14,7 @@ namespace RAGNET.Domain.TokenWallets.TokenTransactions
         public DateTime TimeStamp { get; private set; }
         public TokenSource Source { get; private set; }
 
+        public WorkflowId WorkflowId { get; set; } = null!;
         public TokenWalletId TokenWalletId { get; set; } = null!;
         public TokenWallet TokenWallet { get; set; } = null!;
 
@@ -22,6 +24,7 @@ namespace RAGNET.Domain.TokenWallets.TokenTransactions
         private TokenTransaction(
             TokenTransactionId id,
             string userId,
+            WorkflowId workflowId,
             TokenWalletId tokenWalletId,
             string operationName,
             string contextInfo,
@@ -32,6 +35,7 @@ namespace RAGNET.Domain.TokenWallets.TokenTransactions
         {
             Id = id;
             UserId = userId;
+            WorkflowId = workflowId;
             TokenWalletId = tokenWalletId;
             OperationName = operationName;
             ContextInfo = contextInfo;
@@ -42,6 +46,7 @@ namespace RAGNET.Domain.TokenWallets.TokenTransactions
 
         public static TokenTransaction Create(
             string userId,
+            WorkflowId workflowId,
             TokenWalletId tokenWalletId,
             string operationName,
             string contextInfo,
@@ -52,6 +57,7 @@ namespace RAGNET.Domain.TokenWallets.TokenTransactions
             return new TokenTransaction(
                 new TokenTransactionId(Guid.NewGuid()),
                 userId,
+                workflowId,
                 tokenWalletId,
                 operationName,
                 contextInfo,

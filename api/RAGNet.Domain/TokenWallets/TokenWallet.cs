@@ -3,6 +3,7 @@ using RAGNET.Domain.SharedKernel.Tokens;
 using RAGNET.Domain.TokenWallets.Events;
 using RAGNET.Domain.TokenWallets.Rules;
 using RAGNET.Domain.TokenWallets.TokenTransactions;
+using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Domain.TokenWallets
 {
@@ -52,7 +53,7 @@ namespace RAGNET.Domain.TokenWallets
             );
         }
 
-        public void Consume(TokenAmount amount, string operation, string contextInfo)
+        public void Consume(TokenAmount amount, WorkflowId workflowId, string operation, string contextInfo)
         {
             CheckRule(new MustHaveSufficientTokensRule(this, amount));
             var source = TokenSource.Free;
@@ -73,6 +74,7 @@ namespace RAGNET.Domain.TokenWallets
                 new TokenConsumedEvent(
                     Id,
                     UserId,
+                    workflowId,
                     amount,
                     operation,
                     contextInfo,
@@ -83,6 +85,7 @@ namespace RAGNET.Domain.TokenWallets
 
         public void AddTransaction(TokenTransaction transaction)
         {
+
             _transactions.Add(transaction);
         }
 
