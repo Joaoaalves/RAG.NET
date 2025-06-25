@@ -42,9 +42,9 @@ namespace web.Controllers.Workflows
             {
                 return BadRequest(new { exc.Message });
             }
-            catch (Exception e)
+            catch (Exception exc)
             {
-                return Problem(e.Message);
+                return Problem(exc.Message);
             }
         }
 

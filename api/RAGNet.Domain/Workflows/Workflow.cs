@@ -52,7 +52,7 @@ namespace RAGNET.Domain.Workflows
             string userId,
             string apiKey,
             Guid collectionId,
-            Chunker? chunker,
+            Chunker chunker,
             ConversationProviderConfig conversationProviderConfig,
             EmbeddingProviderConfig embeddingProviderConfig,
             QueryResultFilter? filter = null)

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace RAGNET.Application.Workflows.Commands.CreateWorkflow
+namespace RAGNET.Application.Workflows.CallbackUrls.Commands.CreateCallbackUrl
 {
     public class CreateCallbackUrlRequest
     {
