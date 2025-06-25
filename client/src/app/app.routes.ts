@@ -10,6 +10,7 @@ import { WorkflowComponent } from './components/workflow/workflow.component';
 import { QueryComponent } from './components/workflow/query/query.component';
 import { ProvidersComponent } from './components/providers/providers.component';
 import { HomeComponent } from './components/home/home.component';
+import { WalletComponent } from './components/wallet/wallet.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, title: 'RAG.NET' },
@@ -30,6 +31,12 @@ export const routes: Routes = [
         component: WorkflowsComponent,
         canActivate: [AuthGuard],
         title: 'Workflows - RAG.NET',
+      },
+      {
+        path: 'wallet',
+        component: WalletComponent,
+        canActivate: [AuthGuard],
+        title: 'Wallet - RAG.NET',
       },
       {
         path: 'providers',

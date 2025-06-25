@@ -11,6 +11,7 @@ import {
   lucideLayers,
   lucideLogOut,
   lucideMenu,
+  lucideWallet,
   lucideX,
 } from '@ng-icons/lucide';
 
@@ -29,6 +30,7 @@ import { Observable } from 'rxjs';
   providers: [
     provideIcons({
       lucideDatabase,
+      lucideWallet,
       lucideLayers,
       lucideLogOut,
       lucideMenu,
@@ -52,6 +54,12 @@ export class SidebarComponent implements OnInit {
       label: 'Providers',
       onClick: () => this.navigateProviders(),
       url: '/dashboard/providers',
+    },
+    {
+      icon: 'lucideWallet',
+      label: 'Wallet',
+      onclick: () => this.navigateWallet(),
+      url: '/dashboard/wallet',
     },
     {
       icon: 'lucideLogOut',
@@ -89,6 +97,10 @@ export class SidebarComponent implements OnInit {
 
   navigateProviders() {
     this.router.navigate(['/dashboard/providers']);
+  }
+
+  navigateWallet() {
+    this.router.navigate(['/dashboard/wallet']);
   }
 
   logout() {

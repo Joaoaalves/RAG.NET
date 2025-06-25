@@ -46,6 +46,7 @@ export class UserService {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
+      tokenWallet: user.tokenWallet,
     };
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(basic));
     this._user$.next(basic);
