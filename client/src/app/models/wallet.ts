@@ -3,7 +3,6 @@ export interface Wallet {
   paidTokens: number;
   lastFreeTokenResetAt: Date;
   transactions: Transaction[];
-  dailyTransactions: DailyTransactionsAggregate[];
 }
 
 export interface Transaction {
@@ -28,6 +27,7 @@ export interface DailyTransactionsAggregate {
 
 export interface GetWalletResponse {
   wallet: Wallet;
+  dailyTransactions: DailyTransactionsAggregate[];
 }
 
 export interface GetWalletRequest {
