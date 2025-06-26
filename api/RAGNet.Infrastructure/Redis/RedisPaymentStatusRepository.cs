@@ -17,7 +17,11 @@ namespace RAGNET.Infrastructure.Redis
             {
                 var db = _redis.GetDatabase();
                 var key = GetStatusKey(intent.PaymentIntentId, intent.UserId);
-                await db.StringSetAsync(key, PaymentStatus.PENDING.ToString());
+                await db.StringSetAsync(
+                    key,
+                    PaymentStatus.PENDING.ToString(),
+                    TimeSpan.FromMinutes(30) // TTL 30 Minutes
+                );
                 return true;
             }
             catch (Exception ex)
