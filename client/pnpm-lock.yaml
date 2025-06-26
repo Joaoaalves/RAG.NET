@@ -65,6 +65,9 @@ importers:
       '@spartan-ng/brain':
         specifier: 0.0.1-alpha.432
         version: 0.0.1-alpha.432(@angular/cdk@19.2.7(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0)))(rxjs@7.8.2))(clsx@2.1.1)(luxon@3.6.0)(rxjs@7.8.2)(tailwind-merge@2.6.0)(tailwindcss-animate@1.0.7(tailwindcss@4.0.17))(tailwindcss@4.0.17)
+      '@stripe/stripe-js':
+        specifier: ^7.4.0
+        version: 7.4.0
       '@tailwindcss/postcss':
         specifier: ^4.0.17
         version: 4.0.17
@@ -89,6 +92,9 @@ importers:
       ngx-sonner:
         specifier: ^3.0.0
         version: 3.1.0(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))
+      ngx-stripe:
+        specifier: ^20.7.0
+        version: 20.7.0(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(@stripe/stripe-js@7.4.0)
       postcss:
         specifier: ^8.5.3
         version: 8.5.3
@@ -2669,6 +2675,10 @@ packages:
     resolution: {integrity: sha512-Wwau94m71hg/7GJgG2YAijbOTWAnlL6fjncnZdB5FTltjcXM8Wrrjuy5bwYyvHpIGChE7kcgV6WTcqlOxLxI+A==}
     peerDependencies:
       tslib: ^2.3.0
+
+  '@stripe/stripe-js@7.4.0':
+    resolution: {integrity: sha512-lQHQPfXPTBeh0XFjq6PqSBAyR7umwcJbvJhXV77uGCUDD6ymXJU/f2164ydLMLCCceNuPlbV9b+1smx98efwWQ==}
+    engines: {node: '>=12.16'}
 
   '@swc-node/core@1.13.3':
     resolution: {integrity: sha512-OGsvXIid2Go21kiNqeTIn79jcaX4l0G93X2rAnas4LFoDyA9wAwVK7xZdm+QsKoMn5Mus2yFLCc4OtX2dD/PWA==}
@@ -5707,6 +5717,13 @@ packages:
     peerDependencies:
       '@angular/common': '>=19.0.0'
       '@angular/core': '>=19.0.0'
+
+  ngx-stripe@20.7.0:
+    resolution: {integrity: sha512-gwrjOSfGKXgdjlqyxt61Tz6kKnlJhs38iMqAuyZH+UJ2TeClBA4+iywIheTU3GOg8DLnaANKunr7BDO/gjQkPQ==}
+    peerDependencies:
+      '@angular/common': '>=20.0.0 <21.0.0'
+      '@angular/core': '>=20.0.0 <21.0.0'
+      '@stripe/stripe-js': '>=7.0.0 <8.0.0'
 
   node-abort-controller@3.1.1:
     resolution: {integrity: sha512-AGK2yQKIjRuqnc6VkX2Xj5d+QW8xZ87pa1UK6yA6ouUyuxfHuMP6umE5QK7UmTeOAymo+Zx1Fxiuw9rVx8taHQ==}
@@ -10816,6 +10833,8 @@ snapshots:
       - vue-tsc
       - webpack-cli
 
+  '@stripe/stripe-js@7.4.0': {}
+
   '@swc-node/core@1.13.3(@swc/core@1.5.29(@swc/helpers@0.5.13))(@swc/types@0.1.20)':
     dependencies:
       '@swc/core': 1.5.29(@swc/helpers@0.5.13)
@@ -14310,6 +14329,13 @@ snapshots:
     dependencies:
       '@angular/common': 19.2.3(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2)
       '@angular/core': 19.2.3(rxjs@7.8.2)(zone.js@0.15.0)
+      tslib: 2.8.1
+
+  ngx-stripe@20.7.0(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(@stripe/stripe-js@7.4.0):
+    dependencies:
+      '@angular/common': 19.2.3(@angular/core@19.2.3(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2)
+      '@angular/core': 19.2.3(rxjs@7.8.2)(zone.js@0.15.0)
+      '@stripe/stripe-js': 7.4.0
       tslib: 2.8.1
 
   node-abort-controller@3.1.1: {}

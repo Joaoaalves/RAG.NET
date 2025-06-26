@@ -21,15 +21,10 @@ namespace web.Controllers.Workflows.QueryResultFilters
 
         [HttpPost("{workflowId}/content-filter/rse")]
         [ServiceFilter(typeof(WebWorkflowFilter))]
-        public async Task<IActionResult> EnableRSE([FromBody] QueryResultFilterCreationRequest request, [FromRoute] Guid workflowId)
+        public async Task<IActionResult> EnableRSE([FromBody] CreateQueryResultFilterCommand command, [FromRoute] Guid workflowId)
         {
             try
             {
-
-                var command = new CreateQueryResultFilterCommand(
-                    request
-                );
-
                 var rse = await _commandsExecutor.Execute(command);
 
                 return Ok(new { Message = "Relevant Segment Extraction enabled!", Filter = rse });

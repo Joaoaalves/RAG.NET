@@ -1,6 +1,5 @@
 using StackExchange.Redis;
 
-
 using RAGNET.Domain.SharedKernel.Providers;
 
 using RAGNET.Infrastructure.ChatCompletions;
@@ -16,6 +15,8 @@ using RAGNET.Infrastructure.Embedders;
 
 using RAGNET.Application.Feedbacks.Services;
 using RAGNET.Application.Infrastructure.Providers;
+using RAGNET.Application.Payments.Services;
+using RAGNET.Infrastructure.Payments;
 
 namespace web.Configurations
 {
@@ -59,6 +60,10 @@ namespace web.Configurations
             services.AddScoped<ICardCreatorService, TrelloCardCreator>();
 
 
+            // Stripe
+            services.AddScoped<IPaymentGateway, StripePaymentGateway>();
+            services.Configure<StripeSettings>(configuration.GetSection("Stripe"));
+
             // Providers
             services.AddSingleton<OpenAIChatModelCatalog>();
             services.AddSingleton<AnthropicChatModelCatalog>();
@@ -69,7 +74,6 @@ namespace web.Configurations
                 { SupportedProvider.Anthropic, sp.GetRequiredService<AnthropicChatModelCatalog>() },
                 { SupportedProvider.Gemini, sp.GetRequiredService<GeminiChatModelCatalog>() },
             });
-
 
             services.AddSingleton<OpenAIEmbeddingModelCatalog>();
             services.AddSingleton<VoyageEmbeddingModelCatalog>();

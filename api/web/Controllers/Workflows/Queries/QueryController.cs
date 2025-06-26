@@ -27,14 +27,14 @@ namespace web.Controllers.Workflows.Queries
         {
             try
             {
-                var enhanceQuery = new EnhanceQueryCommand(queryDTO);
-                var queries = await _commandsExecutor.Execute(enhanceQuery);
+                var enhanceCommand = new EnhanceQueryCommand(queryDTO);
+                var queries = await _commandsExecutor.Execute(enhanceCommand);
 
-                var chunkQuery = new QueryChunksCommand(queries, queryDTO);
-                var chunks = await _commandsExecutor.Execute(chunkQuery);
+                var chunkCommand = new QueryChunksCommand(queries, queryDTO);
+                var chunks = await _commandsExecutor.Execute(chunkCommand);
 
-                var filterQuery = new FilterQueryResultCommand(chunks, queryDTO.Query);
-                var filteredContent = await _commandsExecutor.Execute(filterQuery);
+                var filterCommand = new FilterQueryResultCommand(chunks, queryDTO.Query);
+                var filteredContent = await _commandsExecutor.Execute(filterCommand);
 
                 var wallet = await _queriesExecutor.Execute(new GetUserTokenWalletQuery());
 

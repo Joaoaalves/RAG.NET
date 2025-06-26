@@ -11,6 +11,7 @@ import { QueryComponent } from './components/workflow/query/query.component';
 import { ProvidersComponent } from './components/providers/providers.component';
 import { HomeComponent } from './components/home/home.component';
 import { WalletComponent } from './components/wallet/wallet.component';
+import { SubscriptionComponent } from './components/subscription/subscription.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, title: 'RAG.NET' },
@@ -37,6 +38,12 @@ export const routes: Routes = [
         component: WalletComponent,
         canActivate: [AuthGuard],
         title: 'Wallet - RAG.NET',
+      },
+      {
+        path: 'subscription',
+        component: SubscriptionComponent,
+        canActivate: [AuthGuard],
+        title: 'Subscription - RAG.NET',
       },
       {
         path: 'providers',

@@ -1,0 +1,36 @@
+{
+    "ConnectionStrings": {
+        "DefaultConnection": "Host=postgres;Port=5432;Database=rag_db;Username=postgres;Password=password",
+        "Redis": "redis:6379,abortConnect=false"
+    },
+    "RabbitMQ": {
+        "Host": "rabbitmq",
+        "Username": "rag_user",
+        "Password": "rag_password"
+    },
+    "Trello": {
+        "ApiKey": "",
+        "Token": "",
+        "ListId": ""
+    },
+    "Logging": {
+        "LogLevel": {
+            "Default": "Error",
+            "Microsoft.AspNetCore": "Warning"
+        }
+    },
+    "AllowedHosts": "*",
+    "JWT": {
+        "Issuer": "http://localhost:5246",
+        "Audience": "http://localhost:5246",
+        "SignInKey": ""
+    },
+    "Encryption": {
+        "Key": ""
+    },
+    "Stripe": {
+        "SecretKey": "",
+        "WebhookSecret": "",
+        "PriceId": ""
+    }
+}

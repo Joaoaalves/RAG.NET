@@ -1,5 +1,5 @@
 import { UserService } from 'src/app/services/user.service';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { User } from 'src/app/models/user';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 // Icons
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
+  lucideCalendarSync,
   lucideDatabase,
   lucideLayers,
   lucideLogOut,
@@ -34,6 +35,7 @@ import { Observable } from 'rxjs';
       lucideLayers,
       lucideLogOut,
       lucideMenu,
+      lucideCalendarSync,
       lucideX,
     }),
   ],
@@ -58,8 +60,14 @@ export class SidebarComponent implements OnInit {
     {
       icon: 'lucideWallet',
       label: 'Wallet',
-      onclick: () => this.navigateWallet(),
+      onClick: () => this.navigateWallet(),
       url: '/dashboard/wallet',
+    },
+    {
+      icon: 'lucideCalendarSync',
+      label: 'Subscription',
+      onClick: () => this.navigateSubscription(),
+      url: '/dashboard/subscription',
     },
     {
       icon: 'lucideLogOut',
@@ -101,6 +109,10 @@ export class SidebarComponent implements OnInit {
 
   navigateWallet() {
     this.router.navigate(['/dashboard/wallet']);
+  }
+
+  navigateSubscription() {
+    this.router.navigate(['/dashboard/subscription']);
   }
 
   logout() {

@@ -1,0 +1,9 @@
+<section class="subscription">
+  <h1 class="text-3xl text-white">Subscribe Now!</h1>
+
+  <button (click)="subscribe()" [disabled]="loading" class="bg-neutral-950 text-white p-3 rounded-2xl">
+    {{ loading ? 'Redirecting...' : 'Get Professional Subscription' }}
+  </button>
+
+  <p class="error" *ngIf="error">{{ error }}</p>
+</section>

@@ -4,6 +4,7 @@ using RAGNET.Domain.Users;
 using RAGNET.Infrastructure.SignalR;
 using web.Configurations;
 using web.Extensions;
+using web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 var isProductionEnv = Environment.GetEnvironmentVariable("PRODUCTION") ?? "false";
@@ -101,6 +102,7 @@ var identityApi = app.MapIdentityApi<User>();
 
 
 app.MapControllers();
+app.UseMiddleware<StripeWebhookMiddleware>();
 
 app.Run();
 public partial class Program { }

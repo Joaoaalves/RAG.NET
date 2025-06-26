@@ -104,6 +104,8 @@ namespace RAGNET.Domain.TokenWallets
         public void AddPaidTokens(TokenAmount amount)
         {
             PaidTokens = TokenAmount.FromMilitokens(PaidTokens.Value + amount.Value);
+
+            AddDomainEvent(new PaidTokensAddedEvent(Id, UserId, amount));
         }
 
         public void ResetFreeTokens(TokenAmount monthlyAmount)
