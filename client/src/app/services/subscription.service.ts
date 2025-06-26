@@ -1,17 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { StripeService } from 'ngx-stripe';
 import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { PaymentStatus, PaymentStatusResponse } from '../models/subscription';
 
 @Injectable({ providedIn: 'root' })
 export class SubscriptionService {
   private apiUrl = environment.apiUrl;
-  constructor(private http: HttpClient, private stripeService: StripeService) {}
+  constructor(private http: HttpClient) {}
 
   startSubscription(): Observable<string> {
-    const successUrl = `${window.location.origin}/checkout/success`;
-    const cancelUrl = `${window.location.origin}/checkout/cancel`;
+    const successUrl = `${window.location.origin}/dashboard/subscriptions/pending`;
+    const cancelUrl = `${window.location.origin}/dashboard/subscriptions`;
 
     return this.http
       .post<{ url: string }>(`${this.apiUrl}/api/checkout/start`, {
@@ -21,10 +21,19 @@ export class SubscriptionService {
       .pipe(
         map((response) => {
           if (!response.url) {
-            throw new Error('Checkout URL inválida');
+            throw new Error('Invalid Checkout URL');
           }
           return response.url;
         })
       );
+  }
+
+  checkPaymentStatus(paymentId: string): Observable<PaymentStatusResponse> {
+    return this.http.get<PaymentStatusResponse>(
+      `${this.apiUrl}/api/checkout/status`,
+      {
+        params: { paymentId },
+      }
+    );
   }
 }

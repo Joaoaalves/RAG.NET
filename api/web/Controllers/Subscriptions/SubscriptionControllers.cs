@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RAGNET.Application.Payments.Commands.CreateCheckout;
 using RAGNET.Application.Payments.DTOs;
+using RAGNET.Application.Payments.Queries.GetPaymentStatus;
+using RAGNET.Application.Payments.Services;
 using RAGNET.Infrastructure.Processing;
 
 namespace web.Controllers.Subscriptions
@@ -9,10 +11,12 @@ namespace web.Controllers.Subscriptions
     [Route("api/checkout")]
     [ApiController]
     public class SubscriptionsController(
-        CommandsExecutor commandsExecutor
+        CommandsExecutor commandsExecutor,
+        QueriesExecutor queriesExecutor
     ) : ControllerBase
     {
         private readonly CommandsExecutor _commandsExecutor = commandsExecutor;
+        private readonly QueriesExecutor _queriesExecutor = queriesExecutor;
 
         [HttpPost("start")]
         [Authorize]
@@ -24,6 +28,32 @@ namespace web.Controllers.Subscriptions
                 var url = await _commandsExecutor.Execute(command);
 
                 return Ok(new { url });
+            }
+            catch (Exception exc)
+            {
+                return Problem(exc.Message);
+            }
+        }
+
+        [HttpGet("status")]
+        [Authorize]
+        public async Task<IActionResult> CheckPaymentStatus([FromQuery] string paymentId)
+        {
+            try
+            {
+                var query = new GetPaymentStatusQuery(paymentId);
+
+                var status = await _queriesExecutor.Execute(query);
+
+                if (status is not null)
+                {
+                    return Ok(new
+                    {
+                        status
+                    });
+                }
+
+                return NotFound(new { message = "Payment not found" });
             }
             catch (Exception exc)
             {

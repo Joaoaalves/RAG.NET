@@ -53,12 +53,13 @@ namespace web.Configurations
             services.AddSingleton<IJobNotificationService, SignalRJobNotificationService>();
 
             services.AddScoped<IVectorDatabaseService, QDrantAdapter>();
-            services.AddScoped<IJobStatusRepository, RedisJobStatusRepository>();
 
+            // REDIS
+            services.AddScoped<IJobStatusRepository, RedisJobStatusRepository>();
+            services.AddScoped<IPaymentStatusService, RedisPaymentStatusRepository>();
 
             // Trello
             services.AddScoped<ICardCreatorService, TrelloCardCreator>();
-
 
             // Stripe
             services.AddScoped<IPaymentGateway, StripePaymentGateway>();

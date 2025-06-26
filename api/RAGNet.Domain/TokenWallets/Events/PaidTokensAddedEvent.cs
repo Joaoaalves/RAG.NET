@@ -8,11 +8,13 @@ namespace RAGNET.Domain.TokenWallets.Events
         public TokenWalletId TokenWalletId { get; }
         public string UserId { get; } = string.Empty;
         public TokenAmount TokenAmount { get; }
-        public PaidTokensAddedEvent(TokenWalletId tokenWalletId, string userId, TokenAmount tokenAmount)
+        public string PaymentId { get; }
+        public PaidTokensAddedEvent(TokenWalletId tokenWalletId, string userId, TokenAmount tokenAmount, string paymentId)
         {
             TokenWalletId = tokenWalletId;
             UserId = userId;
             TokenAmount = tokenAmount;
+            PaymentId = paymentId;
 
             Console.WriteLine($"{TokenAmount.Value} added to wallet with id: {TokenWalletId} - user: {UserId}");
         }

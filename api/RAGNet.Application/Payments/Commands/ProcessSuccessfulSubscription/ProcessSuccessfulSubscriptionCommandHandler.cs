@@ -14,9 +14,11 @@ namespace RAGNET.Application.Payments.Commands.ProcessSuccessfulSubscription
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         public async Task<Unit> Handle(ProcessSuccessfulSubscriptionCommand request, CancellationToken cancellationToken)
         {
-            var wallet = await _tokenWalletRepository.GetByUserIdAsync(request.UserId) ?? throw new ApplicationException("Wallet not found");
+            var wallet = await _tokenWalletRepository.GetByUserIdAsync(request.Intent.UserId) ?? throw new ApplicationException("Wallet not found");
 
-            wallet.AddPaidTokens(TokenAmount.MonthlyPaidQuota);
+            wallet.AddPaidTokens(TokenAmount.MonthlyPaidQuota, request.Intent.PaymentIntentId);
+
+            await _tokenWalletRepository.UpdateAsync(wallet);
 
             await _unitOfWork.CommitAsync(cancellationToken);
 

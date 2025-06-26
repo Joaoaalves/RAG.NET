@@ -3,6 +3,7 @@ using Stripe;
 using Stripe.Checkout;
 
 using RAGNET.Application.Payments.Services;
+using RAGNET.Application.Payments.DTOs;
 
 namespace RAGNET.Infrastructure.Payments
 {
@@ -32,7 +33,8 @@ namespace RAGNET.Infrastructure.Payments
                     ],
                 Metadata = new Dictionary<string, string>
                     {
-                        { "userId", userId }
+                        { "userId", userId },
+                        { "paymentIntentId", Guid.NewGuid().ToString()}
                     }
             };
 
@@ -42,19 +44,20 @@ namespace RAGNET.Infrastructure.Payments
             return session.Url;
         }
 
-        public Task<string?> ExtractUserIdFromEventAsync(string json, string signature)
+        public Task<PaymentIntentDTO?> ExtractUserIdFromEventAsync(string json, string signature)
         {
             var stripeEvent = EventUtility.ConstructEvent(json, signature, _settings.WebhookSecret);
 
             if (stripeEvent.Type == "checkout.session.completed" &&
                 stripeEvent.Data.Object is Session session &&
                 session.Metadata is not null &&
-                session.Metadata.TryGetValue("userId", out var userId))
+                session.Metadata.TryGetValue("userId", out var userId) &&
+                session.Metadata.TryGetValue("paymentIntentId", out var paymentIntentId))
             {
-                return Task.FromResult<string?>(userId);
+                return Task.FromResult<PaymentIntentDTO?>(new PaymentIntentDTO { UserId = userId, PaymentIntentId = paymentIntentId });
             }
 
-            return Task.FromResult<string?>(null);
+            return Task.FromResult<PaymentIntentDTO?>(null);
         }
     }
 }

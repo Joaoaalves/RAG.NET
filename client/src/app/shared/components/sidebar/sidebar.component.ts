@@ -67,7 +67,7 @@ export class SidebarComponent implements OnInit {
       icon: 'lucideCalendarSync',
       label: 'Subscription',
       onClick: () => this.navigateSubscription(),
-      url: '/dashboard/subscription',
+      url: '/dashboard/subscriptions',
     },
     {
       icon: 'lucideLogOut',
@@ -112,7 +112,7 @@ export class SidebarComponent implements OnInit {
   }
 
   navigateSubscription() {
-    this.router.navigate(['/dashboard/subscription']);
+    this.router.navigate(['/dashboard/subscriptions']);
   }
 
   logout() {

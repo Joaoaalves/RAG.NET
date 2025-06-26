@@ -1,11 +1,12 @@
 using RAGNET.Application.Configuration.Commands;
+using RAGNET.Application.Payments.DTOs;
 
 namespace RAGNET.Application.Payments.Commands.ProcessSuccessfulSubscription
 {
     public class ProcessSuccessfulSubscriptionCommand(
-        string userId
+        PaymentIntentDTO intent
     ) : BaseCommand<Unit>
     {
-        public string UserId { get; } = userId;
+        public PaymentIntentDTO Intent { get; } = intent;
     }
 }

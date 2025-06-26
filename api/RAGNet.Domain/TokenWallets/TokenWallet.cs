@@ -57,31 +57,32 @@ namespace RAGNET.Domain.TokenWallets
 
             CheckRule(new MustHaveSufficientTokensRule(this, amount));
 
-            var source = TokenSource.Free;
+            var source = GetTokenSourceFor(amount);
 
-            if (FreeTokens.Value >= amount.Value)
+            if (HasEnough(amount))
             {
-                FreeTokens = TokenAmount.FromMilitokens(FreeTokens.Value - amount.Value);
-            }
-            else
-            {
-                var remaining = amount.Value - FreeTokens.Value;
-                FreeTokens = TokenAmount.Zero;
-                PaidTokens = TokenAmount.FromMilitokens(PaidTokens.Value - remaining);
-                source = TokenSource.Paid;
-            }
+                if (source == TokenSource.Free)
+                    FreeTokens = TokenAmount.FromMilitokens(FreeTokens.Value - amount.Value);
+                else
+                {
+                    var remaining = amount.Value - FreeTokens.Value;
+                    FreeTokens = TokenAmount.Zero;
+                    PaidTokens = TokenAmount.FromMilitokens(PaidTokens.Value - remaining);
+                    source = TokenSource.Paid;
+                }
 
-            AddDomainEvent(
-                new TokenConsumedEvent(
-                    Id,
-                    UserId,
-                    workflowId,
-                    amount,
-                    operation,
-                    contextInfo,
-                    source
-                )
-            );
+                AddDomainEvent(
+                    new TokenConsumedEvent(
+                        Id,
+                        UserId,
+                        workflowId,
+                        amount,
+                        operation,
+                        contextInfo,
+                        source
+                    )
+                );
+            }
         }
         private void ResetFreeTokensIfExpired()
         {
@@ -101,11 +102,11 @@ namespace RAGNET.Domain.TokenWallets
             _transactions.Add(transaction);
         }
 
-        public void AddPaidTokens(TokenAmount amount)
+        public void AddPaidTokens(TokenAmount amount, string paymentId)
         {
             PaidTokens = TokenAmount.FromMilitokens(PaidTokens.Value + amount.Value);
 
-            AddDomainEvent(new PaidTokensAddedEvent(Id, UserId, amount));
+            AddDomainEvent(new PaidTokensAddedEvent(Id, UserId, amount, paymentId));
         }
 
         public void ResetFreeTokens(TokenAmount monthlyAmount)

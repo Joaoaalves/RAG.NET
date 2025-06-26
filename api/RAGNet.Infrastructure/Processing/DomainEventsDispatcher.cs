@@ -19,7 +19,6 @@ namespace RAGNET.Infrastructure.Processing
                 .SelectMany(e => e.Entity.DomainEvents!)
                 .ToList();
 
-
             // Clear to avoid re-sending events
             domainEntities.ForEach(e => e.Entity.ClearDomainEvents());
 

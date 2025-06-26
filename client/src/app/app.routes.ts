@@ -12,6 +12,8 @@ import { ProvidersComponent } from './components/providers/providers.component';
 import { HomeComponent } from './components/home/home.component';
 import { WalletComponent } from './components/wallet/wallet.component';
 import { SubscriptionComponent } from './components/subscription/subscription.component';
+import { SubscriptionPendingComponent } from './components/subscription/pending/subscription-pending.component';
+import { SubscriptionSuccessComponent } from './components/subscription/success/subscription-success.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, title: 'RAG.NET' },
@@ -40,10 +42,22 @@ export const routes: Routes = [
         title: 'Wallet - RAG.NET',
       },
       {
-        path: 'subscription',
+        path: 'subscriptions',
         component: SubscriptionComponent,
         canActivate: [AuthGuard],
         title: 'Subscription - RAG.NET',
+      },
+      {
+        path: 'subscriptions/pending',
+        component: SubscriptionPendingComponent,
+        canActivate: [AuthGuard],
+        title: 'Subscription Pending - RAG.NET',
+      },
+      {
+        path: 'subscriptions/success',
+        component: SubscriptionSuccessComponent,
+        canActivate: [AuthGuard],
+        title: 'Subscription Success - RAG.NET',
       },
       {
         path: 'providers',

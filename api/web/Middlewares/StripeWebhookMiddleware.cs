@@ -10,7 +10,7 @@ namespace web.Middlewares
 
         public async Task InvokeAsync(HttpContext context, IPaymentGateway gateway, CommandsExecutor commandsExecutor)
         {
-            if (context.Request.Path != "/webhooks/stripe")
+            if (context.Request.Path != "/api/webhooks/stripe")
             {
                 await _next(context);
                 return;
@@ -21,10 +21,10 @@ namespace web.Middlewares
 
             if (!string.IsNullOrEmpty(signature))
             {
-                var userId = await gateway.ExtractUserIdFromEventAsync(json, signature!);
-                if (userId is not null)
+                var intent = await gateway.ExtractUserIdFromEventAsync(json, signature!);
+                if (intent is not null)
                 {
-                    await commandsExecutor.Execute(new ProcessSuccessfulSubscriptionCommand(userId));
+                    await commandsExecutor.Execute(new ProcessSuccessfulSubscriptionCommand(intent));
                 }
             }
 
