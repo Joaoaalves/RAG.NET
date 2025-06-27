@@ -1,0 +1,58 @@
+<section class="relative min-h-screen flex items-center">
+  <div class="w-full max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="space-y-8 transition-all duration-1000">
+        <div class="space-y-4">
+          <h2
+            class="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 bg-clip-text text-transparent"
+          >
+            Upgrade to Enhanced
+          </h2>
+          <p class="text-xl text-neutral-300 max-w-lg leading-relaxed">
+            Unlock advanced RAG capabilities with more tokens, smarter chunking,
+            and priority support for your growing AI applications.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div
+            *ngFor="let feature of features; index as i"
+            class="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-fuchsia-500/10 to-rose-500/10 border border-fuchsia-500/20 hover:border-fuchsia-500/40 transition-all duration-300 hover:scale-105"
+            [style.animationDelay]="i * 100 + 'ms'"
+          >
+            <div class="text-xl text-fuchsia-400">
+              <ng-icon [name]="feature.icon"></ng-icon>
+            </div>
+            <span class="text-neutral-200 text-sm font-medium">{{
+              feature.text
+            }}</span>
+          </div>
+        </div>
+
+        <button
+          (click)="onSubscribe()"
+          [disabled]="isLoading"
+          class="cursor-pointer group relative bg-gradient-to-r from-fuchsia-500 to-sky-500 hover:from-fuchsia-400 hover:to-sky-400 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-fuchsia-500/25 disabled:opacity-50 disabled:cursor-not-allowed animate-pulse-slow"
+        >
+          <span class="relative z-10 flex items-center space-x-2">
+            <span>{{
+              isLoading ? 'Processing...' : 'Subscribe for $10/month'
+            }}</span>
+            <div
+              class="text-xl group-hover:translate-x-1 transition-transform duration-300"
+            >
+              <ng-icon name="lucideArrowRight" class="mt-2"></ng-icon>
+            </div>
+          </span>
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-fuchsia-600 to-sky-600 rounded-xl blur opacity-0 group-hover:opacity-50 transition-opacity"
+          ></div>
+        </button>
+      </div>
+      <app-cube></app-cube>
+    </div>
+  </div>
+  <div
+    class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-fuchsia-500/50 to-transparent"
+  ></div>
+</section>
