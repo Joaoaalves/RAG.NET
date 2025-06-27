@@ -5,7 +5,7 @@ import { LoginRequest } from '../models/login';
 import { RegisterRequest } from '../models/register';
 import { LoginResponse } from '../models/login';
 import { Observable, of, throwError } from 'rxjs';
-import { map, catchError, tap } from 'rxjs/operators';
+import { map, catchError, tap, switchMap } from 'rxjs/operators';
 import { TokenService } from './token.service';
 
 @Injectable({
@@ -22,10 +22,8 @@ export class AuthService {
     return this.httpClient
       .post<void>(`${this.apiUrl}/api/register`, credentials)
       .pipe(
-        map(() => {
-          this.login(credentials);
-          return true;
-        }),
+        switchMap(() => this.login(credentials)),
+        map(() => true),
         catchError(() => of(false))
       );
   }

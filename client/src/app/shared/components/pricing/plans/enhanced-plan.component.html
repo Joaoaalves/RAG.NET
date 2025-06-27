@@ -1,0 +1,78 @@
+<div
+  class="relative bg-neutral-900/80 backdrop-blur-sm rounded-2xl p-8 transition-all duration-300 hover:scale-105 cursor-pointer border-2 border-fuchsia-500/50 hover:border-fuchsia-500/80 hover:shadow-fuchsia-500/30 hover:shadow-2xl ring-2 ring-fuchsia-500/20 animate-pulse-slow h-full"
+>
+  <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+    <div
+      class="bg-gradient-to-r from-fuchsia-500 to-fuchsia-600 text-white px-4 py-1 rounded-full text-sm font-semibold"
+    >
+      Most Popular
+    </div>
+  </div>
+  <div class="relative z-10 flex flex-col h-full">
+    <div
+      class="inline-flex p-3 rounded-xl mb-6 bg-fuchsia-500/20 text-fuchsia-400 text-2xl w-12 h-12"
+    >
+      <ng-icon name="lucideCrown"></ng-icon>
+    </div>
+    <h3 class="text-2xl font-bold mb-2">Enhanced</h3>
+    <div class="mb-6">
+      <span class="text-4xl font-bold">$10</span>
+      <span class="text-neutral-400 ml-1">/month</span>
+    </div>
+    <p class="text-neutral-300 mb-8">
+      Perfect for developers looking to enhance their RAG stack
+    </p>
+    <ul class="space-y-3 mb-8">
+      <li class="flex items-center text-neutral-200 font-bold">
+        <div class="text-emerald-400 mr-3 text-xl">
+          <ng-icon name="lucideCheck"></ng-icon>
+        </div>
+        3,000 + 500 tokens/month
+      </li>
+      <li class="flex items-center text-neutral-200 font-bold">
+        <div class="text-emerald-400 mr-3 text-xl">
+          <ng-icon name="lucideCheck"></ng-icon>
+        </div>
+        <span>
+          All from <strong class="font-black text-rose-400">Core</strong> Plan
+        </span>
+      </li>
+      <li class="flex items-center text-neutral-200">
+        <div class="text-emerald-400 mr-3 text-xl">
+          <ng-icon name="lucideCheck"></ng-icon>
+        </div>
+        Proposition Chunker
+      </li>
+      <li class="flex items-center text-neutral-200">
+        <div class="text-emerald-400 mr-3 text-xl">
+          <ng-icon name="lucideCheck"></ng-icon>
+        </div>
+        Query Enhancer - Auto Query
+      </li>
+      <li class="flex items-center text-neutral-200">
+        <div class="text-green-400 mr-3 text-xl">
+          <ng-icon name="lucideCheck"></ng-icon>
+        </div>
+        Filter - Relevant Segment Extraction
+      </li>
+      <li class="flex items-center text-neutral-200">
+        <div class="text-emerald-400 mr-3 text-xl">
+          <ng-icon name="lucideCheck"></ng-icon>
+        </div>
+        50 workflows
+      </li>
+      <li class="flex items-center text-neutral-200">
+        <div class="text-emerald-400 mr-3 text-xl">
+          <ng-icon name="lucideCheck"></ng-icon>
+        </div>
+        Max file size: 100MB
+      </li>
+    </ul>
+    <button
+      (click)="navigateRegister()"
+      class="cursor-pointer w-full mt-auto py-3 px-6 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg bg-gradient-to-r from-fuchsia-500 to-fuchsia-600 hover:from-fuchsia-400 hover:to-fuchsia-500 text-white"
+    >
+      Upgrade Now
+    </button>
+  </div>
+</div>
