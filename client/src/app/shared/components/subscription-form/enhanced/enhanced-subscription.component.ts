@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { CubeComponent } from './cube.component';
+import { PlanType } from 'src/app/models/subscription';
 
 @Component({
   selector: 'app-enhanced-subscription',
@@ -10,11 +11,11 @@ import { CubeComponent } from './cube.component';
   standalone: true,
 })
 export class EnhancedSubscriptionComponent {
-  @Output() subscribe = new EventEmitter<'enhanced'>();
+  @Output() subscribe = new EventEmitter<PlanType>();
   isLoading: boolean = false;
 
   onSubscribe() {
-    this.subscribe.emit('enhanced');
+    this.subscribe.emit(PlanType.ENHANCED);
   }
 
   get features() {

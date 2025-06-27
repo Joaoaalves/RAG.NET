@@ -14,6 +14,7 @@ using RAGNET.Domain.Workflows;
 using RAGNET.Domain.Workflows.CallbackUrls;
 using RAGNET.Domain.TokenWallets;
 using RAGNET.Domain.TokenWallets.TokenTransactions;
+using RAGNET.Domain.Users.Subscriptions;
 
 namespace RAGNET.Infrastructure.Database
 {
@@ -31,6 +32,7 @@ namespace RAGNET.Infrastructure.Database
         public DbSet<Chunk> Chunks { get; set; }
         public DbSet<TokenWallet> TokenWallets { get; set; }
         public DbSet<TokenTransaction> TokenTransactions { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

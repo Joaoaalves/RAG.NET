@@ -1,5 +1,5 @@
-using RAGNET.Application.Payments.Commands.ProcessSuccessfulSubscription;
-using RAGNET.Application.Payments.Services;
+using RAGNET.Application.Subscriptions.Commands.ProcessSuccessfulSubscription;
+using RAGNET.Application.Subscriptions.Services;
 using RAGNET.Infrastructure.Processing;
 
 namespace web.Middlewares

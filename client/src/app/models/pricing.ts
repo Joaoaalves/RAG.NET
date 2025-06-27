@@ -7,9 +7,3 @@ export interface Plan {
   features: string[];
   cta: string;
 }
-
-export enum Intent {
-  CORE = 'core',
-  ENHANCED = 'enhanced',
-  ASCEND = 'ascend',
-}

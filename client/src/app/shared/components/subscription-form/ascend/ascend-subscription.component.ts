@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { OrbitalSystemComponent } from './orbital-system.component';
+import { PlanType } from 'src/app/models/subscription';
 
 @Component({
   selector: 'app-ascend-subscription',
@@ -11,10 +12,10 @@ import { OrbitalSystemComponent } from './orbital-system.component';
 })
 export class AscendSubscriptionComponent {
   @Input() isLoading = false;
-  @Output() subscribe = new EventEmitter<'ascend'>();
+  @Output() subscribe = new EventEmitter<PlanType>();
 
   onSubscribe() {
-    this.subscribe.emit('ascend');
+    this.subscribe.emit(PlanType.ASCEND);
   }
 
   get features() {

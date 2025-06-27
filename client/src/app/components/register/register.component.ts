@@ -12,7 +12,8 @@ import { InputComponent } from 'src/app/shared/components/input/input.component'
 
 // Services
 import { AuthService } from '../../services/auth.service';
-import { Intent } from 'src/app/models/pricing';
+import { PlanType } from 'src/app/models/subscription';
+import { SubscriptionService } from 'src/app/services/subscription.service';
 
 @Component({
   selector: 'app-register',
@@ -23,16 +24,17 @@ import { Intent } from 'src/app/models/pricing';
 export class RegisterComponent implements OnInit {
   form!: FormGroup;
   error = '';
-  intent?: Intent;
+  intent?: PlanType;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private subscriptionService: SubscriptionService
   ) {
     this.route.queryParams.subscribe((params) => {
-      this.intent = params['intent'];
+      this.intent = Number(params['intent']) as PlanType;
     });
   }
 
@@ -41,24 +43,24 @@ export class RegisterComponent implements OnInit {
   }
 
   isValidIntent(): boolean {
-    if (this.intent)
-      return Object.values(Intent).includes(this.intent as Intent);
-
-    return false;
+    return (this.intent as number) in PlanType;
   }
 
-  navigateSubscription() {
-    if (this.isValidIntent())
-      return this.router.navigate(['/dashboard/subscriptions'], {
-        queryParams: { intent: this.intent },
-      });
-
-    return this.router.navigate(['/dashboard/workflows']);
+  handleSubscription() {
+    if (this.isValidIntent()) {
+      this.subscriptionService
+        .startSubscription(this.intent as PlanType)
+        .subscribe({
+          next: (url) => (window.location.href = url),
+          error: (err) => console.error('Failed to start subscription', err),
+        });
+    } else {
+      this.router.navigate(['/dashboard/workflows']);
+    }
   }
 
   ngOnInit(): void {
-    if (this.authService.isLoggedIn() && this.intent)
-      this.navigateSubscription();
+    if (this.authService.isLoggedIn() && this.intent) this.handleSubscription();
 
     this.form = this.fb.group(
       {
@@ -96,7 +98,7 @@ export class RegisterComponent implements OnInit {
       .register({ firstName, lastName, email, password })
       .subscribe((success) => {
         if (success) {
-          this.navigateSubscription();
+          this.handleSubscription();
         } else {
           this.error = 'Registration failed.';
         }

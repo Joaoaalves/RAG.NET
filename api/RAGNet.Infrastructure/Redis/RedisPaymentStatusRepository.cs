@@ -1,5 +1,5 @@
-using RAGNET.Application.Payments.DTOs;
-using RAGNET.Application.Payments.Services;
+using RAGNET.Application.Subscriptions.DTOs;
+using RAGNET.Application.Subscriptions.Services;
 using StackExchange.Redis;
 
 namespace RAGNET.Infrastructure.Redis

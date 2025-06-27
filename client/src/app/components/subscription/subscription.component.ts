@@ -14,6 +14,8 @@ import {
   lucideMessageSquare,
   lucideCheck,
 } from '@ng-icons/lucide';
+import { SubscriptionService } from 'src/app/services/subscription.service';
+import { PlanType } from 'src/app/models/subscription';
 
 @Component({
   templateUrl: 'subscription.component.html',
@@ -34,4 +36,13 @@ import {
   ],
   standalone: true,
 })
-export class SubscriptionComponent {}
+export class SubscriptionComponent {
+  constructor(private subscriptionService: SubscriptionService) {}
+
+  handleSubscribe(plan: PlanType) {
+    this.subscriptionService.startSubscription(plan).subscribe({
+      next: (url) => (window.location.href = url),
+      error: (err) => console.error('Failed to start subscription', err),
+    });
+  }
+}

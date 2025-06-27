@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RAGNET.Application.Payments.Commands.CreateCheckout;
-using RAGNET.Application.Payments.DTOs;
-using RAGNET.Application.Payments.Queries.GetPaymentStatus;
-using RAGNET.Application.Payments.Services;
+using RAGNET.Application.Subscriptions.Commands.CreateCheckout;
+using RAGNET.Application.Subscriptions.DTOs;
+using RAGNET.Application.Subscriptions.Queries.GetPaymentStatus;
+using RAGNET.Application.Subscriptions.Services;
 using RAGNET.Infrastructure.Processing;
 
 namespace web.Controllers.Subscriptions
@@ -24,7 +24,7 @@ namespace web.Controllers.Subscriptions
         {
             try
             {
-                var command = new CreateCheckoutCommand(dto.SuccessUrl, dto.CancelUrl);
+                var command = new CreateSubscriptionCheckoutCommand(dto.PlanType, dto.SuccessUrl, dto.CancelUrl);
                 var url = await _commandsExecutor.Execute(command);
 
                 return Ok(new { url });

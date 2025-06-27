@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using RAGNET.Application.Configuration.Commands;
-using RAGNET.Domain.SharedKernel.Tokens;
 using RAGNET.Domain.SharedKernel.Users;
 using RAGNET.Domain.TokenWallets;
 using RAGNET.Domain.Users;
+using RAGNET.Domain.Users.Subscriptions;
 
 namespace RAGNET.Application.Users.Commands.RegisterUser
 {
@@ -21,11 +21,13 @@ namespace RAGNET.Application.Users.Commands.RegisterUser
 
             var user = User.Create(firstName, lastName, userName, email);
 
-            var wallet = TokenWallet.Create(
+            user.AddWallet(TokenWallet.Create(
                 user.Id
-            );
+            ));
 
-            user.AddWallet(wallet);
+            user.AddSubscription(Subscription.Create(
+                user.Id
+            ));
 
             var result = await _userManager.CreateAsync(user, request.Password);
 

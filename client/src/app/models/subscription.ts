@@ -8,3 +8,9 @@ export enum PaymentStatus {
 export interface PaymentStatusResponse {
   status: PaymentStatus;
 }
+
+export enum PlanType {
+  CORE,
+  ENHANCED,
+  ASCEND,
+}

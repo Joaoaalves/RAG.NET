@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgIcon } from '@ng-icons/core';
-import { Intent } from 'src/app/models/pricing';
+import { PlanType } from 'src/app/models/subscription';
 
 @Component({
   selector: 'app-ascend-plan',
@@ -15,7 +15,7 @@ export class AscendPlanComponent {
   navigateRegister() {
     this.router.navigate(['/register'], {
       queryParams: {
-        intent: Intent.ASCEND,
+        intent: PlanType.ASCEND.toString(),
       },
     });
   }

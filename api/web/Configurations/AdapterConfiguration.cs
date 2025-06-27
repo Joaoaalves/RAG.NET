@@ -15,7 +15,7 @@ using RAGNET.Infrastructure.Embedders;
 
 using RAGNET.Application.Feedbacks.Services;
 using RAGNET.Application.Infrastructure.Providers;
-using RAGNET.Application.Payments.Services;
+using RAGNET.Application.Subscriptions.Services;
 using RAGNET.Infrastructure.Payments;
 
 namespace web.Configurations
