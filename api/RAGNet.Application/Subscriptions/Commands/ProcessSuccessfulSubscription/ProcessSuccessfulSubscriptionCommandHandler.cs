@@ -18,7 +18,7 @@ namespace RAGNET.Application.Subscriptions.Commands.ProcessSuccessfulSubscriptio
 
             var subscriptionPlan = SubscriptionPlan.FromType(request.PlanType);
 
-            subscription.Renew(subscriptionPlan, request.PaymentId);
+            subscription.Renew(subscriptionPlan, request.PaymentId, request.SubscriptionId);
 
             await _subscriptionRepository.UpdateAsync(subscription);
 

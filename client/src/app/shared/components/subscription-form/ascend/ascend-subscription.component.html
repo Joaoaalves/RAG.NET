@@ -2,9 +2,7 @@
   <div class="w-full max-w-7xl mx-auto px-6">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-center">
       <app-orbital-system></app-orbital-system>
-      <div
-        class="space-y-8 order-1 lg:order-2 transition-all duration-1000"
-      >
+      <div class="space-y-8 order-1 lg:order-2 transition-all duration-1000">
         <div class="space-y-4 w-full">
           <h2
             class="text-5xl lg:text-7xl w-full max-w-lg font-bold bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 bg-clip-text text-transparent"
@@ -34,14 +32,21 @@
 
         <button
           (click)="onSubscribe()"
-          [disabled]="isLoading"
+          [disabled]="isLoading || isSubscribed"
           class="cursor-pointer group relative bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 hover:from-rose-400 hover:via-fuchsia-400 hover:to-sky-400 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-sky-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span class="relative z-10 flex items-center space-x-2">
             <span>{{
-              isLoading ? 'Processing...' : 'Subscribe for $30/month'
+              isLoading
+                ? 'Processing...'
+                : isSubscribed
+                ? 'Already Subscribed!'
+                : 'Subscribe for $30/month'
             }}</span>
-            <div class="text-xl group-hover:translate-x-1 transition-transform duration-300">
+            <div
+              *ngIf="!isSubscribed"
+              class="text-xl group-hover:translate-x-1 transition-transform duration-300"
+            >
               <ng-icon name="lucideArrowRight" class="mt-2"></ng-icon>
             </div>
           </span>

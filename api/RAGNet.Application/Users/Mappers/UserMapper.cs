@@ -1,3 +1,4 @@
+using RAGNET.Application.Subscriptions.Mappers;
 using RAGNET.Application.TokenWallets.Mappers;
 using RAGNET.Application.Users.Queries.GetUserDetails;
 using RAGNET.Domain.Users;
@@ -13,7 +14,8 @@ namespace RAGNET.Application.Users.Mappers
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email ?? "",
-                TokenWallet = user.TokenWallet.ToDTO()
+                TokenWallet = user.TokenWallet.ToDTO(),
+                Subscription = user.Subscription.ToDTO()
             };
         }
     }

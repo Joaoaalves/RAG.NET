@@ -3,6 +3,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { CubeComponent } from './cube.component';
 import { PlanType } from 'src/app/models/subscription';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-enhanced-subscription',
@@ -13,6 +14,17 @@ import { PlanType } from 'src/app/models/subscription';
 export class EnhancedSubscriptionComponent {
   @Output() subscribe = new EventEmitter<PlanType>();
   isLoading: boolean = false;
+  currentPlan: PlanType = PlanType.CORE;
+
+  constructor(private userService: UserService) {
+    this.userService.user$.subscribe((user) => {
+      if (user) this.currentPlan = user.subscription.planType;
+    });
+  }
+
+  get isSubscribed() {
+    return this.currentPlan == PlanType.ENHANCED;
+  }
 
   onSubscribe() {
     this.subscribe.emit(PlanType.ENHANCED);

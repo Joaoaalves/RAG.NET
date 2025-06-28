@@ -10,6 +10,7 @@ import {
   PaymentStatus,
   PaymentStatusResponse,
 } from 'src/app/models/subscription';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   standalone: true,
@@ -31,6 +32,7 @@ export class SubscriptionPendingComponent implements OnDestroy {
 
   constructor(
     private subscriptionService: SubscriptionService,
+    private userService: UserService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -65,8 +67,11 @@ export class SubscriptionPendingComponent implements OnDestroy {
         if (this.status === PaymentStatus.SUCCESS) {
           this.destroy$.next();
           setTimeout(() => {
-            this.router.navigate(['/dashboard/subscriptions/success'], {
-              queryParams: { paymentId },
+            this.userService.clearCache();
+            this.userService.getInfo().subscribe(() => {
+              this.router.navigate(['/dashboard/subscriptions/success'], {
+                queryParams: { paymentId },
+              });
             });
           }, 2000);
         }

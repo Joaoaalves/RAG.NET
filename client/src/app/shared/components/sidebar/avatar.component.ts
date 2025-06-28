@@ -1,5 +1,7 @@
+import { UserService } from 'src/app/services/user.service';
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
+import { PlanType } from 'src/app/models/subscription';
 
 @Component({
   selector: 'app-avatar',
@@ -15,8 +17,21 @@ import { Component, Input } from '@angular/core';
   ],
 })
 export class AvatarComponent {
-  @Input() src?: string;
-  @Input() fallback = '';
+  fallback = '';
+  src = '/img/placeholder.svg';
+  plan?: PlanType;
+
+  constructor(private userService: UserService) {
+    this.userService.userInitials$.subscribe((initials) => {});
+
+    this.userService.user$.subscribe((user) => {
+      if (user) {
+        this.plan = user.subscription.planType;
+        this.fallback = user?.firstName[0] + user?.lastName[0];
+      }
+    });
+  }
+
   showFallback = false;
 
   onError() {

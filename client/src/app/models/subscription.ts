@@ -14,3 +14,9 @@ export enum PlanType {
   ENHANCED,
   ASCEND,
 }
+
+export interface Subscription {
+  planType: PlanType;
+  expiresAt: Date;
+  subscribedAt: Date;
+}

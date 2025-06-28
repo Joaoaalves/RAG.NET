@@ -22,6 +22,7 @@ namespace RAGNET.Application.Subscriptions.Commands.CreateCheckout
 
             return await _paymentGateway.CreateCheckoutSessionAsync(
                 request.User.Id,
+                request.User.CustomerId,
                 request.SuccessUrl + $"?paymentId={intent.PaymentIntentId}",
                 request.CancelUrl,
                 request.PlanType,

@@ -31,12 +31,14 @@
 
         <button
           (click)="onSubscribe()"
-          [disabled]="isLoading"
+          [disabled]="isLoading || isSubscribed"
           class="cursor-pointer group relative bg-gradient-to-r from-fuchsia-500 to-sky-500 hover:from-fuchsia-400 hover:to-sky-400 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-fuchsia-500/25 disabled:opacity-50 disabled:cursor-not-allowed animate-pulse-slow"
         >
           <span class="relative z-10 flex items-center space-x-2">
             <span>{{
-              isLoading ? 'Processing...' : 'Subscribe for $10/month'
+              isLoading
+                ? 'Processing...'
+                : isSubscribed ? 'Already Subscribed!' : 'Subscribe for $10/month'
             }}</span>
             <div
               class="text-xl group-hover:translate-x-1 transition-transform duration-300"

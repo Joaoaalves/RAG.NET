@@ -13,6 +13,7 @@ namespace RAGNET.Infrastructure.Domain.Users
 
             builder.Property(u => u.FirstName).IsRequired();
             builder.Property(u => u.LastName).IsRequired();
+            builder.Property(u => u.CustomerId).IsRequired();
 
             builder.HasOne(u => u.TokenWallet)
                    .WithOne()

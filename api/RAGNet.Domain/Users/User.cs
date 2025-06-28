@@ -18,6 +18,9 @@ namespace RAGNET.Domain.Users
         public TokenWallet TokenWallet { get; private set; } = null!;
         public Subscription Subscription { get; private set; } = null!;
 
+        // Payment Gateway
+        public string CustomerId { get; private set; } = null!;
+
         public IReadOnlyCollection<Workflow> Workflows => _workflows.AsReadOnly();
         public IReadOnlyCollection<ProviderApiKey> ApiKeys => _apiKeys.AsReadOnly();
 
@@ -64,6 +67,11 @@ namespace RAGNET.Domain.Users
         {
             ArgumentNullException.ThrowIfNull(subscription);
             Subscription = subscription;
+        }
+
+        public void AddCustomerId(string customerId)
+        {
+            CustomerId = customerId;
         }
 
         public void RemoveWorkflow(Workflow workflow)

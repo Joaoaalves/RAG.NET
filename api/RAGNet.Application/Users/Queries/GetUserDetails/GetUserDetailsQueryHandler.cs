@@ -16,6 +16,7 @@ namespace RAGNET.Application.Users.Queries.GetUserDetails
         {
             var user = await _userManager.Users
                 .Include(u => u.TokenWallet)
+                .Include(u => u.Subscription)
                 .FirstOrDefaultAsync(u => u.Id == _userManager.GetUserId(request.Principal), cancellationToken: cancellationToken) ?? throw new Exception("Invalid user!");
             return user.ToUserDetailsDTO();
         }

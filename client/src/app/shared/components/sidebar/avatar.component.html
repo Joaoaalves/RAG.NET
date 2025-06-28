@@ -1,15 +1,28 @@
-<div class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-black">
-  <img
-    *ngIf="!showFallback && src"
-    [src]="src"
-    class="aspect-square h-full w-full"
-    (error)="onError()"
-    alt="Avatar"
-  />
+<div class="relative">
   <div
-    *ngIf="showFallback || !src"
-    class="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-600 text-white font-bold"
+    class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-black"
   >
-    {{ fallback }}
+    <img
+      *ngIf="!showFallback && src"
+      [src]="src"
+      class="aspect-square h-full w-full"
+      (error)="onError()"
+      alt="Avatar"
+    />
+    <div
+      *ngIf="showFallback || !src"
+      class="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-600 text-white font-bold"
+    >
+      {{ fallback }}
+    </div>
+  </div>
+  <div
+    class="absolute right-1/2 translate-x-1/2 bottom-0 translate-y-1/2 rounded p-[1px] bg-gradient-to-br from-rose-500 via-fuchsia-500 to-sky-600"
+  >
+    <div
+      class="px-1 py-0.5 text-xs text-white text-center bg-gradient-to-br from-neutral-700 to-neutral-900 rounded"
+    >
+      {{ plan === 0 ? 'Core' : plan === 1 ? 'Enhanced' : 'Ascend' }}
+    </div>
   </div>
 </div>

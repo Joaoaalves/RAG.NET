@@ -5,14 +5,14 @@
     ></div>
 
     <div
-      class="relative flex items-center gap-3 p-3 bg-black rounded-lg hover:bg-black/90 transition-all cursor-pointer"
+      class="relative flex items-center p-3 bg-black rounded-lg hover:bg-black/90 transition-all cursor-pointer"
     >
-      <div class="relative">
+      <div class="relative mr-6">
         <div
           class="absolute h-11 w-11 -inset-0.5 rounded-full bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 opacity-70 blur-[1px]"
         >
       </div>
-      <app-avatar [src]="avatarUrl" [fallback]="initials"></app-avatar>
+      <app-avatar></app-avatar>
       </div>
       <div class="flex-1 min-w-0">
         <p class="text-sm font-medium truncate text-white/90">{{ name }}</p>

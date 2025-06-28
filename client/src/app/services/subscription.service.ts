@@ -2,11 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import {
-  PaymentStatus,
-  PaymentStatusResponse,
-  PlanType,
-} from '../models/subscription';
+import { PaymentStatusResponse, PlanType } from '../models/subscription';
 
 @Injectable({ providedIn: 'root' })
 export class SubscriptionService {
@@ -16,7 +12,6 @@ export class SubscriptionService {
   startSubscription(planType: PlanType): Observable<string> {
     const successUrl = `${window.location.origin}/dashboard/subscriptions/pending`;
     const cancelUrl = `${window.location.origin}/dashboard/subscriptions`;
-    console.log('Starting Subscription');
     return this.http
       .post<{ url: string }>(`${this.apiUrl}/api/checkout/start`, {
         planType,
@@ -29,6 +24,18 @@ export class SubscriptionService {
             throw new Error('Invalid Checkout URL');
           }
           return response.url;
+        })
+      );
+  }
+
+  changePlan(newPlan: PlanType): Observable<boolean> {
+    return this.http
+      .post<{ message: string }>(`${this.apiUrl}/api/checkout/change-plan`, {
+        newPlan,
+      })
+      .pipe(
+        map(() => {
+          return true;
         })
       );
   }

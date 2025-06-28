@@ -79,7 +79,6 @@ export class SidebarComponent implements OnInit {
 
   sidebarOpen = true;
   user$: Observable<User | null>;
-  initials$: Observable<string>;
 
   constructor(
     private authService: AuthService,
@@ -87,7 +86,6 @@ export class SidebarComponent implements OnInit {
     private userService: UserService
   ) {
     this.user$ = this.userService.user$;
-    this.initials$ = this.userService.userInitials$;
   }
 
   ngOnInit(): void {

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RAGNET.Application.Subscriptions.Commands.ChangeSubscriptionPlan;
 using RAGNET.Application.Subscriptions.Commands.CreateCheckout;
 using RAGNET.Application.Subscriptions.DTOs;
 using RAGNET.Application.Subscriptions.Queries.GetPaymentStatus;
-using RAGNET.Application.Subscriptions.Services;
 using RAGNET.Infrastructure.Processing;
 
 namespace web.Controllers.Subscriptions
@@ -28,6 +28,23 @@ namespace web.Controllers.Subscriptions
                 var url = await _commandsExecutor.Execute(command);
 
                 return Ok(new { url });
+            }
+            catch (Exception exc)
+            {
+                return Problem(exc.Message);
+            }
+        }
+
+        [HttpPost("change-plan")]
+        [Authorize]
+        public async Task<IActionResult> ChangePlan([FromBody] ChangePlanDTO dto)
+        {
+            try
+            {
+                var command = new ChangeSubscriptionPlanCommand(dto.NewPlan);
+                await _commandsExecutor.Execute(command);
+
+                return Ok(new { Message = "Plan changed!" });
             }
             catch (Exception exc)
             {

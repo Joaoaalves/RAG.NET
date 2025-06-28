@@ -62,7 +62,7 @@ namespace web.Configurations
             services.AddScoped<ICardCreatorService, TrelloCardCreator>();
 
             // Stripe
-            services.AddScoped<IPaymentGateway, StripePaymentGateway>();
+            services.AddScoped<IPaymentGateway, StripeGateway>();
             services.Configure<StripeSettings>(configuration.GetSection("Stripe"));
 
             // Providers

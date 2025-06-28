@@ -6,6 +6,7 @@ namespace RAGNET.Application.Subscriptions.DTOs
     {
         public string UserId { get; set; } = string.Empty;
         public string PaymentIntentId { get; set; } = string.Empty;
+        public string SubscriptionId { get; set; } = string.Empty;
         public string PlanType { get; set; } = string.Empty;
     }
 }

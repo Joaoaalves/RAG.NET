@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { OrbitalSystemComponent } from './orbital-system.component';
 import { PlanType } from 'src/app/models/subscription';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-ascend-subscription',
@@ -13,9 +14,20 @@ import { PlanType } from 'src/app/models/subscription';
 export class AscendSubscriptionComponent {
   @Input() isLoading = false;
   @Output() subscribe = new EventEmitter<PlanType>();
+  currentPlan: PlanType = PlanType.CORE;
+
+  constructor(private userService: UserService) {
+    this.userService.user$.subscribe((user) => {
+      if (user) this.currentPlan = user.subscription.planType;
+    });
+  }
 
   onSubscribe() {
-    this.subscribe.emit(PlanType.ASCEND);
+    if (!this.isSubscribed) this.subscribe.emit(PlanType.ASCEND);
+  }
+
+  get isSubscribed() {
+    return this.currentPlan == PlanType.ASCEND;
   }
 
   get features() {

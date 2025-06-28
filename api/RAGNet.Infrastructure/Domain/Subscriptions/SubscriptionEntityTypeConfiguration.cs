@@ -25,10 +25,26 @@ namespace RAGNET.Infrastructure.Domain.Subscriptions
                 )
                 .HasColumnName("Plan");
 
+            builder.OwnsOne(s => s.ScheduledPlan, owned =>
+                {
+                    owned.Property(p => p.Value)
+                        .HasConversion(
+                            plan => plan.ToString(),
+                            planString => Enum.Parse<PlanType>(planString)
+                        )
+                        .HasColumnName("ScheduledPlan")
+                        .HasMaxLength(50);
+                });
+
             builder.Property(s => s.PaymentId)
                 .HasMaxLength(100)
                 .IsRequired(false)
                 .HasColumnName("PaymentId");
+
+            builder.Property(s => s.SubscriptionId)
+                .HasMaxLength(100)
+                .IsRequired(false)
+                .HasColumnName("SubscriptionId");
 
             builder.Property(s => s.SubscribedAt)
                 .IsRequired()

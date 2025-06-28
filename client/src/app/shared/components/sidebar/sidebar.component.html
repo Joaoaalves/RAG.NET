@@ -29,10 +29,5 @@
     ></app-nav-item>
   </nav>
 
-  <app-user-card
-    avatarUrl="/img/placeholder.svg"
-    [initials]="(initials$ | async) ?? ''"
-    [name]="(user$ | async)?.firstName ?? ''"
-    [email]="(user$ | async)?.email ?? ''"
-  ></app-user-card>
+  <app-user-card></app-user-card>
 </aside>

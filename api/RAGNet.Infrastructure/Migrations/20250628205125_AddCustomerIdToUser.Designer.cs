@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RAGNET.Infrastructure.Database;
@@ -11,9 +12,11 @@ using RAGNET.Infrastructure.Database;
 namespace RAGNet.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250628205125_AddCustomerIdToUser")]
+    partial class AddCustomerIdToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -454,11 +457,6 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Property<DateTime>("SubscribedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("SubscribedAt");
-
-                    b.Property<string>("SubscriptionId")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("SubscriptionId");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -938,27 +936,6 @@ namespace RAGNet.Infrastructure.Migrations
                         .HasForeignKey("RAGNET.Domain.Users.Subscriptions.Subscription", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.OwnsOne("RAGNET.Domain.SharedKernel.Subscriptions.SubscriptionPlan", "ScheduledPlan", b1 =>
-                        {
-                            b1.Property<Guid>("SubscriptionId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(50)
-                                .HasColumnType("character varying(50)")
-                                .HasColumnName("ScheduledPlan");
-
-                            b1.HasKey("SubscriptionId");
-
-                            b1.ToTable("Subscriptions");
-
-                            b1.WithOwner()
-                                .HasForeignKey("SubscriptionId");
-                        });
-
-                    b.Navigation("ScheduledPlan");
                 });
 
             modelBuilder.Entity("RAGNET.Domain.Workflows.CallbackUrls.CallbackUrl", b =>
