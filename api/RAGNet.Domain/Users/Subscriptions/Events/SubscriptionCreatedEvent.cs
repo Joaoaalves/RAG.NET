@@ -1,21 +1,17 @@
 using RAGNET.Domain.SeedWork;
-using RAGNET.Domain.SharedKernel.Subscriptions;
 
 namespace RAGNET.Domain.Users.Subscriptions.Events
 {
     public class SubscriptionCreatedEvent : DomainEventBase
     {
-        public string UserId { get; } = string.Empty;
-        public SubscriptionPlan Plan { get; }
-        public DateTime ExpiresAt { get; }
 
-        public SubscriptionCreatedEvent(string userId, SubscriptionPlan plan, DateTime expiresAt)
+        public Subscription Subscription { get; }
+
+        public SubscriptionCreatedEvent(Subscription subscription)
         {
-            UserId = userId;
-            Plan = plan;
-            ExpiresAt = expiresAt;
+            Subscription = subscription;
 
-            Console.WriteLine($"Subscription Created for user: {UserId} with plan: {Plan.Value}");
+            Console.WriteLine($"Subscription Created for user: {Subscription.UserId} with plan: {Subscription.Plan.Value}");
         }
     }
 }

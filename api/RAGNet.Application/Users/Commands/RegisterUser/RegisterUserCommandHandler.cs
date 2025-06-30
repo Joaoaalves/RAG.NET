@@ -41,8 +41,6 @@ namespace RAGNET.Application.Users.Commands.RegisterUser
             if (!result.Succeeded)
                 return (string.Empty, result.Errors.Select(e => e.Description));
 
-
-
             await _userManager.UpdateAsync(user);
 
             return (user.Id, []);

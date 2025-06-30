@@ -59,7 +59,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
+    logging:
+      driver: none
   redis:
     image: bitnami/redis:latest
     environment:
@@ -119,7 +120,8 @@ services:
       - pgadmin_data:/var/lib/pgadmin
     command: >
       sh -c "echo 'Host=postgres;Port=5432;Database=rag_db;Username=postgres;Password=password' > /pgadmin4/config_local.py && /entrypoint.sh"
-      
+    logging:
+      driver: none
 volumes:
   rabbitmq_data:
   postgres_data:

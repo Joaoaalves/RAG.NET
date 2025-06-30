@@ -13,15 +13,14 @@ namespace RAGNET.Application.Subscriptions.Commands.CreateCheckout
         {
             var intent = new PaymentIntentDTO
             {
-                UserId = request.User.Id,
+                CustomerId = request.User.CustomerId,
                 PaymentIntentId = Guid.NewGuid().ToString(),
-                PlanType = request.PlanType.ToString()
+                PlanType = request.PlanType
             };
 
             await _paymentStatusService.CreatePaymentIntent(intent);
 
             return await _paymentGateway.CreateCheckoutSessionAsync(
-                request.User.Id,
                 request.User.CustomerId,
                 request.SuccessUrl + $"?paymentId={intent.PaymentIntentId}",
                 request.CancelUrl,

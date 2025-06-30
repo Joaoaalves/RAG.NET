@@ -10,6 +10,7 @@ namespace RAGNET.Domain.Users.Subscriptions
         public SubscriptionId Id { get; private init; } = default!;
         public string UserId { get; set; } = null!;
         public SubscriptionPlan Plan { get; private set; } = null!;
+        public SubscriptionStatus? Status { get; private set; }
         public string? PaymentId { get; private set; }
         public DateTime SubscribedAt { get; private set; }
         public DateTime ExpiresAt { get; private set; }
@@ -31,8 +32,6 @@ namespace RAGNET.Domain.Users.Subscriptions
             Plan = plan;
             SubscribedAt = now;
             ExpiresAt = plan.Value != PlanType.Core ? now + month : DateTime.MaxValue;
-
-            AddDomainEvent(new SubscriptionCreatedEvent(UserId, Plan, ExpiresAt));
         }
 
         public static Subscription Create(string userId, SubscriptionPlan? plan = null, SubscriptionId? id = null)
@@ -56,20 +55,27 @@ namespace RAGNET.Domain.Users.Subscriptions
             return isActive;
         }
 
-        public void Renew(SubscriptionPlan plan, string paymentId, string subscriptionId)
+        public void Renew(DateTime renewedAt, DateTime expiresAt)
         {
-            var now = DateTime.UtcNow;
-            var month = TimeSpan.FromDays(30);
+            SubscribedAt = renewedAt;
+            ExpiresAt = expiresAt;
 
-            Plan = ScheduledPlan ?? plan;
-            ScheduledPlan = null;
-            SubscribedAt = now;
+
+            AddDomainEvent(new SubscriptionRenewedEvent(this));
+        }
+
+        public void AddSubscription(SubscriptionPlan plan, DateTime renewedAt, DateTime expiresAt, string paymentId, string subscriptionId)
+        {
+            Plan = plan;
+            Status = SubscriptionStatus.Active;
+            SubscribedAt = renewedAt;
             PaymentId = paymentId;
             SubscriptionId = subscriptionId;
-            ExpiresAt = now + month;
+            ExpiresAt = expiresAt;
 
-            AddDomainEvent(new SubscriptionRenewedEvent(UserId, subscriptionId, PaymentId, Plan, ExpiresAt));
+            AddDomainEvent(new SubscriptionCreatedEvent(this));
         }
+
         public void SchedulePlanChange(SubscriptionPlan newPlan)
         {
             if (newPlan.Value == Plan.Value)
@@ -78,19 +84,32 @@ namespace RAGNET.Domain.Users.Subscriptions
             ScheduledPlan = newPlan;
         }
 
-        public void Expire()
+        public void Cancel()
         {
-            Plan = SubscriptionPlan.Core;
-            SubscribedAt = DateTime.UtcNow;
-            ExpiresAt = DateTime.MaxValue;
-
-            AddDomainEvent(new SubscriptionExpiredEvent(this));
+            ClearPlan();
+            AddDomainEvent(new SubscriptionCanceledEvent(this));
         }
+
         public bool AllowsChunker(ChunkerStrategy strategy)
         {
             return IsActive() && Plan.Allows(strategy);
         }
 
+        private void Expire()
+        {
+            ClearPlan();
+
+            AddDomainEvent(new SubscriptionExpiredEvent(this));
+        }
+
+        private void ClearPlan()
+        {
+            Plan = SubscriptionPlan.Core;
+            SubscriptionId = null;
+            SubscribedAt = DateTime.UtcNow;
+            PaymentId = null;
+            ExpiresAt = DateTime.MaxValue;
+        }
     }
 
 }

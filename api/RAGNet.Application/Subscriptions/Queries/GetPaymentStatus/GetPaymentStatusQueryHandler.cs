@@ -14,7 +14,7 @@ namespace RAGNET.Application.Subscriptions.Queries.GetPaymentStatus
         {
             var intent = new PaymentIntentDTO
             {
-                UserId = request.User.Id,
+                CustomerId = request.User.CustomerId,
                 PaymentIntentId = request.PaymentId
             };
 

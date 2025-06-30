@@ -1,33 +1,46 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { CubeComponent } from './cube.component';
-import { PlanType } from 'src/app/models/subscription';
+import { PlanType, SubscriptionStatus } from 'src/app/models/subscription';
 import { UserService } from 'src/app/services/user.service';
+import { AlertComponent } from '../../alert/alert.component';
 
 @Component({
   selector: 'app-enhanced-subscription',
-  imports: [CommonModule, NgIcon, CubeComponent],
+  imports: [CommonModule, NgIcon, CubeComponent, AlertComponent],
   templateUrl: './enhanced-subscription.component.html',
   standalone: true,
 })
 export class EnhancedSubscriptionComponent {
+  @Input() isLoading: boolean = false;
   @Output() subscribe = new EventEmitter<PlanType>();
-  isLoading: boolean = false;
-  currentPlan: PlanType = PlanType.CORE;
+  @Output() cancel = new EventEmitter();
+
+  expiresAt: string = '';
+  isActive: boolean = true;
+  isSubscribed: boolean = false;
 
   constructor(private userService: UserService) {
     this.userService.user$.subscribe((user) => {
-      if (user) this.currentPlan = user.subscription.planType;
+      if (user) {
+        var subscription = user.subscription;
+
+        this.isActive = subscription.status === SubscriptionStatus.ACTIVE;
+        this.isSubscribed = subscription.planType == PlanType.ENHANCED;
+        this.expiresAt = `Expires at ${new Date(
+          subscription.expiresAt
+        ).toLocaleDateString()}`;
+      }
     });
   }
 
-  get isSubscribed() {
-    return this.currentPlan == PlanType.ENHANCED;
+  onSubscribe() {
+    if (!this.isSubscribed) this.subscribe.emit(PlanType.ENHANCED);
   }
 
-  onSubscribe() {
-    this.subscribe.emit(PlanType.ENHANCED);
+  onCancel() {
+    if (this.isSubscribed) this.cancel.emit();
   }
 
   get features() {

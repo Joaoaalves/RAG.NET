@@ -2,32 +2,49 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { OrbitalSystemComponent } from './orbital-system.component';
-import { PlanType } from 'src/app/models/subscription';
+import { PlanType, SubscriptionStatus } from 'src/app/models/subscription';
 import { UserService } from 'src/app/services/user.service';
+import { AlertComponent } from '../../alert/alert.component';
 
 @Component({
   selector: 'app-ascend-subscription',
-  imports: [CommonModule, NgIcon, OrbitalSystemComponent],
+  imports: [CommonModule, NgIcon, OrbitalSystemComponent, AlertComponent],
   templateUrl: './ascend-subscription.component.html',
   standalone: true,
 })
 export class AscendSubscriptionComponent {
-  @Input() isLoading = false;
+  @Input() isLoading: boolean = false;
   @Output() subscribe = new EventEmitter<PlanType>();
-  currentPlan: PlanType = PlanType.CORE;
+  @Output() cancel = new EventEmitter();
+
+  expiresAt: string = '';
+  isActive: boolean = true;
+  isSubscribed: boolean = false;
+  isUpgradable: boolean = false;
 
   constructor(private userService: UserService) {
     this.userService.user$.subscribe((user) => {
-      if (user) this.currentPlan = user.subscription.planType;
+      if (user) {
+        var subscription = user.subscription;
+
+        this.isActive = subscription.status === SubscriptionStatus.ACTIVE;
+        this.isSubscribed = subscription.planType == PlanType.ASCEND;
+        this.expiresAt = `Expires at ${new Date(
+          subscription.expiresAt
+        ).toLocaleDateString()}`;
+
+        this.isUpgradable =
+          this.isActive && subscription.planType == PlanType.ENHANCED;
+      }
     });
+  }
+
+  onCancel() {
+    if (this.isSubscribed) this.cancel.emit();
   }
 
   onSubscribe() {
     if (!this.isSubscribed) this.subscribe.emit(PlanType.ASCEND);
-  }
-
-  get isSubscribed() {
-    return this.currentPlan == PlanType.ASCEND;
   }
 
   get features() {

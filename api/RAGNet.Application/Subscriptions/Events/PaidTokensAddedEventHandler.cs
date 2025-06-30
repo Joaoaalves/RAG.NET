@@ -14,7 +14,7 @@ namespace RAGNET.Application.Subscriptions.Events
         {
             var intent = new PaymentIntentDTO
             {
-                UserId = notification.UserId,
+                CustomerId = notification.UserId,
                 PaymentIntentId = notification.PaymentId
             };
 

@@ -1,26 +1,15 @@
 using RAGNET.Domain.SeedWork;
-using RAGNET.Domain.SharedKernel.Subscriptions;
 
 namespace RAGNET.Domain.Users.Subscriptions.Events
 {
     public class SubscriptionRenewedEvent : DomainEventBase
     {
-        public string UserId { get; } = string.Empty;
-        public SubscriptionPlan Plan { get; }
-        public string SubscriptionId { get; }
-        public DateTime ExpiresAt { get; }
-
-        public string PaymentId { get; }
-
-        public SubscriptionRenewedEvent(string userId, string subscriptionId, string paymentId, SubscriptionPlan plan, DateTime expiresAt)
+        public Subscription Subscription { get; }
+        public SubscriptionRenewedEvent(Subscription subscription)
         {
-            UserId = userId;
-            PaymentId = paymentId;
-            SubscriptionId = subscriptionId;
-            Plan = plan;
-            ExpiresAt = expiresAt;
+            Subscription = subscription;
 
-            Console.WriteLine($"Subscription Renewed for user: {UserId} with plan: {Plan.Value}");
+            Console.WriteLine($"Subscription Renewed for user: {Subscription.UserId} with plan: {Subscription.Plan.Value}");
         }
     }
 }

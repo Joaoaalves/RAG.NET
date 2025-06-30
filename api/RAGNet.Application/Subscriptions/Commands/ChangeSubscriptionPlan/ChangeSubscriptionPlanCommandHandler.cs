@@ -26,7 +26,7 @@ namespace RAGNET.Application.Subscriptions.Commands.ChangeSubscriptionPlan
             var subscription = await _subscriptionRepository.GetByUserIdAsync(user.Id);
 
             if (string.IsNullOrEmpty(user.CustomerId) || string.IsNullOrEmpty(subscription?.SubscriptionId))
-                throw new ApplicationException("Usuário não tem uma assinatura ativa no Stripe.");
+                throw new ApplicationException("Invalid subscription id.");
 
             var prorate = subscription.Plan.Value < request.NewPlan;
 

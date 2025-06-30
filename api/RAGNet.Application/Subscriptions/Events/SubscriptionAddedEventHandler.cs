@@ -1,19 +1,18 @@
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.TokenWallets;
-using RAGNET.Domain.Users;
 using RAGNET.Domain.Users.Subscriptions.Events;
 
 namespace RAGNET.Application.Subscriptions.Events
 {
-    public class SubscriptionRenewedEventHandler(
+    public class SubscriptionCreatedEventHandler(
         ITokenWalletRepository tokenWalletRepository,
         IUnitOfWork unitOfWork
-    ) : INotificationHandler<SubscriptionRenewedEvent>
+    ) : INotificationHandler<SubscriptionCreatedEvent>
     {
         private readonly ITokenWalletRepository _tokenWalletRepository = tokenWalletRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-        public async Task Handle(SubscriptionRenewedEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(SubscriptionCreatedEvent notification, CancellationToken cancellationToken)
         {
             var wallet = await _tokenWalletRepository.GetByUserIdAsync(notification.Subscription.UserId) ?? throw new ApplicationException("Wallet not found");
 

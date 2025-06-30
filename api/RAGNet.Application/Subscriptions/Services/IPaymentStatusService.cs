@@ -14,7 +14,7 @@ namespace RAGNET.Application.Subscriptions.Services
     {
         SUCCESS,
         PENDING,
-        CANCELLED,
+        CANCELED,
         ERROR
     }
 }

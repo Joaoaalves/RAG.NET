@@ -23,8 +23,8 @@ namespace RAGNET.Domain.SharedKernel.Subscriptions
         public TokenAmount MonthlyTokenAllowance => Value switch
         {
             PlanType.Core => TokenAmount.MonthlyFreeQuota,
-            PlanType.Ascend => TokenAmount.FromDecimal(3000),
-            PlanType.Enhanced => TokenAmount.FromDecimal(10000),
+            PlanType.Enhanced => TokenAmount.FromDecimal(3000),
+            PlanType.Ascend => TokenAmount.FromDecimal(10000),
             _ => TokenAmount.Zero
         };
 

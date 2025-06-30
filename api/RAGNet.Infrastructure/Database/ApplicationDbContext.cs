@@ -33,6 +33,7 @@ namespace RAGNET.Infrastructure.Database
         public DbSet<TokenWallet> TokenWallets { get; set; }
         public DbSet<TokenTransaction> TokenTransactions { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

@@ -19,7 +19,7 @@ namespace RAGNET.Infrastructure.Payments
             StripeConfiguration.ApiKey = _settings.SecretKey;
         }
 
-        public async Task<string> CreateCheckoutSessionAsync(string userId, string customerId, string successUrl, string cancelUrl, PlanType type, CancellationToken ct)
+        public async Task<string> CreateCheckoutSessionAsync(string customerId, string successUrl, string cancelUrl, PlanType type, CancellationToken ct)
         {
             var options = new SessionCreateOptions
             {
@@ -34,18 +34,21 @@ namespace RAGNET.Infrastructure.Payments
                             Quantity = 1
                         }
                     ],
-                Metadata = new Dictionary<string, string>
-                    {
-                        { "userId", userId },
-                        { "paymentIntentId", Guid.NewGuid().ToString()},
-                        { "planType", type.ToString()}
-                    }
             };
 
             var service = new SessionService();
             var session = await service.CreateAsync(options, cancellationToken: ct);
 
             return session.Url;
+        }
+
+        public async Task<bool> CancelSubscriptionAsync(string subscriptionId)
+        {
+            var service = new SubscriptionService();
+
+            Subscription subscription = await service.CancelAsync(subscriptionId);
+
+            return subscription is not null;
         }
 
         public async Task ChangeSubscriptionPlanAsync(PlanType newPlanType, string subscriptionId, bool prorate)
@@ -83,25 +86,44 @@ namespace RAGNET.Infrastructure.Payments
             return customer.Id;
         }
 
-        public Task<PaymentIntentDTO?> ExtractUserIdFromEventAsync(string json, string signature)
+        public Task<PaymentIntentDTO?> ExtractPaymentIntentFromEventAsync(string json, string signature)
         {
             var stripeEvent = EventUtility.ConstructEvent(json, signature, _settings.WebhookSecret);
-
-            if (stripeEvent.Type == "checkout.session.completed" &&
-                stripeEvent.Data.Object is Session session &&
-                session.Metadata is not null)
+            if (stripeEvent.Type == "invoice.payment_succeeded" &&
+                stripeEvent.Data.Object is Invoice invoice)
             {
-                if (
-                    session.Metadata.TryGetValue("userId", out var userId) &&
-                    session.Metadata.TryGetValue("paymentIntentId", out var paymentIntentId) &&
-                    session.Metadata.TryGetValue("planType", out var planType)
-                )
+                var price = invoice.Lines.Data.First().Pricing.PriceDetails.Price;
+
+                return Task.FromResult<PaymentIntentDTO?>(new PaymentIntentDTO
                 {
-                    return Task.FromResult<PaymentIntentDTO?>(new PaymentIntentDTO { UserId = userId, PaymentIntentId = paymentIntentId, PlanType = planType, SubscriptionId = session.SubscriptionId });
-                }
+                    CustomerId = invoice.CustomerId,
+                    PaymentIntentId = invoice.Id,
+                    PlanType = GetPlanFromPriceId(price),
+                    SubscriptionId = invoice.Parent.SubscriptionDetails.SubscriptionId,
+                    RenewedAt = invoice.PeriodStart,
+                    ExpiresAt = invoice.PeriodEnd
+                });
             }
 
             return Task.FromResult<PaymentIntentDTO?>(null);
+        }
+
+        public Task<CancelSubscriptionIntentDTO?> ExtractCancelIntentFromEventAsync(string eventJson, string signature)
+        {
+            var stripeEvent = EventUtility.ConstructEvent(eventJson, signature, _settings.WebhookSecret);
+            if (stripeEvent.Type == "customer.subscription.updated" &&
+                stripeEvent.Data.Object is Subscription subscription &&
+                subscription.CancelAt is not null)
+            {
+                return Task.FromResult<CancelSubscriptionIntentDTO?>(new CancelSubscriptionIntentDTO
+                {
+                    CustomerId = subscription.CustomerId,
+                    SubscriptionId = subscription.Id,
+                    CancelAt = subscription.CancelAt ?? DateTime.MinValue
+                });
+            }
+
+            return Task.FromResult<CancelSubscriptionIntentDTO?>(null);
         }
 
         private string GetPriceId(PlanType type)
@@ -112,6 +134,17 @@ namespace RAGNET.Infrastructure.Payments
                 PlanType.Enhanced => _settings.PriceIdEnhanced,
                 _ => throw new ArgumentOutOfRangeException()
             };
+        }
+
+        private PlanType GetPlanFromPriceId(string priceId)
+        {
+            if (priceId == _settings.PriceIdEnhanced)
+                return PlanType.Enhanced;
+
+            if (priceId == _settings.PriceIdAscend)
+                return PlanType.Ascend;
+
+            throw new ArgumentOutOfRangeException("Invalid Price Id");
         }
     }
 }

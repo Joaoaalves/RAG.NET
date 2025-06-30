@@ -12,8 +12,8 @@ using RAGNET.Infrastructure.Database;
 namespace RAGNet.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250628213215_AddSubscriptionIdToSubscription")]
-    partial class AddSubscriptionIdToSubscription
+    [Migration("20250630152746_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -449,10 +449,12 @@ namespace RAGNet.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("PaymentId");
 
-                    b.Property<string>("Plan")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<int>("Plan")
+                        .HasColumnType("integer")
                         .HasColumnName("Plan");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("SubscribedAt")
                         .HasColumnType("timestamp with time zone")

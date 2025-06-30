@@ -11,7 +11,8 @@ namespace RAGNET.Application.Subscriptions.Mappers
             {
                 PlanType = subscription.Plan.Value,
                 SubscribedAt = subscription.SubscribedAt,
-                ExpiresAt = subscription.ExpiresAt
+                ExpiresAt = subscription.ExpiresAt,
+                Status = subscription.Status
             };
         }
     }

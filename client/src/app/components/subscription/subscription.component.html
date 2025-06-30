@@ -1,2 +1,6 @@
-<app-enhanced-subscription (subscribe)="handleSubscribe($event)"></app-enhanced-subscription>
-<app-ascend-subscription (subscribe)="handleSubscribe($event)"></app-ascend-subscription>
+<div class="flex flex-col gap-y-4">
+  <app-enhanced-subscription (subscribe)="handleSubscribe($event)" (cancel)="handleCancel()"></app-enhanced-subscription>
+  <app-ascend-subscription (subscribe)="handleSubscribe($event)" (cancel)="handleCancel()"></app-ascend-subscription>
+
+</div>
+<hlm-toaster />

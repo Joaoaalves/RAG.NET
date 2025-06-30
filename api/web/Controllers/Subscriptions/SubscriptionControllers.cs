@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RAGNET.Application.Subscriptions.Commands.CancelSubscription;
 using RAGNET.Application.Subscriptions.Commands.ChangeSubscriptionPlan;
 using RAGNET.Application.Subscriptions.Commands.CreateCheckout;
 using RAGNET.Application.Subscriptions.DTOs;
@@ -45,6 +46,27 @@ namespace web.Controllers.Subscriptions
                 await _commandsExecutor.Execute(command);
 
                 return Ok(new { Message = "Plan changed!" });
+            }
+            catch (Exception exc)
+            {
+                return Problem(exc.Message);
+            }
+        }
+
+        [HttpPost("cancel")]
+        [Authorize]
+        public async Task<IActionResult> CancelPlan()
+        {
+            try
+            {
+                var sucess = await _commandsExecutor.Execute(new CancelSubscriptionCommand());
+
+                if (sucess)
+                {
+                    return Ok(new { Message = "Plan cancelation requested!" });
+                }
+
+                return BadRequest(new { Message = "You're not subscribed!" });
             }
             catch (Exception exc)
             {

@@ -16,7 +16,7 @@ namespace RAGNET.Infrastructure.Redis
             try
             {
                 var db = _redis.GetDatabase();
-                var key = GetStatusKey(intent.PaymentIntentId, intent.UserId);
+                var key = GetStatusKey(intent.PaymentIntentId, intent.CustomerId);
                 await db.StringSetAsync(
                     key,
                     PaymentStatus.PENDING.ToString(),
@@ -36,7 +36,7 @@ namespace RAGNET.Infrastructure.Redis
             try
             {
                 var db = _redis.GetDatabase();
-                var key = GetStatusKey(intent.PaymentIntentId, intent.UserId);
+                var key = GetStatusKey(intent.PaymentIntentId, intent.CustomerId);
                 var value = await db.StringGetAsync(key);
 
                 if (value.HasValue &&
@@ -59,7 +59,7 @@ namespace RAGNET.Infrastructure.Redis
             try
             {
                 var db = _redis.GetDatabase();
-                var key = GetStatusKey(intent.PaymentIntentId, intent.UserId);
+                var key = GetStatusKey(intent.PaymentIntentId, intent.CustomerId);
 
                 var exists = await db.KeyExistsAsync(key);
                 if (!exists)
@@ -80,7 +80,7 @@ namespace RAGNET.Infrastructure.Redis
             try
             {
                 var db = _redis.GetDatabase();
-                var key = GetStatusKey(intent.PaymentIntentId, intent.UserId);
+                var key = GetStatusKey(intent.PaymentIntentId, intent.CustomerId);
 
                 var currentStatus = await GetPaymentIntent(intent);
                 if (currentStatus == null)

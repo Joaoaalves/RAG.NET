@@ -446,10 +446,12 @@ namespace RAGNet.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("PaymentId");
 
-                    b.Property<string>("Plan")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<int>("Plan")
+                        .HasColumnType("integer")
                         .HasColumnName("Plan");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("SubscribedAt")
                         .HasColumnType("timestamp with time zone")

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PaymentStatusResponse, PlanType } from '../models/subscription';
 
@@ -37,6 +37,17 @@ export class SubscriptionService {
         map(() => {
           return true;
         })
+      );
+  }
+
+  cancelSubscription(): Observable<boolean> {
+    return this.http
+      .post<{ message: string }>(`${this.apiUrl}/api/checkout/cancel`, {})
+      .pipe(
+        map(() => {
+          return true;
+        }),
+        catchError((err) => of(false))
       );
   }
 

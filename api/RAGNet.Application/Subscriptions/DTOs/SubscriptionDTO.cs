@@ -7,5 +7,6 @@ namespace RAGNET.Application.Subscriptions.DTOs
         public required PlanType PlanType { get; set; }
         public required DateTime SubscribedAt { get; set; }
         public required DateTime ExpiresAt { get; set; }
+        public SubscriptionStatus? Status { get; set; }
     }
 }

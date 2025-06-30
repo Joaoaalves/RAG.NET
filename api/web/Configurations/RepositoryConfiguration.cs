@@ -23,6 +23,8 @@ using RAGNET.Domain.TokenWallets;
 using RAGNET.Infrastructure.Domain.TokenWallets;
 using RAGNET.Domain.Users.Subscriptions;
 using RAGNET.Infrastructure.Domain.Subscriptions;
+using RAGNET.Domain.Users;
+using RAGNET.Infrastructure.Domain.Users;
 
 namespace web.Configurations
 {
@@ -42,6 +44,7 @@ namespace web.Configurations
             services.AddScoped<ICallbackUrlRepository, CallbackUrlRepository>();
             services.AddScoped<ITokenWalletRepository, TokenWalletRepository>();
             services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             return services;
         }
     }

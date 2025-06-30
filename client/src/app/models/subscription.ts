@@ -1,8 +1,13 @@
 export enum PaymentStatus {
   'PENDING',
   'SUCCESS',
-  'CANCELLED',
+  'CANCELED',
   'ERROR',
+}
+
+export enum SubscriptionStatus {
+  CANCELED = 0,
+  ACTIVE = 1,
 }
 
 export interface PaymentStatusResponse {
@@ -19,4 +24,5 @@ export interface Subscription {
   planType: PlanType;
   expiresAt: Date;
   subscribedAt: Date;
+  status?: SubscriptionStatus;
 }

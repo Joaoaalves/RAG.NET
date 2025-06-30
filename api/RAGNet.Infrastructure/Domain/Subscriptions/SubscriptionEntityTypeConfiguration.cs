@@ -16,14 +16,14 @@ namespace RAGNET.Infrastructure.Domain.Subscriptions
             builder.Property(s => s.UserId).IsRequired();
 
             builder.Property(s => s.Plan)
-                .IsRequired()
                 .HasConversion(
-                    plan => plan.Value.ToString(),
-                    planString => SubscriptionPlan.FromType(
-                        Enum.Parse<PlanType>(planString!)
+                    plan => plan.Value,
+                    value => SubscriptionPlan.FromType(
+                        value
                     )
                 )
-                .HasColumnName("Plan");
+                .HasColumnName("Plan")
+                .IsRequired();
 
             builder.OwnsOne(s => s.ScheduledPlan, owned =>
                 {
