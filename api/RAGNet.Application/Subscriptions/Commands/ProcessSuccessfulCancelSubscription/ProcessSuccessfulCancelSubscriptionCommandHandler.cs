@@ -16,7 +16,7 @@ namespace RAGNET.Application.Subscriptions.Commands.ProcessSuccessfulCancelSubsc
             var user = await _userRepository.GetByCustomerIdAsync(request.CustomerId) ?? throw new ApplicationException("User not found.");
 
             user.Subscription.Cancel();
-
+                
             await _userRepository.UpdateAsync(user);
 
             return true;

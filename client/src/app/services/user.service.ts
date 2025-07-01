@@ -35,12 +35,6 @@ export class UserService {
       .pipe(tap((user) => this.setUserCache(user)));
   }
 
-  updateInfo(info: UpdateUserRequest): Observable<User> {
-    return this.httpClient
-      .post<User>(`${this.apiUrl}/api/info`, info)
-      .pipe(tap((user) => this.setUserCache(user)));
-  }
-
   private setUserCache(user: User) {
     const basic: User = {
       firstName: user.firstName,

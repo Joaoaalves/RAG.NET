@@ -122,6 +122,15 @@ services:
       sh -c "echo 'Host=postgres;Port=5432;Database=rag_db;Username=postgres;Password=password' > /pgadmin4/config_local.py && /entrypoint.sh"
     logging:
       driver: none
+  stripe:
+    image: stripe/stripe-cli
+    container_name: stripe-webhook
+    command: listen --forward-to host.docker.internal:5000/api/webhooks/stripe
+    env_file:
+      - .env
+    volumes:
+      - ~/.config/stripe:/root/.config/stripe
+    network_mode: "host"
 volumes:
   rabbitmq_data:
   postgres_data:
