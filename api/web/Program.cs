@@ -35,6 +35,7 @@ builder.Services.AddServiceConfiguration();
 builder.Services.AddAdapterConfiguration(builder.Configuration);
 builder.Services.AddFilterConfiguration();
 builder.Services.AddFactoryConfiguration();
+builder.Services.AddSpecificationConfiguration();
 
 // Hub
 builder.Services.AddSignalR();

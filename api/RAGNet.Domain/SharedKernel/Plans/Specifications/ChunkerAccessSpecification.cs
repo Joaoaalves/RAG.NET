@@ -3,18 +3,11 @@ using RAGNET.Domain.SharedKernel.Subscriptions;
 
 namespace RAGNET.Domain.SharedKernel.Plans.Specifications
 {
-    public class ChunkerAccessSpecification
+    public class ChunkerAccessSpecification : IAccessSpecification<ChunkerStrategy>
     {
-        private readonly PlanType _plan;
-
-        public ChunkerAccessSpecification(PlanType plan)
+        public bool IsSatisfiedBy(PlanType plan, ChunkerStrategy strategy)
         {
-            _plan = plan;
-        }
-
-        public bool IsSatisfiedBy(ChunkerStrategy strategy)
-        {
-            return _plan switch
+            return plan switch
             {
                 PlanType.Core => strategy == ChunkerStrategy.PARAGRAPH,
                 PlanType.Enhanced => strategy == ChunkerStrategy.PARAGRAPH || strategy == ChunkerStrategy.PROPOSITION,

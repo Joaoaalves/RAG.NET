@@ -140,11 +140,6 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
             } successfully.`
           );
         },
-        error: (err: Error) => {
-          toast.error('Error toggling query enhancer', {
-            description: 'An error occurred while toggling the query enhancer.',
-          });
-        },
       });
   }
 
@@ -170,12 +165,6 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
               description: 'The query enhancer has been updated.',
             });
           },
-          error: (err: Error) => {
-            toast.error('Error updating query enhancer', {
-              description:
-                'An error occurred while updating the query enhancer.',
-            });
-          },
         });
     } else {
       const newQE: QueryEnhancer = {
@@ -193,12 +182,6 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
               description: 'The query enhancer has been created.',
             });
           },
-          error: (err: Error) => {
-            toast.error('Error creating query enhancer', {
-              description:
-                'An error occurred while creating the query enhancer.',
-            });
-          },
         });
     }
   }
@@ -213,11 +196,6 @@ export class QueryEnhancerConfigComponent implements OnInit, OnChanges {
           this.queryEnhancer = undefined;
           this.enabled$.next(false);
         }
-      },
-      error: (err: Error) => {
-        toast.error('Error deleting query enhancer', {
-          description: 'An error occurred while deleting the query enhancer.',
-        });
       },
     });
   }

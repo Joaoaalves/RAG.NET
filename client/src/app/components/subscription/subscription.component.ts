@@ -28,7 +28,6 @@ import {
 } from 'src/app/models/subscription';
 import { CommonModule } from '@angular/common';
 
-import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component';
 import { AlertWithPasswordComponent } from 'src/app/shared/components/alert/with-password/alert-with-password.component';
 import { toast } from 'ngx-sonner';
 
@@ -37,7 +36,6 @@ import { toast } from 'ngx-sonner';
   imports: [
     AscendSubscriptionComponent,
     EnhancedSubscriptionComponent,
-    HlmToasterComponent,
     NgIcon,
     AlertWithPasswordComponent,
     CommonModule,

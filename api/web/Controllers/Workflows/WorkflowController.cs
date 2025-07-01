@@ -15,6 +15,7 @@ using RAGNET.Application.Workflows.Queries.GetWorkflowDetails;
 using RAGNET.Application.Workflows.Commands.UpdateWorkflow;
 using RAGNET.Application.Workflows.Queries.GetUserWorkflows;
 using RAGNET.Application.Workflows.CallbackUrls.Mappers;
+using System.ComponentModel.DataAnnotations;
 
 namespace web.Controllers.Workflows
 {

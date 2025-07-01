@@ -1,16 +1,40 @@
 using RAGNET.Domain.Chunkers;
-using RAGNET.Domain.SharedKernel.Plans.Specifications;
+using RAGNET.Domain.QueryEnhancers;
+using RAGNET.Domain.QueryResultFilters;
 using RAGNET.Domain.Users;
 
 namespace RAGNET.Domain.SharedKernel.Plans.Policies
 {
-    public static class SubscriptionPolicy
+    public class SubscriptionPolicy(
+        IAccessSpecification<ChunkerStrategy> chunkerAccessSpec,
+        IAccessSpecification<QueryEnhancerStrategy> queryEnhancerAccessSpec,
+        IAccessSpecification<QueryResultFilterStrategy> queryResultFilterAccessSpec
+    )
     {
-        public static bool AllowsChunker(User user, ChunkerStrategy strategy)
+
+        private readonly IAccessSpecification<ChunkerStrategy> _chunkerAccessSpec = chunkerAccessSpec;
+
+        private readonly IAccessSpecification<QueryEnhancerStrategy> _queryEnhancerAccessSpec = queryEnhancerAccessSpec;
+
+        private readonly IAccessSpecification<QueryResultFilterStrategy> _queryResultFilterAccessSpec = queryResultFilterAccessSpec;
+
+        public bool Allows(User user, ChunkerStrategy strategy)
         {
             var plan = user.Subscription.Plan.Value;
-            var spec = new ChunkerAccessSpecification(plan);
-            return spec.IsSatisfiedBy(strategy);
+
+            return _chunkerAccessSpec.IsSatisfiedBy(plan, strategy);
+        }
+
+        public bool Allows(User user, QueryEnhancerStrategy strategy)
+        {
+            var plan = user.Subscription.Plan.Value;
+            return _queryEnhancerAccessSpec.IsSatisfiedBy(plan, strategy);
+        }
+
+        public bool Allows(User user, QueryResultFilterStrategy strategy)
+        {
+            var plan = user.Subscription.Plan.Value;
+            return _queryResultFilterAccessSpec.IsSatisfiedBy(plan, strategy);
         }
     }
 }

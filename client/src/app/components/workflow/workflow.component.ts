@@ -12,7 +12,6 @@ import { CallbackUrlsFormComponent } from 'src/app/shared/components/callback-ur
 import { ProviderSettingsComponent } from 'src/app/shared/components/provider-settings/provider-settings.component';
 import { WorkflowNameComponent } from './data/workflow-name.component';
 import { WorkflowDescriptionComponent } from './data/workflow-description.component';
-import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component';
 import { HlmSwitchComponent } from 'libs/ui/ui-switch-helm/src/lib/hlm-switch.component';
 import { FilterConfigComponent } from 'src/app/shared/components/filter-config/filter-config.component';
 
@@ -30,7 +29,6 @@ import { catchError, of } from 'rxjs';
     QueryEnhancerConfigComponent,
     ProviderSettingsComponent,
     FilterConfigComponent,
-    HlmToasterComponent,
     CallbackUrlsFormComponent,
     HlmSwitchComponent,
   ],

@@ -38,6 +38,7 @@ import { RadarAxis } from 'src/app/services/radar-data.service';
 import { ProviderSelectService } from 'src/app/services/provider-select.service';
 import { WorkflowService } from 'src/app/services/workflow.service';
 import { ConversationModel, EmbeddingModel } from 'src/app/models/models';
+import { toast } from 'ngx-sonner';
 
 @Component({
   imports: [
@@ -187,8 +188,7 @@ export class NewWorkflowComponent implements OnInit {
       next: (id) => {
         this.router.navigate(['/dashboard/workflows']);
       },
-      error: (response) => {
-        this.error = response.error?.message || 'Something went wrong.';
+      error: (error: Error) => {
         this.isSubmitting = false;
       },
       complete: () => {

@@ -11,6 +11,7 @@ import {
 import { JwtInterceptor } from './interceptors/jwt-interceptor';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { environment } from 'src/environments/environment';
+import { ErrorInterceptor } from './interceptors/error-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,5 +21,6 @@ export const appConfig: ApplicationConfig = {
     provideNgxStripe(environment.stripePublishableKey),
     provideCharts(withDefaultRegisterables()),
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
 };
