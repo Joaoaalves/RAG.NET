@@ -12,7 +12,7 @@ import { InputComponent } from 'src/app/shared/components/input/input.component'
 
 // Services
 import { AuthService } from '../../services/auth.service';
-import { PlanType } from 'src/app/models/subscription';
+import { BillingPeriod, PlanType } from 'src/app/models/subscription';
 import { SubscriptionService } from 'src/app/services/subscription.service';
 
 @Component({
@@ -49,7 +49,7 @@ export class RegisterComponent implements OnInit {
   handleSubscription() {
     if (this.isValidIntent()) {
       this.subscriptionService
-        .startSubscription(this.intent as PlanType)
+        .startSubscription(this.intent as PlanType, BillingPeriod.YEARLY)
         .subscribe({
           next: (url) => (window.location.href = url),
           error: (err) => console.error('Failed to start subscription', err),

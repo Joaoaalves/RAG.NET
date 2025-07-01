@@ -18,8 +18,9 @@ namespace RAGNET.Application.Subscriptions.Commands.CancelSubscription
         public async Task<bool> Handle(CancelSubscriptionCommand request, CancellationToken cancellationToken)
         {
             var user = request.User;
+            var passwordCheck = await _userRepository.CheckPassowrd(user, request.UserPassword);
 
-            if (user.Subscription.SubscriptionId is not null)
+            if (passwordCheck && user.Subscription.SubscriptionId is not null)
             {
                 var success = await _paymentGateway.CancelSubscriptionAsync(request.User.Subscription.SubscriptionId!);
 

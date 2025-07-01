@@ -31,7 +31,7 @@
           [class.text-fuchsia-400]="subscription?.planType === 1"
           [class.text-rose-400]="subscription?.planType === 2"
         >
-          {{subscription?.planType === 1 ? 'Enhanced' : 'Ascend'}}
+          {{ subscription?.planType === 1 ? 'Enhanced' : 'Ascend' }}
         </p>
       </div>
       <div class="space-y-2">
@@ -43,7 +43,7 @@
             >Subscribed On</span
           >
         </div>
-        <p class="text-xl font-semibold text-white">{{subscribedOn}}</p>
+        <p class="text-xl font-semibold text-white">{{ subscribedOn }}</p>
       </div>
       <div class="space-y-2">
         <div class="flex items-center space-x-2">
@@ -52,36 +52,32 @@
           </div>
           <span class="text-neutral-400 text-sm font-medium">Renews On</span>
         </div>
-        <p class="text-xl font-semibold text-white">{{renewsOn}}</p>
+        <p class="text-xl font-semibold text-white">{{ renewsOn }}</p>
       </div>
     </div>
     <div class="mt-6 pt-6 border-t border-neutral-700/50">
-      <app-alert
-          id="cancel_subscription"
-          *ngIf="isSubscribed"
-          title="Cancel Subscription"
-          variant="destructive"
-          description="Are you sure you want to cancel your subscription? You will LOST ALL OF YOUR PRIVILEGES."
-          (actionConfirmed)="handleCancel()"
-        >
-      <button
-        class="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/25"
+      <app-alert-with-password
+        id="cancel_subscription"
+        *ngIf="isSubscribed"
+        title="Cancel Subscription"
+        description="Are you sure you want to cancel your subscription? You will LOST ALL OF YOUR PRIVILEGES."
+        (passwordConfirmed)="handleCancel($event)"
       >
-        Cancel Subscription
-      </button>
-
-        </app-alert>
+        <button
+          class="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/25"
+        >
+          Cancel Subscription
+        </button>
+      </app-alert-with-password>
     </div>
   </div>
 </div>
-<div class="flex flex-col gap-y-4">
+<div class="flex flex-col gap-y-8">
   <app-enhanced-subscription
     (subscribe)="handleSubscribe($event)"
-    (cancel)="handleCancel()"
   ></app-enhanced-subscription>
   <app-ascend-subscription
     (subscribe)="handleSubscribe($event)"
-    (cancel)="handleCancel()"
   ></app-ascend-subscription>
 </div>
 <hlm-toaster />

@@ -20,6 +20,12 @@ export enum PlanType {
   ASCEND,
 }
 
+export enum BillingPeriod {
+  MONTHLY,
+  SEMIANNUALLY,
+  YEARLY,
+}
+
 export interface Subscription {
   planType: PlanType;
   expiresAt: string;

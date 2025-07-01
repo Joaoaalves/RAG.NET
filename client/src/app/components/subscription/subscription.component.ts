@@ -1,3 +1,4 @@
+import { BillingPeriod } from './../../models/subscription';
 import { UserService } from 'src/app/services/user.service';
 import { EnhancedSubscriptionComponent } from 'src/app/shared/components/subscription-form/enhanced/enhanced-subscription.component';
 import { AscendSubscriptionComponent } from '../../shared/components/subscription-form/ascend/ascend-subscription.component';
@@ -28,7 +29,8 @@ import {
 import { CommonModule } from '@angular/common';
 
 import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component';
-import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
+import { AlertWithPasswordComponent } from 'src/app/shared/components/alert/with-password/alert-with-password.component';
+import { toast } from 'ngx-sonner';
 
 @Component({
   templateUrl: 'subscription.component.html',
@@ -37,7 +39,7 @@ import { AlertComponent } from 'src/app/shared/components/alert/alert.component'
     EnhancedSubscriptionComponent,
     HlmToasterComponent,
     NgIcon,
-    AlertComponent,
+    AlertWithPasswordComponent,
     CommonModule,
   ],
   providers: [
@@ -95,16 +97,28 @@ export class SubscriptionComponent implements OnInit {
     });
   }
 
-  handleCancel() {
-    this.subscriptionService.cancelSubscription().subscribe({
-      next: () => {
-        this.userService.clearCache();
-        window.location.reload();
+  handleCancel(password: string) {
+    this.subscriptionService.cancelSubscription(password).subscribe({
+      next: (result) => {
+        if (result) {
+          this.userService.clearCache();
+          return window.location.reload();
+        }
+
+        toast.error('An error occurred!', {
+          description: 'You provided a wrong password. Try again!',
+        });
       },
     });
   }
 
-  handleSubscribe(plan: PlanType) {
+  handleSubscribe({
+    planType,
+    billingPeriod,
+  }: {
+    planType: PlanType;
+    billingPeriod: BillingPeriod;
+  }) {
     this.userService.clearCache();
 
     this.userService.getInfo().subscribe((user) => {
@@ -112,7 +126,7 @@ export class SubscriptionComponent implements OnInit {
         user.subscription.planType != PlanType.CORE &&
         user.subscription.status
       ) {
-        this.subscriptionService.changePlan(plan).subscribe({
+        this.subscriptionService.changePlan(planType, billingPeriod).subscribe({
           next: () => {
             this.userService.clearCache();
             window.location.href = '/dashboard/workflows';
@@ -120,10 +134,12 @@ export class SubscriptionComponent implements OnInit {
           error: (err) => console.error('Failed to change subscription plan'),
         });
       } else {
-        this.subscriptionService.startSubscription(plan).subscribe({
-          next: (url) => (window.location.href = url),
-          error: (err) => console.error('Failed to start subscription', err),
-        });
+        this.subscriptionService
+          .startSubscription(planType, billingPeriod)
+          .subscribe({
+            next: (url) => (window.location.href = url),
+            error: (err) => console.error('Failed to start subscription', err),
+          });
       }
     });
   }

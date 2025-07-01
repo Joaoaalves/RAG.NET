@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RAGNET.Application.Subscriptions.Commands.CancelSubscription;
 using RAGNET.Application.Subscriptions.Commands.ChangeSubscriptionPlan;
-using RAGNET.Application.Subscriptions.Commands.CreateCheckout;
+using RAGNET.Application.Subscriptions.Commands.CreateSubscriptionCheckout;
 using RAGNET.Application.Subscriptions.DTOs;
 using RAGNET.Application.Subscriptions.Queries.GetPaymentStatus;
 using RAGNET.Infrastructure.Processing;
@@ -21,11 +21,11 @@ namespace web.Controllers.Subscriptions
 
         [HttpPost("start")]
         [Authorize]
-        public async Task<IActionResult> StartCheckout([FromBody] StartCheckoutDTO dto)
+        public async Task<IActionResult> StartCheckout([FromBody] StartCheckoutRequest request)
         {
             try
             {
-                var command = new CreateSubscriptionCheckoutCommand(dto.PlanType, dto.SuccessUrl, dto.CancelUrl);
+                var command = new CreateSubscriptionCheckoutCommand(request);
                 var url = await _commandsExecutor.Execute(command);
 
                 return Ok(new { url });
@@ -38,11 +38,11 @@ namespace web.Controllers.Subscriptions
 
         [HttpPost("change-plan")]
         [Authorize]
-        public async Task<IActionResult> ChangePlan([FromBody] ChangePlanDTO dto)
+        public async Task<IActionResult> ChangePlan([FromBody] ChangePlanRequest request)
         {
             try
             {
-                var command = new ChangeSubscriptionPlanCommand(dto.NewPlan);
+                var command = new ChangeSubscriptionPlanCommand(request);
                 await _commandsExecutor.Execute(command);
 
                 return Ok(new { Message = "Plan changed!" });
@@ -55,18 +55,18 @@ namespace web.Controllers.Subscriptions
 
         [HttpPost("cancel")]
         [Authorize]
-        public async Task<IActionResult> CancelPlan()
+        public async Task<IActionResult> CancelPlan([FromBody] CancelSubscriptionRequest request)
         {
             try
             {
-                var sucess = await _commandsExecutor.Execute(new CancelSubscriptionCommand());
+                var sucess = await _commandsExecutor.Execute(new CancelSubscriptionCommand(request));
 
                 if (sucess)
                 {
                     return Ok(new { Message = "Plan cancelation requested!" });
                 }
 
-                return BadRequest(new { Message = "You're not subscribed!" });
+                return BadRequest(new { Message = "Wrong Password!" });
             }
             catch (Exception exc)
             {

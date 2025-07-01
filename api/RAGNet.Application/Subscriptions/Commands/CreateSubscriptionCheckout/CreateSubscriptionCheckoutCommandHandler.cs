@@ -2,7 +2,7 @@ using RAGNET.Application.Configuration.Commands;
 using RAGNET.Application.Subscriptions.DTOs;
 using RAGNET.Application.Subscriptions.Services;
 
-namespace RAGNET.Application.Subscriptions.Commands.CreateCheckout
+namespace RAGNET.Application.Subscriptions.Commands.CreateSubscriptionCheckout
 {
     public class CreateCheckoutCommandHandler(IPaymentGateway paymentGateway, IPaymentStatusService paymentStatusService) : ICommandHandler<CreateSubscriptionCheckoutCommand, string>
     {
@@ -25,6 +25,7 @@ namespace RAGNET.Application.Subscriptions.Commands.CreateCheckout
                 request.SuccessUrl + $"?paymentId={intent.PaymentIntentId}",
                 request.CancelUrl,
                 request.PlanType,
+                request.BillingPeriod,
                 ct
             );
         }

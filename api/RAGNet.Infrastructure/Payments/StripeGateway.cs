@@ -19,7 +19,7 @@ namespace RAGNET.Infrastructure.Payments
             StripeConfiguration.ApiKey = _settings.SecretKey;
         }
 
-        public async Task<string> CreateCheckoutSessionAsync(string customerId, string successUrl, string cancelUrl, PlanType type, CancellationToken ct)
+        public async Task<string> CreateCheckoutSessionAsync(string customerId, string successUrl, string cancelUrl, PlanType type, BillingPeriod period, CancellationToken ct)
         {
             var options = new SessionCreateOptions
             {
@@ -30,7 +30,7 @@ namespace RAGNET.Infrastructure.Payments
                 LineItems = [
                         new()
                         {
-                            Price = GetPriceId(type),
+                            Price = GetPriceId(type, period),
                             Quantity = 1
                         }
                     ],
@@ -128,25 +128,37 @@ namespace RAGNET.Infrastructure.Payments
             return Task.FromResult<CancelSubscriptionIntentDTO?>(null);
         }
 
-        private string GetPriceId(PlanType type)
+        private string GetPriceId(PlanType type, BillingPeriod period = BillingPeriod.Monthly)
         {
-            return type switch
+            return (type, period) switch
             {
-                PlanType.Ascend => _settings.PriceIdAscend,
-                PlanType.Enhanced => _settings.PriceIdEnhanced,
-                _ => throw new ArgumentOutOfRangeException()
+                (PlanType.Enhanced, BillingPeriod.Monthly) => _settings.Prices.Enhanced.Monthly,
+                (PlanType.Enhanced, BillingPeriod.SemiAnnualy) => _settings.Prices.Enhanced.SemiAnnualy,
+                (PlanType.Enhanced, BillingPeriod.Yearly) => _settings.Prices.Enhanced.Yearly,
+                (PlanType.Ascend, BillingPeriod.Monthly) => _settings.Prices.Ascend.Monthly,
+                (PlanType.Ascend, BillingPeriod.SemiAnnualy) => _settings.Prices.Ascend.SemiAnnualy,
+                (PlanType.Ascend, BillingPeriod.Yearly) => _settings.Prices.Ascend.Yearly,
+                _ => throw new ArgumentOutOfRangeException(nameof(type), "Invalid plan or period")
             };
         }
 
         private PlanType GetPlanFromPriceId(string priceId)
         {
-            if (priceId == _settings.PriceIdEnhanced)
+            if (priceId == _settings.Prices.Enhanced.Monthly ||
+                priceId == _settings.Prices.Enhanced.SemiAnnualy ||
+                priceId == _settings.Prices.Enhanced.Yearly)
+            {
                 return PlanType.Enhanced;
+            }
 
-            if (priceId == _settings.PriceIdAscend)
+            if (priceId == _settings.Prices.Ascend.Monthly ||
+                priceId == _settings.Prices.Ascend.SemiAnnualy ||
+                priceId == _settings.Prices.Ascend.Yearly)
+            {
                 return PlanType.Ascend;
+            }
 
-            throw new ArgumentOutOfRangeException("Invalid Price Id");
+            throw new ArgumentOutOfRangeException(nameof(priceId), priceId, "Invalid Price Id");
         }
     }
 }

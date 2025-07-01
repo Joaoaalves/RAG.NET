@@ -2,19 +2,28 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { PaymentStatusResponse, PlanType } from '../models/subscription';
+import {
+  BillingPeriod,
+  PaymentStatusResponse,
+  PlanType,
+} from '../models/subscription';
 
 @Injectable({ providedIn: 'root' })
 export class SubscriptionService {
   private apiUrl = environment.apiUrl;
   constructor(private http: HttpClient) {}
 
-  startSubscription(planType: PlanType): Observable<string> {
+  startSubscription(
+    planType: PlanType,
+    billingPeriod: BillingPeriod
+  ): Observable<string> {
     const successUrl = `${window.location.origin}/dashboard/subscriptions/pending`;
     const cancelUrl = `${window.location.origin}/dashboard/subscriptions`;
+
     return this.http
       .post<{ url: string }>(`${this.apiUrl}/api/checkout/start`, {
         planType,
+        billingPeriod,
         successUrl,
         cancelUrl,
       })
@@ -28,10 +37,14 @@ export class SubscriptionService {
       );
   }
 
-  changePlan(newPlan: PlanType): Observable<boolean> {
+  changePlan(
+    newPlan: PlanType,
+    billingPeriod: BillingPeriod
+  ): Observable<boolean> {
     return this.http
       .post<{ message: string }>(`${this.apiUrl}/api/checkout/change-plan`, {
         newPlan,
+        billingPeriod,
       })
       .pipe(
         map(() => {
@@ -40,9 +53,11 @@ export class SubscriptionService {
       );
   }
 
-  cancelSubscription(): Observable<boolean> {
+  cancelSubscription(password: string): Observable<boolean> {
     return this.http
-      .post<{ message: string }>(`${this.apiUrl}/api/checkout/cancel`, {})
+      .post<{ message: string }>(`${this.apiUrl}/api/checkout/cancel`, {
+        password,
+      })
       .pipe(
         map(() => {
           return true;

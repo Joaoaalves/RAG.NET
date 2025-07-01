@@ -2,20 +2,25 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { OrbitalSystemComponent } from './orbital-system.component';
-import { PlanType, SubscriptionStatus } from 'src/app/models/subscription';
+import {
+  BillingPeriod,
+  PlanType,
+  SubscriptionStatus,
+} from 'src/app/models/subscription';
 import { UserService } from 'src/app/services/user.service';
-import { AlertComponent } from '../../alert/alert.component';
 
 @Component({
   selector: 'app-ascend-subscription',
-  imports: [CommonModule, NgIcon, OrbitalSystemComponent, AlertComponent],
+  imports: [CommonModule, NgIcon, OrbitalSystemComponent],
   templateUrl: './ascend-subscription.component.html',
   standalone: true,
 })
 export class AscendSubscriptionComponent {
   @Input() isLoading: boolean = false;
-  @Output() subscribe = new EventEmitter<PlanType>();
-  @Output() cancel = new EventEmitter();
+  @Output() subscribe = new EventEmitter<{
+    planType: PlanType;
+    billingPeriod: BillingPeriod;
+  }>();
 
   expiresAt: string = '';
   isActive: boolean = true;
@@ -39,12 +44,31 @@ export class AscendSubscriptionComponent {
     });
   }
 
-  onCancel() {
-    if (this.isSubscribed) this.cancel.emit();
+  onSubscribeMonthly() {
+    if (!this.isSubscribed) {
+      this.subscribe.emit({
+        planType: PlanType.ASCEND,
+        billingPeriod: BillingPeriod.MONTHLY,
+      });
+    }
   }
 
-  onSubscribe() {
-    if (!this.isSubscribed) this.subscribe.emit(PlanType.ASCEND);
+  onSubscribeSemiAnnually() {
+    if (!this.isSubscribed) {
+      this.subscribe.emit({
+        planType: PlanType.ASCEND,
+        billingPeriod: BillingPeriod.SEMIANNUALLY,
+      });
+    }
+  }
+
+  onSubscribeYearly() {
+    if (!this.isSubscribed) {
+      this.subscribe.emit({
+        planType: PlanType.ASCEND,
+        billingPeriod: BillingPeriod.YEARLY,
+      });
+    }
   }
 
   get features() {

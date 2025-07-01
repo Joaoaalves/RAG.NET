@@ -31,6 +31,17 @@
     "Stripe": {
         "SecretKey": "",
         "WebhookSecret": "",
-        "PriceId": ""
+        "Prices": {
+            "Enhanced": {
+                "Monthly": "",
+                "SemiAnnualy": "",
+                "Yearly": ""
+            },
+            "Ascend": {
+                "Monthly": "",
+                "SemiAnnualy": "",
+                "Yearly": ""
+            }
+        }
     }
 }

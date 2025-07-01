@@ -55,5 +55,9 @@ namespace RAGNET.Infrastructure.Domain.Users
             return await _userManager.UpdateAsync(user);
         }
 
+        public async Task<bool> CheckPassowrd(User user, string password)
+        {
+            return await _userManager.CheckPasswordAsync(user, password);
+        }
     }
 }

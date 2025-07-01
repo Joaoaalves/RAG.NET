@@ -4,9 +4,10 @@ using RAGNET.Domain.SharedKernel.Subscriptions;
 namespace RAGNET.Application.Subscriptions.Commands.ChangeSubscriptionPlan
 {
     public class ChangeSubscriptionPlanCommand(
-        PlanType newPlan
+        ChangePlanRequest request
     ) : UserAwareCommand<Unit>
     {
-        public PlanType NewPlan { get; } = newPlan;
+        public BillingPeriod BillingPeriod { get; } = request.BillingPeriod;
+        public PlanType NewPlan { get; } = request.NewPlan;
     }
 }
