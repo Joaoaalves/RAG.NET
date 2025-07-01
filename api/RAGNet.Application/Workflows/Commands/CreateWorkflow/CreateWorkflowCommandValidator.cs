@@ -3,6 +3,7 @@ using RAGNET.Application.Infrastructure.Providers.Conversation.Validators;
 using RAGNET.Application.Infrastructure.Providers.Embedding.Validators;
 using RAGNET.Domain.SharedKernel.Plans.Policies;
 
+
 namespace RAGNET.Application.Workflows.Commands.CreateWorkflow
 {
 
@@ -10,13 +11,18 @@ namespace RAGNET.Application.Workflows.Commands.CreateWorkflow
     {
         private readonly SubscriptionPolicy _subscriptionPolicy;
 
-        public CreateWorkflowCommandValidator(SubscriptionPolicy subscriptionPolicy)
+        public CreateWorkflowCommandValidator(
+            SubscriptionPolicy subscriptionPolicy)
         {
             _subscriptionPolicy = subscriptionPolicy;
 
             RuleFor(w => w)
                 .Must(w => _subscriptionPolicy.Allows(w.User, w.Strategy))
                 .WithMessage("Your subscription plan does not allow this chunker strategy.");
+
+            RuleFor(x => x)
+                .Must(w => _subscriptionPolicy.AllowsWorkflowCreation(w.User))
+                .WithMessage("You have reached the maximum number of workflows allowed by your subscription plan.");
 
             RuleFor(w => w.Name).NotEmpty().MaximumLength(100);
             RuleFor(w => w.Description).NotEmpty().MaximumLength(500);

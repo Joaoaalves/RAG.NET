@@ -3,7 +3,9 @@ using RAGNET.Domain.QueryEnhancers;
 using RAGNET.Domain.QueryResultFilters;
 using RAGNET.Domain.SharedKernel.Plans;
 using RAGNET.Domain.SharedKernel.Plans.Policies;
-using RAGNET.Domain.SharedKernel.Plans.Specifications;
+using RAGNET.Domain.SharedKernel.Plans.Specifications.Access;
+using RAGNET.Domain.SharedKernel.Plans.Specifications.Limits;
+using RAGNET.Domain.Workflows;
 
 namespace web.Configurations
 {
@@ -14,6 +16,7 @@ namespace web.Configurations
             services.AddSingleton<IAccessSpecification<ChunkerStrategy>, ChunkerAccessSpecification>();
             services.AddSingleton<IAccessSpecification<QueryEnhancerStrategy>, QueryEnhancerAccessSpecification>();
             services.AddSingleton<IAccessSpecification<QueryResultFilterStrategy>, QueryResultFiterAcessSpecification>();
+            services.AddSingleton<ILimitSpecification<Workflow>, WorkflowLimitsSpecification>();
             services.AddScoped<SubscriptionPolicy>();
             return services;
         }

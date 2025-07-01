@@ -2,13 +2,15 @@ using RAGNET.Domain.Chunkers;
 using RAGNET.Domain.QueryEnhancers;
 using RAGNET.Domain.QueryResultFilters;
 using RAGNET.Domain.Users;
+using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Domain.SharedKernel.Plans.Policies
 {
     public class SubscriptionPolicy(
         IAccessSpecification<ChunkerStrategy> chunkerAccessSpec,
         IAccessSpecification<QueryEnhancerStrategy> queryEnhancerAccessSpec,
-        IAccessSpecification<QueryResultFilterStrategy> queryResultFilterAccessSpec
+        IAccessSpecification<QueryResultFilterStrategy> queryResultFilterAccessSpec,
+        ILimitSpecification<Workflow> workflowLimitSpec
     )
     {
 
@@ -18,6 +20,7 @@ namespace RAGNET.Domain.SharedKernel.Plans.Policies
 
         private readonly IAccessSpecification<QueryResultFilterStrategy> _queryResultFilterAccessSpec = queryResultFilterAccessSpec;
 
+        private readonly ILimitSpecification<Workflow> _workflowLimitSpec = workflowLimitSpec;
         public bool Allows(User user, ChunkerStrategy strategy)
         {
             var plan = user.Subscription.Plan.Value;
@@ -35,6 +38,13 @@ namespace RAGNET.Domain.SharedKernel.Plans.Policies
         {
             var plan = user.Subscription.Plan.Value;
             return _queryResultFilterAccessSpec.IsSatisfiedBy(plan, strategy);
+        }
+
+        public bool AllowsWorkflowCreation(User user)
+        {
+            var plan = user.Subscription.Plan.Value;
+
+            return _workflowLimitSpec.IsWithinLimit(plan, user.Workflows);
         }
     }
 }

@@ -2,7 +2,7 @@ using RAGNET.Domain.Chunkers;
 using RAGNET.Domain.QueryEnhancers;
 using RAGNET.Domain.SharedKernel.Subscriptions;
 
-namespace RAGNET.Domain.SharedKernel.Plans.Specifications
+namespace RAGNET.Domain.SharedKernel.Plans.Specifications.Access
 {
     public class QueryEnhancerAccessSpecification : IAccessSpecification<QueryEnhancerStrategy>
     {
