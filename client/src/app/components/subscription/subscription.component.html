@@ -1,6 +1,87 @@
-<div class="flex flex-col gap-y-4">
-  <app-enhanced-subscription (subscribe)="handleSubscribe($event)" (cancel)="handleCancel()"></app-enhanced-subscription>
-  <app-ascend-subscription (subscribe)="handleSubscribe($event)" (cancel)="handleCancel()"></app-ascend-subscription>
+<header>
+  <div class="mb-12">
+    <h1
+      class="text-5xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 bg-clip-text text-transparent"
+    >
+      Your Subscription
+    </h1>
+    <p class="text-xl text-neutral-300 max-w-3xl leading-relaxed">
+      Manage your current plan, explore new features, or cancel at any time.
+      Scale your RAG workflows with confidence and flexibility.
+    </p>
+  </div>
+</header>
+<div
+  *ngIf="isSubscribed && subscription?.planType != 0"
+  class="mb-12 transition-all duration-1000 delay-200 opacity-100 translate-y-0"
+>
+  <div
+    class="bg-gradient-to-r from-neutral-950/50 to-neutral-900/50 backdrop-blur-xl border border-neutral-700/50 rounded-2xl p-8"
+  >
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="space-y-2">
+        <div class="flex items-center space-x-2">
+          <div class="text-xl text-fuchsia-400">
+            <ng-icon name="lucideStar"></ng-icon>
+          </div>
+          <span class="text-neutral-400 text-sm font-medium">Current Plan</span>
+        </div>
+        <p
+          class="text-2xl font-bold"
+          [class.text-fuchsia-400]="subscription?.planType === 1"
+          [class.text-rose-400]="subscription?.planType === 2"
+        >
+          {{subscription?.planType === 1 ? 'Enhanced' : 'Ascend'}}
+        </p>
+      </div>
+      <div class="space-y-2">
+        <div class="flex items-center space-x-2">
+          <div class="text-xl text-sky-400">
+            <ng-icon name="lucideCalendar"></ng-icon>
+          </div>
+          <span class="text-neutral-400 text-sm font-medium"
+            >Subscribed On</span
+          >
+        </div>
+        <p class="text-xl font-semibold text-white">{{subscribedOn}}</p>
+      </div>
+      <div class="space-y-2">
+        <div class="flex items-center space-x-2">
+          <div class="text-xl text-rose-400">
+            <ng-icon name="lucideCreditCard"></ng-icon>
+          </div>
+          <span class="text-neutral-400 text-sm font-medium">Renews On</span>
+        </div>
+        <p class="text-xl font-semibold text-white">{{renewsOn}}</p>
+      </div>
+    </div>
+    <div class="mt-6 pt-6 border-t border-neutral-700/50">
+      <app-alert
+          id="cancel_subscription"
+          *ngIf="isSubscribed"
+          title="Cancel Subscription"
+          variant="destructive"
+          description="Are you sure you want to cancel your subscription? You will LOST ALL OF YOUR PRIVILEGES."
+          (actionConfirmed)="handleCancel()"
+        >
+      <button
+        class="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white px-6 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-red-500/25"
+      >
+        Cancel Subscription
+      </button>
 
+        </app-alert>
+    </div>
+  </div>
+</div>
+<div class="flex flex-col gap-y-4">
+  <app-enhanced-subscription
+    (subscribe)="handleSubscribe($event)"
+    (cancel)="handleCancel()"
+  ></app-enhanced-subscription>
+  <app-ascend-subscription
+    (subscribe)="handleSubscribe($event)"
+    (cancel)="handleCancel()"
+  ></app-ascend-subscription>
 </div>
 <hlm-toaster />

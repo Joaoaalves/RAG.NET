@@ -68,6 +68,7 @@
           id="cancel_subscription"
           *ngIf="isSubscribed"
           [title]="'Cancel Subscription'"
+          variant="destructive"
           description="Are you sure you want to cancel your subscription? You will LOST ALL OF YOUR PRIVILEGES."
           (actionConfirmed)="onCancel()"
         >

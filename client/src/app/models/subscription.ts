@@ -22,7 +22,7 @@ export enum PlanType {
 
 export interface Subscription {
   planType: PlanType;
-  expiresAt: Date;
-  subscribedAt: Date;
+  expiresAt: string;
+  subscribedAt: string;
   status?: SubscriptionStatus;
 }

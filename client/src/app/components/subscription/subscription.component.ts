@@ -2,7 +2,7 @@ import { UserService } from 'src/app/services/user.service';
 import { EnhancedSubscriptionComponent } from 'src/app/shared/components/subscription-form/enhanced/enhanced-subscription.component';
 import { AscendSubscriptionComponent } from '../../shared/components/subscription-form/ascend/ascend-subscription.component';
 import { Component, OnInit } from '@angular/core';
-import { provideIcons } from '@ng-icons/core';
+import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
   lucideArrowRight,
   lucideCode,
@@ -15,12 +15,20 @@ import {
   lucideMessageSquare,
   lucideCheck,
   lucideTrash,
+  lucideStar,
+  lucideCalendar,
+  lucideCreditCard,
 } from '@ng-icons/lucide';
 import { SubscriptionService } from 'src/app/services/subscription.service';
-import { PlanType, Subscription } from 'src/app/models/subscription';
+import {
+  PlanType,
+  Subscription,
+  SubscriptionStatus,
+} from 'src/app/models/subscription';
 import { CommonModule } from '@angular/common';
 
 import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component';
+import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
 
 @Component({
   templateUrl: 'subscription.component.html',
@@ -28,6 +36,8 @@ import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.
     AscendSubscriptionComponent,
     EnhancedSubscriptionComponent,
     HlmToasterComponent,
+    NgIcon,
+    AlertComponent,
     CommonModule,
   ],
   providers: [
@@ -43,12 +53,18 @@ import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.
       lucideCheck,
       lucideTrash,
       lucideMessageSquare,
+      lucideCalendar,
+      lucideCreditCard,
+      lucideStar,
     }),
   ],
   standalone: true,
 })
 export class SubscriptionComponent implements OnInit {
   subscription?: Subscription;
+  subscribedOn: string = '';
+  isSubscribed: boolean = false;
+  renewsOn: string = '';
 
   constructor(
     private subscriptionService: SubscriptionService,
@@ -58,6 +74,24 @@ export class SubscriptionComponent implements OnInit {
   ngOnInit(): void {
     this.userService.user$.subscribe((user) => {
       this.subscription = user?.subscription;
+      if (this.subscription) {
+        this.isSubscribed =
+          this.subscription.status == SubscriptionStatus.ACTIVE;
+
+        this.subscribedOn = this.getFormatedDate(
+          this.subscription.subscribedAt
+        );
+
+        this.renewsOn = this.getFormatedDate(this.subscription.expiresAt);
+      }
+    });
+  }
+
+  getFormatedDate(date: string) {
+    return new Date(date).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
     });
   }
 

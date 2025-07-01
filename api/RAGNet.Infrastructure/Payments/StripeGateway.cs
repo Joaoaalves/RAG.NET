@@ -92,7 +92,9 @@ namespace RAGNET.Infrastructure.Payments
             if (stripeEvent.Type == "invoice.payment_succeeded" &&
                 stripeEvent.Data.Object is Invoice invoice)
             {
-                var price = invoice.Lines.Data.First().Pricing.PriceDetails.Price;
+                var invoiceData = invoice.Lines.Data.First();
+                var price = invoiceData.Pricing.PriceDetails.Price;
+                var period = invoiceData.Period;
 
                 return Task.FromResult<PaymentIntentDTO?>(new PaymentIntentDTO
                 {
@@ -100,8 +102,8 @@ namespace RAGNET.Infrastructure.Payments
                     PaymentIntentId = invoice.Id,
                     PlanType = GetPlanFromPriceId(price),
                     SubscriptionId = invoice.Parent.SubscriptionDetails.SubscriptionId,
-                    RenewedAt = invoice.PeriodStart,
-                    ExpiresAt = invoice.PeriodEnd
+                    RenewedAt = period.Start,
+                    ExpiresAt = period.End
                 });
             }
 
