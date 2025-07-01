@@ -12,7 +12,7 @@ namespace RAGNET.Application.Chunkers.Services
         private readonly string _evaluationPrompt = evaluationPrompt;
         private readonly IConversationProviderService _completionService = completionService;
 
-        public async Task<IEnumerable<string>> ChunkText(string text)
+        public async Task<List<string>> ChunkText(string text)
         {
 
             var paragraphs = text.Split(['\n'], StringSplitOptions.RemoveEmptyEntries);
@@ -30,7 +30,7 @@ namespace RAGNET.Application.Chunkers.Services
                 }
             });
 
-            return chunksBag;
+            return [.. chunksBag];
         }
 
         private async Task<List<string>> ChunkParagraph(string paragraph)

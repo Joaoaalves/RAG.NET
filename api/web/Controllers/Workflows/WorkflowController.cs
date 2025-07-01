@@ -29,11 +29,11 @@ namespace web.Controllers.Workflows
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateWorkflow([FromBody] WorkflowCreationDTO dto)
+        public async Task<IActionResult> CreateWorkflow([FromBody] WorkflowCreationRequest request)
         {
             try
             {
-                var command = new CreateWorkflowCommand(dto);
+                var command = new CreateWorkflowCommand(request);
                 var workflowId = await _commandExecutor.Execute(command);
 
                 return Ok(new { Message = "Workflow created!", WorkflowId = workflowId });

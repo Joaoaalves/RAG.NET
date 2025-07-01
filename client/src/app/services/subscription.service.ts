@@ -37,22 +37,6 @@ export class SubscriptionService {
       );
   }
 
-  changePlan(
-    newPlan: PlanType,
-    billingPeriod: BillingPeriod
-  ): Observable<boolean> {
-    return this.http
-      .post<{ message: string }>(`${this.apiUrl}/api/checkout/change-plan`, {
-        newPlan,
-        billingPeriod,
-      })
-      .pipe(
-        map(() => {
-          return true;
-        })
-      );
-  }
-
   cancelSubscription(password: string): Observable<boolean> {
     return this.http
       .post<{ message: string }>(`${this.apiUrl}/api/checkout/cancel`, {

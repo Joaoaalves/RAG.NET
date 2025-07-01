@@ -1,7 +1,8 @@
-using RAGNET.Application.Configuration.Commands;
-using RAGNET.Application.Subscriptions.Services;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.Users;
+
+using RAGNET.Application.Configuration.Commands;
+using RAGNET.Application.Subscriptions.Services;
 
 namespace RAGNET.Application.Subscriptions.Commands.CancelSubscription
 {

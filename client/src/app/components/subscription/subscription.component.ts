@@ -122,25 +122,12 @@ export class SubscriptionComponent implements OnInit {
     this.userService.clearCache();
 
     this.userService.getInfo().subscribe((user) => {
-      if (
-        user.subscription.planType != PlanType.CORE &&
-        user.subscription.status
-      ) {
-        this.subscriptionService.changePlan(planType, billingPeriod).subscribe({
-          next: () => {
-            this.userService.clearCache();
-            window.location.href = '/dashboard/workflows';
-          },
-          error: (err) => console.error('Failed to change subscription plan'),
+      this.subscriptionService
+        .startSubscription(planType, billingPeriod)
+        .subscribe({
+          next: (url) => (window.location.href = url),
+          error: (err) => console.error('Failed to start subscription', err),
         });
-      } else {
-        this.subscriptionService
-          .startSubscription(planType, billingPeriod)
-          .subscribe({
-            next: (url) => (window.location.href = url),
-            error: (err) => console.error('Failed to start subscription', err),
-          });
-      }
     });
   }
 

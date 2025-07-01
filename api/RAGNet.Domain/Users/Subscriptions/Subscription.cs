@@ -1,4 +1,3 @@
-using RAGNET.Domain.Chunkers;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.SharedKernel.Subscriptions;
 using RAGNET.Domain.Users.Subscriptions.Events;
@@ -79,11 +78,6 @@ namespace RAGNET.Domain.Users.Subscriptions
         {
             ClearPlan();
             AddDomainEvent(new SubscriptionCanceledEvent(this));
-        }
-
-        public bool AllowsChunker(ChunkerStrategy strategy)
-        {
-            return IsActive() && Plan.Allows(strategy);
         }
 
         private void Expire()

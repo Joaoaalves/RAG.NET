@@ -7,7 +7,7 @@ namespace RAGNET.Application.Chunkers.Services
         /// </summary>
         /// <param name="text">Text to be processed.</param>
         /// <returns>List of chunks.</returns>
-        Task<IEnumerable<string>> ChunkText(string text);
+        Task<List<string>> ChunkText(string text);
         decimal GetCostMultiplier();
     }
 }

@@ -8,11 +8,16 @@ import {
   SubscriptionStatus,
 } from 'src/app/models/subscription';
 import { UserService } from 'src/app/services/user.service';
-import { AlertComponent } from '../../alert/alert.component';
+import { BillingPeriodSelectorComponent } from '../billing-period-selector/billing-period-selector.component';
 
 @Component({
   selector: 'app-enhanced-subscription',
-  imports: [CommonModule, NgIcon, CubeComponent],
+  imports: [
+    CommonModule,
+    NgIcon,
+    CubeComponent,
+    BillingPeriodSelectorComponent,
+  ],
   templateUrl: './enhanced-subscription.component.html',
   standalone: true,
 })
@@ -23,17 +28,44 @@ export class EnhancedSubscriptionComponent {
     billingPeriod: BillingPeriod;
   }>();
 
-  expiresAt: string = '';
-  isActive: boolean = true;
-  isSubscribed: boolean = false;
+  expiresAt = '';
+  isActive = true;
+  isEnhanced = false;
+  isSubscribed = false;
+
+  selectedPeriod: BillingPeriod | null = null;
+
+  billingOptions = [
+    {
+      period: BillingPeriod.MONTHLY,
+      label: 'Monthly',
+      price: 10,
+      discount: 0,
+      description: 'Pay every month. No discount applied.',
+    },
+    {
+      period: BillingPeriod.SEMIANNUALLY,
+      label: '6 Months',
+      price: 49.99,
+      discount: 16,
+      description: 'Save ~16% with a semiannual plan.',
+    },
+    {
+      period: BillingPeriod.YEARLY,
+      label: 'Yearly',
+      price: 89.99,
+      discount: 25,
+      description: 'Save ~25% by paying once a year.',
+    },
+  ];
 
   constructor(private userService: UserService) {
     this.userService.user$.subscribe((user) => {
       if (user) {
-        var subscription = user.subscription;
-
+        const subscription = user.subscription;
         this.isActive = subscription.status === SubscriptionStatus.ACTIVE;
-        this.isSubscribed = subscription.planType == PlanType.ENHANCED;
+        this.isEnhanced = subscription.planType === PlanType.ENHANCED;
+        this.isSubscribed = subscription.planType !== PlanType.CORE;
         this.expiresAt = `Expires at ${new Date(
           subscription.expiresAt
         ).toLocaleDateString()}`;
@@ -41,29 +73,15 @@ export class EnhancedSubscriptionComponent {
     });
   }
 
-  onSubscribeMonthly() {
-    if (!this.isSubscribed) {
-      this.subscribe.emit({
-        planType: PlanType.ENHANCED,
-        billingPeriod: BillingPeriod.MONTHLY,
-      });
-    }
+  selectPeriod(period: BillingPeriod) {
+    this.selectedPeriod = period;
   }
 
-  onSubscribeSemiAnnually() {
-    if (!this.isSubscribed) {
+  onSubscribe() {
+    if (this.selectedPeriod && !this.isSubscribed) {
       this.subscribe.emit({
         planType: PlanType.ENHANCED,
-        billingPeriod: BillingPeriod.SEMIANNUALLY,
-      });
-    }
-  }
-
-  onSubscribeYearly() {
-    if (!this.isSubscribed) {
-      this.subscribe.emit({
-        planType: PlanType.ENHANCED,
-        billingPeriod: BillingPeriod.YEARLY,
+        billingPeriod: this.selectedPeriod,
       });
     }
   }

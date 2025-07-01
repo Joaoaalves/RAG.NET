@@ -9,7 +9,6 @@ using RAGNET.Application.ProviderApiKeys.Services;
 using RAGNET.Infrastructure.Jobs;
 using RAGNET.Infrastructure.Jobs.Queue;
 using RAGNET.Application.Infrastructure.Providers.Embedding;
-using RAGNET.Domain.TokenWallets;
 using RAGNET.Application.TokenWallets.Services.Consumption;
 using RAGNET.Application.TokenWallets.Services.Consumption.Strategies;
 
@@ -19,15 +18,13 @@ namespace RAGNET.Infrastructure.Workers.Handlers
         IApiKeyResolverService apiKeyResolver,
         IEmbeddingProcessingService embeddingService,
         IJobNotificationService realTimeNotifier,
-        ITokenConsumerContext tokenConsumerContext,
-        ITokenWalletRepository tokenWalletRepository) : BaseJobProcessingHandler
+        ITokenConsumerContext tokenConsumerContext) : BaseJobProcessingHandler
     {
         private readonly IApiKeyResolverService _apiKeyResolver = apiKeyResolver;
         private readonly IEmbeddingProcessingService _embeddingService = embeddingService;
         private readonly IJobNotificationService _realTimeNotifier = realTimeNotifier;
 
         private readonly ITokenConsumerContext _tokenConsumerContext = tokenConsumerContext;
-        private readonly ITokenWalletRepository _tokenWalletRepository = tokenWalletRepository;
 
         private readonly ProcessDTO _currentProcess = new()
         {
@@ -56,30 +53,16 @@ namespace RAGNET.Infrastructure.Workers.Handlers
         public override async Task HandleAsync(EmbeddingJob job, CancellationToken ct)
         {
             var workflow = job.Context.Workflow;
-
-            var wallet = await _tokenWalletRepository.GetByUserIdAsync(workflow.UserId) ?? throw new Exception("Wallet not Found");
+            var wallet = job.Context.Wallet;
 
             var document = job.Context.Document ?? throw new Exception("Document is not set");
 
             await NotifyProgress(job, document, ct);
 
-            var convoKey = await _apiKeyResolver.ResolveForUserAsync(
-                job.UserId,
-                workflow.ConversationProviderConfig!.Provider);
-
-            var embedKey = await _apiKeyResolver.ResolveForUserAsync(
-                job.UserId,
-                workflow.ConversationProviderConfig.Provider
-            );
-
             var totalPages = document.Pages.Count;
             int processedPages = 0;
 
-            var chunker = _embeddingService.GetChunker(
-                workflow.Chunker!,
-                workflow.ConversationProviderConfig,
-                convoKey
-            );
+            var chunker = job.Context.TextChunkerService;
 
             var tokenConsumptionStrategy = new ChunkerConsumptionStrategy(
                 workflow,
@@ -100,17 +83,16 @@ namespace RAGNET.Infrastructure.Workers.Handlers
             {
                 try
                 {
-                    var chunks = (await _embeddingService.ChunkTextAsync(
+                    var chunks = await _embeddingService.ChunkTextAsync(
                                                     chunker,
-                                                    convoKey
-                                                 )).ToList();
+                                                    page.Text.Value
+                                                 );
 
                     if (chunks.Count > 0)
                     {
                         var results = await _embeddingService.GetEmbeddingsAsync(
                                           chunks,
-                                          workflow.EmbeddingProviderConfig!,
-                                          embedKey
+                                          job.Context.EmbeddingProviderService
                                       );
 
                         var batch = results

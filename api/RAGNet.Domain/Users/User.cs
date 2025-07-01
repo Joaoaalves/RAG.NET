@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using RAGNET.Domain.ProvidersApiKeys;
 using RAGNET.Domain.SeedWork;
-using RAGNET.Domain.SharedKernel.Subscriptions;
+
 using RAGNET.Domain.SharedKernel.Users;
 using RAGNET.Domain.TokenWallets;
 using RAGNET.Domain.Users.Subscriptions;

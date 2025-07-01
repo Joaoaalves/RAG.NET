@@ -8,10 +8,16 @@ import {
   SubscriptionStatus,
 } from 'src/app/models/subscription';
 import { UserService } from 'src/app/services/user.service';
+import { BillingPeriodSelectorComponent } from '../billing-period-selector/billing-period-selector.component';
 
 @Component({
   selector: 'app-ascend-subscription',
-  imports: [CommonModule, NgIcon, OrbitalSystemComponent],
+  imports: [
+    CommonModule,
+    NgIcon,
+    OrbitalSystemComponent,
+    BillingPeriodSelectorComponent,
+  ],
   templateUrl: './ascend-subscription.component.html',
   standalone: true,
 })
@@ -24,8 +30,34 @@ export class AscendSubscriptionComponent {
 
   expiresAt: string = '';
   isActive: boolean = true;
+  isAscend: boolean = true;
   isSubscribed: boolean = false;
-  isUpgradable: boolean = false;
+
+  selectedPeriod: BillingPeriod | null = null;
+
+  billingOptions = [
+    {
+      period: BillingPeriod.MONTHLY,
+      label: 'Monthly',
+      price: 30,
+      discount: 0,
+      description: 'Pay every month. No discount applied.',
+    },
+    {
+      period: BillingPeriod.SEMIANNUALLY,
+      label: '6 Months',
+      price: 149.99,
+      discount: 16,
+      description: 'Save ~16% with a semiannual plan.',
+    },
+    {
+      period: BillingPeriod.YEARLY,
+      label: 'Yearly',
+      price: 269.99,
+      discount: 25,
+      description: 'Save ~25% by paying once a year.',
+    },
+  ];
 
   constructor(private userService: UserService) {
     this.userService.user$.subscribe((user) => {
@@ -33,42 +65,26 @@ export class AscendSubscriptionComponent {
         var subscription = user.subscription;
 
         this.isActive = subscription.status === SubscriptionStatus.ACTIVE;
-        this.isSubscribed = subscription.planType == PlanType.ASCEND;
+        this.isAscend = subscription.planType == PlanType.ASCEND;
+        this.isSubscribed = subscription.planType !== PlanType.CORE;
         this.expiresAt = `Expires at ${new Date(
           subscription.expiresAt
         ).toLocaleDateString()}`;
-
-        this.isUpgradable =
-          this.isActive && subscription.planType == PlanType.ENHANCED;
       }
     });
   }
 
-  onSubscribeMonthly() {
-    if (!this.isSubscribed) {
+  onSubscribe() {
+    if (this.selectedPeriod && !this.isSubscribed) {
       this.subscribe.emit({
         planType: PlanType.ASCEND,
-        billingPeriod: BillingPeriod.MONTHLY,
+        billingPeriod: this.selectedPeriod,
       });
     }
   }
 
-  onSubscribeSemiAnnually() {
-    if (!this.isSubscribed) {
-      this.subscribe.emit({
-        planType: PlanType.ASCEND,
-        billingPeriod: BillingPeriod.SEMIANNUALLY,
-      });
-    }
-  }
-
-  onSubscribeYearly() {
-    if (!this.isSubscribed) {
-      this.subscribe.emit({
-        planType: PlanType.ASCEND,
-        billingPeriod: BillingPeriod.YEARLY,
-      });
-    }
+  selectPeriod(period: BillingPeriod) {
+    this.selectedPeriod = period;
   }
 
   get features() {

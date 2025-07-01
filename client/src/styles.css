@@ -106,6 +106,10 @@
 }
 
 @layer components {
+  .subscription-selector__active{
+    @apply !border-fuchsia-500 !shadow-xl !shadow-fuchsia-500/5
+  }
+
   .timeline-item {
     @apply relative flex items-start md:items-center w-full mb-12 hover:scale-105 transition-transform duration-300;
   }

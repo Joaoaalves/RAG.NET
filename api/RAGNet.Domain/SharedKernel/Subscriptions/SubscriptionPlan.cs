@@ -34,11 +34,6 @@ namespace RAGNET.Domain.SharedKernel.Subscriptions
             _ => []
         };
 
-        public bool Allows(ChunkerStrategy chunkerStrategy)
-        {
-            return AllowedChunkers.Contains(chunkerStrategy);
-        }
-
         public static SubscriptionPlan FromType(PlanType type) => type switch
         {
             PlanType.Core => Core,

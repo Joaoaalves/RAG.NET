@@ -9,6 +9,8 @@ namespace web.Configurations
 
             services.AddScoped<InitializeJobHandler>();
             services.AddScoped<ExtractTextHandler>();
+            services.AddScoped<MountChunkerHandler>();
+            services.AddScoped<MountProvidersHandler>();
             services.AddScoped<ProcessPagesHandler>();
             services.AddScoped<UpdateWorkflowHandler>();
             services.AddScoped<NotifyHandler>();

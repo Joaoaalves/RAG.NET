@@ -6,7 +6,7 @@ using RAGNET.Application.Chunkers.DTOs;
 
 namespace RAGNET.Application.Workflows.Commands.CreateWorkflow
 {
-    public class WorkflowCreationDTO
+    public class WorkflowCreationRequest
     {
         public string Name { get; set; } = String.Empty;
         public string Description { get; set; } = String.Empty;

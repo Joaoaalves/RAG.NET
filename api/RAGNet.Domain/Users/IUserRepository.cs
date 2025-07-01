@@ -4,6 +4,7 @@ namespace RAGNET.Domain.Users
 {
     public interface IUserRepository
     {
+        Task<User?> GetByEmailAsync(string email);
         Task<User?> GetByIdAsync(string userId);
         Task<User?> GetByCustomerIdAsync(string customerId);
         Task<User?> GetUserByUsernameAsync(string username);

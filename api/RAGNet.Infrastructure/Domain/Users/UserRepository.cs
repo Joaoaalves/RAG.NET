@@ -24,6 +24,16 @@ namespace RAGNET.Infrastructure.Domain.Users
             return await _userManager.DeleteAsync(user);
         }
 
+        public async Task<User?> GetByEmailAsync(string email)
+        {
+            return await _dbContext.Users
+                .Include(u => u.Subscription)
+                .Include(u => u.TokenWallet)
+                .Include(u => u.Workflows)
+                .Include(u => u.ApiKeys)
+                .FirstOrDefaultAsync(u => u.Email == email);
+        }
+
         public async Task<User?> GetByIdAsync(string userId)
         {
             return await _dbContext.Users
@@ -31,9 +41,8 @@ namespace RAGNET.Infrastructure.Domain.Users
                 .Include(u => u.TokenWallet)
                 .Include(u => u.Workflows)
                 .Include(u => u.ApiKeys)
-                .FirstOrDefaultAsync(u => u.Email == userId);
+                .FirstOrDefaultAsync(u => u.Id == userId);
         }
-
         public async Task<User?> GetByCustomerIdAsync(string customerId)
         {
             return await _dbContext.Users

@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
-
 using RAGNET.Infrastructure.Workers.Handlers;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Infrastructure.Jobs.Queue;
@@ -31,12 +30,14 @@ namespace RAGNET.Infrastructure.Workers
 
 
         private async Task HandleJobAsync(EmbeddingJob job, CancellationToken ct)
-        {   
+        {
             using var scope = _scopeFactory.CreateScope();
             job.Context = new EmbeddingJobContext(scope);
 
             var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
             var initializeJobHandler = scope.ServiceProvider.GetRequiredService<InitializeJobHandler>();
+            var mountProvidersHandler = scope.ServiceProvider.GetRequiredService<MountProvidersHandler>();
+            var mountChunkerHandler = scope.ServiceProvider.GetRequiredService<MountChunkerHandler>();
             var extractHandler = scope.ServiceProvider.GetRequiredService<ExtractTextHandler>();
             var processPagesHandler = scope.ServiceProvider.GetRequiredService<ProcessPagesHandler>();
             var updateWorkflowHanlder = scope.ServiceProvider.GetRequiredService<UpdateWorkflowHandler>();
@@ -44,10 +45,19 @@ namespace RAGNET.Infrastructure.Workers
 
             try
             {
-                initializeJobHandler.SetNext(extractHandler);
+                initializeJobHandler.SetNext(mountProvidersHandler);
+
+                mountProvidersHandler.SetNext(mountChunkerHandler);
+
+                mountChunkerHandler.SetNext(extractHandler);
+
                 extractHandler.SetNext(processPagesHandler);
+
                 processPagesHandler.SetNext(updateWorkflowHanlder);
+
                 updateWorkflowHanlder.SetNext(notifyHandler);
+
+
                 await initializeJobHandler.HandleAsync(job, ct);
                 await unitOfWork.CommitAsync(ct);
             }

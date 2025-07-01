@@ -26,7 +26,7 @@ namespace RAGNET.Application.Configuration.Commands.Behaviors
                 var userId = claimsPrincipal?.Identity?.Name
                     ?? throw new Exception("Failed to resolve authenticated user.");
 
-                var user = await _userRepository.GetByIdAsync(userId) ?? throw new Exception("Failed to resolve authenticated user from repository.");
+                var user = await _userRepository.GetByEmailAsync(userId) ?? throw new Exception("Failed to resolve authenticated user from repository.");
 
                 userAware.InjectUser(user);
             }
