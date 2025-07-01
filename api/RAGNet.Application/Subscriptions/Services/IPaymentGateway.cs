@@ -7,7 +7,6 @@ namespace RAGNET.Application.Subscriptions.Services
     {
         Task<string> CreateCustomerAsync(string userId, string firstName, string lastName, string email);
         Task<string> CreateCheckoutSessionAsync(string customerId, string successUrl, string cancelUrl, PlanType type, BillingPeriod period, CancellationToken ct);
-        Task ChangeSubscriptionPlanAsync(PlanType newPlanType, string subscriptionId, bool prorate);
         Task<bool> CancelSubscriptionAsync(string subscriptionId);
         Task<PaymentIntentDTO?> ExtractPaymentIntentFromEventAsync(string eventJson, string signature);
         Task<CancelSubscriptionIntentDTO?> ExtractCancelIntentFromEventAsync(string eventJson, string signature);

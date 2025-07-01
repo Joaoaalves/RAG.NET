@@ -20,13 +20,11 @@ namespace RAGNET.Domain.SharedKernel.Subscriptions
             Value = type;
         }
 
-        public TokenAmount MonthlyTokenAllowance => Value switch
+        public TokenAmount GetTokenAllowance(BillingPeriod billingPeriod)
         {
-            PlanType.Core => TokenAmount.MonthlyFreeQuota,
-            PlanType.Enhanced => TokenAmount.FromDecimal(3000),
-            PlanType.Ascend => TokenAmount.FromDecimal(10000),
-            _ => TokenAmount.Zero
-        };
+            var strategy = TokenAllowanceStrategyFactory.GetStrategy(billingPeriod);
+            return strategy.GetTokenAmount(Value);
+        }
 
         public IEnumerable<ChunkerStrategy> AllowedChunkers => Value switch
         {

@@ -17,7 +17,10 @@ namespace RAGNET.Application.Subscriptions.Events
         {
             var wallet = await _tokenWalletRepository.GetByUserIdAsync(notification.Subscription.UserId) ?? throw new ApplicationException("Wallet not found");
 
-            wallet.AddPaidTokens(notification.Subscription.Plan.MonthlyTokenAllowance, notification.Subscription.PaymentId!);
+            wallet.AddPaidTokens(
+                notification.Subscription.Plan.GetTokenAllowance(notification.BillingPeriod),
+                notification.Subscription.PaymentId!
+            );
 
             await _tokenWalletRepository.UpdateAsync(wallet);
 

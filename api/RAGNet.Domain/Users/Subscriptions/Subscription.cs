@@ -55,16 +55,15 @@ namespace RAGNET.Domain.Users.Subscriptions
             return isActive;
         }
 
-        public void Renew(DateTime renewedAt, DateTime expiresAt)
+        public void Renew(DateTime renewedAt, DateTime expiresAt, BillingPeriod billingPeriod)
         {
             SubscribedAt = renewedAt;
             ExpiresAt = expiresAt;
 
-
-            AddDomainEvent(new SubscriptionRenewedEvent(this));
+            AddDomainEvent(new SubscriptionRenewedEvent(this, billingPeriod));
         }
 
-        public void AddSubscription(SubscriptionPlan plan, DateTime renewedAt, DateTime expiresAt, string paymentId, string subscriptionId)
+        public void AddSubscription(SubscriptionPlan plan, BillingPeriod billingPeriod, DateTime renewedAt, DateTime expiresAt, string paymentId, string subscriptionId)
         {
             Plan = plan;
             Status = SubscriptionStatus.Active;
@@ -73,15 +72,7 @@ namespace RAGNET.Domain.Users.Subscriptions
             SubscriptionId = subscriptionId;
             ExpiresAt = expiresAt;
 
-            AddDomainEvent(new SubscriptionCreatedEvent(this));
-        }
-
-        public void SchedulePlanChange(SubscriptionPlan newPlan)
-        {
-            if (newPlan.Value == Plan.Value)
-                throw new InvalidOperationException("No plan changes.");
-
-            ScheduledPlan = newPlan;
+            AddDomainEvent(new SubscriptionCreatedEvent(this, billingPeriod));
         }
 
         public void Cancel()

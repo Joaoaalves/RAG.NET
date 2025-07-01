@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RAGNET.Application.Subscriptions.Commands.CancelSubscription;
-using RAGNET.Application.Subscriptions.Commands.ChangeSubscriptionPlan;
 using RAGNET.Application.Subscriptions.Commands.CreateSubscriptionCheckout;
 using RAGNET.Application.Subscriptions.DTOs;
 using RAGNET.Application.Subscriptions.Queries.GetPaymentStatus;
@@ -29,23 +28,6 @@ namespace web.Controllers.Subscriptions
                 var url = await _commandsExecutor.Execute(command);
 
                 return Ok(new { url });
-            }
-            catch (Exception exc)
-            {
-                return Problem(exc.Message);
-            }
-        }
-
-        [HttpPost("change-plan")]
-        [Authorize]
-        public async Task<IActionResult> ChangePlan([FromBody] ChangePlanRequest request)
-        {
-            try
-            {
-                var command = new ChangeSubscriptionPlanCommand(request);
-                await _commandsExecutor.Execute(command);
-
-                return Ok(new { Message = "Plan changed!" });
             }
             catch (Exception exc)
             {

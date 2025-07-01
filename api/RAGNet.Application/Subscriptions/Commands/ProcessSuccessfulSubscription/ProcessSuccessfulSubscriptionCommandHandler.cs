@@ -24,7 +24,7 @@ namespace RAGNET.Application.Subscriptions.Commands.ProcessSuccessfulSubscriptio
             // Else, just add a new subscription
             if (subscription.Status == SubscriptionStatus.Active && subscription.Plan.Value == request.PlanType)
             {
-                subscription.Renew(request.RenewedAt, request.ExpiresAt);
+                subscription.Renew(request.RenewedAt, request.ExpiresAt, request.BillingPeriod);
             }
             else
             {
@@ -32,6 +32,7 @@ namespace RAGNET.Application.Subscriptions.Commands.ProcessSuccessfulSubscriptio
 
                 subscription.AddSubscription(
                     subscriptionPlan,
+                    request.BillingPeriod,
                     request.RenewedAt,
                     request.ExpiresAt,
                     request.PaymentId,

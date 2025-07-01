@@ -12,6 +12,7 @@ namespace RAGNET.Application.Subscriptions.Commands.ProcessSuccessfulSubscriptio
         public string PaymentId { get; } = paymentIntentDTO.PaymentIntentId;
         public string SubscriptionId { get; } = paymentIntentDTO.SubscriptionId;
         public PlanType PlanType { get; } = paymentIntentDTO.PlanType;
+        public BillingPeriod BillingPeriod { get; } = paymentIntentDTO.BillingPeriod;
         public DateTime RenewedAt { get; } = paymentIntentDTO.RenewedAt;
         public DateTime ExpiresAt { get; } = paymentIntentDTO.ExpiresAt;
     }

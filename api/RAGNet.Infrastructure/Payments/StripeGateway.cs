@@ -51,24 +51,6 @@ namespace RAGNET.Infrastructure.Payments
             return subscription is not null;
         }
 
-        public async Task ChangeSubscriptionPlanAsync(PlanType newPlanType, string subscriptionId, bool prorate)
-        {
-            var subscriptionService = new SubscriptionService();
-
-            var subscription = await subscriptionService.GetAsync(subscriptionId);
-
-            var subscriptionItemId = subscription.Items.Data.First().Id;
-
-            var updateOptions = new SubscriptionItemUpdateOptions
-            {
-                Price = GetPriceId(newPlanType),
-                ProrationBehavior = prorate ? "create_prorations" : "none"
-            };
-
-            var subscriptionItemService = new SubscriptionItemService();
-            await subscriptionItemService.UpdateAsync(subscriptionItemId, updateOptions);
-        }
-
         public async Task<string> CreateCustomerAsync(string userId, string firstName, string lastName, string email)
         {
             var options = new CustomerCreateOptions
@@ -101,6 +83,7 @@ namespace RAGNET.Infrastructure.Payments
                     CustomerId = invoice.CustomerId,
                     PaymentIntentId = invoice.Id,
                     PlanType = GetPlanFromPriceId(price),
+                    BillingPeriod = GetBillingPeriodFromPriceId(price),
                     SubscriptionId = invoice.Parent.SubscriptionDetails.SubscriptionId,
                     RenewedAt = period.Start,
                     ExpiresAt = period.End
@@ -157,6 +140,20 @@ namespace RAGNET.Infrastructure.Payments
             {
                 return PlanType.Ascend;
             }
+
+            throw new ArgumentOutOfRangeException(nameof(priceId), priceId, "Invalid Price Id");
+        }
+
+        private BillingPeriod GetBillingPeriodFromPriceId(string priceId)
+        {
+            if (priceId == _settings.Prices.Enhanced.Monthly || priceId == _settings.Prices.Ascend.Monthly)
+                return BillingPeriod.Monthly;
+
+            if (priceId == _settings.Prices.Enhanced.SemiAnnualy || priceId == _settings.Prices.Ascend.SemiAnnualy)
+                return BillingPeriod.SemiAnnualy;
+
+            if (priceId == _settings.Prices.Enhanced.Yearly || priceId == _settings.Prices.Ascend.Yearly)
+                return BillingPeriod.Yearly;
 
             throw new ArgumentOutOfRangeException(nameof(priceId), priceId, "Invalid Price Id");
         }

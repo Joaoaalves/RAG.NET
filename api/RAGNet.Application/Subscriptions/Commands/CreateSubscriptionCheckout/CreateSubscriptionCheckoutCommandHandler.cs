@@ -15,7 +15,8 @@ namespace RAGNET.Application.Subscriptions.Commands.CreateSubscriptionCheckout
             {
                 CustomerId = request.User.CustomerId,
                 PaymentIntentId = Guid.NewGuid().ToString(),
-                PlanType = request.PlanType
+                PlanType = request.PlanType,
+                BillingPeriod = request.BillingPeriod
             };
 
             await _paymentStatusService.CreatePaymentIntent(intent);
