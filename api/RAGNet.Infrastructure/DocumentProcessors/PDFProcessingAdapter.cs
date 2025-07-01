@@ -3,7 +3,8 @@ using UglyToad.PdfPig;
 using RAGNET.Domain.Documents;
 using RAGNET.Domain.Documents.Pages;
 using RAGNET.Domain.SeedWork;
-using RAGNET.Domain.Workflows; // Should use the Document from here
+using RAGNET.Domain.Workflows;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.DocumentProcessors; // Should use the Document from here
 
 namespace RAGNET.Infrastructure.DocumentProcessors
 {

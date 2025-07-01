@@ -1,6 +1,7 @@
 using RAGNET.Domain.Workflows;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.SharedKernel.Metas;
+using System.Text.Json.Serialization;
 
 namespace RAGNET.Domain.QueryResultFilters
 {

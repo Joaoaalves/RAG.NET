@@ -1,5 +1,6 @@
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Contexts;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
 using RAGNET.Infrastructure.Jobs;
-using RAGNET.Infrastructure.Jobs.Contexts;
 using RAGNET.Infrastructure.Jobs.Queue;
 
 namespace RAGNET.Infrastructure.Workers.Handlers

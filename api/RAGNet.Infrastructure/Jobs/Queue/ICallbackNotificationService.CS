@@ -1,3 +1,6 @@
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Contexts;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
+
 namespace RAGNET.Infrastructure.Jobs.Queue
 {
     public interface ICallbackNotificationService<TContext> where TContext : JobProcessingContext

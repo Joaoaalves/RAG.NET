@@ -1,4 +1,4 @@
-namespace RAGNET.Infrastructure.DocumentProcessors
+namespace RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.DocumentProcessors
 {
     public class DocumentExtractResult
     {

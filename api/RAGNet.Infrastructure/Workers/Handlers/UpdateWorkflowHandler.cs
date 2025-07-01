@@ -1,3 +1,4 @@
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
 using RAGNET.Domain.Workflows;
 using RAGNET.Infrastructure.Jobs;
 

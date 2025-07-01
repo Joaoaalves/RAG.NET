@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace RAGNET.Infrastructure.Jobs
+namespace RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Contexts
 {
     public abstract class JobProcessingContext(IServiceScope scope)
     {

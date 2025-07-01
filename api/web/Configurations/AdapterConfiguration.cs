@@ -17,6 +17,7 @@ using RAGNET.Application.Feedbacks.Services;
 using RAGNET.Application.Infrastructure.Providers;
 using RAGNET.Application.Subscriptions.Services;
 using RAGNET.Infrastructure.Payments;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob;
 
 namespace web.Configurations
 {
@@ -40,7 +41,7 @@ namespace web.Configurations
                 ?? throw new Exception("RabbitMQ Password must be set.");
 
             services.AddSingleton<IEmbeddingJobQueue>(sp =>
-                RabbitMqEmbeddingJobQueue
+                RabbitMqEmbeddingJobQueueAdapter
                     .CreateAsync(host, userName, password)
                     .GetAwaiter()
                     .GetResult()

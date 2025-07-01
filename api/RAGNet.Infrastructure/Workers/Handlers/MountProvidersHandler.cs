@@ -1,6 +1,7 @@
 using RAGNET.Application.Infrastructure.Providers.Conversation;
 using RAGNET.Application.Infrastructure.Providers.Embedding;
 using RAGNET.Application.ProviderApiKeys.Services;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
 using RAGNET.Infrastructure.Jobs;
 
 namespace RAGNET.Infrastructure.Workers.Handlers

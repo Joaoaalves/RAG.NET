@@ -17,6 +17,7 @@ namespace web.Configurations
             services.AddSingleton<IAccessSpecification<QueryEnhancerStrategy>, QueryEnhancerAccessSpecification>();
             services.AddSingleton<IAccessSpecification<QueryResultFilterStrategy>, QueryResultFiterAcessSpecification>();
             services.AddSingleton<ILimitSpecification<Workflow>, WorkflowLimitsSpecification>();
+            services.AddSingleton<IFileSizePolicy, FileSizePolicy>();
             services.AddScoped<SubscriptionPolicy>();
             return services;
         }

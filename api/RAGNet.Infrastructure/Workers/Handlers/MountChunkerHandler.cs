@@ -1,4 +1,5 @@
 using RAGNET.Application.Infrastructure.Providers.Embedding;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
 using RAGNET.Domain.SharedKernel.Plans.Policies;
 using RAGNET.Infrastructure.Jobs;
 

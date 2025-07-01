@@ -1,4 +1,6 @@
-namespace RAGNET.Infrastructure.Jobs.Queue
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
+
+namespace RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob
 {
     public interface IEmbeddingJobQueue
     {

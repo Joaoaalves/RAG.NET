@@ -11,6 +11,7 @@ using RAGNET.Infrastructure.Jobs.Queue;
 using RAGNET.Application.Infrastructure.Providers.Embedding;
 using RAGNET.Application.TokenWallets.Services.Consumption;
 using RAGNET.Application.TokenWallets.Services.Consumption.Strategies;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
 
 namespace RAGNET.Infrastructure.Workers.Handlers
 {
@@ -53,7 +54,7 @@ namespace RAGNET.Infrastructure.Workers.Handlers
         public override async Task HandleAsync(EmbeddingJob job, CancellationToken ct)
         {
             var workflow = job.Context.Workflow;
-            var wallet = job.Context.Wallet;
+            var wallet = job.Context.User.TokenWallet;
 
             var document = job.Context.Document ?? throw new Exception("Document is not set");
 

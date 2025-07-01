@@ -94,7 +94,7 @@ export class AscendSubscriptionComponent {
       { icon: 'lucideMessageSquare', text: 'All Conversation Providers' },
       { icon: 'lucideCode', text: 'Semantic Chunker' },
       { icon: 'lucideZap', text: 'SERP Context Enricher' },
-      { icon: 'lucideUpload', text: '1GB/File Uploads' },
+      { icon: 'lucideUpload', text: '500MB/File Uploads' },
       { icon: 'lucideInfinity', text: 'Unlimited Workflows' },
       {
         icon: 'lucideDatabase',

@@ -1,3 +1,5 @@
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
+
 namespace RAGNET.Infrastructure.Jobs
 {
     public interface IJobProcessingHandler

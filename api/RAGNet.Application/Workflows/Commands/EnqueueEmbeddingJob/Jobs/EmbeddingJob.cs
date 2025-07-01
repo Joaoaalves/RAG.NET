@@ -1,6 +1,6 @@
-using RAGNET.Infrastructure.Jobs.Contexts;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Contexts;
 
-namespace RAGNET.Infrastructure.Jobs
+namespace RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs
 {
     public class EmbeddingJob : Job<EmbeddingJobContext>
     {

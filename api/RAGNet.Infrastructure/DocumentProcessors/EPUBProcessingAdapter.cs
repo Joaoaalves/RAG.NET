@@ -6,6 +6,7 @@ using RAGNET.Domain.Documents;
 using RAGNET.Domain.Documents.Pages;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.Workflows;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.DocumentProcessors;
 
 namespace RAGNET.Infrastructure.DocumentProcessors
 {

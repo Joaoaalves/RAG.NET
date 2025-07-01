@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 
 using Polly;
 using Polly.Retry;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Contexts;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
 
 namespace RAGNET.Infrastructure.Jobs.Queue
 {

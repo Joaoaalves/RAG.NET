@@ -94,7 +94,7 @@ export class EnhancedSubscriptionComponent {
       { icon: 'lucideCode', text: 'Access to Proposition Chunker' },
       { icon: 'lucideShield', text: 'Auto Query Enhancer' },
       { icon: 'lucideCheck', text: 'Relevant Segment Extraction' },
-      { icon: 'lucideUpload', text: 'Upload up to 100MB per file' },
+      { icon: 'lucideUpload', text: 'Upload up to 50MB per file' },
       { icon: 'lucideCrown', text: 'Up to 15 Workflows' },
       { icon: 'lucideShield', text: 'Priority Support' },
       { icon: 'lucideCode', text: 'API Access' },
