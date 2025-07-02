@@ -1,4 +1,4 @@
-<div class="z-10 relative pb-20">
+<div class="z-10 relative pb-20" *ngIf="workflow">
   <header>
     <h1 class="text-4xl text-neutral-200 font-bold">Document Embedding</h1>
     <p class="text-white/60 mt-1">
@@ -134,7 +134,7 @@
       <p class="text-neutral-400 text-sm">
         This workflow processes documents and extracts key information using AI.
       </p>
-      <div class="flex items-center justify-between text-sm w-full" *ngIf="workflow">
+      <div class="flex items-center justify-between text-sm w-full" >
         <p class="text-neutral-400">Status</p>
         <span [class.text-sky-500]="workflow.isActive" [class.text-rose-500]="!workflow.isActive">{{workflow.isActive ? 'Active' : 'Inactive'}}</span>
       </div>
@@ -145,7 +145,7 @@
       <h3 class="text-xl text-white font-medium">Embedding Stats</h3>
       <div class="flex items-center justify-between text-sm w-full">
         <p class="text-neutral-400">Total Documents:</p>
-        <span class="text-white">42</span>
+        <span class="text-white">{{workflow.documentsCount}}</span>
       </div>
       <div class="flex items-center justify-between text-sm w-full">
         <p class="text-neutral-400">Embedded Today:</p>
@@ -161,12 +161,8 @@
     >
       <h3 class="text-xl text-white font-medium">Api Usage</h3>
       <div class="flex items-center justify-between text-sm w-full">
-        <p class="text-neutral-400">Credits Used:</p>
-        <span class="text-white">1,245</span>
-      </div>
-      <div class="flex items-center justify-between text-sm w-full">
-        <p class="text-neutral-400">Credits Remaining:</p>
-        <span class="text-white">8,755</span>
+        <p class="text-neutral-400">Tokens Spent:</p>
+        <span class="text-white">{{workflow.totalSpent}}</span>
       </div>
       <div class="flex items-center justify-between text-sm w-full">
         <p class="text-neutral-400">Plan:</p>

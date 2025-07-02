@@ -1,0 +1,20 @@
+      <div
+        class="hidden lg:flex justify-center items-center order-2 lg:order-1 transition-all max-h-60 lg:max-h-auto duration-1000 delay-300"
+        [class.opacity-100]="enhancedVisible"
+        [class.translate-x-0]="enhancedVisible"
+        [class.opacity-0]="!enhancedVisible"
+        [class.translate-x-20]="!enhancedVisible"
+      >
+        <div class="relative">
+          <canvas
+            #canvasRef
+            class="max-w-full h-auto"
+            style="filter: drop-shadow(0 0 20px rgba(217, 70, 239, 0.3))"
+          ></canvas>
+          <div
+  class="absolute animate-glow inset-0 bg-gradient-to-r from-fuchsia-500/10 to-rose-500/10 rounded-full blur-3xl"></div>
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-fuchsia-500/5 to-rose-500/5 rounded-full blur-3xl animate-pulse"
+          ></div>
+        </div>
+      </div>

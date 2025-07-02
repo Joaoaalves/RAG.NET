@@ -107,3 +107,11 @@ Thumbs.db
 **/.vscode
 **/.angular
 .fake
+
+# environment client
+**/environment.ts
+**/environment.prod.ts
+/client/src/environments/environment.prod.ts
+/client/src/environments/environment.ts
+
+.env

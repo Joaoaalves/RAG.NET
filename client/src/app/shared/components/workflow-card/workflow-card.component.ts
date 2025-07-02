@@ -56,8 +56,8 @@ export class WorkflowCardComponent {
 
     this.workflowService
       .toggleWorkflow(!this.workflow.isActive, this.workflow.id)
-      .subscribe((w) => {
-        this.workflow.isActive = w.isActive;
+      .subscribe((workflow) => {
+        this.workflow = workflow;
 
         toast('Workflow updated!', {
           description: `Workflow ${

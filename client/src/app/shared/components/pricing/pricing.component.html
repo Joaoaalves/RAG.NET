@@ -1,0 +1,47 @@
+<div class="min-h-screen bg-black text-white overflow-hidden">
+  <div
+    class="fixed inset-0 bg-gradient-to-br from-rose-500/5 via-fuchsia-500/5 to-sky-500/5"
+  ></div>
+  <div
+    class="fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(217,70,239,0.1),transparent_50%)]"
+  ></div>
+  <div
+    class="relative z-10 pt-20 pb-16 text-center transition-all duration-1000 opacity-100 translate-y-0"
+  >
+    <h1
+      class="text-6xl font-bold mb-4 bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 bg-clip-text text-transparent"
+    >
+      Choose Your Plan
+    </h1>
+    <div
+      class="w-32 h-1 mx-auto bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 rounded-full animate-shimmer"
+    ></div>
+    <p class="text-xl text-neutral-300 mt-8 max-w-2xl mx-auto">
+      Scale your RAG workflows with transparent pricing designed for every stage
+      of your journey
+    </p>
+  </div>
+
+  <app-plans></app-plans>
+  <app-comparisons></app-comparisons>
+
+  <div class="relative z-10 text-center pb-20">
+    <div
+      class="transition-all duration-1000 delay-800 opacity-100 translate-y-0"
+    >
+      <h3 class="text-2xl font-bold mb-4 text-neutral-100">
+        Ready to supercharge your RAG workflows?
+      </h3>
+      <p class="text-neutral-300 mb-8 max-w-2xl mx-auto">
+        Join thousands of developers building the future of AI-powered
+        applications with RAG.NET
+      </p>
+      <button
+        (click)="navigateRegister()"
+        class="cursor-pointer bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 hover:from-rose-400 hover:via-fuchsia-400 hover:to-sky-400 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+      >
+        Start Building Today
+      </button>
+    </div>
+  </div>
+</div>

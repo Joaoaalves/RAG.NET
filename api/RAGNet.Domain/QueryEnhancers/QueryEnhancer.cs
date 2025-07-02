@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Domain.SharedKernel.Metas;
 using RAGNET.Domain.Workflows;

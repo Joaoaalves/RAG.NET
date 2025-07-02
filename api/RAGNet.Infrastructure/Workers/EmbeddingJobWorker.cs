@@ -1,12 +1,12 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
-
 using RAGNET.Infrastructure.Workers.Handlers;
 using RAGNET.Domain.SeedWork;
 using RAGNET.Infrastructure.Jobs.Queue;
-using RAGNET.Infrastructure.Jobs.Contexts;
-using RAGNET.Infrastructure.Jobs;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Contexts;
 
 namespace RAGNET.Infrastructure.Workers
 {
@@ -29,25 +29,35 @@ namespace RAGNET.Infrastructure.Workers
             ).ConfigureAwait(false);
         }
 
-
         private async Task HandleJobAsync(EmbeddingJob job, CancellationToken ct)
-        {   
+        {
             using var scope = _scopeFactory.CreateScope();
             job.Context = new EmbeddingJobContext(scope);
 
             var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
             var initializeJobHandler = scope.ServiceProvider.GetRequiredService<InitializeJobHandler>();
+            var mountProvidersHandler = scope.ServiceProvider.GetRequiredService<MountProvidersHandler>();
+            var mountChunkerHandler = scope.ServiceProvider.GetRequiredService<MountChunkerHandler>();
             var extractHandler = scope.ServiceProvider.GetRequiredService<ExtractTextHandler>();
             var processPagesHandler = scope.ServiceProvider.GetRequiredService<ProcessPagesHandler>();
-            var updateWorkflowHanlder = scope.ServiceProvider.GetRequiredService<UpdateWorkflowHandler>();
+            var updateWorkflowHandler = scope.ServiceProvider.GetRequiredService<UpdateWorkflowHandler>();
             var notifyHandler = scope.ServiceProvider.GetRequiredService<NotifyHandler>();
 
             try
             {
-                initializeJobHandler.SetNext(extractHandler);
+                initializeJobHandler.SetNext(mountProvidersHandler);
+
+                mountProvidersHandler.SetNext(mountChunkerHandler);
+
+                mountChunkerHandler.SetNext(extractHandler);
+
                 extractHandler.SetNext(processPagesHandler);
-                processPagesHandler.SetNext(updateWorkflowHanlder);
-                updateWorkflowHanlder.SetNext(notifyHandler);
+
+                processPagesHandler.SetNext(updateWorkflowHandler);
+
+                updateWorkflowHandler.SetNext(notifyHandler);
+
+
                 await initializeJobHandler.HandleAsync(job, ct);
                 await unitOfWork.CommitAsync(ct);
             }

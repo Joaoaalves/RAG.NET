@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using RAGNET.Domain.SeedWork;
+using RAGNET.Domain.Users;
 using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.Configuration.Commands.Behaviors
@@ -20,6 +21,7 @@ namespace RAGNET.Application.Configuration.Commands.Behaviors
             {
                 if (_httpContextAccessor.HttpContext?.Items["Workflow"] is not Workflow workflow)
                     throw new Exception("Workflow not found");
+
                 workflowAware.InjectWorkflow(workflow);
             }
 

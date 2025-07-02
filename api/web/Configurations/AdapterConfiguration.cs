@@ -1,6 +1,5 @@
 using StackExchange.Redis;
 
-
 using RAGNET.Domain.SharedKernel.Providers;
 
 using RAGNET.Infrastructure.ChatCompletions;
@@ -16,6 +15,9 @@ using RAGNET.Infrastructure.Embedders;
 
 using RAGNET.Application.Feedbacks.Services;
 using RAGNET.Application.Infrastructure.Providers;
+using RAGNET.Application.Subscriptions.Services;
+using RAGNET.Infrastructure.Payments;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob;
 
 namespace web.Configurations
 {
@@ -39,7 +41,7 @@ namespace web.Configurations
                 ?? throw new Exception("RabbitMQ Password must be set.");
 
             services.AddSingleton<IEmbeddingJobQueue>(sp =>
-                RabbitMqEmbeddingJobQueue
+                RabbitMqEmbeddingJobQueueAdapter
                     .CreateAsync(host, userName, password)
                     .GetAwaiter()
                     .GetResult()
@@ -52,12 +54,17 @@ namespace web.Configurations
             services.AddSingleton<IJobNotificationService, SignalRJobNotificationService>();
 
             services.AddScoped<IVectorDatabaseService, QDrantAdapter>();
-            services.AddScoped<IJobStatusRepository, RedisJobStatusRepository>();
 
+            // REDIS
+            services.AddScoped<IJobStatusRepository, RedisJobStatusRepository>();
+            services.AddScoped<IPaymentStatusService, RedisPaymentStatusRepository>();
 
             // Trello
             services.AddScoped<ICardCreatorService, TrelloCardCreator>();
 
+            // Stripe
+            services.AddScoped<IPaymentGateway, StripeGateway>();
+            services.Configure<StripeSettings>(configuration.GetSection("Stripe"));
 
             // Providers
             services.AddSingleton<OpenAIChatModelCatalog>();
@@ -69,7 +76,6 @@ namespace web.Configurations
                 { SupportedProvider.Anthropic, sp.GetRequiredService<AnthropicChatModelCatalog>() },
                 { SupportedProvider.Gemini, sp.GetRequiredService<GeminiChatModelCatalog>() },
             });
-
 
             services.AddSingleton<OpenAIEmbeddingModelCatalog>();
             services.AddSingleton<VoyageEmbeddingModelCatalog>();

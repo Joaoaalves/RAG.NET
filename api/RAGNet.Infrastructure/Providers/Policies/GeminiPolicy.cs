@@ -11,13 +11,11 @@ namespace RAGNET.Infrastructure.Providers.Policies
         public string Prefix => "AIza";
         public string Pattern => "^AIza[0-9A-Za-z_-]{30,50}$";
         public string Url => "https://aistudio.google.com/app/apikey";
-        public static SupportedProvider Id => SupportedProvider.OpenAI;
-
-        SupportedProvider IProviderPolicy.ProviderType => throw new NotImplementedException();
+        public SupportedProvider ProviderType => SupportedProvider.OpenAI;
 
         public void Validate(string apiKey)
         {
-            var regexRule = new ApiKeyMustMatchPatternRule(Id, apiKey, Pattern);
+            var regexRule = new ApiKeyMustMatchPatternRule(ProviderType, apiKey, Pattern);
 
             if (regexRule.IsBroken())
                 throw new BusinessRuleValidationException(regexRule);

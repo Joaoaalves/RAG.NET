@@ -10,11 +10,6 @@ namespace RAGNET.Application.Infrastructure.Providers.Conversation.DTOs
         [JsonConverter(typeof(SupportedProviderConverter))]
         public SupportedProvider ProviderName { get; set; }
         public List<ConversationModel> Models { get; set; } = [];
-
-        internal ConversationProviderConfig ToConversationProviderConfig()
-        {
-            throw new NotImplementedException();
-        }
     }
 
 

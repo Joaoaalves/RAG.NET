@@ -11,7 +11,7 @@ namespace RAGNET.Application.Chunkers.Services
         private readonly float _threshold = threshold;
         private readonly IConversationProviderService _completionService = completionService;
 
-        public async Task<IEnumerable<string>> ChunkText(string text)
+        public async Task<List<string>> ChunkText(string text)
         {
             var sentences = SentenceRegex().Split(text);
 
@@ -62,6 +62,7 @@ namespace RAGNET.Application.Chunkers.Services
             return chunks;
         }
 
+        public decimal GetCostMultiplier() => 4m;
         private JsonDocument GetSchema()
         {
             string schemaString = @"

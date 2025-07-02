@@ -4,7 +4,7 @@ namespace RAGNET.Application.Chunkers.Services
     {
         private readonly int _maxChunkSize = maxChunkSize;
 
-        public Task<IEnumerable<string>> ChunkText(string text)
+        public Task<List<string>> ChunkText(string text)
         {
             var paragraphs = text.Split(["./n"], StringSplitOptions.RemoveEmptyEntries);
             var chunks = new List<string>();
@@ -20,7 +20,7 @@ namespace RAGNET.Application.Chunkers.Services
                     chunks.AddRange(SplitIntoChunks(paragraph, _maxChunkSize));
                 }
             }
-            return Task.FromResult<IEnumerable<string>>(chunks);
+            return Task.FromResult(chunks);
         }
 
         private IEnumerable<string> SplitIntoChunks(string paragraph, int chunkSize)
@@ -30,5 +30,7 @@ namespace RAGNET.Application.Chunkers.Services
                 yield return paragraph.Substring(i, Math.Min(chunkSize, paragraph.Length - i));
             }
         }
+
+        public decimal GetCostMultiplier() => 1;
     }
 }

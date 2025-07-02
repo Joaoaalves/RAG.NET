@@ -15,6 +15,8 @@ using RAGNET.Application.Workflows.Queries.GetWorkflowDetails;
 using RAGNET.Application.Workflows.Commands.UpdateWorkflow;
 using RAGNET.Application.Workflows.Queries.GetUserWorkflows;
 using RAGNET.Application.Workflows.CallbackUrls.Mappers;
+using System.ComponentModel.DataAnnotations;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob;
 
 namespace web.Controllers.Workflows
 {
@@ -29,14 +31,11 @@ namespace web.Controllers.Workflows
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateWorkflow([FromBody] WorkflowCreationDTO dto)
+        public async Task<IActionResult> CreateWorkflow([FromBody] WorkflowCreationRequest request)
         {
             try
             {
-                Console.WriteLine(
-                    dto.EmbeddingProvider.VectorSize
-                );
-                var command = new CreateWorkflowCommand(dto);
+                var command = new CreateWorkflowCommand(request);
                 var workflowId = await _commandExecutor.Execute(command);
 
                 return Ok(new { Message = "Workflow created!", WorkflowId = workflowId });
@@ -45,9 +44,9 @@ namespace web.Controllers.Workflows
             {
                 return BadRequest(new { exc.Message });
             }
-            catch (Exception e)
+            catch (Exception exc)
             {
-                return Problem(e.Message);
+                return Problem(exc.Message);
             }
         }
 
@@ -128,44 +127,21 @@ namespace web.Controllers.Workflows
         [HttpPost("embedding")]
         [Consumes("multipart/form-data")]
         [ServiceFilter(typeof(ApiWorkflowFilter))]
-        public async Task ProcessEmbedding(IFormFile file, [FromServices] IEmbeddingJobQueue enqueuer, CancellationToken cancellationToken, [FromQuery] bool stream = false)
+        public async Task<IActionResult> ProcessEmbedding(IFormFile file)
         {
             try
             {
-                var workflow = HttpContext.Items["Workflow"] as Workflow
-                    ?? throw new InvalidOperationException("Workflow not found on context.");
+                var command = new EnqueueEmbeddingJobCommand(
+                    file
+                );
 
-                if (!workflow.IsActive)
-                {
-                    throw new Exception("Workflow is not active!");
-                }
+                var jobId = await _commandExecutor.Execute(command);
 
-                var ms = new MemoryStream();
-                file.CopyTo(ms);
-
-                var urls = workflow.CallbackUrls.Select(curl => curl.Url).ToList();
-                var job = new EmbeddingJob
-                {
-                    ApiKey = workflow.ApiKey,
-                    UserId = workflow.UserId,
-                    FileName = file.FileName,
-                    FileContent = ms.ToArray(),
-                    CallbackUrls = urls.ToUrlList()
-                };
-
-                await enqueuer.EnqueueAsync(job, cancellationToken);
-
-                Response.StatusCode = 202; // Accepted
-                await Response.WriteAsJsonAsync(new
-                {
-                    Message = "Job queued.",
-                    job.JobId
-                });
+                return Accepted(new { Message = "Job Queued", JobId = jobId });
             }
-            catch (Exception ex)
+            catch (Exception exc)
             {
-                Response.StatusCode = 400;
-                await Response.WriteAsync(ex.Message);
+                return Problem(exc.Message);
             }
         }
     }

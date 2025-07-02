@@ -7,7 +7,7 @@ namespace RAGNET.Application.Users.Commands.RegisterUser
         string lastName,
         string email,
         string password
-    ) : BaseCommand<(bool sucess, IEnumerable<string> Errors)>
+    ) : BaseCommand<(string userId, IEnumerable<string> Errors)>
     {
         public string FirstName { get; set; } = firstName;
         public string LastName { get; set; } = lastName;

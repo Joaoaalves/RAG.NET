@@ -10,5 +10,6 @@ namespace RAGNET.Domain.Workflows
         Task<Workflow?> GetByApiKey(string apiKey);
         Task<IEnumerable<Workflow>> GetUserWorkflows(string userId);
         Task UpdateByApiKey(Workflow workflow, string apiKey);
+        Task<long> GetTotalTokenSpent(WorkflowId workflowId);
     }
 }

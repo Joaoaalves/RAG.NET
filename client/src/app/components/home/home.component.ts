@@ -9,6 +9,7 @@ import { RoadmapComponent } from 'src/app/shared/components/roadmap/roadmap.comp
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { gsap } from 'gsap';
 import { SplitText } from 'gsap/all';
+import { PricingComponent } from 'src/app/shared/components/pricing/pricing.component';
 
 @Component({
   templateUrl: './home.component.html',
@@ -17,6 +18,7 @@ import { SplitText } from 'gsap/all';
     HeroComponent,
     AboutComponent,
     IntegrationsComponent,
+    PricingComponent,
     RoadmapComponent,
     FooterComponent,
   ],

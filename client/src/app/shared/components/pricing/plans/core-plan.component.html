@@ -1,0 +1,72 @@
+<div
+  class="relative bg-neutral-900/80 backdrop-blur-sm rounded-2xl p-8 transition-all duration-300 hover:scale-105 cursor-pointer border border-rose-500/30 hover:border-rose-500/60 hover:shadow-rose-500/20 hover:shadow-2xl h-full"
+>
+  <div class="relative z-10 flex flex-col h-full">
+    <div
+      class="inline-flex p-3 rounded-xl mb-6 bg-rose-500/20 text-rose-400 text-2xl w-12 h-12"
+    >
+      <ng-icon name="lucideZap"></ng-icon>
+    </div>
+    <h3 class="text-2xl font-bold mb-2">Core</h3>
+    <div class="mb-6"><span class="text-4xl font-bold">Free</span></div>
+    <p class="text-neutral-300 mb-8">
+      Great for exploring RAG.NET with full access to all providers
+    </p>
+    <ul class="space-y-3 mb-8">
+      <li class="flex items-center text-neutral-200 font-bold">
+        <div class="text-emerald-400 mr-3 text-xl">
+          <ng-icon name="lucideCheck"></ng-icon>
+        </div>
+        500 tokens/month
+      </li>
+      <li class="flex items-center text-neutral-200">
+        <div class="text-emerald-400 mr-3 text-xl">
+          <ng-icon name="lucideCheck"></ng-icon>
+        </div>
+        All embedding providers
+      </li>
+      <li class="flex items-center text-neutral-200">
+        <div class="text-emerald-400 mr-3 text-xl">
+          <ng-icon name="lucideCheck"></ng-icon>
+        </div>
+        All conversation providers
+      </li>
+      <li class="flex items-center text-neutral-200">
+        <div class="text-emerald-400 mr-3 text-xl">
+          <ng-icon name="lucideCheck"></ng-icon>
+        </div>
+        10 workflows
+      </li>
+      <li class="flex items-center text-neutral-200">
+        <div class="text-emerald-400 mr-3 text-xl">
+          <ng-icon name="lucideCheck"></ng-icon>
+        </div>
+        Max file size: 10MB
+      </li>
+      <li class="flex items-center text-neutral-200">
+        <div class="text-orange-400 mr-3 text-xl">
+          <ng-icon name="lucideCheck"></ng-icon>
+        </div>
+        Paragraph Chunker only
+      </li>
+      <li class="flex items-center text-neutral-200">
+        <div class="text-orange-400 mr-3 text-xl">
+          <ng-icon name="lucideCheck"></ng-icon>
+        </div>
+        Query Enhancers - HyDE only
+      </li>
+      <li class="flex items-center text-neutral-200">
+        <div class="text-red-500 mr-3 text-xl">
+          <ng-icon name="lucideX"></ng-icon>
+        </div>
+        No Filters
+      </li>
+    </ul>
+    <button
+      (click)="navigateRegister()"
+      class="cursor-pointer w-full mt-auto py-3 px-6 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-400 hover:to-rose-500 text-white"
+    >
+      Get Started
+    </button>
+  </div>
+</div>

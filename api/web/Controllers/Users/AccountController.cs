@@ -18,16 +18,14 @@ namespace web.Controllers.Users
         private readonly QueriesExecutor _queriesExecutor = queriesExecutor;
         private readonly CommandsExecutor _commandsExecutor = commandsExecutor;
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
+        public async Task<IActionResult> Register([FromBody] RegisterUserCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var command = new RegisterUserCommand(request.FirstName, request.LastName, request.Email, request.Password);
+            var (userId, errors) = await _commandsExecutor.Execute(command);
 
-            var (success, errors) = await _commandsExecutor.Execute(command);
-
-            if (!success)
+            if (string.IsNullOrEmpty(userId))
             {
                 foreach (var error in errors)
                     ModelState.AddModelError(string.Empty, error);

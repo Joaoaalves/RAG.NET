@@ -6,7 +6,7 @@ namespace RAGNET.Application.Queries.Commands.FilterQueryResult
     public class FilterQueryResultCommand(
         List<ContentItemDTO> items,
         string query
-    ) : WorkflowAwareCommand<List<string>>
+    ) : WorkflowAndWalletAwareCommand<List<string>>
     {
         public List<ContentItemDTO> Items { get; } = items;
         public string Query { get; } = query;

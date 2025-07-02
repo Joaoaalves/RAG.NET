@@ -11,13 +11,13 @@
   "private": true,
   "dependencies": {
     "@angular/cdk": "^19.0.0",
-    "@angular/common": "^19.2.0",
-    "@angular/compiler": "^19.2.0",
-    "@angular/core": "^19.2.0",
-    "@angular/forms": "^19.2.0",
-    "@angular/platform-browser": "^19.2.0",
-    "@angular/platform-browser-dynamic": "^19.2.0",
-    "@angular/router": "^19.2.0",
+    "@angular/common": "^19.0.0",
+    "@angular/compiler": "^19.0.0",
+    "@angular/core": "^19.0.0",
+    "@angular/forms": "^19.0.0",
+    "@angular/platform-browser": "^19.0.0",
+    "@angular/platform-browser-dynamic": "^19.0.0",
+    "@angular/router": "^19.0.0",
     "@microsoft/signalr": "^8.0.7",
     "@ng-icons/core": "^31.2.0",
     "@ng-icons/heroicons": "^31.2.0",
@@ -25,6 +25,7 @@
     "@ng-icons/lucide": ">=29.0.0",
     "@ng-icons/remixicon": "^31.3.0",
     "@spartan-ng/brain": "0.0.1-alpha.432",
+    "@stripe/stripe-js": "^7.4.0",
     "@tailwindcss/postcss": "^4.0.17",
     "chart.js": "^4.4.9",
     "class-variance-authority": "^0.7.0",
@@ -33,6 +34,7 @@
     "ng2-charts": "^8.0.0",
     "ngx-scrollbar": ">=16.0.0",
     "ngx-sonner": "^3.0.0",
+    "ngx-stripe": "^19.7.0",
     "postcss": "^8.5.3",
     "rxjs": "~7.8.2",
     "tailwindcss": "^4.0.17",
@@ -46,7 +48,7 @@
     "@angular/cli": "^19.2.4",
     "@angular/compiler-cli": "^19.2.0",
     "@eslint/js": "^9.8.0",
-    "@nx/angular": "20.6.4",
+    "@nx/angular": "^20.1.4",
     "@nx/eslint": "20.6.4",
     "@nx/eslint-plugin": "20.6.4",
     "@nx/jest": "20.6.4",
@@ -83,21 +85,14 @@
     "tailwindcss-animate": "^1.0.6",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
-    "typescript": "~5.7.2",
+    "typescript": "^5.7.2",
     "typescript-eslint": "^8.19.0"
   },
-  "pnpm": {
-    "overrides": {
-      "esbuild@<=0.24.2": ">=0.25.0",
-      "vite@>=6.2.0 <6.2.3": ">=6.2.3",
-      "vite@>=6.2.0 <6.2.4": ">=6.2.4",
-      "vite@>=6.2.0 <6.2.5": ">=6.2.5",
-      "koa@<2.16.1": ">=2.16.1",
-      "vite@>=6.2.0 <6.2.6": ">=6.2.6",
-      "http-proxy-middleware@>=3.0.0 <3.0.5": ">=3.0.5",
-      "http-proxy-middleware@<2.0.9": ">=2.0.9",
-      "http-proxy-middleware@>=3.0.0 <3.0.4": ">=3.0.4",
-      "http-proxy-middleware@<2.0.8": ">=2.0.8"
-    }
+  "overrides": {
+    "esbuild": "^0.25.0",
+    "vite": "^6.2.7",
+    "koa": "^2.16.1",
+    "http-proxy-middleware": "^3.0.5",
+    "webpack-dev-server": "^5.2.1"
   }
 }

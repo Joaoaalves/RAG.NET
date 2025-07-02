@@ -1,31 +1,38 @@
 using FluentValidation;
 using RAGNET.Application.Infrastructure.Providers.Conversation.Validators;
 using RAGNET.Application.Infrastructure.Providers.Embedding.Validators;
+using RAGNET.Domain.SharedKernel.Plans.Policies;
+
 
 namespace RAGNET.Application.Workflows.Commands.CreateWorkflow
 {
 
     public class CreateWorkflowCommandValidator : AbstractValidator<CreateWorkflowCommand>
     {
-        public CreateWorkflowCommandValidator()
+        private readonly SubscriptionPolicy _subscriptionPolicy;
+
+        public CreateWorkflowCommandValidator(
+            SubscriptionPolicy subscriptionPolicy)
         {
-            RuleFor(c => c.Dto.Name).NotEmpty().MaximumLength(100);
-            RuleFor(c => c.Dto.Description).NotEmpty().MaximumLength(500);
+            _subscriptionPolicy = subscriptionPolicy;
 
-            RuleFor(c => c.Dto.Strategy).IsInEnum();
+            RuleFor(w => w)
+                .Must(w => _subscriptionPolicy.Allows(w.User, w.Strategy))
+                .WithMessage("Your subscription plan does not allow this chunker strategy.");
 
-            RuleFor(c => c.Dto.ConversationProvider).SetValidator(
-                new ConversationProviderConfigValidator()
-            );
+            RuleFor(x => x)
+                .Must(w => _subscriptionPolicy.AllowsWorkflowCreation(w.User))
+                .WithMessage("You have reached the maximum number of workflows allowed by your subscription plan.");
 
-            RuleFor(c => c.Dto.EmbeddingProvider).SetValidator(
-                new EmbeddingProviderConfigValidator()
-            );
+            RuleFor(w => w.Name).NotEmpty().MaximumLength(100);
+            RuleFor(w => w.Description).NotEmpty().MaximumLength(500);
+            RuleFor(w => w.Strategy).IsInEnum();
 
-            RuleFor(c => c.Dto.Settings.Threshold).InclusiveBetween(0, 1);
-            RuleFor(c => c.Dto.Settings.MaxChunkSize).InclusiveBetween(100, 1200);
+            RuleFor(w => w.ConversationProvider).SetValidator(new ConversationProviderConfigValidator());
+            RuleFor(w => w.EmbeddingProvider).SetValidator(new EmbeddingProviderConfigValidator());
+
+            RuleFor(w => w.Settings.Threshold).InclusiveBetween(0, 1);
+            RuleFor(w => w.Settings.MaxChunkSize).InclusiveBetween(100, 1200);
         }
-
     }
-
 }

@@ -9,11 +9,17 @@ namespace RAGNET.Application.Workflows.Queries.GetWorkflowDetails
     ) : IQueryHandler<GetWorkflowDetailsQuery, WorkflowDetailsDTO>
     {
         private readonly IWorkflowRepository _workflowRepository = workflowRepository;
+
+
         public async Task<WorkflowDetailsDTO> Handle(GetWorkflowDetailsQuery request, CancellationToken cancellationToken)
         {
             var workflow = await _workflowRepository.GetByIdAsync(request.WorkflowId, request.User.Id) ?? throw new Exception("Workflow não encontrado.");
+            var totalSpent = await _workflowRepository.GetTotalTokenSpent(workflow.Id);
 
-            return workflow.ToWorkflowDetailsDTO();
+            var dto = workflow.ToWorkflowDetailsDTO();
+            dto.TotalSpent = totalSpent;
+
+            return dto;
         }
     }
 }

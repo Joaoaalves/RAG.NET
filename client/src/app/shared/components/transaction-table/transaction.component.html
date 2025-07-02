@@ -1,0 +1,55 @@
+<div
+  (click)="toggleExpand()"
+  class="cursor-pointer flex flex-col gap-3 p-4 rounded-xl bg-gradient-to-tr from-neutral-900 to-neutral-800 hover:brightness-110 transition-all duration-200 border border-neutral-700 hover:border-fuchsia-500"
+  style="animation: 0.5s ease-out 0s 1 normal forwards running fadeInUp"
+>
+  <div class="flex justify-between items-start">
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-2 mb-1">
+        <h4
+          class="text-neutral-200 font-medium truncate group-hover:text-white transition-colors"
+        >
+          {{ transaction.operationName }}
+        </h4>
+        <button
+          (click)="navigateToWorkflow(); $event.stopPropagation()"
+          class="flex items-center gap-1 text-xs text-neutral-500 hover:text-fuchsia-400 transition-colors cursor-pointer"
+        >
+          {{ workflowId }}
+          <ng-icon name="lucideExternalLink" class="w-4 h-4"></ng-icon>
+        </button>
+      </div>
+
+      <div class="text-sm text-neutral-400">{{ transactionDate }}</div>
+    </div>
+
+    <div
+        class="text-neutral-400 group-hover:text-white transition-colors text-2xl">
+      <ng-icon
+        [name]="isExpanded ? 'lucideChevronUp' : 'lucideChevronDown'"
+      />
+    </div>
+  </div>
+
+  <div
+    class="overflow-hidden transition-all duration-300"
+    [style.maxHeight]="isExpanded ? '500px' : '0px'"
+  >
+    <div class="mt-2 text-sm text-neutral-400 leading-relaxed bg-neutral-950/50 rounded-md p-3" [innerHTML]="parsedContextInfo"></div>
+  </div>
+
+  <div class="flex justify-between items-center pt-3 border-t border-neutral-800 mt-2 text-base">
+    <div
+      [ngClass]="{
+        'bg-sky-500/10 text-sky-400 border-sky-500/20': source === 'Free',
+        'bg-rose-500/10 text-rose-400 border-rose-500/20': source === 'Paid'
+      }"
+      class="inline-flex items-center rounded-full border px-3 py-0.5 font-semibold text-xs transition-colors"
+    >
+      {{ source }}
+    </div>
+    <div class="text-neutral-100 font-semibold">
+      <span class="text-fuchsia-500">{{ cost }}</span> tokens
+    </div>
+  </div>
+</div>

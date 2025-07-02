@@ -5,7 +5,7 @@ namespace RAGNET.Application.QueryEnhancers.Commands.EnhanceQuery
 {
     public class EnhanceQueryCommand(
         QueryDTO queryDTO
-    ) : WorkflowAwareCommand<List<string>>
+    ) : WorkflowAndWalletAwareCommand<List<string>>
     {
         public QueryDTO QueryDTO { get; } = queryDTO;
 

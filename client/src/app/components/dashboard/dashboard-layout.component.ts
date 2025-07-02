@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component';
 import { Observable } from 'rxjs';
 import { JobItem } from 'src/app/models/job';
 
@@ -14,7 +15,12 @@ import { SidebarComponent } from 'src/app/shared/components/sidebar/sidebar.comp
   selector: 'app-dashboard-layout',
   templateUrl: './dashboard-layout.component.html',
   standalone: true,
-  imports: [RouterOutlet, SidebarComponent, JobBarComponent],
+  imports: [
+    RouterOutlet,
+    SidebarComponent,
+    JobBarComponent,
+    HlmToasterComponent,
+  ],
 })
 export class DashboardLayoutComponent {
   jobs$: Observable<JobItem[]>;

@@ -1,13 +1,12 @@
 FROM node:22 AS build
 WORKDIR /app
 
-RUN npm install -g pnpm
 
 COPY package*.json ./
-RUN pnpm install
+RUN npm install
 
 COPY . .
-RUN pnpm run build
+RUN npm run build
 
 FROM nginx:latest AS ngi
 

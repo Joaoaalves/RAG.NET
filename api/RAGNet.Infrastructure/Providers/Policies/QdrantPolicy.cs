@@ -11,13 +11,11 @@ namespace RAGNET.Infrastructure.Providers.Policies
         public string Prefix => "";
         public string Pattern => "^[\\w-]*.[\\w-]*.[\\w-]*$";
         public string Url => "https://cloud.qdrant.io/";
-        public static SupportedProvider Id => SupportedProvider.OpenAI;
-
-        SupportedProvider IProviderPolicy.ProviderType => throw new NotImplementedException();
+        public SupportedProvider ProviderType => SupportedProvider.OpenAI;
 
         public void Validate(string apiKey)
         {
-            var regexRule = new ApiKeyMustMatchPatternRule(Id, apiKey, Pattern);
+            var regexRule = new ApiKeyMustMatchPatternRule(ProviderType, apiKey, Pattern);
 
             if (regexRule.IsBroken())
                 throw new BusinessRuleValidationException(regexRule);

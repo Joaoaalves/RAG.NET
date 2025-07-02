@@ -13,14 +13,6 @@ using RAGNET.Application.Configuration.Commands.Behaviors;
 using RAGNET.Application.Configuration.Queries.Behaviors;
 using RAGNET.Application.Chunkers.Services;
 using RAGNET.Application.ProviderApiKeys.Services;
-
-using RAGNET.Infrastructure.Embedders;
-using RAGNET.Infrastructure.ChatCompletions;
-using RAGNET.Infrastructure.Providers;
-using RAGNET.Infrastructure.Processing;
-using RAGNET.Application.Queries.Services;
-
-using web.Identity;
 using RAGNET.Application.ProviderApiKeys.Commands.CreateProviderApiKey;
 using RAGNET.Application.ProviderApiKeys.Commands.DeleteProviderApiKey;
 using RAGNET.Application.ProviderApiKeys.Commands.UpdateProviderApiKey;
@@ -30,7 +22,15 @@ using RAGNET.Application.QueryEnhancers.Commands.CreateQueryEnhancer;
 using RAGNET.Application.QueryEnhancers.Commands.EnhanceQuery;
 using RAGNET.Application.QueryEnhancers.Commands.UpdateQueryEnhancer;
 using RAGNET.Application.QueryResultFilters.Commands.UpdateQueryResultFilter;
-using RAGNET.Application.Workflows.CallbackUrls.Commands.CreateCallbackUrl;
+
+using RAGNET.Infrastructure.Embedders;
+using RAGNET.Infrastructure.ChatCompletions;
+using RAGNET.Infrastructure.Providers;
+using RAGNET.Infrastructure.Processing;
+using RAGNET.Application.Queries.Services;
+
+using web.Identity;
+using RAGNET.Application.TokenWallets.Services.Consumption;
 
 namespace web.Configurations
 {
@@ -52,6 +52,9 @@ namespace web.Configurations
             services.AddScoped<IChunkRetrieverService, ChunkRetrieverService>();
 
             services.AddScoped<IScoreNormalizerService, ScoreNormalizerService>();
+
+            // TokenWallet
+            services.AddScoped<ITokenConsumerContext, TokenConsumerContext>();
 
             // ApiKey
             services.AddScoped<IApiKeyResolverService, ApiKeyResolverService>();
@@ -84,10 +87,10 @@ namespace web.Configurations
             services.AddScoped<IDomainEventsDispatcher, DomainEventsDispatcher>();
 
             services.AddScoped(typeof(ICommandPipelineBehavior<,>), typeof(WorkflowInjectionBehavior<,>));
+            services.AddScoped(typeof(ICommandPipelineBehavior<,>), typeof(WalletInjectionBehavior<,>));
             services.AddScoped(typeof(ICommandPipelineBehavior<,>), typeof(LoggingBehavior<,>));
             services.AddScoped(typeof(ICommandPipelineBehavior<,>), typeof(UserInjectionCommandBehavior<,>));
             services.AddScoped(typeof(IRequestPipelineBehavior<,>), typeof(UserInjectionQueryBehavior<,>));
-
             services.AddHttpContextAccessor();
 
             return services;

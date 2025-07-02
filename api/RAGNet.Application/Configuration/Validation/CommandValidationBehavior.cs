@@ -27,7 +27,7 @@ namespace RAGNET.Application.Configuration.Validation
                     .ToList();
 
                 if (failures.Count != 0)
-                    throw new ValidationException(failures);
+                    throw new Exception(failures[0].ErrorMessage);
             }
 
             return await next();

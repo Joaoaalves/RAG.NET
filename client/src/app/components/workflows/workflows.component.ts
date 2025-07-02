@@ -4,7 +4,6 @@ import { toast } from 'ngx-sonner';
 
 // Components
 import { WorkflowCardComponent } from 'src/app/shared/components/workflow-card/workflow-card.component';
-import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component';
 
 // Models
 import { Workflow } from 'src/app/models/workflow';
@@ -15,12 +14,7 @@ import { WorkflowNavBarComponent } from './workflow-nav-bar.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [
-    WorkflowCardComponent,
-    WorkflowNavBarComponent,
-    CommonModule,
-    HlmToasterComponent,
-  ],
+  imports: [WorkflowCardComponent, WorkflowNavBarComponent, CommonModule],
   templateUrl: './workflows.component.html',
   standalone: true,
 })

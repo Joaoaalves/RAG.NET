@@ -8,7 +8,6 @@ namespace RAGNET.Domain.Workflows.Events
 
         public WorkflowCreatedEvent(WorkflowId id)
         {
-            Console.WriteLine("Workflow Created!");
             WorkflowId = id;
         }
     }

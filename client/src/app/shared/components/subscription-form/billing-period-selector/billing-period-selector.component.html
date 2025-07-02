@@ -1,0 +1,17 @@
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+  <div
+    *ngFor="let option of billingOptions"
+    (click)="onSelect(option.period)"
+    [class.subscription-selector__active]="selected === option.period"
+    class="cursor-pointer rounded-xl p-6 border border-neutral-700 bg-gradient-to-br from-neutral-900 to-neutral-800 hover:border-fuchsia-500 transition-all duration-300 hover:scale-[1.02]"
+  >
+    <div class="text-white font-bold text-lg mb-1">{{ option.label }}</div>
+    <div class="text-neutral-300 text-sm">
+      {{ option.price | currency }}
+      <span *ngIf="option.discount > 0" class="text-green-400 ml-1">
+        ({{ option.discount }}% off)
+      </span>
+    </div>
+    <div class="mt-3 text-xs text-neutral-400">{{ option.description }}</div>
+  </div>
+</div>

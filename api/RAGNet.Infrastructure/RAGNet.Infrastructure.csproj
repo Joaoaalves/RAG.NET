@@ -29,6 +29,7 @@
     <PackageReference Include="Qdrant.Client" Version="1.13.0" />
     <PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
     <PackageReference Include="StackExchange.Redis" Version="2.8.31" />
+    <PackageReference Include="Stripe.net" Version="48.2.0" />
     <PackageReference Include="UglyToad.PdfPig" Version="1.7.0-custom-5" />
     <PackageReference Include="VersOne.Epub" Version="3.3.3" />
   </ItemGroup>

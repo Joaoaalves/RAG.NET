@@ -1,0 +1,5 @@
+    <div class="flex gap-x-4 items-center justify-center mt-4 w-full">
+      <button class="cursor-pointer py-3 w-32 bg-gradient-to-r from-fuchsia-500 to-sky-500 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-fuchsia-500/25 transition-all duration-300 disabled:brightness-50 disabled:cursor-not-allowed" [disabled]="currentPage === 1" (click)="goTo(currentPage - 1)">Previous</button>
+      <span class="text-white border py-3 w-32 text-center border-neutral-800 rounded">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button class="cursor-pointer py-3 w-32 bg-gradient-to-r from-fuchsia-500 to-sky-500 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-fuchsia-500/25 transition-all duration-300 disabled:brightness-50 disabled:cursor-not-allowed" [disabled]="currentPage === totalPages" (click)="goTo(currentPage + 1)">Next</button>
+    </div>

@@ -1,0 +1,26 @@
+<div
+  class="flex flex-col items-center justify-center min-h-[70vh] px-4 text-center text-slate-100 bg-gradient-to-tr from-neutral-950/50 to-neutral-950/80 backdrop-blur-3xl rounded-3xl relative z-10"
+>
+  <div
+    class="text-4xl mb-8 text-sky-500 stroke-[3px]"
+    #checkIcon
+  >
+    <ng-icon name="lucideCheck" />
+  </div>
+
+  <h1 class="text-4xl font-extrabold tracking-tight mb-4 animate-fade-in">
+    Subscription Confirmed!
+  </h1>
+  <p class="text-slate-300 max-w-md mb-10 animate-fade-in" style="animation-delay: 0.3s;">
+    Thank you for subscribing. You now have access to all premium features.
+  </p>
+
+  <button
+    (click)="goToDashboard()"
+    class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-11 rounded-md px-8 group relative overflow-hidden bg-gradient-to-r from-rose-500 via-fuchsia-500 to-sky-500 hover:shadow-2xl hover:shadow-fuchsia-500/25 transition-all duration-300 text-white animate-fade-in"
+    style="animation-delay: 0.6s;"
+    aria-label="Go to Dashboard"
+  >
+    Go to Dashboard
+  </button>
+</div>

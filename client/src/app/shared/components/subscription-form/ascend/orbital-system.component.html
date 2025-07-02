@@ -1,0 +1,18 @@
+<div
+  class="hidden lg:flex justify-center items-center order-2 lg:order-1 transition-all duration-1000 delay-300"
+  [class.opacity-100]="ascendVisible"
+  [class.-translate-x-0]="ascendVisible"
+  [class.opacity-0]="!ascendVisible"
+  [class.-translate-x-20]="!ascendVisible"
+>
+  <div class="relative">
+    <canvas
+      #orbitalCanvasRef
+      class="max-w-full h-auto"
+      style="filter: drop-shadow(0 0 30px rgba(14, 165, 233, 0.4))"
+    ></canvas>
+    <div
+      class="absolute inset-0 bg-gradient-to-r from-rose-500/5 via-fuchsia-500/5 to-sky-500/5 rounded-full blur-3xl animate-pulse"
+    ></div>
+  </div>
+</div>

@@ -9,14 +9,23 @@ using RAGNET.Application.ProviderApiKeys.Services;
 using RAGNET.Infrastructure.Jobs;
 using RAGNET.Infrastructure.Jobs.Queue;
 using RAGNET.Application.Infrastructure.Providers.Embedding;
+using RAGNET.Application.TokenWallets.Services.Consumption;
+using RAGNET.Application.TokenWallets.Services.Consumption.Strategies;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
 
 namespace RAGNET.Infrastructure.Workers.Handlers
 {
-    public class ProcessPagesHandler(IApiKeyResolverService apiKeyResolver, IEmbeddingProcessingService embeddingService, IJobNotificationService realTimeNotifier) : BaseJobProcessingHandler
+    public class ProcessPagesHandler(
+        IApiKeyResolverService apiKeyResolver,
+        IEmbeddingProcessingService embeddingService,
+        IJobNotificationService realTimeNotifier,
+        ITokenConsumerContext tokenConsumerContext) : BaseJobProcessingHandler
     {
-        public readonly IApiKeyResolverService _apiKeyResolver = apiKeyResolver;
-        public readonly IEmbeddingProcessingService _embeddingService = embeddingService;
-        public readonly IJobNotificationService _realTimeNotifier = realTimeNotifier;
+        private readonly IApiKeyResolverService _apiKeyResolver = apiKeyResolver;
+        private readonly IEmbeddingProcessingService _embeddingService = embeddingService;
+        private readonly IJobNotificationService _realTimeNotifier = realTimeNotifier;
+
+        private readonly ITokenConsumerContext _tokenConsumerContext = tokenConsumerContext;
 
         private readonly ProcessDTO _currentProcess = new()
         {
@@ -33,50 +42,58 @@ namespace RAGNET.Infrastructure.Workers.Handlers
             _currentProcess.Title = "Storing Vectors";
             _currentProcess.Progress = 0;
             await NotifyProgress(job, document, ct);
+
             await _embeddingService.AddChunksAsync([.. chunksBag]);
+
             _currentProcess.Title = "Storing Vectors";
             _currentProcess.Progress = 100;
+
             await NotifyProgress(job, document, ct);
-
         }
-
 
         public override async Task HandleAsync(EmbeddingJob job, CancellationToken ct)
         {
             var workflow = job.Context.Workflow;
+            var wallet = job.Context.User.TokenWallet;
 
             var document = job.Context.Document ?? throw new Exception("Document is not set");
+
             await NotifyProgress(job, document, ct);
-
-            var convoKey = await _apiKeyResolver.ResolveForUserAsync(
-                job.UserId,
-                workflow.ConversationProviderConfig!.Provider);
-
-            var embedKey = await _apiKeyResolver.ResolveForUserAsync(
-                job.UserId,
-                workflow.ConversationProviderConfig.Provider
-            );
 
             var totalPages = document.Pages.Count;
             int processedPages = 0;
 
+            var chunker = job.Context.TextChunkerService;
+
+            var tokenConsumptionStrategy = new ChunkerConsumptionStrategy(
+                workflow,
+                chunker,
+                totalPages
+            );
+
+            await _tokenConsumerContext.ConsumeAsync(
+                workflow,
+                wallet,
+                tokenConsumptionStrategy,
+                ct
+            );
+
             var chunksBag = new ConcurrentBag<Chunk>();
+
             var counts = await Task.WhenAll(document.Pages.Select(async page =>
             {
                 try
                 {
-                    var chunks = (await _embeddingService.ChunkTextAsync(
-                                                    page.Text.Value,
-                                                    workflow.Chunker!,
-                                                    workflow.ConversationProviderConfig,
-                                                    convoKey
-                                                 )).ToList();
+                    var chunks = await _embeddingService.ChunkTextAsync(
+                                                    chunker,
+                                                    page.Text.Value
+                                                 );
+
                     if (chunks.Count > 0)
                     {
                         var results = await _embeddingService.GetEmbeddingsAsync(
                                           chunks,
-                                          workflow.EmbeddingProviderConfig!,
-                                          embedKey
+                                          job.Context.EmbeddingProviderService
                                       );
 
                         var batch = results
@@ -105,8 +122,9 @@ namespace RAGNET.Infrastructure.Workers.Handlers
 
                     return chunks.Count;
                 }
-                catch
+                catch (Exception exc)
                 {
+                    Console.WriteLine(exc.Message);
                     return 0;
                 }
 

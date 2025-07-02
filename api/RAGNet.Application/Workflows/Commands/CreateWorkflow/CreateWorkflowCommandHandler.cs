@@ -1,4 +1,3 @@
-using RAGNET.Application.Chunkers.Mappers;
 using RAGNET.Application.Configuration.Commands;
 using RAGNET.Application.Infrastructure.Providers;
 using RAGNET.Application.Infrastructure.Providers.Conversation;
@@ -8,6 +7,7 @@ using RAGNET.Application.Infrastructure.Providers.Embedding.Mappers;
 
 using RAGNET.Domain.Chunkers;
 using RAGNET.Domain.SeedWork;
+using RAGNET.Domain.SharedKernel.Metas;
 using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.Workflows.Commands.CreateWorkflow
@@ -29,27 +29,34 @@ namespace RAGNET.Application.Workflows.Commands.CreateWorkflow
 
         public async Task<WorkflowId> Handle(CreateWorkflowCommand request, CancellationToken cancellationToken)
         {
-            var dto = request.Dto;
             var user = request.User;
             var workflowId = new WorkflowId();
 
             var embeddingModel = _embeddingProviderResolver.Resolve(
-                dto.EmbeddingProvider.ToEmbeddingProviderConfig()
+                request.EmbeddingProvider.ToEmbeddingProviderConfig()
             );
 
             var vectorSize = embeddingModel.VectorSize;
 
-            _conversationProviderResolver.Resolve(dto.ConversationProvider.ToConversationProviderConfig());
+            _conversationProviderResolver.Resolve(request.ConversationProvider.ToConversationProviderConfig());
 
-            var conversationProvider = dto.ConversationProvider.ToConversationProviderConfig();
-            var embeddingProvider = dto.EmbeddingProvider.ToEmbeddingProviderConfig(vectorSize);
+            var conversationProvider = request.ConversationProvider.ToConversationProviderConfig();
+            var embeddingProvider = request.EmbeddingProvider.ToEmbeddingProviderConfig(vectorSize);
 
-            var chunker = dto.ToChunker(workflowId, user.Id);
+            var chunker = new ChunkerBuilder()
+                .ForWorkflow(workflowId)
+                .ForUser(user.Id)
+                .WithStrategy(request.Strategy)
+                .AddMeta(new Meta("threshold", request.Settings.Threshold.ToString()))
+                .AddMeta(new Meta("evaluationPrompt", request.Settings.EvaluationPrompt))
+                .AddMeta(new Meta("maxChunkSize", request.Settings.MaxChunkSize.ToString()))
+                .Build();
+
             await _chunkerRepository.AddAsync(chunker);
 
             var workflow = new WorkflowBuilder()
-                .WithName(dto.Name)
-                .WithDescription(dto.Description)
+                .WithName(request.Name)
+                .WithDescription(request.Description)
                 .ForUser(user.Id)
                 .WithApiKey(Guid.NewGuid().ToString("N"))
                 .WithCollectionId(Guid.NewGuid())

@@ -1,0 +1,85 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using RAGNET.Application.Subscriptions.Commands.CancelSubscription;
+using RAGNET.Application.Subscriptions.Commands.CreateSubscriptionCheckout;
+using RAGNET.Application.Subscriptions.DTOs;
+using RAGNET.Application.Subscriptions.Queries.GetPaymentStatus;
+using RAGNET.Infrastructure.Processing;
+
+namespace web.Controllers.Subscriptions
+{
+    [Route("api/checkout")]
+    [ApiController]
+    public class SubscriptionsController(
+        CommandsExecutor commandsExecutor,
+        QueriesExecutor queriesExecutor
+    ) : ControllerBase
+    {
+        private readonly CommandsExecutor _commandsExecutor = commandsExecutor;
+        private readonly QueriesExecutor _queriesExecutor = queriesExecutor;
+
+        [HttpPost("start")]
+        [Authorize]
+        public async Task<IActionResult> StartCheckout([FromBody] StartCheckoutRequest request)
+        {
+            try
+            {
+                var command = new CreateSubscriptionCheckoutCommand(request);
+                var url = await _commandsExecutor.Execute(command);
+
+                return Ok(new { url });
+            }
+            catch (Exception exc)
+            {
+                return Problem(exc.Message);
+            }
+        }
+
+        [HttpPost("cancel")]
+        [Authorize]
+        public async Task<IActionResult> CancelPlan([FromBody] CancelSubscriptionRequest request)
+        {
+            try
+            {
+                var sucess = await _commandsExecutor.Execute(new CancelSubscriptionCommand(request));
+
+                if (sucess)
+                {
+                    return Ok(new { Message = "Plan cancelation requested!" });
+                }
+
+                return BadRequest(new { Message = "Wrong Password!" });
+            }
+            catch (Exception exc)
+            {
+                return Problem(exc.Message);
+            }
+        }
+
+        [HttpGet("status")]
+        [Authorize]
+        public async Task<IActionResult> CheckPaymentStatus([FromQuery] string paymentId)
+        {
+            try
+            {
+                var query = new GetPaymentStatusQuery(paymentId);
+
+                var status = await _queriesExecutor.Execute(query);
+
+                if (status is not null)
+                {
+                    return Ok(new
+                    {
+                        status
+                    });
+                }
+
+                return NotFound(new { message = "Payment not found" });
+            }
+            catch (Exception exc)
+            {
+                return Problem(exc.Message);
+            }
+        }
+    }
+}

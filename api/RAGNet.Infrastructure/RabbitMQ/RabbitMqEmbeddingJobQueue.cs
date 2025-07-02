@@ -2,24 +2,24 @@ using System.Text.Json;
 
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using RAGNET.Infrastructure.Jobs;
-using RAGNET.Infrastructure.Jobs.Queue;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
 
 namespace RAGNET.Infrastructure.RabbitMQ
 {
-    public class RabbitMqEmbeddingJobQueue : IEmbeddingJobQueue, IAsyncDisposable
+    public class RabbitMqEmbeddingJobQueueAdapter : IEmbeddingJobQueue, IAsyncDisposable
     {
         private const string QueueName = "embedding_jobs";
         private readonly IConnection _connection;
         private readonly IChannel _channel;
 
-        private RabbitMqEmbeddingJobQueue(IConnection connection, IChannel channel)
+        private RabbitMqEmbeddingJobQueueAdapter(IConnection connection, IChannel channel)
         {
             _connection = connection;
             _channel = channel;
         }
 
-        public static async Task<RabbitMqEmbeddingJobQueue> CreateAsync(string host, string user, string password)
+        public static async Task<RabbitMqEmbeddingJobQueueAdapter> CreateAsync(string host, string user, string password)
         {
 
             var factory = new ConnectionFactory
@@ -42,7 +42,7 @@ namespace RAGNET.Infrastructure.RabbitMQ
                 arguments: null
             );
 
-            return new RabbitMqEmbeddingJobQueue(connection, channel);
+            return new RabbitMqEmbeddingJobQueueAdapter(connection, channel);
         }
 
         public async Task EnqueueAsync(EmbeddingJob job, CancellationToken cancellationToken = default)

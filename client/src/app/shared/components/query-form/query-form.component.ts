@@ -13,7 +13,6 @@ import { HlmSwitchComponent } from 'libs/ui/ui-switch-helm/src/lib/hlm-switch.co
 import { CommonModule } from '@angular/common';
 import { lucideChevronDown, lucideLoaderCircle } from '@ng-icons/lucide';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { HlmToasterComponent } from 'libs/ui/ui-sonner-helm/src/lib/hlm-toaster.component';
 import { toast } from 'ngx-sonner';
 import { UsageTooltipComponent } from '../usage-tooltip/usage-tooltip.component';
 import { SliderInputComponent } from '../slider-input/slider-input.component';
@@ -27,7 +26,6 @@ import { SliderInputComponent } from '../slider-input/slider-input.component';
     InputComponent,
     HlmSwitchComponent,
     ReactiveFormsModule,
-    HlmToasterComponent,
     SliderInputComponent,
     UsageTooltipComponent,
     NgIcon,

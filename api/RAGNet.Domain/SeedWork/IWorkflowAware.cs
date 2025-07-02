@@ -1,3 +1,4 @@
+using RAGNET.Domain.Users;
 using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Domain.SeedWork

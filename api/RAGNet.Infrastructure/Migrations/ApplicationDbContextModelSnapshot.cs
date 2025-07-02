@@ -363,6 +363,117 @@ namespace RAGNet.Infrastructure.Migrations
                     b.ToTable("Rankers", (string)null);
                 });
 
+            modelBuilder.Entity("RAGNET.Domain.TokenWallets.TokenTransactions.TokenTransaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ContextInfo")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("CostValue")
+                        .HasColumnType("bigint")
+                        .HasColumnName("Cost");
+
+                    b.Property<string>("OperationName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Source")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("TokenWalletId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("TokenWalletId");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("WorkflowId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenWalletId");
+
+                    b.ToTable("TokenTransactions", (string)null);
+                });
+
+            modelBuilder.Entity("RAGNET.Domain.TokenWallets.TokenWallet", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("FreeTokens")
+                        .HasColumnType("bigint")
+                        .HasColumnName("FreeTokens");
+
+                    b.Property<DateTime>("LastFreeTokenResetAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("PaidTokens")
+                        .HasColumnType("bigint")
+                        .HasColumnName("PaidTokens");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("TokenWallets", (string)null);
+                });
+
+            modelBuilder.Entity("RAGNET.Domain.Users.Subscriptions.Subscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("ExpiresAt");
+
+                    b.Property<string>("PaymentId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("PaymentId");
+
+                    b.Property<int>("Plan")
+                        .HasColumnType("integer")
+                        .HasColumnName("Plan");
+
+                    b.Property<int?>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("SubscribedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("SubscribedAt");
+
+                    b.Property<string>("SubscriptionId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("SubscriptionId");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Subscriptions", (string)null);
+                });
+
             modelBuilder.Entity("RAGNET.Domain.Users.User", b =>
                 {
                     b.Property<string>("Id")
@@ -373,6 +484,10 @@ namespace RAGNet.Infrastructure.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
@@ -476,9 +591,19 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
+                    b.Property<DateTime?>("LastEmbeddedDocumentDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("LastQueryDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<long>("TokenUsage")
+                        .HasColumnType("bigint")
+                        .HasColumnName("TokenUsage");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -555,14 +680,7 @@ namespace RAGNet.Infrastructure.Migrations
                             b1.Property<Guid>("ChunkerId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer");
-
-                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
-
                             b1.Property<string>("Key")
-                                .IsRequired()
                                 .HasMaxLength(100)
                                 .HasColumnType("character varying(100)");
 
@@ -571,7 +689,7 @@ namespace RAGNet.Infrastructure.Migrations
                                 .HasMaxLength(1000)
                                 .HasColumnType("character varying(1000)");
 
-                            b1.HasKey("ChunkerId", "Id");
+                            b1.HasKey("ChunkerId", "Key");
 
                             b1.ToTable("ChunkerMetas", (string)null);
 
@@ -795,6 +913,56 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Navigation("Workflow");
                 });
 
+            modelBuilder.Entity("RAGNET.Domain.TokenWallets.TokenTransactions.TokenTransaction", b =>
+                {
+                    b.HasOne("RAGNET.Domain.TokenWallets.TokenWallet", "TokenWallet")
+                        .WithMany("Transactions")
+                        .HasForeignKey("TokenWalletId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TokenWallet");
+                });
+
+            modelBuilder.Entity("RAGNET.Domain.TokenWallets.TokenWallet", b =>
+                {
+                    b.HasOne("RAGNET.Domain.Users.User", null)
+                        .WithOne("TokenWallet")
+                        .HasForeignKey("RAGNET.Domain.TokenWallets.TokenWallet", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("RAGNET.Domain.Users.Subscriptions.Subscription", b =>
+                {
+                    b.HasOne("RAGNET.Domain.Users.User", null)
+                        .WithOne("Subscription")
+                        .HasForeignKey("RAGNET.Domain.Users.Subscriptions.Subscription", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("RAGNET.Domain.SharedKernel.Subscriptions.SubscriptionPlan", "ScheduledPlan", b1 =>
+                        {
+                            b1.Property<Guid>("SubscriptionId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("character varying(50)")
+                                .HasColumnName("ScheduledPlan");
+
+                            b1.HasKey("SubscriptionId");
+
+                            b1.ToTable("Subscriptions");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SubscriptionId");
+                        });
+
+                    b.Navigation("ScheduledPlan");
+                });
+
             modelBuilder.Entity("RAGNET.Domain.Workflows.CallbackUrls.CallbackUrl", b =>
                 {
                     b.HasOne("RAGNET.Domain.Workflows.Workflow", null)
@@ -877,9 +1045,20 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Navigation("Chunks");
                 });
 
+            modelBuilder.Entity("RAGNET.Domain.TokenWallets.TokenWallet", b =>
+                {
+                    b.Navigation("Transactions");
+                });
+
             modelBuilder.Entity("RAGNET.Domain.Users.User", b =>
                 {
                     b.Navigation("ApiKeys");
+
+                    b.Navigation("Subscription")
+                        .IsRequired();
+
+                    b.Navigation("TokenWallet")
+                        .IsRequired();
 
                     b.Navigation("Workflows");
                 });
@@ -888,7 +1067,8 @@ namespace RAGNet.Infrastructure.Migrations
                 {
                     b.Navigation("CallbackUrls");
 
-                    b.Navigation("Chunker");
+                    b.Navigation("Chunker")
+                        .IsRequired();
 
                     b.Navigation("Documents");
 

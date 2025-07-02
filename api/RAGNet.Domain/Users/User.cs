@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using RAGNET.Domain.ProvidersApiKeys;
 using RAGNET.Domain.SeedWork;
+
 using RAGNET.Domain.SharedKernel.Users;
+using RAGNET.Domain.TokenWallets;
+using RAGNET.Domain.Users.Subscriptions;
 using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Domain.Users
@@ -13,6 +16,11 @@ namespace RAGNET.Domain.Users
 
         public string FirstName { get; private set; } = null!;
         public string LastName { get; private set; } = null!;
+        public TokenWallet TokenWallet { get; private set; } = null!;
+        public Subscription Subscription { get; private set; } = null!;
+
+        // Payment Gateway
+        public string CustomerId { get; private set; } = null!;
 
         public IReadOnlyCollection<Workflow> Workflows => _workflows.AsReadOnly();
         public IReadOnlyCollection<ProviderApiKey> ApiKeys => _apiKeys.AsReadOnly();
@@ -48,6 +56,23 @@ namespace RAGNET.Domain.Users
             ArgumentNullException.ThrowIfNull(apiKey);
             _apiKeys.Add(apiKey);
             apiKey.UserId = Id;
+        }
+
+        public void AddWallet(TokenWallet wallet)
+        {
+            ArgumentNullException.ThrowIfNull(wallet);
+            TokenWallet = wallet;
+        }
+
+        public void AddSubscription(Subscription subscription)
+        {
+            ArgumentNullException.ThrowIfNull(subscription);
+            Subscription = subscription;
+        }
+
+        public void AddCustomerId(string customerId)
+        {
+            CustomerId = customerId;
         }
 
         public void RemoveWorkflow(Workflow workflow)

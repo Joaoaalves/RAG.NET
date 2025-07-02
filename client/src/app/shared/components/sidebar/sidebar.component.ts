@@ -1,5 +1,5 @@
 import { UserService } from 'src/app/services/user.service';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { User } from 'src/app/models/user';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -7,10 +7,12 @@ import { CommonModule } from '@angular/common';
 // Icons
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
+  lucideCalendarSync,
   lucideDatabase,
   lucideLayers,
   lucideLogOut,
   lucideMenu,
+  lucideWallet,
   lucideX,
 } from '@ng-icons/lucide';
 
@@ -29,9 +31,11 @@ import { Observable } from 'rxjs';
   providers: [
     provideIcons({
       lucideDatabase,
+      lucideWallet,
       lucideLayers,
       lucideLogOut,
       lucideMenu,
+      lucideCalendarSync,
       lucideX,
     }),
   ],
@@ -54,6 +58,18 @@ export class SidebarComponent implements OnInit {
       url: '/dashboard/providers',
     },
     {
+      icon: 'lucideWallet',
+      label: 'Wallet',
+      onClick: () => this.navigateWallet(),
+      url: '/dashboard/wallet',
+    },
+    {
+      icon: 'lucideCalendarSync',
+      label: 'Subscription',
+      onClick: () => this.navigateSubscription(),
+      url: '/dashboard/subscriptions',
+    },
+    {
       icon: 'lucideLogOut',
       label: 'Logout',
       onClick: () => this.logout(),
@@ -63,7 +79,6 @@ export class SidebarComponent implements OnInit {
 
   sidebarOpen = true;
   user$: Observable<User | null>;
-  initials$: Observable<string>;
 
   constructor(
     private authService: AuthService,
@@ -71,7 +86,6 @@ export class SidebarComponent implements OnInit {
     private userService: UserService
   ) {
     this.user$ = this.userService.user$;
-    this.initials$ = this.userService.userInitials$;
   }
 
   ngOnInit(): void {
@@ -89,6 +103,14 @@ export class SidebarComponent implements OnInit {
 
   navigateProviders() {
     this.router.navigate(['/dashboard/providers']);
+  }
+
+  navigateWallet() {
+    this.router.navigate(['/dashboard/wallet']);
+  }
+
+  navigateSubscription() {
+    this.router.navigate(['/dashboard/subscriptions']);
   }
 
   logout() {

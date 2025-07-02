@@ -24,9 +24,14 @@ namespace RAGNET.Application.QueryResultFilters.Commands.CreateQueryResultFilter
                 if (workflow.QueryResultFilter != null && workflow.QueryResultFilter.IsEnabled)
                     throw new Exception("Relevant Segment Extraction already enabled!");
 
-                var filterData = request.Data.ToFilter(workflow.Id, request.User.Id);
+                var qrf = QueryResultFilter.Create(
+                    request.Strategy,
+                    request.Workflow.Id,
+                    request.User.Id,
+                    request.MaxItems
+                );
 
-                var filter = await _filterRepository.AddAsync(filterData);
+                var filter = await _filterRepository.AddAsync(qrf);
 
                 await _unitOfWork.CommitAsync(cancellationToken);
 

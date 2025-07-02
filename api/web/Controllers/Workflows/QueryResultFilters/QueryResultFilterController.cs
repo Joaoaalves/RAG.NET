@@ -25,12 +25,9 @@ namespace web.Controllers.Workflows.QueryResultFilters
         {
             try
             {
-
-                var command = new CreateQueryResultFilterCommand(
-                    request
+                var rse = await _commandsExecutor.Execute(
+                    new CreateQueryResultFilterCommand(request, QueryResultFilterStrategy.RELEVANT_SEGMENT_EXTRACTION)
                 );
-
-                var rse = await _commandsExecutor.Execute(command);
 
                 return Ok(new { Message = "Relevant Segment Extraction enabled!", Filter = rse });
             }
