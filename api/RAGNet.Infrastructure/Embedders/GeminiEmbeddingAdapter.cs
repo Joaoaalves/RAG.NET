@@ -1,9 +1,8 @@
 using System.Text;
 using System.Text.Json;
-
 using RAGNET.Application.Infrastructure.Providers.Embedding;
-
 using RAGNET.Infrastructure.Exceptions.Adapters;
+using RAGNET.Infrastructure.SeedWork.Resilience;
 
 namespace RAGNET.Infrastructure.Embedders
 {
@@ -11,21 +10,44 @@ namespace RAGNET.Infrastructure.Embedders
     {
         private readonly string _model;
         private readonly HttpClient _httpClient;
+        private readonly int DelayMs;
 
-        public GeminiEmbeddingAdapter(string apiKey, string model = "gemini-embedding-exp-03-07")
+        public GeminiEmbeddingAdapter(string apiKey, string model, HttpClient? httpClient = null, int delayMs = 2000)
         {
             if (string.IsNullOrEmpty(apiKey))
                 throw new ArgumentException("API Key must be provided", nameof(apiKey));
 
             _model = model;
-            _httpClient = new HttpClient
+            _httpClient = httpClient ?? new HttpClient
             {
                 BaseAddress = new Uri("https://generativelanguage.googleapis.com/")
-            };
+            }; ;
             _httpClient.DefaultRequestHeaders.Add("x-goog-api-key", apiKey);
+            DelayMs = delayMs;
         }
 
         public async Task<float[]> GetEmbeddingAsync(string text)
+        {
+
+            var response = await RetryHelper.ExecuteWithRetryAsync(async () =>
+            {
+                var request = BuildRequest(text);
+                var response = await _httpClient.SendAsync(request);
+                response.EnsureSuccessStatusCode();
+                return response;
+            }, baseDelayMs: DelayMs);
+
+            return await ParseBody(response);
+        }
+
+        public async Task<List<float[]>> GetMultipleEmbeddingAsync(List<string> texts)
+        {
+            var tasks = texts.Select(GetEmbeddingAsync);
+            var embeddingsArr = await Task.WhenAll(tasks);
+            return [.. embeddingsArr];
+        }
+
+        private HttpRequestMessage BuildRequest(string text)
         {
             var url = $"v1beta/models/{_model}:embedContent";
 
@@ -43,46 +65,30 @@ namespace RAGNET.Infrastructure.Embedders
                 }
             };
 
-            var requestContent = JsonSerializer.Serialize(payload);
+            var json = JsonSerializer.Serialize(payload);
+            return new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
+        }
+
+        private static async Task<float[]> ParseBody(HttpResponseMessage response)
+        {
+            var body = await response.Content.ReadAsStringAsync();
+
             try
             {
-                using var response = await _httpClient.PostAsync(
-                    url,
-                    new StringContent(requestContent, Encoding.UTF8, "application/json")
-                ).ConfigureAwait(false);
-
-                var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new GeminiEmbeddingException($"Gemini API error {response.StatusCode}: {body}");
-                }
-
                 using var doc = JsonDocument.Parse(body);
+                var vectorElement = doc.RootElement
+                    .GetProperty("embedding")
+                    .GetProperty("values");
 
-                var vectorElement = doc.RootElement.GetProperty("embedding").GetProperty("values");
                 return ParseFloatArray(vectorElement);
             }
             catch (JsonException je)
             {
                 throw new GeminiEmbeddingException("Failed to parse JSON response from Gemini.", je);
             }
-            catch (HttpRequestException he)
-            {
-                throw new GeminiEmbeddingException("HTTP request to Gemini API failed.", he);
-            }
-        }
-
-
-        public async Task<List<float[]>> GetMultipleEmbeddingAsync(List<string> texts)
-        {
-            var tasks = texts.Select(async chunk =>
-            {
-                return await GetEmbeddingAsync(chunk);
-            });
-
-            var embeddingsArr = await Task.WhenAll(tasks);
-            return [.. embeddingsArr];
         }
 
         private static float[] ParseFloatArray(JsonElement vectorElement)
