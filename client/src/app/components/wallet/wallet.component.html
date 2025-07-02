@@ -10,6 +10,12 @@
         Monitor your token balance and track RAG workflow consumption.
       </p>
     </div>
+
+      <app-date-range-selector
+        [start]="start"
+        [end]="end"
+        (rangeChange)="onDateRangeChange($event)"
+      ></app-date-range-selector>
   </header>
   <div class="grid grid-cols-1 gap-8 flex-1 relative z-10">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -30,7 +36,12 @@
               </div>
             </button>
           </div>
-          <div class="text-4xl font-extrabold text-fuchsia-400 mb-2" *ngIf="wallet && wallet.freeTokens >= 0">{{wallet.freeTokens}}</div>
+          <div
+            class="text-4xl font-extrabold text-fuchsia-400 mb-2"
+            *ngIf="wallet && wallet.freeTokens >= 0"
+          >
+            {{ wallet.freeTokens }}
+          </div>
           <div class="text-neutral-400 text-sm">Available tokens</div>
         </div>
       </div>
@@ -46,16 +57,25 @@
               Paid Tokens
             </h3>
           </div>
-          <div class="text-4xl font-extrabold text-sky-400 mb-2" *ngIf="wallet && wallet.paidTokens >= 0">{{wallet.paidTokens}}</div>
+          <div
+            class="text-4xl font-extrabold text-sky-400 mb-2"
+            *ngIf="wallet && wallet.paidTokens >= 0"
+          >
+            {{ wallet.paidTokens }}
+          </div>
           <div class="text-neutral-400 text-sm">Available tokens</div>
         </div>
       </div>
     </div>
 
-    <div class="border-neutral-950/50 border-2 bg-gradient-to-tr from-neutral-950/90 to-neutral-950/80 backdrop-blur-[128px] p-6 rounded-xl space-y-6">
-      <h3 class="text-2xl leading-none text-white font-bold tracking-tight">Token Usage (Last 30 Days)</h3>
+    <div
+      class="border-neutral-950/50 border-2 bg-gradient-to-tr from-neutral-950/90 to-neutral-950/80 backdrop-blur-[128px] p-6 rounded-xl space-y-6"
+    >
+      <h3 class="text-2xl leading-none text-white font-bold tracking-tight">
+        Token Usage (Last 30 Days)
+      </h3>
       <app-bar-chart
-        *ngIf="dailyTransactions"
+        *ngIf="transactionChartData"
         [labels]="barChartLabels"
         [datasets]="barChartDatasets"
       />
@@ -65,5 +85,11 @@
       *ngIf="wallet"
       [transactions]="wallet.transactions"
     ></app-transactions-table>
+    <app-paginator
+      [currentPage]="currentPage"
+      [pageSize]="pageSize"
+      [totalItems]="totalCount"
+      (pageChange)="onPageChange($event)"
+    ></app-paginator>
   </div>
 </div>

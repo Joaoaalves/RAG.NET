@@ -1,7 +1,10 @@
 import {
   DailyTransactionsAggregate,
+  GetTransactionResponse,
+  GetTransactionsRequest,
   GetWalletRequest,
   GetWalletResponse,
+  PagedTransactions,
   Wallet,
 } from './../models/wallet';
 import { Injectable } from '@angular/core';
@@ -17,16 +20,44 @@ export class WalletService {
 
   constructor(private httpClient: HttpClient) {}
 
-  getInfo({ start, end }: GetWalletRequest): Observable<GetWalletResponse> {
-    let params = new HttpParams();
+  getWallet(): Observable<Wallet> {
+    return this.httpClient
+      .get<{ wallet: Wallet }>(`${this.apiUrl}/api/wallet`)
+      .pipe(map((res) => res.wallet));
+  }
 
-    params = params.append('start', start.toISOString());
-    params = params.append('end', end.toISOString());
+  getTransactions({
+    start,
+    end,
+    page,
+    pageSize,
+  }: GetTransactionsRequest): Observable<PagedTransactions> {
+    let params = new HttpParams()
+      .set('start', start.toISOString())
+      .set('end', end.toISOString())
+      .set('page', page)
+      .set('pageSize', pageSize);
 
     return this.httpClient
-      .get<GetWalletResponse>(`${this.apiUrl}/api/wallet`, {
-        params: params,
+      .get<GetTransactionResponse>(`${this.apiUrl}/api/wallet/transactions`, {
+        params,
       })
-      .pipe(map((response) => response));
+      .pipe(map((res) => res.transactions));
+  }
+
+  getDailyTransactions({
+    start,
+    end,
+  }: GetWalletRequest): Observable<DailyTransactionsAggregate[]> {
+    let params = new HttpParams()
+      .set('start', start.toISOString())
+      .set('end', end.toISOString());
+
+    return this.httpClient
+      .get<{ dailyTransactions: DailyTransactionsAggregate[] }>(
+        `${this.apiUrl}/api/wallet/transactions/daily`,
+        { params }
+      )
+      .pipe(map((res) => res.dailyTransactions));
   }
 }

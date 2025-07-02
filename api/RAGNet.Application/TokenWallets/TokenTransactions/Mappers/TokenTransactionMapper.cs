@@ -5,7 +5,7 @@ namespace RAGNET.Application.TokenWallets.TokenTransactions.Mappers
 {
     public static class TokenTransationMapper
     {
-        public static List<TokenTransactionDTO> ToDTOList(this IReadOnlyCollection<TokenTransaction> transactions)
+        public static List<TokenTransactionDTO> ToDTOList(this List<TokenTransaction> transactions)
         {
             List<TokenTransactionDTO> dtoList = [];
 

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { SupportedProvidersComponent } from '../supported-providers/supported-providers.component';
-import { AboutItemComponent } from './about-item.component';
+import { AboutItem, AboutItemComponent } from './about-item.component';
 import { CommonModule } from '@angular/common';
 import { WorkflowBuilderDemoComponent } from './workflow-builder-demo.component';
 import { ApiIntegrationDemoComponent } from './api-integration-demo.component';
@@ -21,8 +21,6 @@ import {
   lucideTarget,
   lucideWrench,
 } from '@ng-icons/lucide';
-
-import { AboutItem } from 'src/app/models/about';
 
 @Component({
   selector: 'app-about',

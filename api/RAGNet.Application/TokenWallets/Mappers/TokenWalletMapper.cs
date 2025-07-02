@@ -1,5 +1,4 @@
 using RAGNET.Application.TokenWallets.DTOs;
-using RAGNET.Application.TokenWallets.TokenTransactions.Mappers;
 using RAGNET.Domain.TokenWallets;
 
 namespace RAGNET.Application.TokenWallets.Mappers
@@ -12,8 +11,7 @@ namespace RAGNET.Application.TokenWallets.Mappers
             {
                 FreeTokens = tokenWallet.FreeTokens.ToDecimal(),
                 PaidTokens = tokenWallet.PaidTokens.ToDecimal(),
-                LastFreeTokenResetAt = tokenWallet.LastFreeTokenResetAt,
-                Transactions = tokenWallet.Transactions.ToDTOList()
+                LastFreeTokenResetAt = tokenWallet.LastFreeTokenResetAt
             };
         }
     }

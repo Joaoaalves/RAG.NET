@@ -7,6 +7,5 @@ namespace RAGNET.Application.TokenWallets.DTOs
         public decimal FreeTokens { get; set; }
         public decimal PaidTokens { get; set; }
         public DateTime LastFreeTokenResetAt { get; set; }
-        public List<TokenTransactionDTO> Transactions { get; set; } = [];
     }
 }

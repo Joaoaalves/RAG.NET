@@ -16,6 +16,35 @@ namespace RAGNET.Infrastructure.Domain.TokenWallets
                 .Include(w => w.Transactions)
                 .FirstOrDefaultAsync(w => w.UserId == userId);
         }
+
+        public async Task<(List<TokenTransaction> Transactions, int TotalCount)> GetPagedTransactionsAsync(
+            string userId,
+            int page,
+            int pageSize,
+            DateTime? start = null,
+            DateTime? end = null
+        )
+        {
+            var query = _context.TokenTransactions
+                .Where(t => t.UserId == userId);
+
+            if (start.HasValue)
+                query = query.Where(t => t.TimeStamp >= start.Value);
+
+            if (end.HasValue)
+                query = query.Where(t => t.TimeStamp <= end.Value);
+
+            var totalCount = await query.CountAsync();
+
+            var transactions = await query
+                .OrderByDescending(t => t.TimeStamp)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (transactions, totalCount);
+        }
+
         public Task UpdateAsync(TokenWallet wallet)
         {
             _context.TokenWallets.Update(wallet);
@@ -27,6 +56,7 @@ namespace RAGNET.Infrastructure.Domain.TokenWallets
             _context.TokenWallets.Remove(wallet);
             return Task.CompletedTask;
         }
+
         public async Task<List<TransactionDailyAggregation>> GetTransactionDailyAggregations(DateTime start, DateTime end, string userId)
         {
             var query = await _context.TokenTransactions

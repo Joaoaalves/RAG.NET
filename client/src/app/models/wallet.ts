@@ -35,3 +35,19 @@ export interface GetWalletRequest {
   start: Date;
   end: Date;
 }
+
+export interface GetTransactionsRequest {
+  start: Date;
+  end: Date;
+  page: number;
+  pageSize: number;
+}
+
+export interface GetTransactionResponse {
+  transactions: PagedTransactions;
+}
+
+export interface PagedTransactions {
+  items: Transaction[];
+  totalCount: number;
+}

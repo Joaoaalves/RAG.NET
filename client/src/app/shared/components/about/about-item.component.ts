@@ -12,9 +12,21 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { HighlightTextPipe } from './highlight-text.pipe';
 import { NgIcon } from '@ng-icons/core';
 
-import { Feat } from 'src/app/models/about';
-
 gsap.registerPlugin(ScrollTrigger);
+
+export interface Feat {
+  title: string;
+  description: string;
+  icon: string;
+}
+
+export interface AboutItem {
+  title: string;
+  subtitle: string;
+  imageUrl: string;
+  component: any;
+  feats: Feat[];
+}
 
 @Component({
   selector: 'app-about-item',
