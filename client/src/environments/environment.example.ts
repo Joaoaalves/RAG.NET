@@ -3,5 +3,4 @@ export const environment = {
   get apiUrl() {
     return `${window.location.protocol}//${window.location.hostname}:5000`;
   },
-  stripePublishableKey: '',
 };

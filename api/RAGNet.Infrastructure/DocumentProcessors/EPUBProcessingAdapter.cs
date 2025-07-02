@@ -41,10 +41,8 @@ namespace RAGNET.Infrastructure.DocumentProcessors
             return result;
         }
 
-        public async Task<Document> CreateDocumentWithPagesAsync(string title, WorkflowId workflowId, List<string> pages)
+        public async Task<Document> CreateDocumentWithPagesAsync(Document document, List<string> pages)
         {
-            var document = Document.Create(new Text(title), workflowId);
-
             foreach (var pageText in pages)
             {
                 var text = new Text(pageText);

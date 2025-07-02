@@ -2,6 +2,7 @@ using System.Text.Json;
 using OpenAI.Chat;
 
 using RAGNET.Application.Infrastructure.Providers.Conversation;
+using RAGNET.Infrastructure.SeedWork.Resilience;
 
 namespace RAGNET.Infrastructure.ChatCompletions
 {
@@ -12,8 +13,12 @@ namespace RAGNET.Infrastructure.ChatCompletions
         public async Task<string> GetCompletionAsync(string systemPrompt, string message)
         {
             ChatMessage[] messages = [new SystemChatMessage(systemPrompt), new UserChatMessage(message)];
-            ChatCompletion completion = await _chatClient.CompleteChatAsync(messages);
-            return completion.Content[0].Text;
+
+            return await RetryHelper.ExecuteWithRetryAsync(async () =>
+            {
+                ChatCompletion completion = await _chatClient.CompleteChatAsync(messages);
+                return completion.Content[0].Text;
+            });
         }
 
         public async Task<JsonDocument> GetCompletionStructuredAsync(string systemPrompt, string message, JsonDocument jsonSchema, string? formatName)
@@ -29,12 +34,14 @@ namespace RAGNET.Infrastructure.ChatCompletions
                 )
             };
 
-            ChatCompletion completion = await _chatClient.CompleteChatAsync(messages, options);
+            return await RetryHelper.ExecuteWithRetryAsync(async () =>
+            {
+                ChatCompletion completion = await _chatClient.CompleteChatAsync(messages, options);
 
-            JsonDocument structuredJson = JsonDocument.Parse(completion.Content[0].Text);
+                JsonDocument structuredJson = JsonDocument.Parse(completion.Content[0].Text);
 
-            return structuredJson;
-
+                return structuredJson;
+            });
         }
     }
 }

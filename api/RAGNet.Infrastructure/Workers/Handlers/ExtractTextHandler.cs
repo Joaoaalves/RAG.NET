@@ -1,4 +1,6 @@
 using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
+using RAGNET.Domain.Documents;
+using RAGNET.Domain.Documents.Pages;
 using RAGNET.Infrastructure.DocumentProcessors;
 using RAGNET.Infrastructure.Jobs;
 using RAGNET.Infrastructure.Jobs.Queue;
@@ -22,11 +24,17 @@ namespace RAGNET.Infrastructure.Workers.Handlers
             var ext = Path.GetExtension(job.FileName).ToLowerInvariant();
             var processor = _documentProcessorFactory.CreateDocumentProcessor(ext);
 
+            var fileTitle = new Text(Path.GetFileNameWithoutExtension(job.FileName));
+
             var extract = await processor.ExtractTextAsync(ms);
 
-            var document = await processor.CreateDocumentWithPagesAsync(
-                                    Path.GetFileNameWithoutExtension(job.FileName),
-                                    job.Context.Workflow.Id,
+            var document = Document.Create(
+                fileTitle,
+                job.Context.Workflow.Id
+            );
+
+            document = await processor.CreateDocumentWithPagesAsync(
+                                    document,
                                     extract.Pages
                                  );
 

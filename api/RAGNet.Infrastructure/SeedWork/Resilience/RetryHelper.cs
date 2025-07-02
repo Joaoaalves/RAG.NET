@@ -7,7 +7,7 @@ namespace RAGNET.Infrastructure.SeedWork.Resilience
         public static async Task<T> ExecuteWithRetryAsync<T>(
             Func<Task<T>> operation,
             int maxRetries = 5,
-            int baseDelayMs = 500,
+            int baseDelayMs = 2000,
             Func<Exception, bool>? shouldRetry = null)
         {
             int attempt = 0;
@@ -18,7 +18,7 @@ namespace RAGNET.Infrastructure.SeedWork.Resilience
                 {
                     return await operation();
                 }
-                catch (Exception ex) when (shouldRetry?.Invoke(ex) ?? true)
+                catch (Exception ex) when ((shouldRetry ?? RetryErrorClassifier.IsTransientError)(ex))
                 {
                     attempt++;
                     if (attempt > maxRetries) throw;
@@ -31,5 +31,4 @@ namespace RAGNET.Infrastructure.SeedWork.Resilience
             }
         }
     }
-
 }

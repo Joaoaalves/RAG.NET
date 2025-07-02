@@ -8,7 +8,7 @@ using RAGNET.Infrastructure.DocumentProcessors;
 using RAGNET.Domain.Workflows;
 
 
-namespace tests.RAGNet.Infrastructure.Tests.Adapters
+namespace tests.RAGNet.Infrastructure.Tests.DocumentProcessors
 {
     public class PdfProcessingAdapterTests
     {
@@ -36,8 +36,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
             var createdDocument = Document.Create(
                 id: docId,
                 title: new Text(title),
-                workflowId: workflowId,
-                pages: pages.Select(p => Page.Create(new Text(p), docId)).ToList()
+                workflowId: workflowId
             );
 
             _documentRepositoryMock
@@ -45,7 +44,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
                 .ReturnsAsync(createdDocument);
 
             // Act
-            var document = await _adapter.CreateDocumentWithPagesAsync(title, workflowId, pages);
+            var document = await _adapter.CreateDocumentWithPagesAsync(createdDocument, pages);
 
             // Assert
             Assert.Equal(createdDocument.Id, document.Id);

@@ -1,4 +1,3 @@
-using RAGNET.Application.Infrastructure.Providers;
 using RAGNET.Application.Infrastructure.Providers.Embedding;
 using RAGNET.Domain.SharedKernel.Providers;
 
@@ -10,7 +9,7 @@ namespace RAGNET.Infrastructure.Embedders
         {
             return config.Provider switch
             {
-                EmbeddingProviderEnum.OPENAI => new OpenAIEmbeddingAdapter(userApiKey, config.Model),
+                EmbeddingProviderEnum.OPENAI => OpenAIEmbeddingAdapter.FromApiKey(userApiKey, config.Model),
                 EmbeddingProviderEnum.VOYAGE => new VoyageEmbeddingAdapter(userApiKey, config.Model),
                 EmbeddingProviderEnum.GEMINI => new GeminiEmbeddingAdapter(userApiKey, config.Model),
                 _ => throw new NotSupportedException("Embedding provider not supported.")

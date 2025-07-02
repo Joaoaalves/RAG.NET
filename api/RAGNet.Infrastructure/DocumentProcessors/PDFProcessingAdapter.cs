@@ -3,7 +3,6 @@ using UglyToad.PdfPig;
 using RAGNET.Domain.Documents;
 using RAGNET.Domain.Documents.Pages;
 using RAGNET.Domain.SeedWork;
-using RAGNET.Domain.Workflows;
 using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.DocumentProcessors; // Should use the Document from here
 
 namespace RAGNET.Infrastructure.DocumentProcessors
@@ -12,9 +11,8 @@ namespace RAGNET.Infrastructure.DocumentProcessors
     {
         private readonly IDocumentRepository _documentRepository = documentRepository;
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        public async Task<Document> CreateDocumentWithPagesAsync(string title, WorkflowId workflowId, List<string> pages)
+        public async Task<Document> CreateDocumentWithPagesAsync(Document document, List<string> pages)
         {
-            var document = Document.Create(new Text(title), workflowId);
 
             foreach (var pageText in pages)
             {

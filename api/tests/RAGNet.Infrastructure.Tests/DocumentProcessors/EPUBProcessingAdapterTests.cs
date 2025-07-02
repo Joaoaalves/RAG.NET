@@ -6,7 +6,7 @@ using RAGNET.Domain.Workflows;
 using RAGNET.Infrastructure.DocumentProcessors;
 using tests.Helpers;
 
-namespace tests.RAGNet.Infrastructure.Tests.Adapters
+namespace tests.RAGNet.Infrastructure.Tests.DocumentProcessors
 {
     public class EpubProcessingAdapterTests
     {
@@ -23,7 +23,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
         }
 
         [Fact]
-        public async Task CreateDocumentWithPagesAsync_Deve_CriarDocumentoEAdicionarPaginas()
+        public async Task CreateDocumentWithPagesAsync_Should_CreateDocumentAndAddPages()
         {
             // Arrange
             var title = "Documento EPUB de Teste";
@@ -35,8 +35,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
             var createdDocument = Document.Create(
                 id: docId,
                 title: new Text(title),
-                workflowId: workflowId,
-                pages: pages.Select(p => Page.Create(new Text(p), docId)).ToList()
+                workflowId: workflowId
             );
 
             _documentRepositoryMock
@@ -44,10 +43,13 @@ namespace tests.RAGNet.Infrastructure.Tests.Adapters
                 .ReturnsAsync(createdDocument);
 
             // Act
-            var document = await _adapter.CreateDocumentWithPagesAsync(title, workflowId, pages);
+            var document = await _adapter.CreateDocumentWithPagesAsync(createdDocument, pages);
 
             // Assert
             Assert.Equal(createdDocument.Id, document.Id);
+
+            Assert.All(document.Pages, page => Assert.Contains(page.Text.Value, pages));
+
             _documentRepositoryMock.Verify(r => r.AddAsync(It.Is<Document>(d =>
                 d.Title.Value == title && d.WorkflowId == workflowId)), Times.Once);
         }

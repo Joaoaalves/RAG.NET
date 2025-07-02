@@ -1,9 +1,9 @@
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using RAGNET.Domain.Chunkers;
 using RAGNET.Domain.Workflows;
 using RAGNET.Infrastructure.Database;
 using RAGNET.Infrastructure.Domain.Chunkers;
+using tests.RAGNet.Infrastructure.Tests.Database;
 
 
 namespace tests.RAGNet.Infrastructure.Tests.Repositories
@@ -15,11 +15,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
         private readonly WorkflowId _workflowId = new(Guid.NewGuid());
         public ChunkerRepositoryTests()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
-
-            _context = new ApplicationDbContext(options);
+            _context = TestDbContextFactory.CreateInMemoryContext();
             _repository = new ChunkerRepository(_context);
         }
 
@@ -30,7 +26,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
             var chunker = Chunker.Create(
                 ChunkerStrategy.SEMANTIC,
                 _workflowId,
-                It.IsAny<string>(),
+                Guid.NewGuid().ToString(),
                 [
                     new( "key1", "value1")
                 ]
@@ -56,7 +52,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
             var chunker = Chunker.Create(
                 ChunkerStrategy.SEMANTIC,
                 _workflowId,
-                It.IsAny<string>(),
+                Guid.NewGuid().ToString(),
                 [
                     new("key1", "value1")
                 ]

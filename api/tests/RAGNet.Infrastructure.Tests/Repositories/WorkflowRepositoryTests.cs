@@ -1,10 +1,16 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 
 using RAGNET.Domain.SharedKernel.Providers;
 using RAGNET.Domain.Workflows;
 using RAGNET.Infrastructure.Database;
 using RAGNET.Infrastructure.Domain.Workflows;
+using RAGNET.Infrastructure.SeedWork;
+using tests.RAGNet.Domain.Tests.Chunkers;
+using tests.RAGNet.Infrastructure.Tests.Database;
 
 namespace tests.RAGNet.Infrastructure.Tests.Repositories
 {
@@ -15,14 +21,9 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
 
         public WorkflowRepositoryTests()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(It.IsAny<Guid>().ToString())
-                .Options;
-
-            _context = new ApplicationDbContext(options);
+            _context = TestDbContextFactory.CreateInMemoryContext();
             _repository = new WorkflowRepository(_context);
         }
-
         [Fact]
         public async Task ShouldCreateWithoutEmbeddingProvider()
         {
@@ -81,8 +82,13 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
 
             var embeddingProvider = new EmbeddingProviderConfig(
                 provider: EmbeddingProviderEnum.OPENAI,
-                model: It.IsAny<string>(),
+                model: "model",
                 vectorSize: 1000
+            );
+
+            var conversationProvider = new ConversationProviderConfig(
+                provider: ConversationProviderEnum.OPENAI,
+                model: "model"
             );
 
             var workflowId = new WorkflowId();
@@ -91,6 +97,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
                 .ForUser(It.IsAny<Guid>().ToString())
                 .WithApiKey(It.IsAny<Guid>().ToString("N"))
                 .WithEmbeddingProvider(embeddingProvider)
+                .WithConversationProvider(conversationProvider)
                 .Build(workflowId);
 
             // Act
@@ -108,32 +115,46 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
         {
             // Arrange
             var apiKey = Guid.NewGuid().ToString("N");
+            var userId = Guid.NewGuid().ToString();
 
             var embeddingProvider = new EmbeddingProviderConfig(
                 provider: EmbeddingProviderEnum.OPENAI,
-                model: It.IsAny<string>(),
+                model: "model",
                 vectorSize: 1000
             );
 
             var workflowId = new WorkflowId();
             var workflow = new WorkflowBuilder()
                 .WithName("Name")
-                .ForUser(It.IsAny<Guid>().ToString())
+                .ForUser(userId)
                 .WithApiKey(apiKey)
                 .WithEmbeddingProvider(embeddingProvider)
+                .WithChunker(DummyChunker.CreateDummy())
                 .Build(workflowId);
 
-            // Act
+            // Add workflow to the context
             await _repository.AddAsync(workflow);
             await _context.SaveChangesAsync();
 
-            await _repository.DeleteAsync(workflow, It.IsAny<Guid>().ToString());
+            // Act - 1st delete call: should deactivate the workflow
+            await _repository.DeleteAsync(workflow, userId);
             await _context.SaveChangesAsync();
 
-            var result = await _repository.GetByIdAsync(workflowId, It.IsAny<Guid>().ToString());
+            var deactivated = await _repository.GetByIdAsync(workflowId, userId);
 
-            // Assert
-            Assert.Null(result);
+            // Assert that workflow is still there but inactive
+            Assert.NotNull(deactivated);
+            Assert.False(deactivated!.IsActive);
+
+            // Act - 2nd delete call: should remove the workflow from DB
+            await _repository.DeleteAsync(workflow, userId);
+            await _context.SaveChangesAsync();
+
+            var removed = await _repository.GetByIdAsync(workflowId, userId);
+
+            // Assert that workflow no longer exists
+            Assert.Null(removed);
         }
+
     }
 }
