@@ -11,6 +11,7 @@
   --animate-fade-in-300: fade-in 0.3s ease-in-out forwards;
   --animate-blob: blob 7s ease-in-out infinite;
   --animate-glow: glow 5s infinite ease-in-out;
+  --animate-shimmer: shimmer 2s infinite linear;
 
   @keyframes x-draw {
     0% {
@@ -100,6 +101,15 @@
   100% {
     transform: scale(1);
     opacity: 0.2;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: '-1000px 0'
+  }
+  100%{
+    background-position: '1000px 0'
   }
 }
 

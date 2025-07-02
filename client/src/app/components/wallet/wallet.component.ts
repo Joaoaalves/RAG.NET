@@ -33,7 +33,7 @@ export class WalletComponent implements OnInit {
   transactionChartData: DailyTransactionsAggregate[] = [];
 
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 20;
   totalCount = 0;
 
   start: Date;
