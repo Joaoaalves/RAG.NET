@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using RAGNET.Infrastructure.ChatCompletions;
+using RAGNET.Infrastructure.ChatCompletions.Gemini;
 using RAGNET.Infrastructure.Exceptions.Adapters;
 using RichardSzalay.MockHttp;
 

@@ -1,5 +1,5 @@
 using System.Net;
-using RAGNET.Infrastructure.Embedders;
+using RAGNET.Infrastructure.Embedders.Gemini;
 using RAGNET.Infrastructure.Exceptions.Adapters;
 using RichardSzalay.MockHttp;
 

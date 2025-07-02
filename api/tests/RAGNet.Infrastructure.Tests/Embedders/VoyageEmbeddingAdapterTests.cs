@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using RAGNET.Infrastructure.Embedders;
+using RAGNET.Infrastructure.Embedders.Voyage;
 using RichardSzalay.MockHttp;
 using Xunit;
 
@@ -41,7 +42,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Embedders
             var result = await adapter.GetEmbeddingAsync("hello");
 
             // Assert
-            Assert.Equal(new[] { 0.1f, 0.2f, 0.3f }, result);
+            Assert.Equal([0.1f, 0.2f, 0.3f], result);
         }
 
         [Fact]
