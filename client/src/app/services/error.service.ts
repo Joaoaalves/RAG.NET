@@ -20,6 +20,7 @@ export class ErrorService {
         message += `\n${details}`;
       }
     }
+    if (typeof error === 'string') message = error;
 
     toast.error('Error', { description: message });
     console.error('HTTP Error:', error);
