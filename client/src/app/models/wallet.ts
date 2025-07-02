@@ -21,7 +21,7 @@ export enum TransactionSource {
 }
 
 export interface DailyTransactionsAggregate {
-  date: Date;
+  date: string;
   freeTokensConsumed: number;
   paidTokensConsumed: number;
 }

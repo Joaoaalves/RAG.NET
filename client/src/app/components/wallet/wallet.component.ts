@@ -58,9 +58,10 @@ export class WalletComponent implements OnInit {
 
       this.dailyTransactions = filledDays;
 
-      this.barChartLabels = filledDays.map((t) =>
-        t.date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
-      );
+      this.barChartLabels = filledDays.map((t) => {
+        const [year, month, day] = t.date.split('T')[0].split('-');
+        return `${day}/${month}`;
+      });
 
       this.barChartDatasets = [
         {
@@ -82,10 +83,10 @@ export class WalletComponent implements OnInit {
   ): DailyTransactionsAggregate[] {
     const map = new Map(
       input.map((d) => [
-        new Date(d.date).toDateString(),
+        d.date.split('T')[0],
         {
           ...d,
-          date: new Date(d.date),
+          date: d.date,
         },
       ])
     );
@@ -94,15 +95,15 @@ export class WalletComponent implements OnInit {
     const cursor = new Date(start);
 
     while (cursor <= end) {
-      const key = cursor.toDateString();
+      const isoDate = cursor.toISOString().split('T')[0];
       filled.push(
-        map.get(key) ?? {
-          date: new Date(cursor),
+        map.get(isoDate) ?? {
+          date: `${isoDate}T00:00:00Z`,
           freeTokensConsumed: 0,
           paidTokensConsumed: 0,
         }
       );
-      cursor.setDate(cursor.getDate() + 1);
+      cursor.setUTCDate(cursor.getUTCDate() + 1);
     }
 
     return filled;

@@ -76,7 +76,7 @@ export class BarChartComponent implements AfterViewInit {
         border: {
           display: false,
         },
-      },
+      }
     },
     plugins: {
       legend: { display: false },
