@@ -12,9 +12,9 @@ namespace RAGNET.Domain.SharedKernel.Plans.Policies
         {
             return plan switch
             {
-                PlanType.Core => fileSizeInBytes <= 10 * 1024 * 1024,        // 10 MB
+                PlanType.Core => fileSizeInBytes <= 10 * 1024 * 1024,       // 10 MB
                 PlanType.Enhanced => fileSizeInBytes <= 50 * 1024 * 1024,   // 50 MB
-                PlanType.Ascend => fileSizeInBytes <= 500 * 1024 * 1024,     // 500 MB
+                PlanType.Ascend => fileSizeInBytes <= 500 * 1024 * 1024,    // 500 MB
                 _ => false
             };
         }
