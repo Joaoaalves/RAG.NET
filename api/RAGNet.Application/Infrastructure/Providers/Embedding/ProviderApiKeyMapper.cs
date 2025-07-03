@@ -21,6 +21,7 @@ namespace RAGNET.Application.Infrastructure.Providers.Embedding
 
             return new ProviderApiKeyDTO
             {
+                Id = userApiKey.Id.Value,
                 ProviderId = prov.ProviderType,
                 Name = prov.Name,
                 Pattern = prov.Pattern,

@@ -17,7 +17,8 @@ export type SupportedProvider =
   | 'voyage'
   | 'qdrant'
   | 'gemini'
-  | 'deepseek';
+  | 'deepseek'
+  | 'xai';
 
 export interface ProviderResponse<
   T extends ConversationModel | EmbeddingModel

@@ -37,7 +37,6 @@ namespace web.Controllers.Providers
             {
                 if (string.IsNullOrWhiteSpace(apiKey.ApiKey))
                     continue;
-
                 if (availableModels.TryGetValue(apiKey.ProviderId, out var models))
                 {
                     response.Providers.Add(new ConversationProviderDTO

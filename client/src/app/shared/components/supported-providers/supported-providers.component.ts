@@ -27,9 +27,9 @@ export class SupportedProvidersComponent {
     {
       title: 'Deepseek',
       src: '/img/providers/deepseek.svg',
-      implemented: false,
+      implemented: true,
     },
-    { title: 'Llama', src: '/img/providers/meta.svg', implemented: false },
+    { title: 'Grok', src: '/img/providers/xai.svg', implemented: true },
     { title: 'CoHere', src: '/img/providers/cohere.svg', implemented: false },
     { title: 'Mistral', src: '/img/providers/mistral.svg', implemented: false },
     { title: 'Manus', src: '/img/providers/manus.svg', implemented: false },

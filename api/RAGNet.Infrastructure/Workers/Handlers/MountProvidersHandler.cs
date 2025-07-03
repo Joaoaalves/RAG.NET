@@ -28,7 +28,7 @@ namespace RAGNET.Infrastructure.Workers.Handlers
 
             var embedKey = await _apiKeyResolver.ResolveForUserAsync(
                 job.UserId,
-                workflow.ConversationProviderConfig.Provider
+                workflow.EmbeddingProviderConfig.Provider
             );
 
             job.Context.EmbeddingProviderService = _embedderFactory.CreateEmbeddingService(embedKey, workflow.EmbeddingProviderConfig);

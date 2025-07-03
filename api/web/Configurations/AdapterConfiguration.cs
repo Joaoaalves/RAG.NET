@@ -23,6 +23,7 @@ using RAGNET.Application.Feedbacks.Services;
 using RAGNET.Application.Infrastructure.Providers;
 using RAGNET.Application.Subscriptions.Services;
 using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob;
+using RAGNET.Infrastructure.ChatCompletions.xAI;
 
 namespace web.Configurations
 {
@@ -76,13 +77,15 @@ namespace web.Configurations
             services.AddSingleton<AnthropicChatModelCatalog>();
             services.AddSingleton<GeminiChatModelCatalog>();
             services.AddSingleton<DeepSeekChatModelCatalog>();
+            services.AddSingleton<XAIModelCatalog>();
 
             services.AddSingleton<Dictionary<SupportedProvider, IProviderConversationModelCatalog>>(sp => new()
             {
                 { SupportedProvider.OpenAI, sp.GetRequiredService<OpenAIChatModelCatalog>() },
                 { SupportedProvider.Anthropic, sp.GetRequiredService<AnthropicChatModelCatalog>() },
                 { SupportedProvider.Gemini, sp.GetRequiredService<GeminiChatModelCatalog>() },
-                { SupportedProvider.DeepSeek, sp.GetRequiredService<DeepSeekChatModelCatalog>()}
+                { SupportedProvider.DeepSeek, sp.GetRequiredService<DeepSeekChatModelCatalog>()},
+                { SupportedProvider.XAI, sp.GetRequiredService<XAIModelCatalog>()}
             });
 
             services.AddSingleton<OpenAIEmbeddingModelCatalog>();

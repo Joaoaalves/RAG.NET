@@ -4,6 +4,7 @@ using RAGNET.Infrastructure.ChatCompletions.Anthropic;
 using RAGNET.Infrastructure.ChatCompletions.DeepSeek;
 using RAGNET.Infrastructure.ChatCompletions.Gemini;
 using RAGNET.Infrastructure.ChatCompletions.OpenAI;
+using RAGNET.Infrastructure.ChatCompletions.xAI;
 
 namespace RAGNET.Infrastructure.ChatCompletions
 {
@@ -19,6 +20,7 @@ namespace RAGNET.Infrastructure.ChatCompletions
                 ConversationProviderEnum.ANTHROPIC => AnthropicClient(userApiKey, config.Model),
                 ConversationProviderEnum.GEMINI => GeminiClient(userApiKey, config.Model),
                 ConversationProviderEnum.DeepSeek => DeepSeekClient(userApiKey, config.Model),
+                ConversationProviderEnum.XAI => XAIClient(userApiKey, config.Model),
                 _ => throw new NotSupportedException("Conversation Provider not supported")
             };
         }
@@ -43,6 +45,13 @@ namespace RAGNET.Infrastructure.ChatCompletions
             var clientWrapper = new DeepSeekClientWrapper(apiKey, model);
 
             return new DeepSeekChatAdapter(clientWrapper, delayMs: _baseDelayMS);
+        }
+
+        private XAIChatAdapter XAIClient(string apiKey, string model)
+        {
+            var clientWrapper = new XAIChatClientWrapper(apiKey, model);
+
+            return new XAIChatAdapter(clientWrapper, _baseDelayMS);
         }
     }
 }

@@ -28,7 +28,6 @@ namespace RAGNET.Infrastructure.Qdrant
             try
             {
                 metadata["documentId"] = documentId;
-
                 var point = new PointStruct
                 {
                     Id = Guid.NewGuid(),

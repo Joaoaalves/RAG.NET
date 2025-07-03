@@ -35,12 +35,11 @@ namespace RAGNET.Infrastructure.ChatCompletions.DeepSeek
             {
                 Type = "json_object"
             };
-            Console.WriteLine("Starting call");
+
             return await RetryHelper.ExecuteWithRetryAsync(async () =>
             {
                 try
                 {
-                    Console.WriteLine("Calling");
                     var completion = await _client.CompleteChatAsync(messages, responseFormat);
                     return JsonDocument.Parse(completion);
                 }

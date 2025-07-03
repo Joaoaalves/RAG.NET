@@ -7,6 +7,7 @@ namespace RAGNET.Domain.SharedKernel.Providers
         Voyage = 2,
         QDrant = 3,
         Gemini = 4,
-        DeepSeek = 5
+        DeepSeek = 5,
+        XAI = 6
     }
 }

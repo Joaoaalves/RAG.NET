@@ -31,7 +31,8 @@ namespace RAGNET.Application.Infrastructure.Providers.Conversation.Mappers
                 ConversationProviderEnum.ANTHROPIC => SupportedProvider.Anthropic,
                 ConversationProviderEnum.GEMINI => SupportedProvider.Gemini,
                 ConversationProviderEnum.DeepSeek => SupportedProvider.DeepSeek,
-                _ => throw new ArgumentOutOfRangeException("Unsupported provider")
+                ConversationProviderEnum.XAI => SupportedProvider.XAI,
+                _ => throw new ArgumentOutOfRangeException("Unsupported Conversation Provider provider")
             };
         }
     }

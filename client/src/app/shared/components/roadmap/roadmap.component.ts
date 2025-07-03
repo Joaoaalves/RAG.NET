@@ -144,6 +144,22 @@ export class RoadmapComponent implements OnInit {
         'Migrated to RabbitMQ for reliable job queuing and real‑time streaming of progress events.',
       status: 'completed',
     },
+    {
+      id: 15,
+      icon: '🔎',
+      title: 'DeepSeek Integration',
+      description:
+        'Adding DeepSeek as an alternative vector database for high‑volume embedding queries.',
+      status: 'completed',
+    },
+    {
+      id: 17,
+      icon: '⏱️',
+      title: 'Robust Timeout Handling',
+      description:
+        'Enhancing retry and timeout logic for LLM API requests to improve system resilience.',
+      status: 'completed',
+    },
 
     // — IN‑PROGRESS —
     {
@@ -154,14 +170,7 @@ export class RoadmapComponent implements OnInit {
         'Developing a Pinecone adapter to provide scalable vector storage and similarity search.',
       status: 'in-progress',
     },
-    {
-      id: 15,
-      icon: '🔎',
-      title: 'DeepSeek Integration',
-      description:
-        'Adding DeepSeek as an alternative vector database for high‑volume embedding queries.',
-      status: 'in-progress',
-    },
+
     {
       id: 16,
       icon: '🎯',
@@ -170,22 +179,14 @@ export class RoadmapComponent implements OnInit {
         'Integrating Cohere’s re‑ranking endpoint to reorder retrieval results by relevance.',
       status: 'in-progress',
     },
-    {
-      id: 17,
-      icon: '⏱️',
-      title: 'Robust Timeout Handling',
-      description:
-        'Enhancing retry and timeout logic for LLM API requests to improve system resilience.',
-      status: 'in-progress',
-    },
 
     // — UPCOMING —
     {
       id: 18,
-      icon: '🦙',
-      title: 'Llama, Mistral & Manus',
+      icon: '✊',
+      title: 'Mistral, Manus',
       description:
-        'Planning on‑premise support for open‑source Llama, Mistral and Manus language models.',
+        'Planning on‑premise support for open‑source Mistral and Manus language models.',
       status: 'upcoming',
     },
     {

@@ -14,7 +14,6 @@ namespace RAGNET.Application.Chunkers.Services
 
         public async Task<List<string>> ChunkText(string text)
         {
-
             var paragraphs = text.Split(['\n'], StringSplitOptions.RemoveEmptyEntries);
             var chunksBag = new ConcurrentBag<string>(); // Thread-safe list
 
