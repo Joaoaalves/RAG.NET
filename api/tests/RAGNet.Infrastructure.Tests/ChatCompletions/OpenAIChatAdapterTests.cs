@@ -18,7 +18,7 @@ public class OpenAIChatAdapterTests
     private OpenAIChatAdapter CreateAdapter() => new(_mockClient.Object, _delayMs);
 
     [Fact]
-    public async Task GetCompletionAsync_ReturnsText_OnSuccess()
+    public async Task GetCompletionAsync_ReturnsExpectedText()
     {
         // Arrange
         var expectedText = "Hello, world!";

@@ -8,6 +8,7 @@ export function getProviderImage(providerId: number): string {
       4: '/img/providers/gemini.svg',
       5: '/img/providers/deepseek.svg',
       6: '/img/providers/xai.svg',
+      7: '/img/providers/mistral.svg',
     }[providerId] ?? ''
   );
 }

@@ -31,7 +31,7 @@ export class SupportedProvidersComponent {
     },
     { title: 'Grok', src: '/img/providers/xai.svg', implemented: true },
     { title: 'CoHere', src: '/img/providers/cohere.svg', implemented: false },
-    { title: 'Mistral', src: '/img/providers/mistral.svg', implemented: false },
+    { title: 'Mistral', src: '/img/providers/mistral.svg', implemented: true },
     { title: 'Manus', src: '/img/providers/manus.svg', implemented: false },
   ];
 }

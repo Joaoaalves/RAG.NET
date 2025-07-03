@@ -18,7 +18,8 @@ export type SupportedProvider =
   | 'qdrant'
   | 'gemini'
   | 'deepseek'
-  | 'xai';
+  | 'xai'
+  | 'mistral';
 
 export interface ProviderResponse<
   T extends ConversationModel | EmbeddingModel

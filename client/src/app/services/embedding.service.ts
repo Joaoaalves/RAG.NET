@@ -76,7 +76,7 @@ export class EmbeddingService {
     return {
       jobId: jobId,
       process: {
-        title: 'Uploading File',
+        title: 'Waiting on Jobs Queue.',
         progress: 0,
       },
       document: {

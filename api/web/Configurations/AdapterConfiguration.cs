@@ -2,7 +2,6 @@ using StackExchange.Redis;
 
 using RAGNET.Domain.SharedKernel.Providers;
 
-using RAGNET.Infrastructure.ChatCompletions;
 using RAGNET.Infrastructure.SignalR;
 using RAGNET.Infrastructure.Jobs.Queue;
 using RAGNET.Infrastructure.Qdrant;
@@ -18,12 +17,16 @@ using RAGNET.Infrastructure.Embedders.OpenAI;
 using RAGNET.Infrastructure.Embedders.Voyage;
 using RAGNET.Infrastructure.Embedders.Gemini;
 using RAGNET.Infrastructure.ChatCompletions.DeepSeek;
+using RAGNET.Infrastructure.ChatCompletions.xAI;
+using RAGNET.Infrastructure.ChatCompletions.OpenAI;
 
 using RAGNET.Application.Feedbacks.Services;
 using RAGNET.Application.Infrastructure.Providers;
 using RAGNET.Application.Subscriptions.Services;
 using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob;
-using RAGNET.Infrastructure.ChatCompletions.xAI;
+using RAGNET.Infrastructure.ChatCompletions.Mistral;
+using RAGNET.Infrastructure.Embedders.Mistral;
+
 
 namespace web.Configurations
 {
@@ -77,26 +80,30 @@ namespace web.Configurations
             services.AddSingleton<AnthropicChatModelCatalog>();
             services.AddSingleton<GeminiChatModelCatalog>();
             services.AddSingleton<DeepSeekChatModelCatalog>();
-            services.AddSingleton<XAIModelCatalog>();
+            services.AddSingleton<XAIChatModelCatalog>();
+            services.AddSingleton<MistralChatModelCatalog>();
 
             services.AddSingleton<Dictionary<SupportedProvider, IProviderConversationModelCatalog>>(sp => new()
             {
                 { SupportedProvider.OpenAI, sp.GetRequiredService<OpenAIChatModelCatalog>() },
                 { SupportedProvider.Anthropic, sp.GetRequiredService<AnthropicChatModelCatalog>() },
                 { SupportedProvider.Gemini, sp.GetRequiredService<GeminiChatModelCatalog>() },
-                { SupportedProvider.DeepSeek, sp.GetRequiredService<DeepSeekChatModelCatalog>()},
-                { SupportedProvider.XAI, sp.GetRequiredService<XAIModelCatalog>()}
+                { SupportedProvider.Deepseek, sp.GetRequiredService<DeepSeekChatModelCatalog>()},
+                { SupportedProvider.XAI, sp.GetRequiredService<XAIChatModelCatalog>()},
+                { SupportedProvider.Mistral, sp.GetRequiredService<MistralChatModelCatalog>()},
             });
 
             services.AddSingleton<OpenAIEmbeddingModelCatalog>();
             services.AddSingleton<VoyageEmbeddingModelCatalog>();
             services.AddSingleton<GeminiEmbeddingModelCatalog>();
+            services.AddSingleton<MistralEmbeddingModelCatalog>();
 
             services.AddSingleton<Dictionary<SupportedProvider, IProviderEmbeddingModelCatalog>>(sp => new()
             {
                 { SupportedProvider.OpenAI, sp.GetRequiredService<OpenAIEmbeddingModelCatalog>() },
                 { SupportedProvider.Voyage, sp.GetRequiredService<VoyageEmbeddingModelCatalog>() },
                 { SupportedProvider.Gemini, sp.GetRequiredService<GeminiEmbeddingModelCatalog>() },
+                { SupportedProvider.Mistral, sp.GetRequiredService<MistralEmbeddingModelCatalog>()},
             });
 
             return services;

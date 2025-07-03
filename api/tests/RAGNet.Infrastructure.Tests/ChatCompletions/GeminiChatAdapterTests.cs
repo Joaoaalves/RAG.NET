@@ -22,7 +22,7 @@ public class GeminiChatAdapterTests
     }
 
     [Fact]
-    public async Task GetCompletionAsync_ReturnsText_OnSuccess()
+    public async Task GetCompletionAsync_ReturnsExpectedText()
     {
         // Arrange
         var response = """

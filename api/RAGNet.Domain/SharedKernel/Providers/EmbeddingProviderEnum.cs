@@ -4,6 +4,7 @@ namespace RAGNET.Domain.SharedKernel.Providers
     {
         OPENAI = SupportedProvider.OpenAI,
         VOYAGE = SupportedProvider.Voyage,
-        GEMINI = SupportedProvider.Gemini
+        GEMINI = SupportedProvider.Gemini,
+        MISTRAL = SupportedProvider.Mistral
     }
 }

@@ -31,6 +31,7 @@ namespace RAGNET.Application.Infrastructure.Providers.Embedding.Mappers
                 EmbeddingProviderEnum.OPENAI => SupportedProvider.OpenAI,
                 EmbeddingProviderEnum.VOYAGE => SupportedProvider.Voyage,
                 EmbeddingProviderEnum.GEMINI => SupportedProvider.Gemini,
+                EmbeddingProviderEnum.MISTRAL => SupportedProvider.Mistral,
                 _ => throw new ArgumentOutOfRangeException("Unsupported provider")
             };
         }

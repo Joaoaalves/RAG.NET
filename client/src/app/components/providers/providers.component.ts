@@ -17,7 +17,7 @@ export class ProvidersComponent implements OnInit {
     this.getUserProviders();
   }
 
-  getProvider(provider: string): Provider {
+  getProvider(provider: SupportedProvider): Provider {
     const prov = this.providers.find(
       (prov) => prov.name.toLowerCase() === provider.toLowerCase()
     );
@@ -39,7 +39,6 @@ export class ProvidersComponent implements OnInit {
   getUserProviders() {
     this.providersService.getUserProviders().subscribe((response) => {
       this.providers = response;
-      console.log(this.providers);
     });
   }
 }

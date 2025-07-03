@@ -30,9 +30,10 @@ namespace RAGNET.Application.Infrastructure.Providers.Conversation.Mappers
                 ConversationProviderEnum.OPENAI => SupportedProvider.OpenAI,
                 ConversationProviderEnum.ANTHROPIC => SupportedProvider.Anthropic,
                 ConversationProviderEnum.GEMINI => SupportedProvider.Gemini,
-                ConversationProviderEnum.DeepSeek => SupportedProvider.DeepSeek,
+                ConversationProviderEnum.DeepSeek => SupportedProvider.Deepseek,
                 ConversationProviderEnum.XAI => SupportedProvider.XAI,
-                _ => throw new ArgumentOutOfRangeException("Unsupported Conversation Provider provider")
+                ConversationProviderEnum.Mistral => SupportedProvider.Mistral,
+                _ => throw new ArgumentOutOfRangeException("Unsupported Conversation Provider")
             };
         }
     }

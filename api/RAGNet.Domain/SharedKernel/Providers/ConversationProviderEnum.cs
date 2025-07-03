@@ -5,7 +5,8 @@ namespace RAGNET.Domain.SharedKernel.Providers
         OPENAI = SupportedProvider.OpenAI,
         ANTHROPIC = SupportedProvider.Anthropic,
         GEMINI = SupportedProvider.Gemini,
-        DeepSeek = SupportedProvider.DeepSeek,
-        XAI = SupportedProvider.XAI
+        DeepSeek = SupportedProvider.Deepseek,
+        XAI = SupportedProvider.XAI,
+        Mistral = SupportedProvider.Mistral
     }
 }

@@ -12,10 +12,11 @@ namespace RAGNET.Infrastructure.Providers
                 SupportedProvider.OpenAI => new OpenAiPolicy(),
                 SupportedProvider.Anthropic => new AnthropicPolicy(),
                 SupportedProvider.Voyage => new VoyagePolicy(),
-                SupportedProvider.QDrant => new QdrantPolicy(),
+                SupportedProvider.Qdrant => new QdrantPolicy(),
                 SupportedProvider.Gemini => new GeminiPolicy(),
-                SupportedProvider.DeepSeek => new DeepSeekPolicy(),
+                SupportedProvider.Deepseek => new DeepSeekPolicy(),
                 SupportedProvider.XAI => new XAIPolicy(),
+                SupportedProvider.Mistral => new MistralPolicy(),
                 _ => throw new ArgumentOutOfRangeException(nameof(type), "Unsupported provider")
             };
         }

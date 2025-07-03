@@ -12,10 +12,7 @@ namespace RAGNET.Application.ProviderApiKeys.Services
 
         public async Task<string> ResolveForUserAsync(string userId, SupportedProvider provider)
         {
-            var userApiKey = await _providerApiKeyRepository.GetByUserIdAndProviderAsync(userId, provider);
-
-            if (userApiKey == null)
-                return String.Empty;
+            var userApiKey = await _providerApiKeyRepository.GetByUserIdAndProviderAsync(userId, provider) ?? throw new Exception($"Api Key not found for provider: {provider}");
 
             // Decrypt
             var apiKey = _cryptoService.Decrypt(userApiKey.Provider.ApiKey.Value);

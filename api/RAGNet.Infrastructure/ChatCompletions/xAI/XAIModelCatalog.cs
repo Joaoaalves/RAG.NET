@@ -3,7 +3,7 @@ using RAGNET.Domain.SharedKernel.Providers;
 
 namespace RAGNET.Infrastructure.ChatCompletions.xAI
 {
-    public class XAIModelCatalog : IProviderConversationModelCatalog
+    public class XAIChatModelCatalog : IProviderConversationModelCatalog
     {
         public List<ConversationModel> GetModels()
         {

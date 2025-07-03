@@ -14,7 +14,7 @@ namespace RAGNET.Application.Infrastructure.Providers
                 "OpenAI" => SupportedProvider.OpenAI,
                 "Anthropic" => SupportedProvider.Anthropic,
                 "Voyage" => SupportedProvider.Voyage,
-                "QDrant" => SupportedProvider.QDrant,
+                "QDrant" => SupportedProvider.Qdrant,
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

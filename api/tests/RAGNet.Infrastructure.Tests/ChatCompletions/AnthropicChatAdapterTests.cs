@@ -19,7 +19,7 @@ namespace tests.RAGNet.Infrastructure.Tests.ChatCompletions
             };
         }
         [Fact]
-        public async Task GetCompletionAsync_ReturnsText_WhenSuccessful()
+        public async Task GetCompletionAsync_ReturnsExpectedText()
         {
             var mock = new Mock<IAnthropicClientWrapper>();
             mock.Setup(c => c.CompleteChatAsync(It.IsAny<MessageParameters>()))
