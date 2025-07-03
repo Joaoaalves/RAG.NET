@@ -4,6 +4,6 @@ namespace RAGNET.Infrastructure.ChatCompletions.Anthropic
 {
     public interface IAnthropicClientWrapper
     {
-        Task<MessageResponse> GetClaudeMessageAsync(MessageParameters parameters);
+        Task<MessageResponse> CompleteChatAsync(MessageParameters parameters);
     }
 }

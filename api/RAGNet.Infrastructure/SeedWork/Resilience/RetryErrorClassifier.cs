@@ -16,7 +16,6 @@ namespace RAGNET.Infrastructure.SeedWork.Resilience
         private static bool IsHttpTransient(HttpRequestException ex)
         {
             var msg = ex.Message.ToLowerInvariant();
-
             return
                 msg.Contains("429") || // Too Many Requests (rate limit)
                 msg.Contains("503") || // Service Unavailable

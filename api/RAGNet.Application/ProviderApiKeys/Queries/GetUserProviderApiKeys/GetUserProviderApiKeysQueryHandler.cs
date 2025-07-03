@@ -1,4 +1,5 @@
 using RAGNET.Application.Configuration.Queries;
+using RAGNET.Application.Infrastructure.Providers.Embedding;
 using RAGNET.Application.ProviderApiKeys.DTOs;
 using RAGNET.Domain.ProvidersApiKeys;
 using RAGNET.Domain.SharedKernel.Providers;
@@ -15,6 +16,7 @@ namespace RAGNET.Application.ProviderApiKeys.Queries.GetUserProviderApiKeys
         public async Task<List<ProviderApiKeyDTO>> Handle(GetUserProviderApiKeysQuery request, CancellationToken cancellationToken)
         {
             var userApiKeys = await _providerApiKeyRepository.GetByUserIdAsync(request.User.Id);
+
             var result = new List<ProviderApiKeyDTO>();
 
             foreach (var apiKey in userApiKeys)
@@ -24,7 +26,6 @@ namespace RAGNET.Application.ProviderApiKeys.Queries.GetUserProviderApiKeys
                 apiKey.Provider.InitializePolicy(policy);
                 result.Add(apiKey.ToDTO());
             }
-
             // Add missing providers
             // Get all supported providers
             var allProviders = Enum.GetValues<SupportedProvider>();
@@ -32,6 +33,7 @@ namespace RAGNET.Application.ProviderApiKeys.Queries.GetUserProviderApiKeys
             foreach (var provider in allProviders)
             {
                 bool alreadyExists = userApiKeys.Any(k => k.Provider.ProviderType == provider);
+
                 if (!alreadyExists)
                 {
                     var policy = _providerPolicyFactory.GetPolicy(provider);
@@ -44,7 +46,6 @@ namespace RAGNET.Application.ProviderApiKeys.Queries.GetUserProviderApiKeys
                         Pattern = policy.Pattern,
                         Url = policy.Url
                     };
-
 
                     result.Add(dto);
                 }

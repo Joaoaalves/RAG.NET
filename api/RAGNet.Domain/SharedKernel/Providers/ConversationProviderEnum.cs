@@ -4,6 +4,7 @@ namespace RAGNET.Domain.SharedKernel.Providers
     {
         OPENAI = SupportedProvider.OpenAI,
         ANTHROPIC = SupportedProvider.Anthropic,
-        GEMINI = SupportedProvider.Gemini
+        GEMINI = SupportedProvider.Gemini,
+        DeepSeek = SupportedProvider.DeepSeek
     }
 }

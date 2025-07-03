@@ -14,6 +14,7 @@ namespace RAGNET.Infrastructure.Providers
                 SupportedProvider.Voyage => new VoyagePolicy(),
                 SupportedProvider.QDrant => new QdrantPolicy(),
                 SupportedProvider.Gemini => new GeminiPolicy(),
+                SupportedProvider.DeepSeek => new DeepSeekPolicy(),
                 _ => throw new ArgumentOutOfRangeException(nameof(type), "Unsupported provider")
             };
         }

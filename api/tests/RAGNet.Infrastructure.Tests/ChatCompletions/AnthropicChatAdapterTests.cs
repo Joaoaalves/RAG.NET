@@ -22,7 +22,7 @@ namespace tests.RAGNet.Infrastructure.Tests.ChatCompletions
         public async Task GetCompletionAsync_ReturnsText_WhenSuccessful()
         {
             var mock = new Mock<IAnthropicClientWrapper>();
-            mock.Setup(c => c.GetClaudeMessageAsync(It.IsAny<MessageParameters>()))
+            mock.Setup(c => c.CompleteChatAsync(It.IsAny<MessageParameters>()))
                 .ReturnsAsync(BuildResponse("Hello world"));
 
             var adapter = new AnthropicChatAdapter(mock.Object);
@@ -36,7 +36,7 @@ namespace tests.RAGNet.Infrastructure.Tests.ChatCompletions
         public async Task GetCompletionAsync_ThrowsException_WhenTextIsNull()
         {
             var mock = new Mock<IAnthropicClientWrapper>();
-            mock.Setup(c => c.GetClaudeMessageAsync(It.IsAny<MessageParameters>()))
+            mock.Setup(c => c.CompleteChatAsync(It.IsAny<MessageParameters>()))
                 .ReturnsAsync(BuildResponse(null));
 
             var adapter = new AnthropicChatAdapter(mock.Object);
@@ -51,7 +51,7 @@ namespace tests.RAGNet.Infrastructure.Tests.ChatCompletions
         public async Task GetCompletionAsync_ThrowsException_WhenClientFails()
         {
             var mock = new Mock<IAnthropicClientWrapper>();
-            mock.Setup(c => c.GetClaudeMessageAsync(It.IsAny<MessageParameters>()))
+            mock.Setup(c => c.CompleteChatAsync(It.IsAny<MessageParameters>()))
                 .ThrowsAsync(new InvalidOperationException("fail"));
 
             var adapter = new AnthropicChatAdapter(mock.Object);
@@ -67,7 +67,7 @@ namespace tests.RAGNet.Infrastructure.Tests.ChatCompletions
         {
             var json = """{"name": "test"}""";
             var mock = new Mock<IAnthropicClientWrapper>();
-            mock.Setup(c => c.GetClaudeMessageAsync(It.IsAny<MessageParameters>()))
+            mock.Setup(c => c.CompleteChatAsync(It.IsAny<MessageParameters>()))
                 .ReturnsAsync(BuildResponse(json));
 
             var adapter = new AnthropicChatAdapter(mock.Object);
@@ -83,7 +83,7 @@ namespace tests.RAGNet.Infrastructure.Tests.ChatCompletions
         public async Task GetCompletionStructuredAsync_ThrowsException_OnInvalidJson()
         {
             var mock = new Mock<IAnthropicClientWrapper>();
-            mock.Setup(c => c.GetClaudeMessageAsync(It.IsAny<MessageParameters>()))
+            mock.Setup(c => c.CompleteChatAsync(It.IsAny<MessageParameters>()))
                 .ReturnsAsync(BuildResponse("{ invalid ")); // malformed JSON
 
             var adapter = new AnthropicChatAdapter(mock.Object);
@@ -102,7 +102,7 @@ namespace tests.RAGNet.Infrastructure.Tests.ChatCompletions
             var mock = new Mock<IAnthropicClientWrapper>();
 
             int callCount = 0;
-            mock.Setup(c => c.GetClaudeMessageAsync(It.IsAny<MessageParameters>()))
+            mock.Setup(c => c.CompleteChatAsync(It.IsAny<MessageParameters>()))
                 .ReturnsAsync(() =>
                 {
                     callCount++;
@@ -124,7 +124,7 @@ namespace tests.RAGNet.Infrastructure.Tests.ChatCompletions
         {
             var mock = new Mock<IAnthropicClientWrapper>();
 
-            mock.Setup(c => c.GetClaudeMessageAsync(It.IsAny<MessageParameters>()))
+            mock.Setup(c => c.CompleteChatAsync(It.IsAny<MessageParameters>()))
                 .ThrowsAsync(new HttpRequestException("429"));
 
             var adapter = new AnthropicChatAdapter(mock.Object, delayMs: 1);
@@ -133,7 +133,7 @@ namespace tests.RAGNet.Infrastructure.Tests.ChatCompletions
                 adapter.GetCompletionAsync("sys", "msg"));
 
             Assert.Contains("Anthropic API", ex.Message);
-            mock.Verify(m => m.GetClaudeMessageAsync(It.IsAny<MessageParameters>()), Times.Exactly(6)); // tentativa inicial + 3 retries
+            mock.Verify(m => m.CompleteChatAsync(It.IsAny<MessageParameters>()), Times.Exactly(6)); // tentativa inicial + 3 retries
         }
     }
 }

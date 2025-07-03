@@ -122,6 +122,10 @@ namespace RAGNET.Infrastructure.Workers.Handlers
 
                     return chunks.Count;
                 }
+                catch (HttpRequestException)
+                {
+                    throw;
+                }
                 catch (Exception exc)
                 {
                     Console.WriteLine(exc.Message);

@@ -3,7 +3,7 @@ using RAGNET.Application.ProviderApiKeys.DTOs;
 using RAGNET.Domain.ProvidersApiKeys;
 using RAGNET.Domain.SharedKernel.Providers;
 
-namespace RAGNET.Application.ProviderApiKeys
+namespace RAGNET.Application.Infrastructure.Providers.Embedding
 {
     public static class ProviderApiKeyMapper
     {
@@ -21,7 +21,6 @@ namespace RAGNET.Application.ProviderApiKeys
 
             return new ProviderApiKeyDTO
             {
-                Id = userApiKey.Id.Value,
                 ProviderId = prov.ProviderType,
                 Name = prov.Name,
                 Pattern = prov.Pattern,

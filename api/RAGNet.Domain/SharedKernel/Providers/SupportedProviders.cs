@@ -6,6 +6,7 @@ namespace RAGNET.Domain.SharedKernel.Providers
         Anthropic = 1,
         Voyage = 2,
         QDrant = 3,
-        Gemini = 4
+        Gemini = 4,
+        DeepSeek = 5
     }
 }

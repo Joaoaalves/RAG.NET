@@ -17,6 +17,7 @@ using RAGNET.Infrastructure.Payments;
 using RAGNET.Infrastructure.Embedders.OpenAI;
 using RAGNET.Infrastructure.Embedders.Voyage;
 using RAGNET.Infrastructure.Embedders.Gemini;
+using RAGNET.Infrastructure.ChatCompletions.DeepSeek;
 
 using RAGNET.Application.Feedbacks.Services;
 using RAGNET.Application.Infrastructure.Providers;
@@ -74,11 +75,14 @@ namespace web.Configurations
             services.AddSingleton<OpenAIChatModelCatalog>();
             services.AddSingleton<AnthropicChatModelCatalog>();
             services.AddSingleton<GeminiChatModelCatalog>();
+            services.AddSingleton<DeepSeekChatModelCatalog>();
+
             services.AddSingleton<Dictionary<SupportedProvider, IProviderConversationModelCatalog>>(sp => new()
             {
                 { SupportedProvider.OpenAI, sp.GetRequiredService<OpenAIChatModelCatalog>() },
                 { SupportedProvider.Anthropic, sp.GetRequiredService<AnthropicChatModelCatalog>() },
                 { SupportedProvider.Gemini, sp.GetRequiredService<GeminiChatModelCatalog>() },
+                { SupportedProvider.DeepSeek, sp.GetRequiredService<DeepSeekChatModelCatalog>()}
             });
 
             services.AddSingleton<OpenAIEmbeddingModelCatalog>();

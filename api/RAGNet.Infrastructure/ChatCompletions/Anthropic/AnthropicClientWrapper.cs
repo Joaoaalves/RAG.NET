@@ -7,7 +7,7 @@ namespace RAGNET.Infrastructure.ChatCompletions.Anthropic
     {
         private readonly AnthropicClient _client = new(apiKey);
 
-        public Task<MessageResponse> GetClaudeMessageAsync(MessageParameters parameters)
+        public Task<MessageResponse> CompleteChatAsync(MessageParameters parameters)
         {
             return _client.Messages.GetClaudeMessageAsync(parameters);
         }

@@ -20,7 +20,7 @@ namespace RAGNET.Infrastructure.ChatCompletions.Anthropic
             try
             {
                 var result = await RetryHelper.ExecuteWithRetryAsync(() =>
-                    _client.GetClaudeMessageAsync(parameters), baseDelayMs: _delayMs);
+                    _client.CompleteChatAsync(parameters), baseDelayMs: _delayMs);
 
                 return result.FirstMessage.Text
                     ?? throw new AnthropicChatException("Anthropic API returned an empty response.");
@@ -43,7 +43,7 @@ namespace RAGNET.Infrastructure.ChatCompletions.Anthropic
             try
             {
                 var result = await RetryHelper.ExecuteWithRetryAsync(() =>
-                    _client.GetClaudeMessageAsync(parameters), baseDelayMs: _delayMs);
+                    _client.CompleteChatAsync(parameters), baseDelayMs: _delayMs);
 
                 var jsonText = result.FirstMessage.Text ?? "{}";
                 return JsonDocument.Parse(jsonText);

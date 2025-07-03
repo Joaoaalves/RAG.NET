@@ -21,7 +21,7 @@ namespace RAGNET.Infrastructure.ChatCompletions.OpenAI
             return await RetryHelper.ExecuteWithRetryAsync(async () =>
             {
                 return await _chatClientWrapper.CompleteChatAsync(messages);
-            });
+            }, baseDelayMs: _delayMs);
         }
 
         public async Task<JsonDocument> GetCompletionStructuredAsync(string systemPrompt, string message, JsonDocument jsonSchema, string? formatName)

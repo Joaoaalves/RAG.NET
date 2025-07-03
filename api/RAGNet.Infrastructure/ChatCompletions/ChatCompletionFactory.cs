@@ -1,6 +1,7 @@
 using RAGNET.Application.Infrastructure.Providers.Conversation;
 using RAGNET.Domain.SharedKernel.Providers;
 using RAGNET.Infrastructure.ChatCompletions.Anthropic;
+using RAGNET.Infrastructure.ChatCompletions.DeepSeek;
 using RAGNET.Infrastructure.ChatCompletions.Gemini;
 using RAGNET.Infrastructure.ChatCompletions.OpenAI;
 
@@ -8,7 +9,7 @@ namespace RAGNET.Infrastructure.ChatCompletions
 {
     public class ChatCompletionFactory : IConversationProviderFactory
     {
-        private readonly int _baseDelayMS = 1000;
+        private readonly int _baseDelayMS = 1;
         public IConversationProviderService CreateCompletionService(string userApiKey, ConversationProviderConfig config)
         {
 
@@ -17,6 +18,7 @@ namespace RAGNET.Infrastructure.ChatCompletions
                 ConversationProviderEnum.OPENAI => OpenAIClient(userApiKey, config.Model),
                 ConversationProviderEnum.ANTHROPIC => AnthropicClient(userApiKey, config.Model),
                 ConversationProviderEnum.GEMINI => GeminiClient(userApiKey, config.Model),
+                ConversationProviderEnum.DeepSeek => DeepSeekClient(userApiKey, config.Model),
                 _ => throw new NotSupportedException("Conversation Provider not supported")
             };
         }
@@ -34,6 +36,13 @@ namespace RAGNET.Infrastructure.ChatCompletions
         private GeminiChatAdapter GeminiClient(string apiKey, string model)
         {
             return new GeminiChatAdapter(apiKey, model, delayMs: _baseDelayMS);
+        }
+
+        private DeepSeekChatAdapter DeepSeekClient(string apiKey, string model)
+        {
+            var clientWrapper = new DeepSeekClientWrapper(apiKey, model);
+
+            return new DeepSeekChatAdapter(clientWrapper, delayMs: _baseDelayMS);
         }
     }
 }

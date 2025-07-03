@@ -4,7 +4,6 @@ namespace RAGNET.Application.ProviderApiKeys.DTOs
 {
     public class ProviderApiKeyDTO
     {
-        public Guid Id { get; set; } = Guid.Empty;
         public string ApiKey { get; set; } = String.Empty;
         public SupportedProvider ProviderId { get; set; }
         public string Name { get; set; } = String.Empty;

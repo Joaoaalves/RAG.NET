@@ -1,4 +1,5 @@
 using RAGNET.Application.Configuration.Commands;
+using RAGNET.Application.Infrastructure.Providers.Embedding;
 using RAGNET.Application.ProviderApiKeys.DTOs;
 using RAGNET.Application.ProviderApiKeys.Services;
 
