@@ -1,9 +1,9 @@
 using System.Net;
 using System.Text.Json;
-using RAGNET.Infrastructure.Embedders;
-using RAGNET.Infrastructure.Embedders.Voyage;
+
 using RichardSzalay.MockHttp;
-using Xunit;
+
+using RAGNET.Infrastructure.Embedders.Voyage;
 
 namespace tests.RAGNet.Infrastructure.Tests.Embedders
 {

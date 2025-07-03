@@ -3,38 +3,41 @@ using System.Text.Json;
 using RAGNET.Application.Infrastructure.Providers.Embedding;
 using RAGNET.Infrastructure.SeedWork.Resilience;
 
-namespace RAGNET.Infrastructure.Embedders
+namespace RAGNET.Infrastructure.Embedders.Voyage
 {
-    public class VoyageEmbeddingAdapter(string apiKey, string model) : IEmbeddingService
+    public class VoyageEmbeddingAdapter : IEmbeddingService
     {
-        private readonly string _voyageApiUrl = "https://api.voyageai.com/v1/embeddings";
-        private readonly HttpClient _httpClient = new();
-        private readonly string _apiKey = apiKey;
-        private readonly string _model = model;
+        private readonly HttpClient _httpClient;
+        private readonly string _apiKey;
+        private readonly string _model;
+        private readonly int _delayMs;
+
+        public VoyageEmbeddingAdapter(string apiKey, string model, HttpClient? httpClient = null, int delayMs = 2000)
+        {
+            _model = model;
+            _apiKey = apiKey;
+            _httpClient = httpClient ?? new HttpClient();
+            _httpClient.BaseAddress = new Uri("https://api.voyageai.com/v1/");
+            _delayMs = delayMs;
+        }
 
         public async Task<float[]> GetEmbeddingAsync(string text)
         {
-            var request = BuildRequest(text);
 
             var response = await RetryHelper.ExecuteWithRetryAsync(async () =>
-                {
-                    var response = await _httpClient.SendAsync(request);
-                    response.EnsureSuccessStatusCode();
-                    return response;
-                }
-            );
+            {
+                var request = BuildRequest(text);
+                var response = await _httpClient.SendAsync(request);
+                response.EnsureSuccessStatusCode();
+                return response;
+            }, baseDelayMs: _delayMs);
 
             return await ParseBody(response);
         }
 
-
         public async Task<List<float[]>> GetMultipleEmbeddingAsync(List<string> texts)
         {
-            var tasks = texts.Select(async chunk =>
-            {
-                return await GetEmbeddingAsync(chunk);
-            });
-
+            var tasks = texts.Select(GetEmbeddingAsync);
             var embeddingsArr = await Task.WhenAll(tasks);
             return [.. embeddingsArr];
         }
@@ -54,7 +57,7 @@ namespace RAGNET.Infrastructure.Embedders
 
         private HttpRequestMessage BuildRequest(string text)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, _voyageApiUrl)
+            var request = new HttpRequestMessage(HttpMethod.Post, "embeddings")
             {
                 Content = new StringContent(
                     JsonSerializer.Serialize(new

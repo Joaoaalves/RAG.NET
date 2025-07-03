@@ -11,12 +11,16 @@ using RAGNET.Infrastructure.Redis;
 using RAGNET.Infrastructure.Trello;
 using RAGNET.Infrastructure.Workers;
 using RAGNET.Infrastructure.Jobs;
-using RAGNET.Infrastructure.Embedders;
+using RAGNET.Infrastructure.ChatCompletions.Anthropic;
+using RAGNET.Infrastructure.ChatCompletions.Gemini;
+using RAGNET.Infrastructure.Payments;
+using RAGNET.Infrastructure.Embedders.OpenAI;
+using RAGNET.Infrastructure.Embedders.Voyage;
+using RAGNET.Infrastructure.Embedders.Gemini;
 
 using RAGNET.Application.Feedbacks.Services;
 using RAGNET.Application.Infrastructure.Providers;
 using RAGNET.Application.Subscriptions.Services;
-using RAGNET.Infrastructure.Payments;
 using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob;
 
 namespace web.Configurations

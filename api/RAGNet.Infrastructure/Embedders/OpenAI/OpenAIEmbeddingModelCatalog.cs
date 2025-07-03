@@ -1,7 +1,7 @@
 using RAGNET.Domain.SharedKernel.Models;
 using RAGNET.Domain.SharedKernel.Providers;
 
-namespace RAGNET.Infrastructure.Embedders
+namespace RAGNET.Infrastructure.Embedders.OpenAI
 {
     public class OpenAIEmbeddingModelCatalog : IProviderEmbeddingModelCatalog
     {

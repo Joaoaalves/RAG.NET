@@ -23,7 +23,8 @@ namespace RAGNET.Infrastructure.SeedWork.Resilience
                 msg.Contains("500") || // Internal Server Error
                 msg.Contains("timeout") || // Timeout in message
                 msg.Contains("temporarily") || // Generic transient wording
-                msg.Contains("retry"); // Sometimes error messages suggest retry
+                msg.Contains("retry") || // Sometimes error messages suggest retry
+                msg.Contains("internal");
         }
     }
 

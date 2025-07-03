@@ -1,7 +1,7 @@
 using RAGNET.Domain.SharedKernel.Models;
 using RAGNET.Domain.SharedKernel.Providers;
 
-namespace RAGNET.Infrastructure.ChatCompletions
+namespace RAGNET.Infrastructure.ChatCompletions.Gemini
 {
     public class GeminiChatModelCatalog : IProviderConversationModelCatalog
     {

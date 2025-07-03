@@ -1,23 +1,26 @@
 using System.Text.Json;
+
 using OpenAI.Chat;
 
 using RAGNET.Application.Infrastructure.Providers.Conversation;
 using RAGNET.Infrastructure.SeedWork.Resilience;
 
-namespace RAGNET.Infrastructure.ChatCompletions
+namespace RAGNET.Infrastructure.ChatCompletions.OpenAI
 {
-    public class OpenAIChatAdapter(string apiKey, string model) : IConversationProviderService
+    public class OpenAIChatAdapter(
+        IOpenAIChatClientWrapper chatClientWrapper,
+        int delayMs = 2000
+    ) : IConversationProviderService
     {
-        private readonly ChatClient _chatClient = new(model, apiKey);
-
+        private readonly IOpenAIChatClientWrapper _chatClientWrapper = chatClientWrapper;
+        private readonly int _delayMs = delayMs;
         public async Task<string> GetCompletionAsync(string systemPrompt, string message)
         {
             ChatMessage[] messages = [new SystemChatMessage(systemPrompt), new UserChatMessage(message)];
 
             return await RetryHelper.ExecuteWithRetryAsync(async () =>
             {
-                ChatCompletion completion = await _chatClient.CompleteChatAsync(messages);
-                return completion.Content[0].Text;
+                return await _chatClientWrapper.CompleteChatAsync(messages);
             });
         }
 
@@ -36,12 +39,9 @@ namespace RAGNET.Infrastructure.ChatCompletions
 
             return await RetryHelper.ExecuteWithRetryAsync(async () =>
             {
-                ChatCompletion completion = await _chatClient.CompleteChatAsync(messages, options);
-
-                JsonDocument structuredJson = JsonDocument.Parse(completion.Content[0].Text);
-
-                return structuredJson;
-            });
+                var completion = await _chatClientWrapper.CompleteChatAsync(messages, options);
+                return JsonDocument.Parse(completion);
+            }, baseDelayMs: _delayMs);
         }
     }
 }

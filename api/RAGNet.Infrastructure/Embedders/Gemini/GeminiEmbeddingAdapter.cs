@@ -4,13 +4,13 @@ using RAGNET.Application.Infrastructure.Providers.Embedding;
 using RAGNET.Infrastructure.Exceptions.Adapters;
 using RAGNET.Infrastructure.SeedWork.Resilience;
 
-namespace RAGNET.Infrastructure.Embedders
+namespace RAGNET.Infrastructure.Embedders.Gemini
 {
     public class GeminiEmbeddingAdapter : IEmbeddingService
     {
         private readonly string _model;
         private readonly HttpClient _httpClient;
-        private readonly int DelayMs;
+        private readonly int _delayMs;
 
         public GeminiEmbeddingAdapter(string apiKey, string model, HttpClient? httpClient = null, int delayMs = 2000)
         {
@@ -23,7 +23,7 @@ namespace RAGNET.Infrastructure.Embedders
                 BaseAddress = new Uri("https://generativelanguage.googleapis.com/")
             }; ;
             _httpClient.DefaultRequestHeaders.Add("x-goog-api-key", apiKey);
-            DelayMs = delayMs;
+            _delayMs = delayMs;
         }
 
         public async Task<float[]> GetEmbeddingAsync(string text)
@@ -35,7 +35,7 @@ namespace RAGNET.Infrastructure.Embedders
                 var response = await _httpClient.SendAsync(request);
                 response.EnsureSuccessStatusCode();
                 return response;
-            }, baseDelayMs: DelayMs);
+            }, baseDelayMs: _delayMs);
 
             return await ParseBody(response);
         }

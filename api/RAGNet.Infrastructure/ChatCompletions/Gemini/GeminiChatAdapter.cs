@@ -4,7 +4,7 @@ using RAGNET.Application.Infrastructure.Providers.Conversation;
 using RAGNET.Infrastructure.Exceptions.Adapters;
 using RAGNET.Infrastructure.SeedWork.Resilience;
 
-namespace RAGNET.Infrastructure.ChatCompletions
+namespace RAGNET.Infrastructure.ChatCompletions.Gemini
 {
     public class GeminiChatAdapter : IConversationProviderService
     {
