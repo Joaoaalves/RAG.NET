@@ -1,6 +1,5 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideNgxStripe } from 'ngx-stripe';
 
 import { routes } from './app.routes';
 import {
@@ -10,7 +9,6 @@ import {
 } from '@angular/common/http';
 import { JwtInterceptor } from './interceptors/jwt-interceptor';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { environment } from 'src/environments/environment';
 import { ErrorInterceptor } from './interceptors/error-interceptor';
 
 export const appConfig: ApplicationConfig = {
@@ -18,7 +16,6 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(withInterceptorsFromDi()),
     provideRouter(routes),
-    provideNgxStripe(environment.stripePublishableKey),
     provideCharts(withDefaultRegisterables()),
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
