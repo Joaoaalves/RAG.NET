@@ -14,7 +14,6 @@ namespace RAGNET.Infrastructure.Workers.Handlers
     {
 
         private readonly IApiKeyResolverService _apiKeyResolver = apiKeyResolver;
-
         private readonly IEmbedderFactory _embedderFactory = embedderFactory;
         private readonly IConversationProviderFactory _chatCompletionFactory = chatCompletionFactory;
 

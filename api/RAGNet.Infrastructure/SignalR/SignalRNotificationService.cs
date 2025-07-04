@@ -42,12 +42,12 @@ namespace RAGNET.Infrastructure.SignalR
             }, ct);
         }
 
-        public Task NotifyFailureAsync(Guid jobId, string userId, Document document, CancellationToken ct = default)
+        public Task NotifyFailureAsync(Guid jobId, string userId, Document document, string errorMessage, CancellationToken ct = default)
         {
 
             return Notify("JobFailed", jobId, userId, document, new ProcessDTO
             {
-                Title = "Error",
+                Title = errorMessage,
                 Progress = 100
             }, ct);
         }

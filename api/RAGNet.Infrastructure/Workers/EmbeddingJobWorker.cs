@@ -39,22 +39,21 @@ namespace RAGNET.Infrastructure.Workers
             var mountProvidersHandler = scope.ServiceProvider.GetRequiredService<MountProvidersHandler>();
             var mountChunkerHandler = scope.ServiceProvider.GetRequiredService<MountChunkerHandler>();
             var extractHandler = scope.ServiceProvider.GetRequiredService<ExtractTextHandler>();
+            var consumeTokensHandler = scope.ServiceProvider.GetRequiredService<ConsumeTokensHandler>();
             var processPagesHandler = scope.ServiceProvider.GetRequiredService<ProcessPagesHandler>();
+            var storeVectoresHandler = scope.ServiceProvider.GetRequiredService<StoreVectorsHandler>();
             var updateWorkflowHandler = scope.ServiceProvider.GetRequiredService<UpdateWorkflowHandler>();
             var notifyHandler = scope.ServiceProvider.GetRequiredService<NotifyHandler>();
 
             try
             {
-                initializeJobHandler.SetNext(mountProvidersHandler);
-
+                initializeJobHandler.SetNext(extractHandler);
+                extractHandler.SetNext(mountProvidersHandler);
                 mountProvidersHandler.SetNext(mountChunkerHandler);
-
-                mountChunkerHandler.SetNext(extractHandler);
-
-                extractHandler.SetNext(processPagesHandler);
-
-                processPagesHandler.SetNext(updateWorkflowHandler);
-
+                mountChunkerHandler.SetNext(consumeTokensHandler);
+                consumeTokensHandler.SetNext(processPagesHandler);
+                processPagesHandler.SetNext(storeVectoresHandler);
+                storeVectoresHandler.SetNext(updateWorkflowHandler);
                 updateWorkflowHandler.SetNext(notifyHandler);
 
 
@@ -64,7 +63,7 @@ namespace RAGNET.Infrastructure.Workers
             catch (Exception ex)
             {
                 await _callbackNotificationService
-              .NotifyFailureAsync(job, ex.Message, ct);
+                    .NotifyFailureAsync(job, ex.Message, ct);
                 await unitOfWork.RevertAsync();
                 throw;
             }

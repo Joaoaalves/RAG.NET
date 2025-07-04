@@ -1,5 +1,3 @@
-using RAGNET.Domain.SharedKernel.Plans.Policies;
-
 using RAGNET.Application.Infrastructure.Providers.Embedding;
 using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
 
@@ -8,37 +6,29 @@ using RAGNET.Infrastructure.Jobs.Queue;
 
 namespace RAGNET.Infrastructure.Workers.Handlers
 {
-    public class MountChunkerHandler(
+    public class StoreVectorsHandler(
         IEmbeddingProcessingService embeddingService,
-        SubscriptionPolicy subscriptionPolicy,
         IJobNotificationService realTimeNotifier
     ) : NotifierJobProcessingHandler(realTimeNotifier)
     {
+
         private readonly IEmbeddingProcessingService _embeddingService = embeddingService;
-        private readonly SubscriptionPolicy _policy = subscriptionPolicy;
         private readonly ProcessDTO _currentProcess = new()
         {
-            Title = "Mounting Chunker",
-            Progress = 0
+            Title = "Storing Vectors",
         };
-
 
         public override async Task HandleAsync(EmbeddingJob job, CancellationToken ct)
         {
-            await NotifyProgress(job, _currentProcess, ct);
-
-            var chunker = job.Context.Workflow.Chunker;
-            var user = job.Context.User;
-
-            if (!_policy.Allows(user, chunker.StrategyType))
+            var chunks = job.Context.Chunks;
+            if (chunks is null || !chunks.Any())
             {
-                throw new InvalidOperationException("Your current subscription does not allow this operation.");
+                throw new Exception("No chunks created");
             }
 
-            job.Context.TextChunkerService = _embeddingService.GetChunker(
-                chunker,
-                job.Context.ConversationProviderService
-            );
+            await NotifyProgress(job, _currentProcess, ct);
+
+            await _embeddingService.AddChunksAsync([.. chunks]);
 
             await base.HandleAsync(job, ct);
         }

@@ -2,11 +2,6 @@ using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
 
 namespace RAGNET.Infrastructure.Jobs
 {
-    public interface IJobProcessingHandler
-    {
-        void SetNext(IJobProcessingHandler next);
-        Task HandleAsync(EmbeddingJob job, CancellationToken ct);
-    }
     public abstract class BaseJobProcessingHandler : IJobProcessingHandler
     {
         private IJobProcessingHandler? _next;

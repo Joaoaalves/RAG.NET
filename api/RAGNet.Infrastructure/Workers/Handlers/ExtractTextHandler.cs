@@ -1,16 +1,20 @@
-using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
 using RAGNET.Domain.Documents;
 using RAGNET.Domain.Documents.Pages;
+
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
+
 using RAGNET.Infrastructure.DocumentProcessors;
 using RAGNET.Infrastructure.Jobs;
 using RAGNET.Infrastructure.Jobs.Queue;
 
 namespace RAGNET.Infrastructure.Workers.Handlers
 {
-    public class ExtractTextHandler(IDocumentProcessorFactory documentProcessorFactory, IJobNotificationService realTimeNotifier) : BaseJobProcessingHandler
+    public class ExtractTextHandler(
+        IDocumentProcessorFactory documentProcessorFactory,
+        IJobNotificationService realTimeNotifier
+    ) : NotifierJobProcessingHandler(realTimeNotifier)
     {
         private readonly IDocumentProcessorFactory _documentProcessorFactory = documentProcessorFactory;
-        public readonly IJobNotificationService _realTimeNotifier = realTimeNotifier;
         private readonly ProcessDTO _currentProcess = new()
         {
             Title = "Extracting Document Pages",
@@ -38,9 +42,8 @@ namespace RAGNET.Infrastructure.Workers.Handlers
                                     extract.Pages
                                  );
 
-            job.Context.ExtractResult = extract;
             job.Context.Document = document;
-            await _realTimeNotifier.NotifyProgress(job.JobId, job.UserId, document, _currentProcess, ct);
+            await NotifyProgress(job, _currentProcess, ct);
             await base.HandleAsync(job, ct);
         }
     }

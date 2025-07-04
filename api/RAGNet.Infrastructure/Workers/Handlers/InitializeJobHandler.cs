@@ -14,7 +14,6 @@ namespace RAGNET.Infrastructure.Workers.Handlers
         {
             var workflow = await _workflowRepository.GetByApiKey(job.ApiKey) ?? throw new Exception("Workflow not found");
             var user = await _userRepository.GetByIdAsync(job.UserId) ?? throw new Exception("User not found.");
-
             job.Context.User = user;
             job.Context.Workflow = workflow;
 

@@ -10,10 +10,9 @@ namespace RAGNET.Infrastructure.Workers.Handlers
         ICallbackNotificationService<EmbeddingJobContext> callbackNotificationService,
         IJobNotificationService realTimeNotifier,
         SubscriptionPolicy subscriptionPolicy
-    ) : BaseJobProcessingHandler
+    ) : NotifierJobProcessingHandler(realTimeNotifier)
     {
         public readonly ICallbackNotificationService<EmbeddingJobContext> _callbackNotificationService = callbackNotificationService;
-        public readonly IJobNotificationService _realTimeNotifier = realTimeNotifier;
         public readonly SubscriptionPolicy _subscriptionPolicy = subscriptionPolicy;
         public override async Task HandleAsync(EmbeddingJob job, CancellationToken ct)
         {
@@ -27,7 +26,7 @@ namespace RAGNET.Infrastructure.Workers.Handlers
                             ct
                     );
 
-                await _realTimeNotifier.NotifySuccessAsync(job.JobId, job.UserId, job.Context.Document, ct);
+                await NotifySuccesss(job, ct);
             }
         }
     }

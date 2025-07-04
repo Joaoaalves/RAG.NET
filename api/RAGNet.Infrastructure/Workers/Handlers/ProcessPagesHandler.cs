@@ -1,82 +1,38 @@
 using System.Collections.Concurrent;
 
-using RAGNET.Domain.Documents;
 using RAGNET.Domain.Documents.Pages;
 using RAGNET.Domain.Documents.Pages.Chunks;
-
-using RAGNET.Application.ProviderApiKeys.Services;
 
 using RAGNET.Infrastructure.Jobs;
 using RAGNET.Infrastructure.Jobs.Queue;
 using RAGNET.Application.Infrastructure.Providers.Embedding;
-using RAGNET.Application.TokenWallets.Services.Consumption;
-using RAGNET.Application.TokenWallets.Services.Consumption.Strategies;
 using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
+using System.Text.Json;
 
 namespace RAGNET.Infrastructure.Workers.Handlers
 {
     public class ProcessPagesHandler(
-        IApiKeyResolverService apiKeyResolver,
         IEmbeddingProcessingService embeddingService,
-        IJobNotificationService realTimeNotifier,
-        ITokenConsumerContext tokenConsumerContext) : BaseJobProcessingHandler
+        IJobNotificationService realTimeNotifier
+        ) : NotifierJobProcessingHandler(realTimeNotifier)
     {
-        private readonly IApiKeyResolverService _apiKeyResolver = apiKeyResolver;
         private readonly IEmbeddingProcessingService _embeddingService = embeddingService;
-        private readonly IJobNotificationService _realTimeNotifier = realTimeNotifier;
-
-        private readonly ITokenConsumerContext _tokenConsumerContext = tokenConsumerContext;
-
         private readonly ProcessDTO _currentProcess = new()
         {
-            Title = "Embedding Extracted Text"
+            Title = "Embedding Extracted Text",
+            Progress = 0
         };
-
-        private async Task NotifyProgress(EmbeddingJob job, Document document, CancellationToken ct)
-        {
-            await _realTimeNotifier.NotifyProgress(job.JobId, job.UserId, document, _currentProcess, ct);
-        }
-
-        private async Task StoreVectors(ConcurrentBag<Chunk> chunksBag, EmbeddingJob job, Document document, CancellationToken ct)
-        {
-            _currentProcess.Title = "Storing Vectors";
-            _currentProcess.Progress = 0;
-            await NotifyProgress(job, document, ct);
-
-            await _embeddingService.AddChunksAsync([.. chunksBag]);
-
-            _currentProcess.Title = "Storing Vectors";
-            _currentProcess.Progress = 100;
-
-            await NotifyProgress(job, document, ct);
-        }
 
         public override async Task HandleAsync(EmbeddingJob job, CancellationToken ct)
         {
+            await NotifyProgress(job, _currentProcess, ct);
+
             var workflow = job.Context.Workflow;
-            var wallet = job.Context.User.TokenWallet;
-
-            var document = job.Context.Document ?? throw new Exception("Document is not set");
-
-            await NotifyProgress(job, document, ct);
-
-            var totalPages = document.Pages.Count;
-            int processedPages = 0;
-
             var chunker = job.Context.TextChunkerService;
 
-            var tokenConsumptionStrategy = new ChunkerConsumptionStrategy(
-                workflow,
-                chunker,
-                totalPages
-            );
-
-            await _tokenConsumerContext.ConsumeAsync(
-                workflow,
-                wallet,
-                tokenConsumptionStrategy,
-                ct
-            );
+            var document = job.Context.Document;
+            var totalPages = document.Pages.Count;
+            int processedPages = 0;
 
             var chunksBag = new ConcurrentBag<Chunk>();
 
@@ -88,7 +44,6 @@ namespace RAGNET.Infrastructure.Workers.Handlers
                                                     chunker,
                                                     page.Text.Value
                                                  );
-
                     if (chunks.Count > 0)
                     {
                         var results = await _embeddingService.GetEmbeddingsAsync(
@@ -118,25 +73,23 @@ namespace RAGNET.Infrastructure.Workers.Handlers
                     var finished = Interlocked.Increment(ref processedPages);
 
                     _currentProcess.Progress = (int)(finished / (double)totalPages * 100);
-                    await NotifyProgress(job, document, ct);
+                    await NotifyProgress(job, _currentProcess, ct);
 
                     return chunks.Count;
                 }
-                catch (HttpRequestException)
+                catch (JsonException)
+                {
+                    return 0;
+                }
+                catch (Exception)
                 {
                     throw;
-                }
-                catch (Exception exc)
-                {
-                    Console.WriteLine(exc.Message);
-                    return 0;
                 }
 
             }));
 
-            await StoreVectors(chunksBag, job, document, ct);
-
             job.Context.TotalProcessed = counts.Sum();
+            job.Context.Chunks = chunksBag;
 
             await base.HandleAsync(job, ct);
         }

@@ -12,6 +12,8 @@ namespace web.Configurations
             services.AddScoped<MountChunkerHandler>();
             services.AddScoped<MountProvidersHandler>();
             services.AddScoped<ProcessPagesHandler>();
+            services.AddScoped<ConsumeTokensHandler>();
+            services.AddScoped<StoreVectorsHandler>();
             services.AddScoped<UpdateWorkflowHandler>();
             services.AddScoped<NotifyHandler>();
             return services;
