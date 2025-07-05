@@ -1,7 +1,5 @@
-using RAGNET.Application.Chunkers.Factories;
 using RAGNET.Application.Chunkers.Services;
-using RAGNET.Application.Infrastructure.Providers.Conversation;
-using RAGNET.Domain.Chunkers;
+using RAGNET.Application.Infrastructure.Providers.Embedding.DTOs;
 using RAGNET.Domain.Documents.Pages.Chunks;
 
 namespace RAGNET.Application.Infrastructure.Providers.Embedding
@@ -13,45 +11,19 @@ namespace RAGNET.Application.Infrastructure.Providers.Embedding
             ITextChunkerService chunker,
             string text
         );
-        ITextChunkerService GetChunker(
-            Chunker chunkerConfig,
-            IConversationProviderService completionService
-        );
-        Task<List<(string ChunkText, string VectorId, float[] Embedding)>> GetEmbeddingsAsync
+        Task<List<EmbeddingDTO>> GetEmbeddingsAsync
         (
             List<string> chunks,
             IEmbeddingService embedder
         );
-        Task AddChunksAsync(List<Chunk> chunks);
-        Task InsertEmbeddingBatchAsync(List<(string VectorId, float[] Embedding, Dictionary<string, string> Metadata)> batch, string collectionId);
+        Task InsertEmbeddingBatchAsync(List<EmbeddingDTO> batch, string collectionId);
     }
 
     public class EmbeddingProcessingService(
-        ITextChunkerFactory chunkerFactory,
-        IChunkRepository chunkRepository,
         IVectorDatabaseService vectorDatabaseService
     ) : IEmbeddingProcessingService
     {
-        private readonly ITextChunkerFactory _chunkerFactory = chunkerFactory;
-        private readonly IChunkRepository _chunkRepository = chunkRepository;
         private readonly IVectorDatabaseService _vectorDatabaseService = vectorDatabaseService;
-
-        public async Task AddChunksAsync(List<Chunk> chunks)
-        {
-            foreach (var chunk in chunks)
-            {
-                await _chunkRepository.AddAsync(chunk);
-            }
-
-        }
-
-        public ITextChunkerService GetChunker(
-            Chunker chunkerConfig,
-            IConversationProviderService completionService
-        )
-        {
-            return _chunkerFactory.CreateChunker(chunkerConfig, completionService);
-        }
 
         public Task<List<string>> ChunkTextAsync(
             ITextChunkerService chunker,
@@ -61,24 +33,30 @@ namespace RAGNET.Application.Infrastructure.Providers.Embedding
             return chunker.ChunkText(text);
         }
 
-        public async Task<List<(string ChunkText, string VectorId, float[] Embedding)>> GetEmbeddingsAsync(
+        public async Task<List<EmbeddingDTO>> GetEmbeddingsAsync(
             List<string> chunks,
             IEmbeddingService embedder
         )
         {
-            var embeddings = await embedder.GetMultipleEmbeddingAsync(chunks);
-            var result = new List<(string, string, float[])>();
+            var vectors = await embedder.GetMultipleEmbeddingAsync(chunks);
+            var result = new List<EmbeddingDTO>();
 
             for (int i = 0; i < chunks.Count; i++)
             {
                 string vectorId = Guid.NewGuid().ToString();
-                result.Add((chunks[i], vectorId, embeddings[i]));
+
+                result.Add(new()
+                {
+                    VectorId = vectorId,
+                    Vector = vectors[i],
+                    ChunkText = chunks[i],
+                });
             }
 
             return result;
         }
 
-        public async Task InsertEmbeddingBatchAsync(List<(string VectorId, float[] Embedding, Dictionary<string, string> Metadata)> batch, string collectionId)
+        public async Task InsertEmbeddingBatchAsync(List<EmbeddingDTO> batch, string collectionId)
         {
             await _vectorDatabaseService.InsertManyAsync(batch, collectionId);
         }

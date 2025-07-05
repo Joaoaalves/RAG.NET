@@ -12,6 +12,9 @@ namespace RAGNET.Domain.Documents.Pages.Chunks
             Vector = vector.ToList().AsReadOnly();
         }
 
+        public float[] ToArray() => [.. Vector];
+        public int Size() => Vector.Count;
+        public float At(int index) => Vector[index];
         public override string ToString() => $"[{string.Join(", ", Vector.Take(5))}...]";
     }
 }

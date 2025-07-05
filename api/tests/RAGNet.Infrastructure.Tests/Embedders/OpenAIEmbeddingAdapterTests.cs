@@ -1,4 +1,5 @@
 using Moq;
+using RAGNET.Domain.Documents.Pages.Chunks;
 using RAGNET.Infrastructure.Embedders.OpenAI;
 
 namespace tests.RAGNet.Infrastructure.Tests.Embedders;
@@ -21,7 +22,7 @@ public class OpenAIEmbeddingAdapterTests
     {
         // Arrange
         var input = "Hello";
-        var expected = new float[] { 0.1f, 0.2f };
+        var expected = new SemanticVector([0.1f, 0.2f]);
 
         _mockWrapper
             .Setup(x => x.GenerateEmbeddingAsync(input, default))
@@ -41,7 +42,11 @@ public class OpenAIEmbeddingAdapterTests
     {
         // Arrange
         var inputs = new[] { "A", "B" };
-        var expected = new[] { [1f], new float[] { 2f } };
+        var expected = new[]
+        {
+            new SemanticVector([1f]),
+            new SemanticVector([2f])
+        };
 
         _mockWrapper
             .Setup(x => x.GenerateEmbeddingAsync("A", default))
@@ -67,7 +72,7 @@ public class OpenAIEmbeddingAdapterTests
     {
         // Arrange
         var input = "Retry text";
-        var expected = new float[] { 9f, 8f };
+        var expected = new SemanticVector([9f, 8f]);
         int attempts = 0;
 
         _mockWrapper

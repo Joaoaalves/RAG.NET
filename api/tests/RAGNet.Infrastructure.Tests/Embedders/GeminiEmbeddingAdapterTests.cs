@@ -1,4 +1,5 @@
 using System.Net;
+using RAGNET.Domain.Documents.Pages.Chunks;
 using RAGNET.Infrastructure.Embedders.Gemini;
 using RAGNET.Infrastructure.Exceptions.Adapters;
 using RichardSzalay.MockHttp;
@@ -20,7 +21,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Embedders
         }
 
         [Fact]
-        public async Task GetEmbeddingAsync_ReturnsFloatArray_OnSuccess()
+        public async Task GetEmbeddingAsync_ReturnsSemanticVector_OnSuccess()
         {
             // Arrange
             var responseJson = """
@@ -37,7 +38,8 @@ namespace tests.RAGNet.Infrastructure.Tests.Embedders
             var result = await adapter.GetEmbeddingAsync("test");
 
             // Assert
-            Assert.Equal([0.1f, 0.2f, 0.3f], result);
+            var expected = new SemanticVector([0.1f, 0.2f, 0.3f]);
+            Assert.Equal(expected, result);
         }
 
         [Fact]
@@ -65,7 +67,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Embedders
         }
 
         [Fact]
-        public async Task GetMultipleEmbeddingAsync_ReturnsMultipleVectors()
+        public async Task GetMultipleEmbeddingAsync_ReturnsMultipleSemanticVectors()
         {
             // Arrange
             var responseJson = """
@@ -82,8 +84,9 @@ namespace tests.RAGNet.Infrastructure.Tests.Embedders
             var result = await adapter.GetMultipleEmbeddingAsync(["a", "b"]);
 
             // Assert
+            var expected = new SemanticVector([0.5f, 0.6f]);
             Assert.Equal(2, result.Count);
-            Assert.All(result, emb => Assert.Equal([0.5f, 0.6f], emb));
+            Assert.All(result, emb => Assert.Equal(expected, emb));
         }
     }
 }

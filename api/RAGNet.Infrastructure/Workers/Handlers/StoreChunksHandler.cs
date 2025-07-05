@@ -1,26 +1,26 @@
-using RAGNET.Application.Infrastructure.Providers.Embedding;
 using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
-
+using RAGNET.Domain.Documents.Pages.Chunks;
 using RAGNET.Infrastructure.Jobs;
 using RAGNET.Infrastructure.Jobs.Queue;
 
 namespace RAGNET.Infrastructure.Workers.Handlers
 {
-    public class StoreVectorsHandler(
-        IEmbeddingProcessingService embeddingService,
+    public class StoreChunksHandler(
+        IChunkRepository chunkRepository,
         IJobNotificationService realTimeNotifier
     ) : NotifierJobProcessingHandler(realTimeNotifier)
     {
 
-        private readonly IEmbeddingProcessingService _embeddingService = embeddingService;
+        private readonly IChunkRepository _chunkRepository = chunkRepository;
         private readonly ProcessDTO _currentProcess = new()
         {
-            Title = "Storing Vectors",
+            Title = "Storing Chunks",
         };
 
         public override async Task HandleAsync(EmbeddingJob job, CancellationToken ct)
         {
             var chunks = job.Context.Chunks;
+
             if (chunks is null || !chunks.Any())
             {
                 throw new Exception("No chunks created");
@@ -28,7 +28,7 @@ namespace RAGNET.Infrastructure.Workers.Handlers
 
             await NotifyProgress(job, _currentProcess, ct);
 
-            await _embeddingService.AddChunksAsync([.. chunks]);
+            await _chunkRepository.AddManyAsync([.. chunks]);
 
             await base.HandleAsync(job, ct);
         }

@@ -1,3 +1,6 @@
+using RAGNET.Application.Infrastructure.Providers.Embedding.DTOs;
+using RAGNET.Domain.Documents.Pages.Chunks;
+
 namespace RAGNET.Application.Infrastructure.Providers
 {
     public class VectorQueryResult
@@ -10,10 +13,10 @@ namespace RAGNET.Application.Infrastructure.Providers
     public interface IVectorDatabaseService
     {
         Task CreateCollectionAsync(Guid collectionName, int vectorSize);
-        Task InsertAsync(string VectorId, float[] vector, string collectionName, Dictionary<string, string> metadata);
-        Task InsertManyAsync(List<(string VectorId, float[] Vector, Dictionary<string, string> Metadata)> batch, string collectionName); // NEW
-        Task<List<VectorQueryResult>> QueryAsync(float[] vector, string collectionId, int topK);
-        Task<List<VectorQueryResult>> QueryMultipleAsync(List<float[]> vectors, string collectionName, int topK);
-        Task<List<VectorQueryResult>> QueryHybridMedianAsync(List<float[]> queryVectors, string collectionName, int topK);
+        Task InsertAsync(EmbeddingDTO embedding, string collectionName);
+        Task InsertManyAsync(IEnumerable<EmbeddingDTO> batch, string collectionName);
+        Task<List<VectorQueryResult>> QueryAsync(SemanticVector vector, string collectionId, int topK);
+        Task<List<VectorQueryResult>> QueryMultipleAsync(IEnumerable<SemanticVector> vectors, string collectionName, int topK);
+        Task<List<VectorQueryResult>> QueryByAverageVectorAsync(IEnumerable<SemanticVector> queryVectors, string collectionName, int topK);
     }
 }

@@ -1,13 +1,14 @@
 using System.Collections.Concurrent;
+using System.Text.Json;
 
 using RAGNET.Domain.Documents.Pages;
 using RAGNET.Domain.Documents.Pages.Chunks;
 
 using RAGNET.Infrastructure.Jobs;
 using RAGNET.Infrastructure.Jobs.Queue;
+
 using RAGNET.Application.Infrastructure.Providers.Embedding;
 using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
-using System.Text.Json;
 
 namespace RAGNET.Infrastructure.Workers.Handlers
 {
@@ -46,24 +47,20 @@ namespace RAGNET.Infrastructure.Workers.Handlers
                                                  );
                     if (chunks.Count > 0)
                     {
-                        var results = await _embeddingService.GetEmbeddingsAsync(
+                        var batch = await _embeddingService.GetEmbeddingsAsync(
                                           chunks,
                                           job.Context.EmbeddingProviderService
                                       );
 
-                        var batch = results
-                            .Select(r => (r.VectorId, r.Embedding, new Dictionary<string, string>()))
-                            .ToList();
-
                         await _embeddingService.InsertEmbeddingBatchAsync(batch, workflow.CollectionId.ToString());
 
-                        foreach (var (ChunkText, VectorId, Embedding) in results)
+                        foreach (var embedding in batch)
                         {
                             var chunk = Chunk.Create(
                                 pageId: page.Id,
-                                text: new Text(ChunkText),
-                                vectorId: VectorId,
-                                vector: new SemanticVector(Embedding)
+                                text: new Text(embedding.ChunkText),
+                                vectorId: embedding.VectorId,
+                                vector: embedding.Vector
                             );
 
                             chunksBag.Add(chunk);

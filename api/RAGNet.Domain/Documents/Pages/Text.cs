@@ -8,10 +8,10 @@ namespace RAGNET.Domain.Documents.Pages
 
         protected Text() { } // For EF
 
-        public Text(string value)
+        public Text(string value = "")
         {
-            value = value.Trim();
             CheckRule(new Rules.TextMustNotBeEmptyRule(value));
+            value = value.Trim();
 
             Value = value;
         }

@@ -1,4 +1,5 @@
 using RAGNET.Application.Infrastructure.Providers.Embedding;
+using RAGNET.Domain.Documents.Pages.Chunks;
 using RAGNET.Infrastructure.SeedWork.Resilience;
 
 namespace RAGNET.Infrastructure.Embedders.OpenAI
@@ -10,7 +11,7 @@ namespace RAGNET.Infrastructure.Embedders.OpenAI
     {
         private readonly IOpenAIEmbeddingWrapper _client = embeddingClient;
         private readonly int _delayMs = delayMs;
-        public async Task<float[]> GetEmbeddingAsync(string text)
+        public async Task<SemanticVector> GetEmbeddingAsync(string text)
         {
             return await RetryHelper.ExecuteWithRetryAsync(async () =>
             {
@@ -18,7 +19,7 @@ namespace RAGNET.Infrastructure.Embedders.OpenAI
             }, baseDelayMs: _delayMs);
         }
 
-        public async Task<List<float[]>> GetMultipleEmbeddingAsync(List<string> texts)
+        public async Task<List<SemanticVector>> GetMultipleEmbeddingAsync(List<string> texts)
         {
             var tasks = texts.Select(async chunk =>
             {

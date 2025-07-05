@@ -8,10 +8,10 @@ namespace RAGNET.Infrastructure.Domain.Documents.Pages.Chunks
     {
         private readonly ApplicationDbContext _context = context;
 
-        public async Task<Chunk> AddAsync(Chunk chunk)
+        public async Task<List<Chunk>> AddManyAsync(List<Chunk> chunks)
         {
-            await _context.Chunks.AddAsync(chunk);
-            return chunk;
+            await _context.Chunks.AddRangeAsync(chunks);
+            return chunks;
         }
 
         public async Task<Chunk?> GetByVectorId(string vectorId)

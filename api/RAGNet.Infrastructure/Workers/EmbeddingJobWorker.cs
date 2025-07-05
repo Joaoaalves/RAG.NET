@@ -41,7 +41,7 @@ namespace RAGNET.Infrastructure.Workers
             var extractHandler = scope.ServiceProvider.GetRequiredService<ExtractTextHandler>();
             var consumeTokensHandler = scope.ServiceProvider.GetRequiredService<ConsumeTokensHandler>();
             var processPagesHandler = scope.ServiceProvider.GetRequiredService<ProcessPagesHandler>();
-            var storeVectoresHandler = scope.ServiceProvider.GetRequiredService<StoreVectorsHandler>();
+            var storeVectoresHandler = scope.ServiceProvider.GetRequiredService<StoreChunksHandler>();
             var updateWorkflowHandler = scope.ServiceProvider.GetRequiredService<UpdateWorkflowHandler>();
             var notifyHandler = scope.ServiceProvider.GetRequiredService<NotifyHandler>();
 

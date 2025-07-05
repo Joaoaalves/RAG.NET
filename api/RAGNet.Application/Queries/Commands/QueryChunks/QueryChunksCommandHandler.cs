@@ -40,11 +40,11 @@ namespace RAGNET.Application.Queries.Commands.QueryChunks
                 var embedderService = _embedderFactory.CreateEmbeddingService(userEmbeddingProviderApiKey, embConfig);
 
                 // Embedd All
-                var embeddings = await embedderService.GetMultipleEmbeddingAsync(request.Queries);
+                var vectors = await embedderService.GetMultipleEmbeddingAsync(request.Queries);
 
                 var queryResults = await _vectorDatabaseService.QueryMultipleAsync
                 (
-                    embeddings,
+                    vectors,
                     workflow.CollectionId.ToString(),
                     queryDTO.TopK
                 );

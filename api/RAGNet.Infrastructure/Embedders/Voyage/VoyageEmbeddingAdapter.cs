@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using RAGNET.Application.Infrastructure.Providers.Embedding;
+using RAGNET.Domain.Documents.Pages.Chunks;
 using RAGNET.Infrastructure.SeedWork.Resilience;
 
 namespace RAGNET.Infrastructure.Embedders.Voyage
@@ -21,7 +22,7 @@ namespace RAGNET.Infrastructure.Embedders.Voyage
             _delayMs = delayMs;
         }
 
-        public async Task<float[]> GetEmbeddingAsync(string text)
+        public async Task<SemanticVector> GetEmbeddingAsync(string text)
         {
 
             var response = await RetryHelper.ExecuteWithRetryAsync(async () =>
@@ -35,24 +36,26 @@ namespace RAGNET.Infrastructure.Embedders.Voyage
             return await ParseBody(response);
         }
 
-        public async Task<List<float[]>> GetMultipleEmbeddingAsync(List<string> texts)
+        public async Task<List<SemanticVector>> GetMultipleEmbeddingAsync(List<string> texts)
         {
             var tasks = texts.Select(GetEmbeddingAsync);
             var embeddingsArr = await Task.WhenAll(tasks);
             return [.. embeddingsArr];
         }
 
-        private static async Task<float[]> ParseBody(HttpResponseMessage response)
+        private static async Task<SemanticVector> ParseBody(HttpResponseMessage response)
         {
             var responseBody = await response.Content.ReadAsStringAsync();
             using var jsonDoc = JsonDocument.Parse(responseBody);
 
-            return jsonDoc.RootElement
+            var vector = jsonDoc.RootElement
                 .GetProperty("data")[0]
                 .GetProperty("embedding")
                 .EnumerateArray()
                 .Select(e => e.GetSingle())
                 .ToArray();
+
+            return new SemanticVector(vector);
         }
 
         private HttpRequestMessage BuildRequest(string text)

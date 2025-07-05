@@ -2,38 +2,54 @@ using Qdrant.Client;
 using Qdrant.Client.Grpc;
 
 using RAGNET.Application.Infrastructure.Providers;
+using RAGNET.Application.Infrastructure.Providers.Embedding.DTOs;
+using RAGNET.Domain.Documents.Pages.Chunks;
 
 namespace RAGNET.Infrastructure.Qdrant
 {
+    /// <summary>
+    /// Adapter that wraps Qdrant's vector database client and exposes domain-friendly operations.
+    /// </summary>
     public class QDrantAdapter : IVectorDatabaseService
     {
         private readonly QdrantClient _client;
 
         public QDrantAdapter()
         {
+            // Initialize the Qdrant client, assuming it connects to a container or service named "qdrant"
             _client = new QdrantClient("qdrant");
         }
 
+        /// <summary>
+        /// Creates a new vector collection in Qdrant with the specified vector size.
+        /// </summary>
         public async Task CreateCollectionAsync(Guid collectionName, int vectorSize)
         {
             await _client.CreateCollectionAsync(collectionName.ToString(), new VectorParams
             {
                 Size = (ulong)vectorSize,
-                Distance = Distance.Cosine
+                Distance = Distance.Cosine  // Cosine distance is typically used for embeddings
             });
         }
 
-        public async Task InsertAsync(string documentId, float[] vector, string collectionName, Dictionary<string, string> metadata)
+        /// <summary>
+        /// Inserts a single embedding into the specified collection.
+        /// </summary>
+        public async Task InsertAsync(EmbeddingDTO embedding, string collectionName)
         {
             try
             {
-                metadata["documentId"] = documentId;
+                // Add required metadata to the payload
+                embedding.Metadata["documentId"] = embedding.VectorId;
+
+                var vectorArray = embedding.Vector.ToArray(); // Convert SemanticVector to float[]
+
                 var point = new PointStruct
                 {
                     Id = Guid.NewGuid(),
-                    Vectors = vector,
+                    Vectors = vectorArray,
                     Payload = {
-                        metadata.ToDictionary(
+                        embedding.Metadata.ToDictionary(
                             kvp => kvp.Key,
                             kvp => new Value { StringValue = kvp.Value }
                         )
@@ -42,94 +58,143 @@ namespace RAGNET.Infrastructure.Qdrant
 
                 await _client.UpsertAsync(collectionName, [point]);
             }
-            catch (Exception exc)
+            catch (Exception ex)
             {
-                Console.WriteLine(exc.Message);
+                // Always wrap and rethrow with context so higher-level services can handle/log properly
+                throw new InvalidOperationException(
+                    $"Error inserting vector into collection '{collectionName}': {ex.Message}", ex);
             }
-
         }
-        public async Task InsertManyAsync(List<(string VectorId, float[] Vector, Dictionary<string, string> Metadata)> batch, string collectionName)
+
+        /// <summary>
+        /// Inserts multiple embeddings in a batch into the specified collection.
+        /// </summary>
+        public async Task InsertManyAsync(IEnumerable<EmbeddingDTO> batch, string collectionName)
         {
-            var points = batch.Select(entry =>
+            try
             {
-                var metadataWithId = new Dictionary<string, string>(entry.Metadata)
+                var points = batch.Select(entry =>
                 {
-                    ["documentId"] = entry.VectorId,
-                    ["vectorId"] = entry.VectorId
-                };
+                    var metadataWithId = new Dictionary<string, string>(entry.Metadata)
+                    {
+                        ["documentId"] = entry.VectorId,
+                        ["vectorId"] = entry.VectorId
+                    };
 
-                return new PointStruct
-                {
-                    Id = Guid.NewGuid(),
-                    Vectors = entry.Vector,
-                    Payload = {
-                        metadataWithId.ToDictionary(
-                            kvp => kvp.Key,
-                            kvp => new Value { StringValue = kvp.Value }
-                        )
-                    }
-                };
-            });
+                    var vectorArray = entry.Vector.ToArray();
 
-            await _client.UpsertAsync(collectionName, [.. points]);
+                    return new PointStruct
+                    {
+                        Id = Guid.NewGuid(),
+                        Vectors = vectorArray,
+                        Payload = {
+                            metadataWithId.ToDictionary(
+                                kvp => kvp.Key,
+                                kvp => new Value { StringValue = kvp.Value }
+                            )
+                        }
+                    };
+                });
+
+                await _client.UpsertAsync(collectionName, [.. points]);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(
+                    $"Error inserting batch into collection '{collectionName}': {ex.Message}", ex);
+            }
         }
-        public async Task<List<VectorQueryResult>> QueryAsync(float[] vector, string collectionName, int topK)
+
+        /// <summary>
+        /// Performs a nearest-neighbor search using a single query vector.
+        /// </summary>
+        public async Task<List<VectorQueryResult>> QueryAsync(SemanticVector vector, string collectionName, int topK)
         {
-            var searchParams = new SearchParams { Exact = false, HnswEf = 128 };
+            var searchParams = new SearchParams
+            {
+                Exact = false,
+                HnswEf = 128  // Search performance parameter for HNSW (Higher = more accurate)
+            };
+
+            var vectorArray = vector.ToArray();
 
             var response = await _client.QueryAsync(
                 collectionName: collectionName,
-                query: vector,
+                query: vectorArray,
                 filter: null,
                 searchParams: searchParams,
                 limit: (ulong)topK
             );
 
-            // Transform the Qdrant response to match the VectorQueryResult interface.
-            var results = response.Select(point => new VectorQueryResult
+            // Parse Qdrant results into domain DTOs
+            var results = response.Select(point =>
             {
-                VectorId = point.Payload.TryGetValue("vectorId", out Value? value) ? value.StringValue : string.Empty,
-                Score = point.Score,
+                string vectorId = string.Empty;
+
+                // Ensure we only read string values from the payload
+                if (point.Payload.TryGetValue("vectorId", out var val) &&
+                    val.KindCase == Value.KindOneofCase.StringValue)
+                {
+                    vectorId = val.StringValue;
+                }
+
+                return new VectorQueryResult
+                {
+                    VectorId = vectorId,
+                    Score = point.Score
+                };
             }).ToList();
 
             return results;
         }
 
-        public async Task<List<VectorQueryResult>> QueryMultipleAsync(List<float[]> vectors, string collectionName, int topK)
+        /// <summary>
+        /// Queries multiple vectors in parallel and flattens all the results into a single list.
+        /// </summary>
+        public async Task<List<VectorQueryResult>> QueryMultipleAsync(IEnumerable<SemanticVector> vectors, string collectionName, int topK)
         {
-            var tasks = vectors.Select(vector => QueryAsync(vector, collectionName, topK));
+            // Each query executes concurrently to improve throughput
+            var tasks = vectors.Select(vector =>
+                QueryAsync(vector, collectionName, topK));
+
             var results = await Task.WhenAll(tasks);
 
-            return [.. results.SelectMany(r => r)];
+            // Flatten the individual result lists into one
+            return results.SelectMany(r => r).ToList();
         }
 
-        public async Task<List<VectorQueryResult>> QueryHybridMedianAsync(List<float[]> queryVectors, string collectionName, int topK)
+        /// <summary>
+        /// Combines multiple vectors into their average and performs a single query.
+        /// This is useful for hybrid or multi-part queries.
+        /// </summary>
+        public async Task<List<VectorQueryResult>> QueryByAverageVectorAsync(IEnumerable<SemanticVector> queryVectors, string collectionName, int topK)
         {
-            if (queryVectors == null || queryVectors.Count == 0)
-            {
-                throw new ArgumentException("At least one query vector is required.");
-            }
+            var vectorList = queryVectors.ToList();
+            if (vectorList.Count == 0)
+                throw new ArgumentException("At least one query vector is required.", nameof(queryVectors));
 
-            int vectorSize = queryVectors.First().Length;
+            int vectorSize = vectorList.First().Size();
             float[] combinedVector = new float[vectorSize];
 
-            // Combine the vectors by summing them
-            foreach (var vector in queryVectors)
+            // Add all vector components element-wise
+            foreach (var vector in vectorList)
             {
                 for (int i = 0; i < vectorSize; i++)
                 {
-                    combinedVector[i] += vector[i];
+                    combinedVector[i] += vector.At(i);
                 }
             }
 
-            // Compute the average vector
+            // Divide by number of vectors to compute average
             for (int i = 0; i < vectorSize; i++)
             {
-                combinedVector[i] /= queryVectors.Count;
+                combinedVector[i] /= vectorList.Count;
             }
 
-            // Use the combined vector to perform the search.
-            return await QueryAsync(combinedVector, collectionName, topK);
+            var averageVector = new SemanticVector(combinedVector);
+
+            // Perform the query using the averaged vector
+            return await QueryAsync(averageVector, collectionName, topK);
         }
     }
 }

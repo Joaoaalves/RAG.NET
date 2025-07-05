@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using RAGNET.Application.Infrastructure.Providers.Embedding;
+using RAGNET.Domain.Documents.Pages.Chunks;
 using RAGNET.Infrastructure.SeedWork.Resilience;
 
 namespace RAGNET.Infrastructure.Embedders.Mistral
@@ -30,7 +31,7 @@ namespace RAGNET.Infrastructure.Embedders.Mistral
             _delayMs = delayMs;
         }
 
-        public async Task<float[]> GetEmbeddingAsync(string text)
+        public async Task<SemanticVector> GetEmbeddingAsync(string text)
         {
             var response = await RetryHelper.ExecuteWithRetryAsync(async () =>
             {
@@ -43,7 +44,7 @@ namespace RAGNET.Infrastructure.Embedders.Mistral
             return await ParseSingleEmbedding(response);
         }
 
-        public async Task<List<float[]>> GetMultipleEmbeddingAsync(List<string> texts)
+        public async Task<List<SemanticVector>> GetMultipleEmbeddingAsync(List<string> texts)
         {
             var response = await RetryHelper.ExecuteWithRetryAsync(async () =>
             {
@@ -74,7 +75,7 @@ namespace RAGNET.Infrastructure.Embedders.Mistral
             };
         }
 
-        private static async Task<float[]> ParseSingleEmbedding(HttpResponseMessage response)
+        private static async Task<SemanticVector> ParseSingleEmbedding(HttpResponseMessage response)
         {
             var body = await response.Content.ReadAsStringAsync();
 
@@ -85,7 +86,7 @@ namespace RAGNET.Infrastructure.Embedders.Mistral
                     .GetProperty("data")[0]
                     .GetProperty("embedding");
 
-                return ParseFloatArray(vectorElement);
+                return ParseSemanticVector(vectorElement);
             }
             catch (JsonException je)
             {
@@ -93,7 +94,7 @@ namespace RAGNET.Infrastructure.Embedders.Mistral
             }
         }
 
-        private static async Task<List<float[]>> ParseBatchEmbeddings(HttpResponseMessage response)
+        private static async Task<List<SemanticVector>> ParseBatchEmbeddings(HttpResponseMessage response)
         {
             var body = await response.Content.ReadAsStringAsync();
 
@@ -102,10 +103,10 @@ namespace RAGNET.Infrastructure.Embedders.Mistral
                 using var doc = JsonDocument.Parse(body);
                 var embeddings = doc.RootElement.GetProperty("data");
 
-                var list = new List<float[]>();
+                var list = new List<SemanticVector>();
                 foreach (var item in embeddings.EnumerateArray())
                 {
-                    list.Add(ParseFloatArray(item.GetProperty("embedding")));
+                    list.Add(ParseSemanticVector(item.GetProperty("embedding")));
                 }
 
                 return list;
@@ -116,7 +117,7 @@ namespace RAGNET.Infrastructure.Embedders.Mistral
             }
         }
 
-        private static float[] ParseFloatArray(JsonElement vectorElement)
+        private static SemanticVector ParseSemanticVector(JsonElement vectorElement)
         {
             var vector = new float[vectorElement.GetArrayLength()];
             int i = 0;
@@ -124,7 +125,7 @@ namespace RAGNET.Infrastructure.Embedders.Mistral
             {
                 vector[i++] = value.GetSingle();
             }
-            return vector;
+            return new SemanticVector(vector);
         }
     }
 }

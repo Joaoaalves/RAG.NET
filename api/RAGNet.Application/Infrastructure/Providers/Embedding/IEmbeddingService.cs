@@ -1,8 +1,10 @@
+using RAGNET.Domain.Documents.Pages.Chunks;
+
 namespace RAGNET.Application.Infrastructure.Providers.Embedding
 {
     public interface IEmbeddingService
     {
-        Task<float[]> GetEmbeddingAsync(string text);
-        Task<List<float[]>> GetMultipleEmbeddingAsync(List<string> texts);
+        Task<SemanticVector> GetEmbeddingAsync(string text);
+        Task<List<SemanticVector>> GetMultipleEmbeddingAsync(List<string> texts);
     }
 }

@@ -4,6 +4,7 @@ namespace RAGNET.Domain.Documents.Pages.Chunks
     {
         Task<Chunk?> GetByVectorId(string vectorId);
         Task<List<Chunk>> GetManyByVectorId(string[] vectorIds);
-        Task<Chunk> AddAsync(Chunk chunk);
+        Task<List<Chunk>> AddManyAsync(List<Chunk> chunks);
+
     }
 }

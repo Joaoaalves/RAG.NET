@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using RAGNET.Application.Infrastructure.Providers.Embedding;
+using RAGNET.Domain.Documents.Pages.Chunks;
 using RAGNET.Infrastructure.Exceptions.Adapters;
 using RAGNET.Infrastructure.SeedWork.Resilience;
 
@@ -26,7 +27,7 @@ namespace RAGNET.Infrastructure.Embedders.Gemini
             _delayMs = delayMs;
         }
 
-        public async Task<float[]> GetEmbeddingAsync(string text)
+        public async Task<SemanticVector> GetEmbeddingAsync(string text)
         {
 
             var response = await RetryHelper.ExecuteWithRetryAsync(async () =>
@@ -40,7 +41,7 @@ namespace RAGNET.Infrastructure.Embedders.Gemini
             return await ParseBody(response);
         }
 
-        public async Task<List<float[]>> GetMultipleEmbeddingAsync(List<string> texts)
+        public async Task<List<SemanticVector>> GetMultipleEmbeddingAsync(List<string> texts)
         {
             var tasks = texts.Select(GetEmbeddingAsync);
             var embeddingsArr = await Task.WhenAll(tasks);
@@ -72,7 +73,7 @@ namespace RAGNET.Infrastructure.Embedders.Gemini
             };
         }
 
-        private static async Task<float[]> ParseBody(HttpResponseMessage response)
+        private static async Task<SemanticVector> ParseBody(HttpResponseMessage response)
         {
             var body = await response.Content.ReadAsStringAsync();
 
@@ -83,7 +84,7 @@ namespace RAGNET.Infrastructure.Embedders.Gemini
                     .GetProperty("embedding")
                     .GetProperty("values");
 
-                return ParseFloatArray(vectorElement);
+                return ParseSemanticVector(vectorElement);
             }
             catch (JsonException je)
             {
@@ -91,15 +92,17 @@ namespace RAGNET.Infrastructure.Embedders.Gemini
             }
         }
 
-        private static float[] ParseFloatArray(JsonElement vectorElement)
+        private static SemanticVector ParseSemanticVector(JsonElement vectorElement)
         {
             var vector = new float[vectorElement.GetArrayLength()];
             int i = 0;
+
             foreach (var value in vectorElement.EnumerateArray())
             {
                 vector[i++] = value.GetSingle();
             }
-            return vector;
+
+            return new SemanticVector(vector);
         }
     }
 }

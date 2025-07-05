@@ -5,17 +5,20 @@ using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs;
 
 using RAGNET.Infrastructure.Jobs;
 using RAGNET.Infrastructure.Jobs.Queue;
+using RAGNET.Application.Chunkers.Factories;
 
 namespace RAGNET.Infrastructure.Workers.Handlers
 {
     public class MountChunkerHandler(
         IEmbeddingProcessingService embeddingService,
         SubscriptionPolicy subscriptionPolicy,
+        ITextChunkerFactory textChunkerFactory,
         IJobNotificationService realTimeNotifier
     ) : NotifierJobProcessingHandler(realTimeNotifier)
     {
         private readonly IEmbeddingProcessingService _embeddingService = embeddingService;
         private readonly SubscriptionPolicy _policy = subscriptionPolicy;
+        private readonly ITextChunkerFactory _textChunkerFactory = textChunkerFactory;
         private readonly ProcessDTO _currentProcess = new()
         {
             Title = "Mounting Chunker",
@@ -32,10 +35,12 @@ namespace RAGNET.Infrastructure.Workers.Handlers
 
             if (!_policy.Allows(user, chunker.StrategyType))
             {
-                throw new InvalidOperationException("Your current subscription does not allow this operation.");
+                throw new InvalidOperationException(
+                    "Your current subscription does not allow this operation."
+                );
             }
 
-            job.Context.TextChunkerService = _embeddingService.GetChunker(
+            job.Context.TextChunkerService = _textChunkerFactory.CreateChunker(
                 chunker,
                 job.Context.ConversationProviderService
             );
