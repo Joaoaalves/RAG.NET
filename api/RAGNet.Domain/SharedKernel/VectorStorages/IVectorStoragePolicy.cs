@@ -9,7 +9,6 @@ namespace RAGNET.Domain.SharedKernel.VectorStorages
         string Prefix { get; }
         string Pattern { get; }
         string Url { get; }
-        string Schema { get; }
         void Validate(string apiKey, IEnumerable<Meta> metas);
     }
 }

@@ -1,12 +1,12 @@
+import { environment } from './../../environments/environment.example';
 export interface VectorStoragePolicy {
   id: string;
-  providerId: number;
+  providerId: SupportedVectorStorage;
   apiKey: string;
   name: string;
   pattern: string;
   prefix: string;
   url: string;
-  schema: string;
 }
 
 export interface VectorStoragesResponse {
@@ -22,4 +22,21 @@ export interface VectorStorage {
 export interface GetVectorStoragesResponse {
   vectorStorages: VectorStorage[];
 }
-export type SupportedVectorStorage = 'qdrant' | 'pinecone';
+
+export interface CreateVectorStorageRequest {
+  apiKey: string;
+  provider: SupportedVectorStorage;
+  indexType?: number;
+  host?: string;
+  region?: string;
+  cloud?: number;
+  environment?: string;
+  pods: number;
+  podSize: string;
+  podType: string;
+}
+
+export enum SupportedVectorStorage {
+  QDRANT,
+  PINECONE,
+}

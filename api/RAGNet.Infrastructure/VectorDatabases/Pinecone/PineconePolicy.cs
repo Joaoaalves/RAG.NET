@@ -8,14 +8,13 @@ using RAGNET.Infrastructure.VectorDatabases.Pinecone.Rules;
 
 namespace RAGNET.Infrastructure.VectorDatabases.Pinecone
 {
-    public partial class PineconePolicy(string schema) : IVectorStoragePolicy
+    public partial class PineconePolicy : IVectorStoragePolicy
     {
 
         public string Name => "Pinecone";
         public string Prefix => "pcsk_";
         public string Pattern => @"^pcsk_\w+(_\w+)*$";
         public string Url => "https://app.pinecone.io/organizations/-/projects";
-        public string Schema => schema;
         public VectorStorageProvider ProviderType => VectorStorageProvider.PINECONE;
 
         public void Validate(string apiKey, IEnumerable<Meta> metas)

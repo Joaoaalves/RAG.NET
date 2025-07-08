@@ -71,15 +71,16 @@ namespace RAGNET.Infrastructure.VectorDatabases.Pinecone
         public async Task CreateCollectionAsync(Guid collectionName, int vectorSize)
         {
             var indexName = collectionName.ToString();
-            await CreateIndex(indexName, vectorSize);
-
-            var collectionRequest = new CreateCollectionRequest
+            var indexRequest = new CreateIndexRequest
             {
                 Name = indexName,
-                Source = indexName
+                Dimension = vectorSize,
+                Spec = CreateIndexSpec(),
+                Metric = MetricType.Cosine,
+                DeletionProtection = DeletionProtection.Disabled
             };
 
-            await Client.CreateCollectionAsync(collectionRequest);
+            await Client.CreateIndexAsync(indexRequest);
         }
 
         public async Task InsertAsync(EmbeddingDTO embedding, string collectionName)
@@ -203,19 +204,6 @@ namespace RAGNET.Infrastructure.VectorDatabases.Pinecone
             var averageVector = new SemanticVector(combinedVector);
 
             return await QueryAsync(averageVector, collectionName, topK);
-        }
-
-        private async Task CreateIndex(string indexName, int dimension)
-        {
-            var indexRequest = new CreateIndexRequest
-            {
-                Name = indexName,
-                Dimension = dimension,
-                Spec = CreateIndexSpec(),
-                Metric = MetricType.Cosine,
-            };
-
-            await Client.CreateIndexAsync(indexRequest);
         }
 
         private OneOf.OneOf<ServerlessIndexSpec, PodIndexSpec, ByocIndexSpec> CreateIndexSpec()

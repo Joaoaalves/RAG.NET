@@ -21,11 +21,11 @@ namespace RAGNET.Infrastructure.VectorDatabases.Pinecone
 
         public static ServerlessSpecCloud ToServerlessSpecCloud(this string cloud)
         {
-            return cloud.ToLowerInvariant() switch
+            return cloud switch
             {
-                "aws" => ServerlessSpecCloud.Aws,
-                "gcp" => ServerlessSpecCloud.Gcp,
-                "azure" => ServerlessSpecCloud.Azure,
+                "0" => ServerlessSpecCloud.Gcp,
+                "1" => ServerlessSpecCloud.Aws,
+                "2" => ServerlessSpecCloud.Azure,
                 _ => throw new ArgumentOutOfRangeException($"Pinecone Serverless Spec Cloud {cloud} is not supported")
             };
         }

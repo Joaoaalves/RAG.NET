@@ -1,0 +1,38 @@
+<div class="relative w-full h-full p-6 bg-gradient-to-br from-slate-900 to-black rounded-2xl border border-white/15">
+  <!-- Header -->
+  <div class="flex items-center justify-start gap-x-4">
+    <img class="w-8 h-8 border-none" src="/img/providers/pinecone.svg" />
+    <h3 class="text-white font-semibold">Pinecone</h3>
+  </div>
+
+  <!-- Type Selector -->
+  <div class="flex items-center justify-start gap-x-4 text-black mt-6">
+    <button
+      *ngFor="let type of types"
+      class="bg-gradient-to-r from-neutral-800 to-neutral-900 px-4 py-2 rounded-lg cursor-pointer"
+      [ngClass]="{
+        '!from-fuchsia-500 !to-sky-500 !text-white': activeType === type
+      }"
+      type="button"
+      (click)="setActiveType(type)"
+    >
+      <p class="text-white uppercase">{{ type }}</p>
+    </button>
+  </div>
+
+  <!-- Form Content -->
+  <div class="mt-6">
+    <app-serverless-form
+      *ngIf="activeType === 'Serverless'"
+      (submitForm)="handleSubmit($event)"
+    />
+    <app-pods-form
+      *ngIf="activeType === 'Pods'"
+      (submitForm)="handleSubmit($event)"
+    />
+    <app-byoc-form
+      *ngIf="activeType === 'BYOC'"
+      (submitForm)="handleSubmit($event)"
+    />
+  </div>
+</div>

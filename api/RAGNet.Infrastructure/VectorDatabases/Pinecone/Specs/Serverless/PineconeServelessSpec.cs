@@ -27,7 +27,6 @@ namespace RAGNET.Infrastructure.VectorDatabases.Pinecone.Specs.Serverless
 
                 var region = metas.FirstOrDefault(m => m.Key == "region")?.Value ?? throw new ArgumentNullException("Region"); ;
                 string validRegion = region.ToServerlessRegion(validCloud);
-                var apiKeyString = metas.FirstOrDefault(m => m.Key == "apiKey")?.Value ?? throw new ArgumentNullException("Api Key");
 
                 return new()
                 {

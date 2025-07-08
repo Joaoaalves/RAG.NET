@@ -6,9 +6,7 @@ using RAGNET.Infrastructure.VectorDatabases.Qdrant.Rules;
 
 namespace RAGNET.Infrastructure.VectorDatabases.Qdrant
 {
-    public partial class QdrantPolicy(
-        string schema
-    ) : IVectorStoragePolicy
+    public partial class QdrantPolicy : IVectorStoragePolicy
     {
 
         public string Name => "QDrant";
@@ -16,7 +14,6 @@ namespace RAGNET.Infrastructure.VectorDatabases.Qdrant
         public string Pattern => "^\\w*.\\w*.\\w*$";
         public string Url => "https://cloud.qdrant.io/";
         public static string HostPattern => @"\b(?:https?):\/\/(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?\b";
-        public string Schema => schema;
         public VectorStorageProvider ProviderType => VectorStorageProvider.QDRANT;
 
         public void Validate(string apiKey, IEnumerable<Meta> metas)

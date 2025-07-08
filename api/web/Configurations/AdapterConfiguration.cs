@@ -62,11 +62,6 @@ namespace web.Configurations
             services.AddSingleton(typeof(ICallbackNotificationService<>), typeof(CallbackNotificationService<>)); services.AddHostedService<EmbeddingJobWorker>();
             services.AddSingleton<IJobNotificationService, SignalRJobNotificationService>();
 
-            // Vector Databases
-            services.Configure<SchemaPathsOptions>(configuration.GetSection("SchemaPaths"));
-            services.AddSingleton(sp =>
-                sp.GetRequiredService<IOptions<SchemaPathsOptions>>().Value);
-
             // REDIS
             services.AddScoped<IJobStatusRepository, RedisJobStatusRepository>();
             services.AddScoped<IPaymentStatusService, RedisPaymentStatusRepository>();

@@ -1,0 +1,60 @@
+<div class="mt-6 flex flex-col gap-6">
+  <!-- API Key -->
+  <div>
+    <label class="block text-sm font-medium text-white mb-2">API Key</label>
+    <input
+      type="text"
+      class="w-full px-4 py-2 rounded-lg bg-neutral-800 text-white placeholder:text-neutral-400"
+      placeholder="Enter your Pinecone API Key"
+      [(ngModel)]="apiKey"
+    />
+  </div>
+
+  <!-- Cloud Selector -->
+  <div>
+    <label class="block text-sm font-medium text-white mb-2">Cloud</label>
+    <div class="flex flex-wrap gap-2">
+      <button
+        *ngFor="let cloud of clouds; index as i"
+        type="button"
+        (click)="selectedCloud = i; selectedRegion = ''"
+        class="px-4 py-2 rounded-lg text-sm font-medium text-white border border-white/20"
+        [ngClass]="{
+          'bg-gradient-to-r from-fuchsia-500 to-sky-500': selectedCloud === i,
+          'bg-neutral-800': selectedCloud !== i
+        }"
+      >
+        {{ cloud.toUpperCase() }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Region Selector -->
+  <div *ngIf="availableRegions.length">
+    <label class="block text-sm font-medium text-white mb-2">Region</label>
+    <div class="flex flex-wrap gap-2">
+      <button
+        *ngFor="let region of availableRegions"
+        type="button"
+        (click)="selectedRegion = region"
+        class="px-4 py-2 rounded-lg text-sm font-medium text-white border border-white/20"
+        [ngClass]="{
+          'bg-gradient-to-r from-fuchsia-500 to-sky-500': selectedRegion === region,
+          'bg-neutral-800': selectedRegion !== region
+        }"
+      >
+        {{ region }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Submit -->
+  <div class="mt-6">
+    <button
+      class="w-full py-3 rounded-xl font-semibold bg-gradient-to-r from-fuchsia-600 to-sky-600 text-white"
+      (click)="submit()"
+    >
+      Create Serverless Vector Storage
+    </button>
+  </div>
+</div>

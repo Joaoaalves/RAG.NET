@@ -42,7 +42,8 @@ namespace RAGNET.Domain.VectorStorages
         {
             _metas.Clear();
             foreach (var (key, value) in specMeta)
-                _metas.Add(new Meta(key, value));
+                if (value is not null)
+                    _metas.Add(new Meta(key, value));
         }
     }
 

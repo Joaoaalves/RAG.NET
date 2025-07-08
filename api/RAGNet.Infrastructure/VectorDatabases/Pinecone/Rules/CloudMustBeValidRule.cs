@@ -7,7 +7,7 @@ namespace RAGNET.Infrastructure.VectorDatabases.Pinecone.Rules
         string? cloud
     ) : IBusinessRule
     {
-        public string Message => "Invalid Cloud parameter";
+        public string Message => $"Invalid Cloud parameter. Received value: {Cloud}";
         public string? Cloud = cloud;
         public bool IsBroken()
         {

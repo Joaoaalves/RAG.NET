@@ -4,11 +4,9 @@ using RAGNET.Infrastructure.VectorDatabases.Qdrant;
 
 namespace RAGNET.Infrastructure.VectorDatabases
 {
-    public class VectorStoragePolicyFactory(
-        SchemaPathsOptions options
-    ) : IVectorStoragePolicyFactory
+    public class VectorStoragePolicyFactory
+    : IVectorStoragePolicyFactory
     {
-        private readonly SchemaPathsOptions _options = options;
         public IVectorStoragePolicy CreatePolicy(VectorStorageProvider provider)
         {
             return provider switch
@@ -19,27 +17,14 @@ namespace RAGNET.Infrastructure.VectorDatabases
             };
         }
 
-        private PineconePolicy CreatePineconePolicy()
+        private static PineconePolicy CreatePineconePolicy()
         {
-
-            var fullPath = Path.GetFullPath(_options.Pinecone);
-            if (!File.Exists(fullPath))
-                throw new FileNotFoundException("pinecone-schema.json not found at", fullPath);
-
-            var schema = File.ReadAllText(fullPath);
-
-            return new PineconePolicy(schema);
+            return new PineconePolicy();
         }
 
-        private QdrantPolicy CreateQdrandPolicy()
+        private static QdrantPolicy CreateQdrandPolicy()
         {
-            var fullPath = Path.GetFullPath(_options.Qdrant);
-            if (!File.Exists(fullPath))
-                throw new FileNotFoundException("qdrant-schema.json not found at", fullPath);
-
-            var schema = File.ReadAllText(fullPath);
-
-            return new QdrantPolicy(schema);
+            return new QdrantPolicy();
         }
 
     }

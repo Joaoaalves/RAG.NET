@@ -54,6 +54,7 @@ namespace RAGNET.Application.Workflows.Commands.CreateWorkflow
                 (uint)embeddingModel.VectorSize,
                 workflowId
             );
+
             var chunker = new ChunkerBuilder()
                 .ForWorkflow(workflowId)
                 .ForUser(user.Id)

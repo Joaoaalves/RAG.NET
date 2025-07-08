@@ -6,8 +6,8 @@ namespace RAGNET.Infrastructure.VectorDatabases.Pinecone.Rules
         string? indexType
     ) : IBusinessRule
     {
-        public string Message => "Index Type must be valid.";
         public string? IndexType = indexType;
+        public string Message => $"Index Type must be valid. Received Value: {IndexType}";
         public bool IsBroken()
         {
             if (!string.IsNullOrEmpty(IndexType))

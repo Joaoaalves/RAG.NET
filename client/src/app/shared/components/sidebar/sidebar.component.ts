@@ -9,6 +9,7 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
   lucideCalendarSync,
   lucideDatabase,
+  lucideFolderCode,
   lucideLayers,
   lucideLogOut,
   lucideMenu,
@@ -36,6 +37,7 @@ import { Observable } from 'rxjs';
       lucideLogOut,
       lucideMenu,
       lucideCalendarSync,
+      lucideFolderCode,
       lucideX,
     }),
   ],
@@ -53,9 +55,15 @@ export class SidebarComponent implements OnInit {
     },
     {
       icon: 'lucideDatabase',
-      label: 'Providers',
+      label: 'LLM Providers',
       onClick: () => this.navigateProviders(),
       url: '/dashboard/providers',
+    },
+    {
+      icon: 'lucideFolderCode',
+      label: 'Vector Storages',
+      onClick: () => this.navigateVectorStorages(),
+      url: '/dashboard/vector-storages',
     },
     {
       icon: 'lucideWallet',
@@ -111,6 +119,10 @@ export class SidebarComponent implements OnInit {
 
   navigateSubscription() {
     this.router.navigate(['/dashboard/subscriptions']);
+  }
+
+  navigateVectorStorages() {
+    this.router.navigate(['/dashboard/vector-storages']);
   }
 
   logout() {

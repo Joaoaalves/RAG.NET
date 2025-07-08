@@ -14,6 +14,7 @@ import { WalletComponent } from './components/wallet/wallet.component';
 import { SubscriptionComponent } from './components/subscription/subscription.component';
 import { SubscriptionPendingComponent } from './components/subscription/pending/subscription-pending.component';
 import { SubscriptionSuccessComponent } from './components/subscription/success/subscription-success.component';
+import { VectorStoragesComponent } from './components/vector-storages/vector-storages.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, title: 'RAG.NET' },
@@ -64,6 +65,12 @@ export const routes: Routes = [
         component: ProvidersComponent,
         canActivate: [AuthGuard],
         title: 'Providers - RAG.NET',
+      },
+      {
+        path: 'vector-storages',
+        component: VectorStoragesComponent,
+        canActivate: [AuthGuard],
+        title: 'Vector Storages - RAG.NET',
       },
       {
         path: 'workflows/new',

@@ -31,8 +31,7 @@ namespace RAGNET.Application.VectorStorages.Queries.GetVectorStorages
                         Name = provider.ToString(),
                         Pattern = policy.Pattern,
                         Prefix = policy.Prefix,
-                        Url = policy.Url,
-                        Schema = policy.Schema
+                        Url = policy.Url
                     };
 
                     providers.Add(providerDto);

@@ -8,7 +8,7 @@ namespace RAGNET.Infrastructure.VectorDatabases.Pinecone.Rules
         ServerlessSpecCloud cloud
     ) : IBusinessRule
     {
-        public string Message => "Invalid Region for Pinecone.";
+        public string Message => $"Invalid Region for Pinecone. Received Value: {Region}";
         public string? Region = region;
         public ServerlessSpecCloud Cloud = cloud;
         public bool IsBroken()

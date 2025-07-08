@@ -14,8 +14,6 @@ using RAGNET.Application.Workflows.Commands.DeleteWorkflow;
 using RAGNET.Application.Workflows.Queries.GetWorkflowDetails;
 using RAGNET.Application.Workflows.Commands.UpdateWorkflow;
 using RAGNET.Application.Workflows.Queries.GetUserWorkflows;
-using RAGNET.Application.Workflows.CallbackUrls.Mappers;
-using System.ComponentModel.DataAnnotations;
 using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob;
 
 namespace web.Controllers.Workflows

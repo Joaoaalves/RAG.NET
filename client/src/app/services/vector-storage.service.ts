@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BaseApiService } from './base-api.service';
 import {
+  CreateVectorStorageRequest,
   GetVectorStoragesResponse,
+  SupportedVectorStorage,
   VectorStorage,
   VectorStoragePolicy,
   VectorStoragesResponse,
@@ -32,9 +34,17 @@ export class VectorStoragesService extends BaseApiService {
       );
   }
 
-  getVectorStorages(): Observable<VectorStoragePolicy[]> {
+  getVectorStoragesPolicies(): Observable<VectorStoragePolicy[]> {
     return this.http
       .get<VectorStoragesResponse>(this.buildUrl('/api/vector-storages'))
-      .pipe(map((response) => response.vectorStorages));
+      .pipe(
+        map((response) => {
+          return response.vectorStorages;
+        })
+      );
+  }
+
+  createVectorStorage(data: CreateVectorStorageRequest): Observable<any> {
+    return this.http.post(this.buildUrl('/api/vector-storages'), data);
   }
 }

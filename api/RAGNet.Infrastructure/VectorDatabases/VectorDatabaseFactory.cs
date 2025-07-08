@@ -23,7 +23,6 @@ namespace RAGNET.Infrastructure.VectorDatabases
         private readonly IVectorStorageRepository _vectorStorageRepository = vectorStorageRepository;
         public async Task<IVectorDatabaseService> CreateVectorDatabaseServiceAsync(VectorStorageId vectorStorageId, string userId)
         {
-            Console.WriteLine("entrou");
             var vectorStorage = await _vectorStorageRepository.GetByIdAsync(vectorStorageId, userId) ?? throw new Exception("Invalid Vector Storage");
             return vectorStorage.Provider switch
             {
@@ -50,15 +49,13 @@ namespace RAGNET.Infrastructure.VectorDatabases
         private static PineconeAdapter PineconeClient(VectorStorage vectorStorage)
         {
             var indexTypeString = vectorStorage.Metas.FirstOrDefault(meta => meta.Key == "indexType")?.Value ?? throw new Exception("Pinecone index type not found");
-
             if (Enum.TryParse(indexTypeString, out PineconeIndexType indexType))
             {
-                var client = new PineconeClient(vectorStorage.ApiKey.ToString());
+                var client = new PineconeClient(vectorStorage.ApiKey.Value);
 
                 if (indexType == PineconeIndexType.Serverless)
                 {
                     var spec = PineconeServerlessInfraSpec.FromMeta(vectorStorage.Metas);
-
                     return PineconeAdapter.Serverless(client, spec.Cloud, spec.Region);
                 }
 

@@ -20,13 +20,13 @@ namespace RAGNET.Application.VectorStorages.Commands.AddVectorStorage
         {
             var user = request.User;
             var provider = request.Provider;
+            var apiKey = request.ApiKey;
 
-            var policy = _vectorStoragePolicyFactory.CreatePolicy(provider);
 
             var storage = VectorStorage.Create(
                 provider,
                 user.Id,
-                request.ApiKey
+                apiKey
             );
             Dictionary<string, string> metas = [];
 
@@ -34,19 +34,20 @@ namespace RAGNET.Application.VectorStorages.Commands.AddVectorStorage
             {
                 metas.Add("host", request.Host!);
             }
-
             if (provider == VectorStorageProvider.PINECONE)
             {
+                metas.Add("indexType", request.IndexType.ToString()!);
                 metas.Add("pods", request.Pods.ToString()!);
                 metas.Add("podSize", request.PodSize!);
                 metas.Add("podType", request.PodType!);
                 metas.Add("environment", request.Environment!);
-                metas.Add("cloud", request.Cloud!);
+                metas.Add("cloud", request.Cloud.ToString()!);
                 metas.Add("region", request.Region!);
             }
 
             storage.SetSpecMetas(metas!);
-            policy.Validate(request.ApiKey.Value, storage.Metas);
+            var policy = _vectorStoragePolicyFactory.CreatePolicy(provider);
+            policy.Validate(apiKey.Value, storage.Metas);
 
             await _vectorStorageRepository.AddAsync(storage);
             await _unitOfWork.CommitAsync(cancellationToken);
