@@ -4,11 +4,9 @@ using RAGNET.Domain.SharedKernel.Providers;
 
 using RAGNET.Infrastructure.SignalR;
 using RAGNET.Infrastructure.Jobs.Queue;
-using RAGNET.Infrastructure.Qdrant;
 using RAGNET.Infrastructure.RabbitMQ;
 using RAGNET.Infrastructure.Redis;
 using RAGNET.Infrastructure.Trello;
-using RAGNET.Infrastructure.Workers;
 using RAGNET.Infrastructure.Jobs;
 using RAGNET.Infrastructure.ChatCompletions.Anthropic;
 using RAGNET.Infrastructure.ChatCompletions.Gemini;
@@ -19,13 +17,15 @@ using RAGNET.Infrastructure.Embedders.Gemini;
 using RAGNET.Infrastructure.ChatCompletions.DeepSeek;
 using RAGNET.Infrastructure.ChatCompletions.xAI;
 using RAGNET.Infrastructure.ChatCompletions.OpenAI;
-
-using RAGNET.Application.Feedbacks.Services;
-using RAGNET.Application.Infrastructure.Providers;
-using RAGNET.Application.Subscriptions.Services;
-using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob;
 using RAGNET.Infrastructure.ChatCompletions.Mistral;
 using RAGNET.Infrastructure.Embedders.Mistral;
+using RAGNET.Infrastructure.Workers.Embedding;
+
+using RAGNET.Application.Feedbacks.Services;
+using RAGNET.Application.Subscriptions.Services;
+using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob;
+using RAGNET.Infrastructure.VectorDatabases;
+using Microsoft.Extensions.Options;
 
 
 namespace web.Configurations
@@ -62,7 +62,10 @@ namespace web.Configurations
             services.AddSingleton(typeof(ICallbackNotificationService<>), typeof(CallbackNotificationService<>)); services.AddHostedService<EmbeddingJobWorker>();
             services.AddSingleton<IJobNotificationService, SignalRJobNotificationService>();
 
-            services.AddScoped<IVectorDatabaseService, QDrantAdapter>();
+            // Vector Databases
+            services.Configure<SchemaPathsOptions>(configuration.GetSection("SchemaPaths"));
+            services.AddSingleton(sp =>
+                sp.GetRequiredService<IOptions<SchemaPathsOptions>>().Value);
 
             // REDIS
             services.AddScoped<IJobStatusRepository, RedisJobStatusRepository>();
@@ -85,12 +88,12 @@ namespace web.Configurations
 
             services.AddSingleton<Dictionary<SupportedProvider, IProviderConversationModelCatalog>>(sp => new()
             {
-                { SupportedProvider.OpenAI, sp.GetRequiredService<OpenAIChatModelCatalog>() },
-                { SupportedProvider.Anthropic, sp.GetRequiredService<AnthropicChatModelCatalog>() },
-                { SupportedProvider.Gemini, sp.GetRequiredService<GeminiChatModelCatalog>() },
-                { SupportedProvider.Deepseek, sp.GetRequiredService<DeepSeekChatModelCatalog>()},
+                { SupportedProvider.OPENAI, sp.GetRequiredService<OpenAIChatModelCatalog>() },
+                { SupportedProvider.ANTHROPIC, sp.GetRequiredService<AnthropicChatModelCatalog>() },
+                { SupportedProvider.GEMINI, sp.GetRequiredService<GeminiChatModelCatalog>() },
+                { SupportedProvider.DEEPSEEK, sp.GetRequiredService<DeepSeekChatModelCatalog>()},
                 { SupportedProvider.XAI, sp.GetRequiredService<XAIChatModelCatalog>()},
-                { SupportedProvider.Mistral, sp.GetRequiredService<MistralChatModelCatalog>()},
+                { SupportedProvider.MISTRAL, sp.GetRequiredService<MistralChatModelCatalog>()},
             });
 
             services.AddSingleton<OpenAIEmbeddingModelCatalog>();
@@ -100,10 +103,10 @@ namespace web.Configurations
 
             services.AddSingleton<Dictionary<SupportedProvider, IProviderEmbeddingModelCatalog>>(sp => new()
             {
-                { SupportedProvider.OpenAI, sp.GetRequiredService<OpenAIEmbeddingModelCatalog>() },
-                { SupportedProvider.Voyage, sp.GetRequiredService<VoyageEmbeddingModelCatalog>() },
-                { SupportedProvider.Gemini, sp.GetRequiredService<GeminiEmbeddingModelCatalog>() },
-                { SupportedProvider.Mistral, sp.GetRequiredService<MistralEmbeddingModelCatalog>()},
+                { SupportedProvider.OPENAI, sp.GetRequiredService<OpenAIEmbeddingModelCatalog>() },
+                { SupportedProvider.VOYAGE, sp.GetRequiredService<VoyageEmbeddingModelCatalog>() },
+                { SupportedProvider.GEMINI, sp.GetRequiredService<GeminiEmbeddingModelCatalog>() },
+                { SupportedProvider.MISTRAL, sp.GetRequiredService<MistralEmbeddingModelCatalog>()},
             });
 
             return services;

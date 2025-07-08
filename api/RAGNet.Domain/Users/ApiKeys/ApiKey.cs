@@ -18,6 +18,5 @@ namespace RAGNET.Domain.Users.ApiKeys
         }
 
         public override string ToString() => $"****{Suffix}";
-
     }
 }

@@ -1,3 +1,6 @@
+using RAGNET.Domain.SharedKernel.VectorStorages.Scores;
+using RAGNET.Domain.SharedKernel.VectorStorages.SemanticVectors;
+
 namespace RAGNET.Domain.Documents.Pages.Chunks
 {
     public class Chunk

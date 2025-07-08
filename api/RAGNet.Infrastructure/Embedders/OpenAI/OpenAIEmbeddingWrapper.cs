@@ -1,5 +1,5 @@
 using OpenAI.Embeddings;
-using RAGNET.Domain.Documents.Pages.Chunks;
+using RAGNET.Domain.SharedKernel.VectorStorages.SemanticVectors;
 
 namespace RAGNET.Infrastructure.Embedders.OpenAI
 {

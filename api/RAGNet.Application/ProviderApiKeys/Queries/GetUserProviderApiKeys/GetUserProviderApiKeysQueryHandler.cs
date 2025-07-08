@@ -22,7 +22,7 @@ namespace RAGNET.Application.ProviderApiKeys.Queries.GetUserProviderApiKeys
             foreach (var apiKey in userApiKeys)
             {
                 var provider = apiKey.Provider.ProviderType;
-                var policy = _providerPolicyFactory.GetPolicy(provider);
+                var policy = _providerPolicyFactory.CreatePolicy(provider);
                 apiKey.Provider.InitializePolicy(policy);
                 result.Add(apiKey.ToDTO());
             }
@@ -36,7 +36,7 @@ namespace RAGNET.Application.ProviderApiKeys.Queries.GetUserProviderApiKeys
 
                 if (!alreadyExists)
                 {
-                    var policy = _providerPolicyFactory.GetPolicy(provider);
+                    var policy = _providerPolicyFactory.CreatePolicy(provider);
                     var dto = new ProviderApiKeyDTO
                     {
                         ApiKey = string.Empty,

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using RAGNET.Domain.SharedKernel.Plans.Policies;
 using RAGNET.Domain.Users;
+using RAGNET.Domain.Users.ApiKeys;
 using RAGNET.Domain.Workflows;
 
 namespace web.Filters
@@ -21,7 +22,7 @@ namespace web.Filters
                 return;
             }
 
-            var workflow = await _workflowRepository.GetByApiKey(apiKey);
+            var workflow = await _workflowRepository.GetByApiKey(new ApiKey(apiKey));
 
             if (workflow == null)
             {

@@ -15,12 +15,16 @@ using RAGNET.Domain.Workflows.CallbackUrls;
 using RAGNET.Domain.TokenWallets;
 using RAGNET.Domain.TokenWallets.TokenTransactions;
 using RAGNET.Domain.Users.Subscriptions;
+using RAGNET.Domain.VectorStorages;
+using RAGNET.Domain.Workflows.VectorStorageConfigs;
 
 namespace RAGNET.Infrastructure.Database
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User>(options)
     {
         public DbSet<Workflow> Workflows { get; set; }
+        public DbSet<VectorStorage> VectorStorages { get; set; }
+        public DbSet<VectorStorageConfig> VectorStorageConfigs { get; set; }
         public DbSet<CallbackUrl> CallbackUrls { get; set; }
         public DbSet<ProviderApiKey> ProviderApiKeys { get; set; }
         public DbSet<Chunker> Chunkers { get; set; }

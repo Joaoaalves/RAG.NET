@@ -1,5 +1,7 @@
 using Moq;
-using RAGNET.Domain.Documents.Pages.Chunks;
+
+using RAGNET.Domain.SharedKernel.VectorStorages.SemanticVectors;
+
 using RAGNET.Infrastructure.Embedders.OpenAI;
 
 namespace tests.RAGNet.Infrastructure.Tests.Embedders;

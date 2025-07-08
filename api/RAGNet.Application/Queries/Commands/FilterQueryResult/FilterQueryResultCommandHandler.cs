@@ -1,13 +1,10 @@
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using RAGNET.Application.Configuration.Commands;
 using RAGNET.Application.Infrastructure.Providers.Conversation;
 using RAGNET.Application.ProviderApiKeys.Services;
 using RAGNET.Application.QueryResultFilters.Factories;
-using RAGNET.Application.TokenWallets.Services;
 using RAGNET.Application.TokenWallets.Services.Consumption;
 using RAGNET.Application.TokenWallets.Services.Consumption.Strategies;
-using RAGNET.Domain.SeedWork;
-using RAGNET.Domain.TokenWallets;
+
 
 namespace RAGNET.Application.Queries.Commands.FilterQueryResult
 {

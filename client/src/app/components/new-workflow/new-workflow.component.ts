@@ -1,3 +1,4 @@
+import { VectorStorage } from './../../models/vector-storage';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -10,7 +11,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 // Components
-import { SelectComponent } from 'src/app/shared/components/select/select.component';
+import {
+  SelectComponent,
+  SelectValue,
+} from 'src/app/shared/components/select/select.component';
 
 // Models
 import { ChunkerStrategy } from 'src/app/models/chunker';
@@ -27,6 +31,7 @@ import { RadarChartComponent } from 'src/app/shared/components/radar-chart/radar
 import { PriceCalculatorComponent } from 'src/app/shared/components/price-calculator/price-calculator.component';
 import { WorkflowMetricsService } from 'src/app/services/workflow-metrics.service';
 import {
+  catchError,
   map,
   Observable,
   startWith,
@@ -38,7 +43,7 @@ import { RadarAxis } from 'src/app/services/radar-data.service';
 import { ProviderSelectService } from 'src/app/services/provider-select.service';
 import { WorkflowService } from 'src/app/services/workflow.service';
 import { ConversationModel, EmbeddingModel } from 'src/app/models/models';
-import { toast } from 'ngx-sonner';
+import { VectorStoragesService } from 'src/app/services/vector-storage.service';
 
 @Component({
   imports: [
@@ -64,6 +69,8 @@ export class NewWorkflowComponent implements OnInit {
   error = '';
   chunkerStrategies: { label: string; value: number | string }[] = [];
 
+  vectorStoragesOptions: SelectValue[] = [];
+
   embeddingOptions$!: Observable<{ value: string | number; label: string }[]>;
   conversationOptions$!: Observable<
     { value: string | number; label: string }[]
@@ -84,7 +91,8 @@ export class NewWorkflowComponent implements OnInit {
     private router: Router,
     private metrics: WorkflowMetricsService,
     private workflowService: WorkflowService,
-    private ps: ProviderSelectService
+    private providerSelectService: ProviderSelectService,
+    private vectorStorageService: VectorStoragesService
   ) {}
 
   ngOnInit(): void {
@@ -113,16 +121,18 @@ export class NewWorkflowComponent implements OnInit {
         providerId: [-1, Validators.required],
         model: [null, Validators.required],
       }),
+      vectorStorageId: [-1, Validators.required],
     });
 
-    this.embeddingOptions$ = this.ps.getEmbeddingProvidersAsSelectOptions();
+    this.embeddingOptions$ =
+      this.providerSelectService.getEmbeddingProvidersAsSelectOptions();
     this.conversationOptions$ =
-      this.ps.getConversationProvidersAsSelectOptions();
+      this.providerSelectService.getConversationProvidersAsSelectOptions();
 
     const embProvCtrl = this.form.get('embeddingProvider.providerId')!;
     this.embeddingModels$ = embProvCtrl.valueChanges.pipe(
       startWith(embProvCtrl.value),
-      switchMap((id) => this.ps.getEmbeddingModels(id)),
+      switchMap((id) => this.providerSelectService.getEmbeddingModels(id)),
       tap(() => this.form.get('embeddingProvider.model')!.reset())
     );
 
@@ -141,7 +151,7 @@ export class NewWorkflowComponent implements OnInit {
     const convProvCtrl = this.form.get('conversationProvider.providerId')!;
     this.conversationModels$ = convProvCtrl.valueChanges.pipe(
       startWith(convProvCtrl.value),
-      switchMap((id) => this.ps.getConversationModels(id)),
+      switchMap((id) => this.providerSelectService.getConversationModels(id)),
       tap(() => this.form.get('conversationProvider.model')!.reset())
     );
 
@@ -151,6 +161,13 @@ export class NewWorkflowComponent implements OnInit {
       withLatestFrom(this.conversationModels$),
       map(([val, list]) => list.find((m) => m.value === val) ?? null)
     );
+
+    this.vectorStorageService.getUserVectorStorages().subscribe((response) => {
+      this.vectorStoragesOptions = response.map((provider) => ({
+        label: provider.name,
+        value: provider.id,
+      }));
+    });
 
     this.metrics.init(this.form, this.embeddingModel$, this.conversationModel$);
 
@@ -181,7 +198,6 @@ export class NewWorkflowComponent implements OnInit {
       formValue.embeddingProvider.model =
         formValue.embeddingProvider.model.value;
     }
-
     const workflowDetails: CreateWorkflowRequest = formValue;
 
     this.workflowService.createWorkflow(workflowDetails).subscribe({

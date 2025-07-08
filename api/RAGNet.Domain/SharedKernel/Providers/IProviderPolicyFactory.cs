@@ -2,6 +2,6 @@ namespace RAGNET.Domain.SharedKernel.Providers
 {
     public interface IProviderPolicyFactory
     {
-        IProviderPolicy GetPolicy(SupportedProvider type);
+        IProviderPolicy CreatePolicy(SupportedProvider type);
     }
 }

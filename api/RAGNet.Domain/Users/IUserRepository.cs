@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using RAGNET.Domain.SharedKernel.Providers;
 
 namespace RAGNET.Domain.Users
 {

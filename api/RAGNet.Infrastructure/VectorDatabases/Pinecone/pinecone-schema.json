@@ -1,0 +1,74 @@
+{
+  "types": [
+    "serverless",
+    "pod",
+    "byoc"
+  ],
+  "serverless": {
+    "fields": {
+      "cloud": {
+        "label" : "Cloud",
+        "type": "select",
+        "values": [
+          "aws",
+          "gcp",
+          "azure"
+        ],
+        "required": true
+      },
+      "region": {
+        "label" : "Region",
+        "type": "select",
+        "values": [
+          "us-east-1",
+          "us-west-2",
+          "eu-west-1",
+          "us-central-1",
+          "europe-west4",
+          "eastus2"
+        ],
+        "required": true
+      }
+    },
+    "required_plan" : 0
+  },
+  "pod" : {
+    "fields" : {
+      "environment" : {
+        "label" : "Environment",
+        "type" : "text",
+        "required" : true
+      },
+      "podType" : {
+        "label" : "Pod Type",
+        "type" : "select",
+        "values" : ["P1", "P2", "S1"],
+        "required" : true
+      },
+      "podSize" : {
+        "label" : "Pod Size",
+        "type" : "select",
+        "values" : ["X1","X2","X3","X4"],
+        "required" : true
+      },
+      "pods" : {
+        "label" : "Pods",
+        "type" : "number",
+        "min" : 1,
+        "max" : 10000,
+        "required" : true
+      }
+    },
+    "required_plan" : 1
+  },
+  "byoc" : {
+    "fields" : {
+      "environment" : {
+        "label" : "Environment",
+        "type" : "text",
+        "required" : true
+      }
+    },
+    "required_plan" : 2
+  }
+}

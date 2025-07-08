@@ -15,7 +15,6 @@ export type SupportedProvider =
   | 'openai'
   | 'anthropic'
   | 'voyage'
-  | 'qdrant'
   | 'gemini'
   | 'deepseek'
   | 'xai'
@@ -37,4 +36,13 @@ export interface Provider {
   pattern: string;
   prefix: string;
   url: string;
+}
+
+export interface VectorStorageProvider {
+  id: number;
+  name: string;
+}
+
+export interface AvailableVectorStorageProvidersResponse {
+  vectorStorages: VectorStorageProvider[];
 }

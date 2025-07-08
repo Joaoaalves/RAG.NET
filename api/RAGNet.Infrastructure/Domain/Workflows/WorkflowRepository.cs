@@ -1,6 +1,7 @@
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using RAGNET.Domain.Users.ApiKeys;
 using RAGNET.Domain.Workflows;
+
 using RAGNET.Infrastructure.Database;
 
 namespace RAGNET.Infrastructure.Domain.Workflows;
@@ -16,6 +17,7 @@ public class WorkflowRepository(ApplicationDbContext context) : IWorkflowReposit
             .Include(w => w.QueryEnhancers).ThenInclude(q => q!.Metas)
             .Include(w => w.QueryResultFilter)!.ThenInclude(f => f!.Metas)
             .Include(w => w.Rankers).ThenInclude(r => r.Metas)
+            .Include(w => w.VectorStorageConfig)
             .Include(w => w.ConversationProviderConfig)
             .Include(w => w.Documents)
             .Include(w => w.EmbeddingProviderConfig)
@@ -30,6 +32,7 @@ public class WorkflowRepository(ApplicationDbContext context) : IWorkflowReposit
             .Include(w => w.QueryEnhancers).ThenInclude(q => q.Metas)
             .Include(w => w.QueryResultFilter)!.ThenInclude(f => f!.Metas)
             .Include(w => w.Rankers).ThenInclude(r => r.Metas)
+            .Include(w => w.VectorStorageConfig)
             .Include(w => w.ConversationProviderConfig)
             .Include(w => w.Documents)
             .Include(w => w.EmbeddingProviderConfig)
@@ -64,13 +67,14 @@ public class WorkflowRepository(ApplicationDbContext context) : IWorkflowReposit
 
     }
 
-    public async Task<Workflow?> GetByApiKey(string apiKey)
+    public async Task<Workflow?> GetByApiKey(ApiKey apiKey)
     {
         return await _context.Workflows
             .Include(w => w.Chunker).ThenInclude(c => c!.Metas)
             .Include(w => w.QueryEnhancers).ThenInclude(q => q.Metas)
             .Include(w => w.QueryResultFilter)!.ThenInclude(f => f!.Metas)
             .Include(w => w.Rankers).ThenInclude(r => r.Metas)
+            .Include(w => w.VectorStorageConfig)
             .Include(w => w.ConversationProviderConfig)
             .Include(w => w.EmbeddingProviderConfig)
             .Include(w => w.Documents)
@@ -85,6 +89,7 @@ public class WorkflowRepository(ApplicationDbContext context) : IWorkflowReposit
             .Include(w => w.QueryEnhancers).ThenInclude(q => q.Metas)
             .Include(w => w.QueryResultFilter)!.ThenInclude(f => f!.Metas)
             .Include(w => w.Rankers).ThenInclude(r => r.Metas)
+            .Include(w => w.VectorStorageConfig)
             .Include(w => w.ConversationProviderConfig)
             .Include(w => w.EmbeddingProviderConfig)
             .Include(w => w.CallbackUrls)
@@ -93,7 +98,7 @@ public class WorkflowRepository(ApplicationDbContext context) : IWorkflowReposit
             .ToListAsync();
     }
 
-    public async Task UpdateByApiKey(Workflow workflow, string apiKey)
+    public async Task UpdateByApiKey(Workflow workflow, ApiKey apiKey)
     {
         var existing = await _context.Workflows.FirstOrDefaultAsync(w => w.Id == workflow.Id);
         if (existing == null || existing.ApiKey != apiKey)

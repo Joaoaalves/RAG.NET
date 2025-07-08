@@ -1,6 +1,7 @@
 using RAGNET.Domain.Chunkers;
 using RAGNET.Domain.QueryResultFilters;
 using RAGNET.Domain.SharedKernel.Providers;
+using RAGNET.Domain.Workflows.VectorStorageConfigs;
 
 namespace RAGNET.Domain.Workflows
 {
@@ -14,6 +15,7 @@ namespace RAGNET.Domain.Workflows
         private Chunker _chunker = null!;
         private ConversationProviderConfig _conversationProvider = null!;
         private EmbeddingProviderConfig _embeddingProvider = null!;
+        private VectorStorageConfig _vectorStorageConfig = null!;
         private QueryResultFilter? _filter;
 
         public WorkflowBuilder WithName(string name)
@@ -70,6 +72,12 @@ namespace RAGNET.Domain.Workflows
             return this;
         }
 
+        public WorkflowBuilder WithVectorStorage(VectorStorageConfig vectorStorageConfig)
+        {
+            _vectorStorageConfig = vectorStorageConfig;
+            return this;
+        }
+
         public Workflow Build(WorkflowId? id)
         {
             return Workflow.Create(
@@ -80,6 +88,7 @@ namespace RAGNET.Domain.Workflows
                 _collectionId,
                 _conversationProvider,
                 _embeddingProvider,
+                _vectorStorageConfig,
                 _chunker,
                 id ?? new WorkflowId(),
                 _filter

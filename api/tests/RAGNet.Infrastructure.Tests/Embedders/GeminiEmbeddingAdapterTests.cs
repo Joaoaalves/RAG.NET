@@ -1,8 +1,10 @@
 using System.Net;
-using RAGNET.Domain.Documents.Pages.Chunks;
+using RichardSzalay.MockHttp;
+
+using RAGNET.Domain.SharedKernel.VectorStorages.SemanticVectors;
+
 using RAGNET.Infrastructure.Embedders.Gemini;
 using RAGNET.Infrastructure.Exceptions.Adapters;
-using RichardSzalay.MockHttp;
 
 namespace tests.RAGNet.Infrastructure.Tests.Embedders
 {

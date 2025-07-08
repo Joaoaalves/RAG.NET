@@ -2,11 +2,11 @@ namespace RAGNET.Domain.SharedKernel.Providers
 {
     public enum ConversationProviderEnum
     {
-        OPENAI = SupportedProvider.OpenAI,
-        ANTHROPIC = SupportedProvider.Anthropic,
-        GEMINI = SupportedProvider.Gemini,
-        DeepSeek = SupportedProvider.Deepseek,
+        OPENAI = SupportedProvider.OPENAI,
+        ANTHROPIC = SupportedProvider.ANTHROPIC,
+        GEMINI = SupportedProvider.GEMINI,
+        DeepSeek = SupportedProvider.DEEPSEEK,
         XAI = SupportedProvider.XAI,
-        Mistral = SupportedProvider.Mistral
+        Mistral = SupportedProvider.MISTRAL
     }
 }

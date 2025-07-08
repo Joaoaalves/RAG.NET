@@ -11,11 +11,11 @@ namespace RAGNET.Infrastructure.Providers.Policies
         public string Prefix => "pa-";
         public string Pattern => "^pa-[A-Za-z0-9-_-]{30,60}$";
         public string Url => "https://voyage.ai/account/settings";
-        public SupportedProvider ProviderType => SupportedProvider.OpenAI;
+        public SupportedProvider ProviderType => SupportedProvider.OPENAI;
 
         public void Validate(string apiKey)
         {
-            var regexRule = new ApiKeyMustMatchPatternRule(ProviderType, apiKey, Pattern);
+            var regexRule = new ApiKeyMustMatchPatternRule(apiKey, Pattern);
 
             if (regexRule.IsBroken())
                 throw new BusinessRuleValidationException(regexRule);

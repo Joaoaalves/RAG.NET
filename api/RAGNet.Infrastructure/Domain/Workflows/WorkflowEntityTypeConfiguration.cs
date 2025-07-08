@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RAGNET.Domain.Chunkers;
 using RAGNET.Domain.QueryResultFilters;
 using RAGNET.Domain.Workflows;
+using RAGNET.Domain.Workflows.VectorStorageConfigs;
 using RAGNET.Infrastructure.SeedWork;
 
 namespace RAGNET.Infrastructure.Domain.Workflows
@@ -18,10 +19,15 @@ namespace RAGNET.Infrastructure.Domain.Workflows
             builder.Property(w => w.Description);
             builder.Property(w => w.IsActive);
             builder.Property(w => w.UserId).IsRequired();
-            builder.Property(w => w.ApiKey).IsRequired();
             builder.Property(w => w.CollectionId).IsRequired();
             builder.Property(w => w.LastEmbeddedDocumentDate);
             builder.Property(w => w.LastQueryDate);
+
+            builder.Property(w => w.ApiKey)
+                .HasConversion(new ApiKeyConverter())
+                .HasColumnName("ApiKey")
+                .IsRequired();
+
             builder.Property(w => w.TokenUsage)
                 .HasConversion(new TokenAmountConverter())
                 .HasColumnName("TokenUsage")
@@ -53,6 +59,11 @@ namespace RAGNET.Infrastructure.Domain.Workflows
             builder.HasMany(w => w.Documents)
                 .WithOne(d => d.Workflow)
                 .HasForeignKey(d => d.WorkflowId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(w => w.VectorStorageConfig)
+                .WithOne(cfg => cfg.Workflow)
+                .HasForeignKey<VectorStorageConfig>(cfg => cfg.WorkflowId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.OwnsOne(w => w.ConversationProviderConfig, cfg =>

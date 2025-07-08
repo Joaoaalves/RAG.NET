@@ -11,11 +11,11 @@ namespace RAGNET.Infrastructure.Providers.Policies
         public string Prefix => "sk-proj-";
         public string Pattern => "^sk-proj-[A-Za-z0-9_-]{120,200}$";
         public string Url => "https://platform.openai.com/api-keys";
-        public SupportedProvider ProviderType => SupportedProvider.OpenAI;
+        public SupportedProvider ProviderType => SupportedProvider.OPENAI;
 
         public void Validate(string apiKey)
         {
-            var regexRule = new ApiKeyMustMatchPatternRule(ProviderType, apiKey, Pattern);
+            var regexRule = new ApiKeyMustMatchPatternRule(apiKey, Pattern);
 
             if (regexRule.IsBroken())
                 throw new BusinessRuleValidationException(regexRule);

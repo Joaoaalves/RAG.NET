@@ -6,11 +6,12 @@ using RAGNET.Application.Chunkers.Services;
 using RAGNET.Application.ProviderApiKeys.Services;
 using RAGNET.Application.Queries.DTOs;
 using RAGNET.Application.Queries.Services;
+using RAGNET.Application.Infrastructure.Providers.VectorDatabases;
 
 namespace RAGNET.Application.Queries.Commands.QueryChunks
 {
     public class QueryChunksCommandHandler(
-        IVectorDatabaseService vectorDatabaseService,
+        IVectorDatabaseFactory vectorDatabaseFactory,
         IQueryResultAggregatorService queryResultAggregatorService,
         IEmbedderFactory embedderFactory,
         IScoreNormalizerService scoreNormalizerService,
@@ -18,7 +19,7 @@ namespace RAGNET.Application.Queries.Commands.QueryChunks
         IApiKeyResolverService apiKeyResolverService
     ) : ICommandHandler<QueryChunksCommand, List<ContentItemDTO>>
     {
-        private readonly IVectorDatabaseService _vectorDatabaseService = vectorDatabaseService;
+        private readonly IVectorDatabaseFactory _vectorDatabaseFactory = vectorDatabaseFactory;
         private readonly IQueryResultAggregatorService _queryResultAggregatorService = queryResultAggregatorService;
         private readonly IEmbedderFactory _embedderFactory = embedderFactory;
         private readonly IScoreNormalizerService _scoreNormalizerService = scoreNormalizerService;
@@ -29,6 +30,7 @@ namespace RAGNET.Application.Queries.Commands.QueryChunks
             try
             {
                 var workflow = request.Workflow;
+                var vectorStorageConfig = workflow.VectorStorageConfig;
                 var queryDTO = request.QueryDTO;
                 var embConfig = workflow.EmbeddingProviderConfig;
 
@@ -42,7 +44,12 @@ namespace RAGNET.Application.Queries.Commands.QueryChunks
                 // Embedd All
                 var vectors = await embedderService.GetMultipleEmbeddingAsync(request.Queries);
 
-                var queryResults = await _vectorDatabaseService.QueryMultipleAsync
+                var vectorDatabaseService = await _vectorDatabaseFactory.CreateVectorDatabaseServiceAsync(
+                    vectorStorageConfig.VectorStorageId,
+                    request.User.Id
+                );
+
+                var queryResults = await vectorDatabaseService.QueryMultipleAsync
                 (
                     vectors,
                     workflow.CollectionId.ToString(),

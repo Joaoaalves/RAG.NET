@@ -1,5 +1,6 @@
 using RAGNET.Domain.Documents.Pages;
 using RAGNET.Domain.Documents.Pages.Chunks;
+using RAGNET.Domain.SharedKernel.VectorStorages.Scores;
 
 using RAGNET.Application.Infrastructure.Providers;
 using RAGNET.Application.Queries.DTOs;

@@ -9,6 +9,8 @@ using RAGNET.Domain.SharedKernel.URLs;
 using RAGNET.Domain.Workflows.CallbackUrls;
 using RAGNET.Domain.Workflows.Events;
 using RAGNET.Domain.SharedKernel.Tokens;
+using RAGNET.Domain.Workflows.VectorStorageConfigs;
+using RAGNET.Domain.Users.ApiKeys;
 
 namespace RAGNET.Domain.Workflows
 {
@@ -27,7 +29,7 @@ namespace RAGNET.Domain.Workflows
         public int DocumentsCount => _documents.Count;
 
         public string UserId { get; set; } = string.Empty;
-        public string ApiKey { get; private set; } = string.Empty;
+        public ApiKey ApiKey { get; private set; } = null!;
         public Guid CollectionId { get; private set; }
         public DateTime? LastEmbeddedDocumentDate { get; private set; }
         public DateTime? LastQueryDate { get; private set; }
@@ -41,6 +43,7 @@ namespace RAGNET.Domain.Workflows
         public ConversationProviderConfig ConversationProviderConfig { get; private set; } = null!;
         public EmbeddingProviderConfig EmbeddingProviderConfig { get; private set; } = null!;
         public QueryResultFilter? QueryResultFilter { get; private set; }
+        public VectorStorageConfig VectorStorageConfig { get; private set; } = null!;
 
         // EF Core
         private Workflow() { }
@@ -50,11 +53,12 @@ namespace RAGNET.Domain.Workflows
             string name,
             string description,
             string userId,
-            string apiKey,
+            ApiKey apiKey,
             Guid collectionId,
             Chunker chunker,
             ConversationProviderConfig conversationProviderConfig,
             EmbeddingProviderConfig embeddingProviderConfig,
+            VectorStorageConfig vectorDatabaseConfig,
             QueryResultFilter? filter = null)
         {
             Id = id;
@@ -67,6 +71,7 @@ namespace RAGNET.Domain.Workflows
             Chunker = chunker;
             ConversationProviderConfig = conversationProviderConfig;
             EmbeddingProviderConfig = embeddingProviderConfig;
+            VectorStorageConfig = vectorDatabaseConfig;
             QueryResultFilter = filter;
 
             this.AddDomainEvent(new WorkflowCreatedEvent(this.Id));
@@ -80,6 +85,7 @@ namespace RAGNET.Domain.Workflows
             Guid collectionId,
             ConversationProviderConfig conversationProviderConfig,
             EmbeddingProviderConfig embeddingProviderConfig,
+            VectorStorageConfig vectorDatabaseConfig,
             Chunker chunker,
             WorkflowId? id = null,
             QueryResultFilter? filter = null)
@@ -89,11 +95,12 @@ namespace RAGNET.Domain.Workflows
                 name,
                 description,
                 userId,
-                apiKey,
+                new ApiKey(apiKey),
                 collectionId,
                 chunker,
                 conversationProviderConfig,
                 embeddingProviderConfig,
+                vectorDatabaseConfig,
                 filter);
         }
 

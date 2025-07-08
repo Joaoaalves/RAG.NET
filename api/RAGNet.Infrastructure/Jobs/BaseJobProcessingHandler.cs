@@ -6,9 +6,10 @@ namespace RAGNET.Infrastructure.Jobs
     {
         private IJobProcessingHandler? _next;
 
-        public void SetNext(IJobProcessingHandler next)
+        public IJobProcessingHandler SetNext(IJobProcessingHandler next)
         {
             _next = next;
+            return _next;
         }
 
         public virtual async Task HandleAsync(EmbeddingJob job, CancellationToken ct)

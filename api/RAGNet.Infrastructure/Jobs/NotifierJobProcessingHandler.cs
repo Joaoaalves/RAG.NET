@@ -9,9 +9,10 @@ namespace RAGNET.Infrastructure.Jobs
     {
         private IJobProcessingHandler? _next;
         private readonly IJobNotificationService _realTimeNotifier = realTimeNotifier;
-        public void SetNext(IJobProcessingHandler next)
+        public IJobProcessingHandler SetNext(IJobProcessingHandler next)
         {
             _next = next;
+            return next;
         }
 
         public virtual async Task HandleAsync(EmbeddingJob job, CancellationToken ct)

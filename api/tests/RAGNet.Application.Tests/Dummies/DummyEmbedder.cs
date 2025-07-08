@@ -1,5 +1,5 @@
 using RAGNET.Application.Infrastructure.Providers.Embedding;
-using RAGNET.Domain.Documents.Pages.Chunks;
+using RAGNET.Domain.SharedKernel.VectorStorages.SemanticVectors;
 
 namespace tests.RAGNet.Application.Tests.Dummies
 {

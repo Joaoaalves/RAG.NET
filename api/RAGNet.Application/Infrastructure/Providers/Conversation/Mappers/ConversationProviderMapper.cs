@@ -27,12 +27,12 @@ namespace RAGNET.Application.Infrastructure.Providers.Conversation.Mappers
         {
             return provider switch
             {
-                ConversationProviderEnum.OPENAI => SupportedProvider.OpenAI,
-                ConversationProviderEnum.ANTHROPIC => SupportedProvider.Anthropic,
-                ConversationProviderEnum.GEMINI => SupportedProvider.Gemini,
-                ConversationProviderEnum.DeepSeek => SupportedProvider.Deepseek,
+                ConversationProviderEnum.OPENAI => SupportedProvider.OPENAI,
+                ConversationProviderEnum.ANTHROPIC => SupportedProvider.ANTHROPIC,
+                ConversationProviderEnum.GEMINI => SupportedProvider.GEMINI,
+                ConversationProviderEnum.DeepSeek => SupportedProvider.DEEPSEEK,
                 ConversationProviderEnum.XAI => SupportedProvider.XAI,
-                ConversationProviderEnum.Mistral => SupportedProvider.Mistral,
+                ConversationProviderEnum.Mistral => SupportedProvider.MISTRAL,
                 _ => throw new ArgumentOutOfRangeException("Unsupported Conversation Provider")
             };
         }

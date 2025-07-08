@@ -31,7 +31,7 @@ namespace RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob
 
             var job = new EmbeddingJob
             {
-                ApiKey = request.Workflow.ApiKey,
+                ApiKey = request.Workflow.ApiKey.Value,
                 UserId = user.Id,
                 FileName = request.File.FileName,
                 FileContent = ms.ToArray(),

@@ -24,7 +24,7 @@ namespace RAGNET.Application.ProviderApiKeys.Commands.CreateProviderApiKey
             try
             {
                 // Validate ApiKey
-                var policy = _providerPolicyFactory.GetPolicy(request.Provider);
+                var policy = _providerPolicyFactory.CreatePolicy(request.Provider);
                 policy.Validate(request.ApiKey);
 
                 // Hash

@@ -1,0 +1,20 @@
+{
+    "types" : [
+        "local",
+        "cloud"
+    ],
+    "cloud" : {
+        "host" : {
+            "label" : "Host",
+            "type" : "Text",
+            "required" : true,
+            "validations" : {
+                "regex" : "https?:\/\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)"
+            }
+        },
+        "required_plan" : 0
+    },
+    "local" : {
+        "required_plan" : 2
+    }
+}

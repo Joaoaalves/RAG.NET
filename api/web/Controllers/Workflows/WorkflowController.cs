@@ -37,7 +37,6 @@ namespace web.Controllers.Workflows
             {
                 var command = new CreateWorkflowCommand(request);
                 var workflowId = await _commandExecutor.Execute(command);
-
                 return Ok(new { Message = "Workflow created!", WorkflowId = workflowId });
             }
             catch (InvalidEmbeddingModelException exc)

@@ -2,13 +2,12 @@ namespace RAGNET.Domain.SharedKernel.Providers
 {
     public enum SupportedProvider
     {
-        OpenAI,
-        Anthropic,
-        Voyage,
-        Qdrant,
-        Gemini,
-        Deepseek,
+        OPENAI,
+        ANTHROPIC,
+        VOYAGE,
+        GEMINI,
+        DEEPSEEK,
         XAI,
-        Mistral
+        MISTRAL,
     }
 }

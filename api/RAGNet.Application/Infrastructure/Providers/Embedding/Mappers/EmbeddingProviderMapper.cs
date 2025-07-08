@@ -28,10 +28,10 @@ namespace RAGNET.Application.Infrastructure.Providers.Embedding.Mappers
         {
             return provider switch
             {
-                EmbeddingProviderEnum.OPENAI => SupportedProvider.OpenAI,
-                EmbeddingProviderEnum.VOYAGE => SupportedProvider.Voyage,
-                EmbeddingProviderEnum.GEMINI => SupportedProvider.Gemini,
-                EmbeddingProviderEnum.MISTRAL => SupportedProvider.Mistral,
+                EmbeddingProviderEnum.OPENAI => SupportedProvider.OPENAI,
+                EmbeddingProviderEnum.VOYAGE => SupportedProvider.VOYAGE,
+                EmbeddingProviderEnum.GEMINI => SupportedProvider.GEMINI,
+                EmbeddingProviderEnum.MISTRAL => SupportedProvider.MISTRAL,
                 _ => throw new ArgumentOutOfRangeException("Unsupported provider")
             };
         }

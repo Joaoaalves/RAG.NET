@@ -2,9 +2,9 @@ namespace RAGNET.Domain.SharedKernel.Providers
 {
     public enum EmbeddingProviderEnum
     {
-        OPENAI = SupportedProvider.OpenAI,
-        VOYAGE = SupportedProvider.Voyage,
-        GEMINI = SupportedProvider.Gemini,
-        MISTRAL = SupportedProvider.Mistral
+        OPENAI = SupportedProvider.OPENAI,
+        VOYAGE = SupportedProvider.VOYAGE,
+        GEMINI = SupportedProvider.GEMINI,
+        MISTRAL = SupportedProvider.MISTRAL
     }
 }

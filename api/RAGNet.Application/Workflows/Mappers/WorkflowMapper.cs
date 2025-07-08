@@ -27,7 +27,7 @@ namespace RAGNET.Application.Workflows.Mappers
                 DocumentsCount = workflow.DocumentsCount,
                 CollectionId = workflow.CollectionId,
                 Strategy = workflow.Chunker!.StrategyType,
-                ApiKey = workflow.ApiKey,
+                ApiKey = workflow.ApiKey.Value,
                 Settings = chunkerSettings,
                 EmbeddingProvider = workflow.EmbeddingProviderConfig.ToDTOFromEmbeddingProviderConfig(),
                 ConversationProvider = workflow.ConversationProviderConfig.ToDTOFromConversationProviderConfig(),

@@ -29,7 +29,7 @@ namespace RAGNET.Application.ProviderApiKeys.Commands.UpdateProviderApiKey
                 var userApiKey = await _providerApiKeyRepository.GetByIdAsync(request.ProviderApiKeyId, request.User.Id) ?? throw new Exception("User API key not found");
 
                 var encryptedApiKey = _cryptoService.Encrypt(request.ApiKey);
-                var policy = _providerPolicyFactory.GetPolicy(userApiKey.Provider.ProviderType);
+                var policy = _providerPolicyFactory.CreatePolicy(userApiKey.Provider.ProviderType);
 
                 policy.Validate(request.ApiKey);
 

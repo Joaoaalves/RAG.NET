@@ -1,7 +1,9 @@
 using System.Net;
 using System.Text.Json;
 using RichardSzalay.MockHttp;
-using RAGNET.Domain.Documents.Pages.Chunks;
+
+using RAGNET.Domain.SharedKernel.VectorStorages.SemanticVectors;
+
 using RAGNET.Infrastructure.Embedders.Voyage;
 
 namespace tests.RAGNet.Infrastructure.Tests.Embedders

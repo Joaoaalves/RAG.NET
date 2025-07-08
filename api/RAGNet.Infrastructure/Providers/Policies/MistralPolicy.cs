@@ -10,11 +10,11 @@ namespace RAGNET.Infrastructure.Providers.Policies
         public string Prefix => "";
         public string Pattern => "^[A-Za-z0-9]{32}$";
         public string Url => "https://admin.mistral.ai/organization/api-keys";
-        public SupportedProvider ProviderType => SupportedProvider.Anthropic;
+        public SupportedProvider ProviderType => SupportedProvider.ANTHROPIC;
 
         public void Validate(string apiKey)
         {
-            var regexRule = new ApiKeyMustMatchPatternRule(ProviderType, apiKey, Pattern);
+            var regexRule = new ApiKeyMustMatchPatternRule(apiKey, Pattern);
 
             if (regexRule.IsBroken())
                 throw new BusinessRuleValidationException(regexRule);

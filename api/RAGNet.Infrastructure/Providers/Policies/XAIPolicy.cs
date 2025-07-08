@@ -11,11 +11,11 @@ namespace RAGNET.Infrastructure.Providers.Policies
         public string Prefix => "xai-";
         public string Pattern => "^xai-[0-9A-Za-z_-]{80}$";
         public string Url => "https://console.x.ai/team/default/api-keys";
-        public SupportedProvider ProviderType => SupportedProvider.OpenAI;
+        public SupportedProvider ProviderType => SupportedProvider.OPENAI;
 
         public void Validate(string apiKey)
         {
-            var regexRule = new ApiKeyMustMatchPatternRule(ProviderType, apiKey, Pattern);
+            var regexRule = new ApiKeyMustMatchPatternRule(apiKey, Pattern);
 
             if (regexRule.IsBroken())
                 throw new BusinessRuleValidationException(regexRule);

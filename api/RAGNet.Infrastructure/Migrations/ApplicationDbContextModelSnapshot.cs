@@ -550,6 +550,27 @@ namespace RAGNet.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("RAGNET.Domain.VectorStorages.VectorStorage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ApiKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Provider")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("VectorStorages", (string)null);
+                });
+
             modelBuilder.Entity("RAGNET.Domain.Workflows.CallbackUrls.CallbackUrl", b =>
                 {
                     b.Property<Guid>("Id")
@@ -572,6 +593,36 @@ namespace RAGNet.Infrastructure.Migrations
                     b.ToTable("CallbackUrls", (string)null);
                 });
 
+            modelBuilder.Entity("RAGNET.Domain.Workflows.VectorStorageConfigs.VectorStorageConfig", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CollectionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<long>("VectorDimension")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("VectorStorageId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("VectorStorageId");
+
+                    b.Property<Guid>("WorkflowId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("WorkflowId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VectorStorageId")
+                        .IsUnique();
+
+                    b.HasIndex("WorkflowId")
+                        .IsUnique();
+
+                    b.ToTable("VectorStorageConfigs", (string)null);
+                });
+
             modelBuilder.Entity("RAGNET.Domain.Workflows.Workflow", b =>
                 {
                     b.Property<Guid>("Id")
@@ -579,7 +630,8 @@ namespace RAGNet.Infrastructure.Migrations
 
                     b.Property<string>("ApiKey")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("ApiKey");
 
                     b.Property<Guid>("CollectionId")
                         .HasColumnType("uuid");
@@ -963,6 +1015,33 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Navigation("ScheduledPlan");
                 });
 
+            modelBuilder.Entity("RAGNET.Domain.VectorStorages.VectorStorage", b =>
+                {
+                    b.OwnsMany("RAGNET.Domain.SharedKernel.Metas.Meta", "Metas", b1 =>
+                        {
+                            b1.Property<Guid>("VectorStorageId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Key")
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(1000)
+                                .HasColumnType("character varying(1000)");
+
+                            b1.HasKey("VectorStorageId", "Key");
+
+                            b1.ToTable("VectorStorageMetas", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("VectorStorageId");
+                        });
+
+                    b.Navigation("Metas");
+                });
+
             modelBuilder.Entity("RAGNET.Domain.Workflows.CallbackUrls.CallbackUrl", b =>
                 {
                     b.HasOne("RAGNET.Domain.Workflows.Workflow", null)
@@ -970,6 +1049,25 @@ namespace RAGNet.Infrastructure.Migrations
                         .HasForeignKey("WorkflowId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("RAGNET.Domain.Workflows.VectorStorageConfigs.VectorStorageConfig", b =>
+                {
+                    b.HasOne("RAGNET.Domain.VectorStorages.VectorStorage", "VectorStorage")
+                        .WithOne()
+                        .HasForeignKey("RAGNET.Domain.Workflows.VectorStorageConfigs.VectorStorageConfig", "VectorStorageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RAGNET.Domain.Workflows.Workflow", "Workflow")
+                        .WithOne("VectorStorageConfig")
+                        .HasForeignKey("RAGNET.Domain.Workflows.VectorStorageConfigs.VectorStorageConfig", "WorkflowId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("VectorStorage");
+
+                    b.Navigation("Workflow");
                 });
 
             modelBuilder.Entity("RAGNET.Domain.Workflows.Workflow", b =>
@@ -1077,6 +1175,9 @@ namespace RAGNet.Infrastructure.Migrations
                     b.Navigation("QueryResultFilter");
 
                     b.Navigation("Rankers");
+
+                    b.Navigation("VectorStorageConfig")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

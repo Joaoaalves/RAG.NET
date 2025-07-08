@@ -1,5 +1,6 @@
 using RAGNET.Application.Infrastructure.Providers.Embedding;
 using RAGNET.Domain.SharedKernel.Providers;
+using RAGNET.Domain.Users.ApiKeys;
 using RAGNET.Infrastructure.Embedders.Gemini;
 using RAGNET.Infrastructure.Embedders.Mistral;
 using RAGNET.Infrastructure.Embedders.OpenAI;
@@ -10,7 +11,7 @@ namespace RAGNET.Infrastructure.Embedders
     public class EmbedderFactory : IEmbedderFactory
     {
         private readonly int _baseDelayMS = 1000;
-        public IEmbeddingService CreateEmbeddingService(string userApiKey, EmbeddingProviderConfig config)
+        public IEmbeddingService CreateEmbeddingService(ApiKey userApiKey, EmbeddingProviderConfig config)
         {
             var model = config.Model;
             return config.Provider switch
@@ -23,9 +24,9 @@ namespace RAGNET.Infrastructure.Embedders
             };
         }
 
-        private OpenAIEmbeddingAdapter OpenAIClient(string apiKey, string model)
+        private OpenAIEmbeddingAdapter OpenAIClient(ApiKey apiKey, string model)
         {
-            var embeddingClient = new OpenAIEmbeddingClientWrapper(apiKey, model);
+            var embeddingClient = new OpenAIEmbeddingClientWrapper(apiKey.Value, model);
 
             return new OpenAIEmbeddingAdapter(
                 embeddingClient,
@@ -33,19 +34,19 @@ namespace RAGNET.Infrastructure.Embedders
             );
         }
 
-        private VoyageEmbeddingAdapter VoyageClient(string apiKey, string model)
+        private VoyageEmbeddingAdapter VoyageClient(ApiKey apiKey, string model)
         {
-            return new VoyageEmbeddingAdapter(apiKey, model, delayMs: _baseDelayMS);
+            return new VoyageEmbeddingAdapter(apiKey.Value, model, delayMs: _baseDelayMS);
         }
 
-        private GeminiEmbeddingAdapter GeminiClient(string apiKey, string model)
+        private GeminiEmbeddingAdapter GeminiClient(ApiKey apiKey, string model)
         {
-            return new GeminiEmbeddingAdapter(apiKey, model, delayMs: _baseDelayMS);
+            return new GeminiEmbeddingAdapter(apiKey.Value, model, delayMs: _baseDelayMS);
         }
 
-        private MistralEmbeddingAdapter MistralClient(string apiKey, string model)
+        private MistralEmbeddingAdapter MistralClient(ApiKey apiKey, string model)
         {
-            return new MistralEmbeddingAdapter(apiKey, model, delayMs: _baseDelayMS);
+            return new MistralEmbeddingAdapter(apiKey.Value, model, delayMs: _baseDelayMS);
         }
     }
 }

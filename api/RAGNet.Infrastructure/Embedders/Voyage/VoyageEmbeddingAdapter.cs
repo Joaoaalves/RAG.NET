@@ -1,7 +1,10 @@
 using System.Text;
 using System.Text.Json;
+
+using RAGNET.Domain.SharedKernel.VectorStorages.SemanticVectors;
+
 using RAGNET.Application.Infrastructure.Providers.Embedding;
-using RAGNET.Domain.Documents.Pages.Chunks;
+
 using RAGNET.Infrastructure.SeedWork.Resilience;
 
 namespace RAGNET.Infrastructure.Embedders.Voyage

@@ -4,6 +4,7 @@ import { EmbeddingProvider } from './embedding';
 import { Filter } from './filter';
 import { ProviderModel } from './provider';
 import { QueryEnhancer } from './query-enhancer';
+import { VectorStorage } from './vector-storage';
 
 export interface Workflow {
   id: string;
@@ -33,6 +34,7 @@ export interface CreateWorkflowRequest {
   settings: ChunkerSettings;
   embeddingProvider: EmbeddingProvider;
   conversationProvider: ProviderModel;
+  vectorStorageId: string;
 }
 
 export interface UpdateWorkflowResponse {

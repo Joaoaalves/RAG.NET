@@ -14,5 +14,6 @@ namespace RAGNET.Application.Workflows.Commands.CreateWorkflow
         public ChunkerSettingsDTO Settings { get; set; } = null!;
         public EmbeddingProviderConfigDTO EmbeddingProvider { get; set; } = null!;
         public ConversationProviderConfigDTO ConversationProvider { get; set; } = null!;
+        public Guid VectorStorageId { get; set; }
     }
 }

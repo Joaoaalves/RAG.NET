@@ -11,10 +11,9 @@ namespace RAGNET.Application.Infrastructure.Providers
             var value = reader.GetString();
             return value switch
             {
-                "OpenAI" => SupportedProvider.OpenAI,
-                "Anthropic" => SupportedProvider.Anthropic,
-                "Voyage" => SupportedProvider.Voyage,
-                "QDrant" => SupportedProvider.Qdrant,
+                "OpenAI" => SupportedProvider.OPENAI,
+                "Anthropic" => SupportedProvider.ANTHROPIC,
+                "Voyage" => SupportedProvider.VOYAGE,
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

@@ -10,11 +10,11 @@ namespace RAGNET.Infrastructure.Providers.Policies
         public string Prefix => "sk-ant-";
         public string Pattern => "^sk-ant-[a-z0-9-]+-[A-Za-z0-9_-]{80,140}$";
         public string Url => "https://console.anthropic.com/settings/keys";
-        public SupportedProvider ProviderType => SupportedProvider.Anthropic;
+        public SupportedProvider ProviderType => SupportedProvider.ANTHROPIC;
 
         public void Validate(string apiKey)
         {
-            var regexRule = new ApiKeyMustMatchPatternRule(ProviderType, apiKey, Pattern);
+            var regexRule = new ApiKeyMustMatchPatternRule(apiKey, Pattern);
 
             if (regexRule.IsBroken())
                 throw new BusinessRuleValidationException(regexRule);

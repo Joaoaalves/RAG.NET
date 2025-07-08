@@ -1,5 +1,4 @@
-
-using RAGNET.Domain.Documents.Pages.Chunks;
+using RAGNET.Domain.SharedKernel.VectorStorages.SemanticVectors;
 
 namespace RAGNET.Application.Infrastructure.Providers.Embedding.DTOs
 {

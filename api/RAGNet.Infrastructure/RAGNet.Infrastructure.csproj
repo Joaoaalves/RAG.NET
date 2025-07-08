@@ -4,6 +4,11 @@
     <ProjectReference Include="..\RAGNet.Domain\RAGNet.Domain.csproj" />
     <ProjectReference Include="..\RAGNet.Application\RAGNet.Application.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="VectorDatabases/Pinecone/pinecone-schema.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Anthropic.SDK" Version="5.1.0" />
@@ -25,6 +30,7 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageReference Include="NRedisStack" Version="0.13.3" />
     <PackageReference Include="OpenAI" Version="2.1.0" />
+    <PackageReference Include="Pinecone.Client" Version="4.0.2" />
     <PackageReference Include="Polly" Version="8.5.2" />
     <PackageReference Include="Polly.Extensions.Http" Version="3.0.0" />
     <PackageReference Include="Qdrant.Client" Version="1.13.0" />

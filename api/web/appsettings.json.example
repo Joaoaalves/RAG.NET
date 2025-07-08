@@ -43,5 +43,8 @@
                 "Yearly": ""
             }
         }
+    },
+    "SchemaPaths": {
+        "Pinecone": "/src/RAGNET.Infrastructure/VectorDatabases/Pinecone/pinecone-schema.json"
     }
 }

@@ -1,7 +1,9 @@
 using System.Net;
 using Moq;
 using Moq.Protected;
-using RAGNET.Domain.Documents.Pages.Chunks;
+
+using RAGNET.Domain.SharedKernel.VectorStorages.SemanticVectors;
+
 using RAGNET.Infrastructure.Embedders.Mistral;
 
 namespace tests.RAGNet.Infrastructure.Tests.Embedders;

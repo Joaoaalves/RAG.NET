@@ -1,6 +1,4 @@
 using RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Contexts;
-using RAGNET.Domain.Users;
-using RAGNET.Domain.Workflows;
 
 namespace RAGNET.Application.Workflows.Commands.EnqueueEmbeddingJob.Jobs
 {

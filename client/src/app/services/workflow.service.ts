@@ -11,7 +11,11 @@ import {
   WorkflowUpdateRequest,
   UpdateWorkflowResponse,
 } from '../models/workflow';
-import { ProviderResponse } from '../models/provider';
+import {
+  AvailableVectorStorageProvidersResponse,
+  ProviderResponse,
+  VectorStorageProvider,
+} from '../models/provider';
 import { ConversationModel, EmbeddingModel } from '../models/models';
 
 @Injectable({
@@ -94,5 +98,13 @@ export class WorkflowService {
         `${this.apiUrl}/api/models/conversation`
       )
       .pipe(map((response) => response));
+  }
+
+  getStorageVectorProviders(): Observable<VectorStorageProvider[]> {
+    return this.httpClient
+      .get<AvailableVectorStorageProvidersResponse>(
+        `${this.apiUrl}/api/vector-storages`
+      )
+      .pipe(map((response) => response.vectorStorages));
   }
 }

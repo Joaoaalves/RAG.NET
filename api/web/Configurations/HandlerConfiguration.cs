@@ -1,4 +1,4 @@
-using RAGNET.Infrastructure.Workers.Handlers;
+using RAGNET.Infrastructure.Workers.Embedding.Handlers;
 
 namespace web.Configurations
 {
@@ -11,6 +11,7 @@ namespace web.Configurations
             services.AddScoped<ExtractTextHandler>();
             services.AddScoped<MountChunkerHandler>();
             services.AddScoped<MountProvidersHandler>();
+            services.AddScoped<MountVectorDatabaseHandler>();
             services.AddScoped<ProcessPagesHandler>();
             services.AddScoped<ConsumeTokensHandler>();
             services.AddScoped<StoreChunksHandler>();

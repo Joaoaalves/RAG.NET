@@ -25,6 +25,8 @@ using RAGNET.Domain.Users.Subscriptions;
 using RAGNET.Infrastructure.Domain.Subscriptions;
 using RAGNET.Domain.Users;
 using RAGNET.Infrastructure.Domain.Users;
+using RAGNET.Domain.VectorStorages;
+using RAGNET.Infrastructure.Domain.VectorStorages;
 
 namespace web.Configurations
 {
@@ -45,6 +47,7 @@ namespace web.Configurations
             services.AddScoped<ITokenWalletRepository, TokenWalletRepository>();
             services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IVectorStorageRepository, VectorStorageRepository>();
             return services;
         }
     }

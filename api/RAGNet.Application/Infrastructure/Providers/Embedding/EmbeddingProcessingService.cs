@@ -1,6 +1,5 @@
 using RAGNET.Application.Chunkers.Services;
 using RAGNET.Application.Infrastructure.Providers.Embedding.DTOs;
-using RAGNET.Domain.Documents.Pages.Chunks;
 
 namespace RAGNET.Application.Infrastructure.Providers.Embedding
 {
@@ -16,14 +15,10 @@ namespace RAGNET.Application.Infrastructure.Providers.Embedding
             List<string> chunks,
             IEmbeddingService embedder
         );
-        Task InsertEmbeddingBatchAsync(List<EmbeddingDTO> batch, string collectionId);
     }
 
-    public class EmbeddingProcessingService(
-        IVectorDatabaseService vectorDatabaseService
-    ) : IEmbeddingProcessingService
+    public class EmbeddingProcessingService : IEmbeddingProcessingService
     {
-        private readonly IVectorDatabaseService _vectorDatabaseService = vectorDatabaseService;
 
         public Task<List<string>> ChunkTextAsync(
             ITextChunkerService chunker,
@@ -54,11 +49,6 @@ namespace RAGNET.Application.Infrastructure.Providers.Embedding
             }
 
             return result;
-        }
-
-        public async Task InsertEmbeddingBatchAsync(List<EmbeddingDTO> batch, string collectionId)
-        {
-            await _vectorDatabaseService.InsertManyAsync(batch, collectionId);
         }
     }
 }
