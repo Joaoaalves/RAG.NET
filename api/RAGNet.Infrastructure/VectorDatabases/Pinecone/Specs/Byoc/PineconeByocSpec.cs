@@ -22,7 +22,6 @@ namespace RAGNET.Infrastructure.VectorDatabases.Pinecone.Specs.Byoc
             try
             {
                 var environment = metas.FirstOrDefault(m => m.Key == "environment")?.Value ?? throw new ArgumentNullException("Environment");
-                var apiKeyString = metas.FirstOrDefault(m => m.Key == "apiKey")?.Value ?? throw new ArgumentNullException("Api Key");
 
                 return new()
                 {

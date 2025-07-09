@@ -16,12 +16,14 @@ export class PodsFormComponent {
   podType = this.podTypes[0];
   podSize = this.podSizes[0];
   pods = 1;
+  apiKey = '';
 
   @Output() submitForm = new EventEmitter<{
     environment: string;
     podType: string;
     podSize: string;
     pods: number;
+    apiKey: string;
   }>();
 
   submit() {
@@ -30,6 +32,7 @@ export class PodsFormComponent {
       podType: this.podType,
       podSize: this.podSize,
       pods: this.pods,
+      apiKey: this.apiKey,
     });
   }
 }

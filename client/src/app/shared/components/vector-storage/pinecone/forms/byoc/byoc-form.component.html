@@ -1,15 +1,27 @@
-<div class="flex flex-col gap-6 mt-8">
+<div class="flex flex-col gap-6 mt-8 border border-neutral-600 rounded-xl p-4 transition-all duration-300">
+  <!-- API Key -->
+  <div>
+    <label class="block text-sm font-medium text-white mb-2">API Key</label>
+    <input
+      type="text"
+      class="w-full px-4 py-2 rounded-lg bg-neutral-800 text-white placeholder:text-neutral-400"
+      placeholder="Enter your Pinecone API Key"
+      [(ngModel)]="apiKey"
+    />
+  </div>
+
   <!-- Environment -->
   <div>
     <p class="text-white font-medium mb-2">Environment</p>
     <input
       type="text"
       [(ngModel)]="environment"
-      placeholder="e.g., my-env"
+      placeholder="e.g., aws-us-east-1-b921"
       class="w-full px-4 py-2 rounded-lg bg-neutral-800 text-white outline-none focus:ring-2 ring-fuchsia-500"
     />
   </div>
 
+  <!-- Submit -->
   <button
     class="mt-4 w-full py-3 rounded-xl bg-gradient-to-r from-fuchsia-500 to-sky-500 text-white font-bold uppercase"
     (click)="submit()"

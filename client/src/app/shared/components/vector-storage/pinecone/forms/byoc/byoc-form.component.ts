@@ -10,10 +10,17 @@ import { FormsModule } from '@angular/forms';
 })
 export class BYOCFormComponent {
   environment = '';
+  apiKey = '';
 
-  @Output() submitForm = new EventEmitter<{ environment: string }>();
+  @Output() submitForm = new EventEmitter<{
+    environment: string;
+    apiKey: string;
+  }>();
 
   submit() {
-    this.submitForm.emit({ environment: this.environment });
+    this.submitForm.emit({
+      environment: this.environment,
+      apiKey: this.apiKey,
+    });
   }
 }

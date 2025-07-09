@@ -1,23 +1,26 @@
-<form class="mt-6 space-y-6 w-full">
+<div class="flex flex-col gap-6 mt-8 border border-neutral-600 rounded-xl p-4 transition-all duration-300">
+  <!-- API Key -->
   <div>
-    <label class="block text-white text-sm font-semibold mb-2">Environment</label>
+    <label class="block text-sm font-medium text-white mb-2">API Key</label>
     <input
       type="text"
-      class="w-full px-4 py-2 rounded-lg bg-neutral-800 text-white border border-white/10 focus:outline-none focus:border-white/30"
-      placeholder="your-env-id"
-      [(ngModel)]="environment"
-      name="environment"
+      class="w-full px-4 py-2 rounded-lg bg-neutral-800 text-white placeholder:text-neutral-400"
+      placeholder="Enter your Pinecone API Key"
+      [(ngModel)]="apiKey"
     />
   </div>
 
+  <!-- Pod Type -->
   <div>
     <label class="block text-white text-sm font-semibold mb-2">Pod Type</label>
     <div class="flex gap-3">
       <button
         type="button"
         *ngFor="let type of ['P1', 'P2', 'S1']"
-        class="px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 border border-white/10 bg-neutral-900 hover:border-white/30"
-        [ngClass]="{ '!bg-gradient-to-r from-fuchsia-500 to-sky-500': podType === type }"
+        class="px-4 py-2 rounded-lg text-white font-medium border border-white/10 bg-neutral-900 hover:border-white/30"
+        [ngClass]="{
+          '!bg-gradient-to-r from-fuchsia-500 to-sky-500': podType === type
+        }"
         (click)="podType = type"
       >
         {{ type }}
@@ -25,14 +28,17 @@
     </div>
   </div>
 
+  <!-- Pod Size -->
   <div>
     <label class="block text-white text-sm font-semibold mb-2">Pod Size</label>
     <div class="flex gap-3">
       <button
         type="button"
         *ngFor="let size of ['X1', 'X2', 'X3', 'X4']"
-        class="px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 border border-white/10 bg-neutral-900 hover:border-white/30"
-        [ngClass]="{ '!bg-gradient-to-r from-fuchsia-500 to-sky-500': podSize === size }"
+        class="px-4 py-2 rounded-lg text-white font-medium border border-white/10 bg-neutral-900 hover:border-white/30"
+        [ngClass]="{
+          '!bg-gradient-to-r from-fuchsia-500 to-sky-500': podSize === size
+        }"
         (click)="podSize = size"
       >
         {{ size }}
@@ -40,6 +46,7 @@
     </div>
   </div>
 
+  <!-- Pods -->
   <div>
     <label class="block text-white text-sm font-semibold mb-2">Pods</label>
     <input
@@ -52,10 +59,26 @@
     />
   </div>
 
+  <!-- Environment -->
+  <div>
+    <label class="block text-white text-sm font-semibold mb-2"
+      >Environment</label
+    >
+    <input
+      type="text"
+      class="w-full px-4 py-2 rounded-lg bg-neutral-800 text-white border border-white/10 focus:outline-none focus:border-white/30"
+      placeholder="your-env-id"
+      [(ngModel)]="environment"
+      name="environment"
+    />
+  </div>
+
+  <!-- Submit -->
   <button
     type="submit"
+    (click)="submit()"
     class="w-full mt-4 bg-gradient-to-r from-fuchsia-500 to-sky-500 py-2 rounded-lg text-white font-semibold hover:opacity-90 transition"
   >
-   Save
+    Save
   </button>
-</form>
+</div>
