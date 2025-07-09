@@ -1,4 +1,5 @@
 using RAGNET.Application.VectorStorages.DTOs;
+using RAGNET.Domain.SharedKernel.VectorStorages;
 using RAGNET.Domain.VectorStorages;
 
 namespace RAGNET.Application.VectorStorages.Mappers
@@ -10,7 +11,11 @@ namespace RAGNET.Application.VectorStorages.Mappers
             return new VectorStorageDTO
             {
                 Id = vectorStorage.Id.Value,
-                Provider = vectorStorage.Provider
+                Provider = vectorStorage.Provider,
+                Name = vectorStorage.Provider.ToString(),
+                ApiKey = vectorStorage.ApiKey.ToString(),
+                IsActive = vectorStorage.IsActive,
+                Metas = vectorStorage.Metas.ToDictionary()
             };
         }
     }

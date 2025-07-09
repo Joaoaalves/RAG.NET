@@ -55,6 +55,7 @@ export const HLM_SWITCH_VALUE_ACCESSOR = {
     </brn-switch>
   `,
   providers: [HLM_SWITCH_VALUE_ACCESSOR],
+  standalone: true,
 })
 export class HlmSwitchComponent implements ControlValueAccessor {
   public readonly userClass = input<ClassValue>('', { alias: 'class' });

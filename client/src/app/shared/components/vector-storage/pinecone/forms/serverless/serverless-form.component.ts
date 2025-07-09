@@ -1,14 +1,39 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-serverless-form',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './serverless-form.component.html',
 })
-export class ServerlessFormComponent {
+export class ServerlessFormComponent implements OnChanges {
+  @Input() cloud: number | undefined;
+  @Input() region: string | undefined;
+  @Input() apiKey: string | undefined;
+  status = false;
+
+  @Output() submitForm = new EventEmitter<{
+    cloud: number;
+    region: string;
+    apiKey: string;
+  }>();
+
+  form: FormGroup;
+
   clouds = ['gcp', 'aws', 'azure'];
 
   regionsMap: Record<string, string[]> = {
@@ -17,26 +42,50 @@ export class ServerlessFormComponent {
     azure: ['eastus2'],
   };
 
-  selectedCloud: number = 0;
-  selectedRegion = '';
-  apiKey = '';
+  submitted = false;
+
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      cloud: [0, Validators.required],
+      region: ['', Validators.required],
+      apiKey: ['', Validators.required],
+    });
+
+    this.status = this.apiKey != undefined;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['cloud'] || changes['region'] || changes['apiKey']) {
+      this.form.patchValue({
+        cloud: this.cloud ?? 0,
+        region: this.region ?? '',
+        apiKey: this.apiKey ?? '',
+      });
+    }
+  }
+
+  get selectedCloud(): number {
+    return this.form.get('cloud')?.value;
+  }
 
   get availableRegions(): string[] {
     const cloudKey = this.clouds[this.selectedCloud];
     return this.regionsMap[cloudKey] ?? [];
   }
 
-  @Output() submitForm = new EventEmitter<{
-    cloud: number;
-    region: string;
-    apiKey: string;
-  }>();
+  selectCloud(index: number) {
+    this.form.patchValue({ cloud: index, region: '' });
+  }
+
+  selectRegion(region: string) {
+    this.form.patchValue({ region });
+  }
 
   submit() {
-    this.submitForm.emit({
-      cloud: this.selectedCloud,
-      region: this.selectedRegion,
-      apiKey: this.apiKey,
-    });
+    this.submitted = true;
+    if (this.form.invalid) return;
+
+    const { cloud, region, apiKey } = this.form.value;
+    this.submitForm.emit({ cloud, region, apiKey });
   }
 }

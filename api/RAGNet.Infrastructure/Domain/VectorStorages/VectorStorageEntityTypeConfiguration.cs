@@ -16,6 +16,7 @@ namespace RAGNET.Infrastructure.Domain.VectorStorages
             builder.Property(v => v.UserId)
                 .IsRequired();
 
+            builder.Property(v => v.IsActive).IsRequired();
             builder.Property(v => v.Provider).IsRequired();
 
             builder.Property(v => v.ApiKey)

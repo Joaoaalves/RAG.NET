@@ -1,6 +1,7 @@
 using Moq;
 
 using RAGNET.Domain.SharedKernel.Providers;
+using RAGNET.Domain.Users.ApiKeys;
 using RAGNET.Domain.Workflows;
 using RAGNET.Infrastructure.Database;
 using RAGNET.Infrastructure.Domain.Workflows;
@@ -73,7 +74,7 @@ namespace tests.RAGNet.Infrastructure.Tests.Repositories
         public async Task ShoulReturnNullWithWrongApiKey()
         {
             // Arrange
-            string wrongApiKey = "wrong-api-key";
+            var wrongApiKey = new ApiKey("wrong-api-key");
 
             var embeddingProvider = new EmbeddingProviderConfig(
                 provider: EmbeddingProviderEnum.OPENAI,

@@ -1,10 +1,11 @@
-<div class="relative w-full h-full p-6 bg-gradient-to-br from-slate-900 to-black rounded-2xl border border-white/15">
-  <!-- Header -->
-  <div class="flex items-center justify-start gap-x-4">
-    <img class="w-8 h-8 border-none" src="/img/providers/pinecone.svg" />
-    <h3 class="text-white font-semibold">Pinecone</h3>
-  </div>
-
+<app-vector-storage-card
+  src="/imgs/providers/pinecone.svg"
+  providerTitle="Pinecone"
+  [isActive]="providerData != null && providerData.isActive"
+  [isDeletable]="providerData != null && !providerData.isActive"
+  (delete)="handleDelete()"
+  (disable)="handleDisable()"
+>
   <!-- Type Selector -->
   <div class="flex items-center justify-start gap-x-4 text-black mt-6">
     <button
@@ -24,15 +25,26 @@
   <div class="mt-6">
     <app-serverless-form
       *ngIf="activeType === 'Serverless'"
+      [cloud]="cloud"
+      [apiKey]="apiKey"
+      [region]="region"
       (submitForm)="handleSubmit($event)"
     />
     <app-pods-form
       *ngIf="activeType === 'Pods'"
+      [apiKey]="apiKey"
+      [pods]="pods"
+      [podSize]="podSize"
+      [podType]="podType"
+      [environment]="environment"
       (submitForm)="handleSubmit($event)"
     />
     <app-byoc-form
       *ngIf="activeType === 'BYOC'"
+      [apiKey]="apiKey"
+      [environment]="environment"
       (submitForm)="handleSubmit($event)"
     />
   </div>
-</div>
+
+</app-vector-storage-card>

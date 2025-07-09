@@ -1,26 +1,59 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-byoc-form',
-  imports: [CommonModule, FormsModule],
-  templateUrl: './byoc-form.component.html',
   standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './byoc-form.component.html',
 })
-export class BYOCFormComponent {
-  environment = '';
-  apiKey = '';
-
+export class BYOCFormComponent implements OnChanges {
+  @Input() apiKey: string | undefined;
+  @Input() environment: string | undefined;
+  status = false;
   @Output() submitForm = new EventEmitter<{
     environment: string;
     apiKey: string;
   }>();
 
-  submit() {
-    this.submitForm.emit({
-      environment: this.environment,
-      apiKey: this.apiKey,
+  form: FormGroup;
+  submitted = false;
+
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      apiKey: ['', Validators.required],
+      environment: ['', Validators.required],
     });
+
+    this.status = this.apiKey != undefined;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['apiKey'] || changes['environment']) {
+      this.form.patchValue({
+        apiKey: this.apiKey ?? '',
+        environment: this.environment ?? '',
+      });
+    }
+  }
+
+  submit() {
+    this.submitted = true;
+    if (this.form.invalid) return;
+
+    this.submitForm.emit(this.form.value);
   }
 }

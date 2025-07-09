@@ -2,7 +2,7 @@ using RAGNET.Domain.SharedKernel.VectorStorages;
 
 namespace RAGNET.Application.VectorStorages.DTOs
 {
-    public class VectorStorageApiKeyDTO
+    public class VectorStoragePolicyDTO
     {
         public Guid Id { get; set; }
         public VectorStorageProvider ProviderId { get; set; }

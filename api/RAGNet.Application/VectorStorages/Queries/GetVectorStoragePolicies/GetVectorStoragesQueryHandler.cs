@@ -3,18 +3,18 @@ using RAGNET.Application.VectorStorages.DTOs;
 using RAGNET.Domain.SharedKernel.VectorStorages;
 using RAGNET.Domain.VectorStorages;
 
-namespace RAGNET.Application.VectorStorages.Queries.GetVectorStorages
+namespace RAGNET.Application.VectorStorages.Queries.GetVectorStoragePolicies
 {
-    public class GetVectorStoragesQueryHandler(
+    public class GetVectorStoragePoliciesQueryHandler(
         IVectorStorageRepository vectorStorageRepository,
         IVectorStoragePolicyFactory vectorStoragePolicyFactory
-    ) : IQueryHandler<GetVectorStoragesQuery, List<VectorStorageApiKeyDTO>>
+    ) : IQueryHandler<GetVectorStoragePoliciesQuery, List<VectorStoragePolicyDTO>>
     {
         private readonly IVectorStorageRepository _vectorStorageRepository = vectorStorageRepository;
         private readonly IVectorStoragePolicyFactory _vectorStoragePolicyFactory = vectorStoragePolicyFactory;
-        public async Task<List<VectorStorageApiKeyDTO>> Handle(GetVectorStoragesQuery request, CancellationToken cancellationToken)
+        public async Task<List<VectorStoragePolicyDTO>> Handle(GetVectorStoragePoliciesQuery request, CancellationToken cancellationToken)
         {
-            List<VectorStorageApiKeyDTO> providers = [];
+            List<VectorStoragePolicyDTO> vsPolcies = [];
 
             foreach (var provider in Enum.GetValues<VectorStorageProvider>())
             {
@@ -23,7 +23,7 @@ namespace RAGNET.Application.VectorStorages.Queries.GetVectorStorages
                     var policy = _vectorStoragePolicyFactory.CreatePolicy(provider);
                     var storage = await _vectorStorageRepository.GetByUserIdAndProviderAsync(request.User.Id, provider);
 
-                    var providerDto = new VectorStorageApiKeyDTO
+                    var providerDto = new VectorStoragePolicyDTO
                     {
                         Id = storage?.Id.Value ?? Guid.Empty,
                         ProviderId = provider,
@@ -34,14 +34,14 @@ namespace RAGNET.Application.VectorStorages.Queries.GetVectorStorages
                         Url = policy.Url
                     };
 
-                    providers.Add(providerDto);
+                    vsPolcies.Add(providerDto);
                 }
                 catch (Exception exc)
                 {
                     Console.WriteLine(exc.Message);
                 }
             }
-            return providers;
+            return vsPolcies;
         }
     }
 }

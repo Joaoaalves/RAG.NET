@@ -3,17 +3,20 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import {
   SupportedVectorStorage,
+  VectorStorage,
   VectorStoragePolicy,
 } from 'src/app/models/vector-storage';
 import { ServerlessFormComponent } from './forms/serverless/serverless-form.component';
 import { PodsFormComponent } from './forms/pods/pods-form.component';
 import { BYOCFormComponent } from './forms/byoc/byoc-form.component';
 import { toast } from 'ngx-sonner';
+import { VectorStorageCard } from '../vector-storage-card.component';
 
 @Component({
   selector: 'app-pinecone-form',
   imports: [
     CommonModule,
+    VectorStorageCard,
     ServerlessFormComponent,
     PodsFormComponent,
     BYOCFormComponent,
@@ -23,6 +26,8 @@ import { toast } from 'ngx-sonner';
 })
 export class PineconeFormComponent {
   @Input() policy!: VectorStoragePolicy;
+  @Input() providerData: VectorStorage | undefined;
+
   types: string[] = ['Serverless', 'Pods', 'BYOC'];
   activeType: string = this.types[0];
 
@@ -30,6 +35,36 @@ export class PineconeFormComponent {
 
   setActiveType(type: string) {
     this.activeType = type;
+  }
+
+  get apiKey() {
+    return this.providerData?.apiKey;
+  }
+
+  get cloud() {
+    if (this.providerData) return parseInt(this.providerData.metas['cloud']);
+    return;
+  }
+
+  get region() {
+    return this.providerData?.metas['region'];
+  }
+
+  get pods() {
+    if (this.providerData) return parseInt(this.providerData.metas['pods']);
+    return;
+  }
+
+  get podSize() {
+    return this.providerData?.metas['podSize'];
+  }
+
+  get podType() {
+    return this.providerData?.metas['podType'];
+  }
+
+  get environment() {
+    return this.providerData?.metas['environment'];
   }
 
   handleSubmit(data: any) {
@@ -49,4 +84,8 @@ export class PineconeFormComponent {
         toast.success('Vector Storage Saved!');
       });
   }
+
+  handleDisable() {}
+
+  handleDelete() {}
 }

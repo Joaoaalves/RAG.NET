@@ -9,9 +9,9 @@ namespace RAGNET.Domain.VectorStorages
     {
         public VectorStorageId Id { get; private init; } = null!;
         public string UserId { get; set; } = string.Empty;
-        public ApiKey ApiKey { get; set; } = null!;
+        public ApiKey ApiKey { get; private set; } = null!;
         public VectorStorageProvider Provider { get; private set; }
-
+        public bool IsActive { get; private set; } = true;
         private readonly List<Meta> _metas = [];
         public IReadOnlyCollection<Meta> Metas => _metas.AsReadOnly();
 

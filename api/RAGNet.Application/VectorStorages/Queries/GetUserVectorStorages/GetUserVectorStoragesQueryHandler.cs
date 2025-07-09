@@ -1,5 +1,6 @@
 using RAGNET.Application.Configuration.Queries;
 using RAGNET.Application.VectorStorages.DTOs;
+using RAGNET.Application.VectorStorages.Mappers;
 using RAGNET.Domain.VectorStorages;
 
 namespace RAGNET.Application.VectorStorages.Queries.GetUserVectorStorages
@@ -17,20 +18,9 @@ namespace RAGNET.Application.VectorStorages.Queries.GetUserVectorStorages
 
             foreach (var storage in vectorStorages)
             {
-                try
-                {
-                    var providerDto = new VectorStorageDTO
-                    {
-                        Id = storage.Id.Value,
-                        Provider = storage.Provider,
-                        Name = storage.Provider.ToString()
-                    };
-
-                    providers.Add(providerDto);
-                }
-                catch (Exception)
-                { }
+                providers.Add(storage.ToDTO());
             }
+
             return providers;
         }
     }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RAGNET.Infrastructure.Processing;
 
 using RAGNET.Application.VectorStorages.Queries.GetUserVectorStorages;
-using RAGNET.Application.VectorStorages.Queries.GetVectorStorages;
+using RAGNET.Application.VectorStorages.Queries.GetVectorStoragePolicies;
 using RAGNET.Application.VectorStorages.Commands.AddVectorStorage;
 
 namespace web.Controllers.VectorStorages
@@ -19,13 +19,13 @@ namespace web.Controllers.VectorStorages
         private readonly QueriesExecutor _queriesExecutor = queriesExecutor;
         private readonly CommandsExecutor _commandsExecutor = commandsExecutor;
 
-        [HttpGet]
+        [HttpGet("policies")]
         [Authorize]
-        public async Task<IActionResult> GetVectorStorages()
+        public async Task<IActionResult> GetVectorStoragePolicies()
         {
             try
             {
-                var vectorStorages = await _queriesExecutor.Execute(new GetVectorStoragesQuery());
+                var vectorStorages = await _queriesExecutor.Execute(new GetVectorStoragePoliciesQuery());
 
                 return Ok(new { vectorStorages });
             }
@@ -56,7 +56,7 @@ namespace web.Controllers.VectorStorages
         }
 
 
-        [HttpGet("user")]
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetUserVectorStorages()
         {

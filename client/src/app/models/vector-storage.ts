@@ -1,4 +1,3 @@
-import { environment } from './../../environments/environment.example';
 export interface VectorStoragePolicy {
   id: string;
   providerId: SupportedVectorStorage;
@@ -15,8 +14,11 @@ export interface VectorStoragesResponse {
 
 export interface VectorStorage {
   id: string;
-  providerId: number;
+  provider: SupportedVectorStorage;
+  apiKey: string;
   name: string;
+  isActive: boolean;
+  metas: Record<string, string>;
 }
 
 export interface GetVectorStoragesResponse {
@@ -34,6 +36,10 @@ export interface CreateVectorStorageRequest {
   pods: number;
   podSize: string;
   podType: string;
+}
+
+export interface CreateVectorStorageResponse {
+  vectorStorage: VectorStorage;
 }
 
 export enum SupportedVectorStorage {

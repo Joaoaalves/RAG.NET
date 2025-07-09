@@ -10,7 +10,6 @@
   "
   [class.hidden]="!workflow.isActive"
 ></div>
-
 <div
   class="absolute -inset-[1px] rounded-xl opacity-0 group-hover:opacity-90 transition-opacity duration-300 bg-gradient-to-r from-rose-500/20 to-fuchsia-500/20 blur-sm pointer-events-none z-20"
   [class.hidden]="!workflow.isActive"
@@ -87,9 +86,8 @@
       </div>
     </app-alert>
     <hlm-switch
-      class="bg-white"
       (click)="toggleEnabled($event)"
       [checked]="workflow.isActive"
-    />
+    ></hlm-switch>
   </div>
 </div>
