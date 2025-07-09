@@ -81,11 +81,32 @@ export class PineconeFormComponent {
         environment: data.environment,
       })
       .subscribe((response) => {
+        this.providerData = response;
         toast.success('Vector Storage Saved!');
       });
   }
 
-  handleDisable() {}
+  handleToggleIsActive() {
+    if (this.providerData != undefined) {
+      this.vsService
+        .togleIsActive(this.providerData.id, !this.providerData.isActive)
+        .subscribe((response) => {
+          this.providerData = response;
+          toast.success('Pinecone Settings was updated.');
+        });
+    }
+  }
 
-  handleDelete() {}
+  handleDelete() {
+    if (this.providerData != undefined) {
+      if (!this.providerData.isActive) {
+        this.vsService
+          .deleteVectorStorage(this.providerData.id)
+          .subscribe((response) => {
+            this.providerData = undefined;
+            toast.success('Pinecone provider was deleted.');
+          });
+      }
+    }
+  }
 }

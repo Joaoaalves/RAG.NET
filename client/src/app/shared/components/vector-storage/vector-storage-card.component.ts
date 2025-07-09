@@ -27,14 +27,16 @@ export class VectorStorageCard implements OnChanges {
   @Input() src!: string;
   @Input() providerTitle!: string;
   @Input() isActive!: boolean;
-  @Input() isDeletable!: boolean;
+  @Input() exists!: boolean;
 
   @Output() delete = new EventEmitter<void>();
-  @Output() toggleEnable = new EventEmitter<void>();
+  @Output() toggleIsActive = new EventEmitter<void>();
+
+  isDeletable: boolean = false;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['isActive']) {
-      this.isDeletable = !this.isActive;
+    if (changes['isActive'] || changes['exists']) {
+      this.isDeletable = this.exists && !this.isActive;
     }
   }
 
@@ -42,7 +44,13 @@ export class VectorStorageCard implements OnChanges {
     this.delete.emit();
   }
 
-  onToggleEnable() {
-    this.toggleEnable.emit();
+  onToggleIsActive() {
+    if (this.exists) {
+      this.toggleIsActive.emit();
+      this.isDeletable = !this.isActive;
+      return;
+    }
+
+    this.isActive = !this.isActive;
   }
 }

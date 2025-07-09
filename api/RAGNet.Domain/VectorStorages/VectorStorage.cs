@@ -42,8 +42,27 @@ namespace RAGNET.Domain.VectorStorages
         {
             _metas.Clear();
             foreach (var (key, value) in specMeta)
-                if (value is not null)
+                if (!string.IsNullOrEmpty(value))
                     _metas.Add(new Meta(key, value));
+        }
+
+        public void UpdateMetas(Dictionary<string, string> metas)
+        {
+            foreach (var meta in metas)
+            {
+                if (!string.IsNullOrEmpty(meta.Value))
+                    _metas.FirstOrDefault(m => m.Key == meta.Key)?.UpdateValue(meta.Value);
+            }
+        }
+
+        public void SetIsActive(bool isActive)
+        {
+            IsActive = isActive;
+        }
+
+        public void UpdateApiKey(ApiKey newApiKey)
+        {
+            ApiKey = newApiKey;
         }
     }
 

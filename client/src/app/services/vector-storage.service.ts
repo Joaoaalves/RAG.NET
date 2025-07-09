@@ -46,7 +46,7 @@ export class VectorStoragesService extends BaseApiService {
 
   createVectorStorage(
     data: CreateVectorStorageRequest
-  ): Observable<VectorStorage[]> {
+  ): Observable<VectorStorage> {
     return this.http
       .post<CreateVectorStorageResponse>(
         this.buildUrl('/api/vector-storages'),
@@ -55,7 +55,7 @@ export class VectorStoragesService extends BaseApiService {
       .pipe(
         map((response) => {
           this.vectorStorages.push(response.vectorStorage);
-          return this.vectorStorages;
+          return response.vectorStorage;
         })
       );
   }
@@ -75,9 +75,27 @@ export class VectorStoragesService extends BaseApiService {
 
   updateVectorStorage(vectorStorage: VectorStorage): Observable<VectorStorage> {
     return this.http
-      .put<CreateVectorStorageResponse>(
+      .patch<CreateVectorStorageResponse>(
         this.buildUrl(`/api/vector-storages/${vectorStorage.id}`),
         vectorStorage
+      )
+      .pipe(
+        map((response) => {
+          return response.vectorStorage;
+        })
+      );
+  }
+
+  togleIsActive(
+    vectorStorageId: string,
+    isActive: boolean
+  ): Observable<VectorStorage> {
+    return this.http
+      .patch<CreateVectorStorageResponse>(
+        this.buildUrl(`/api/vector-storages/${vectorStorageId}`),
+        {
+          isActive,
+        }
       )
       .pipe(
         map((response) => {

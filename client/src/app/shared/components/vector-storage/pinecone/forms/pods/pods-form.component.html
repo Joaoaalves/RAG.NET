@@ -19,7 +19,7 @@
         type="button"
         *ngFor="let type of podTypes"
         class="px-4 py-2 rounded-lg text-white font-medium border border-white/10 bg-neutral-900 hover:border-white/30"
-        [ngClass]="{ '!bg-gradient-to-r from-fuchsia-500 to-sky-500': podType === type }"
+        [ngClass]="{ 'bg-gradient-to-r from-fuchsia-500 to-sky-500': podTypeValue === type }"
         (click)="selectPodType(type)"
       >
         {{ type }}
@@ -35,7 +35,7 @@
         type="button"
         *ngFor="let size of podSizes"
         class="px-4 py-2 rounded-lg text-white font-medium border border-white/10 bg-neutral-900 hover:border-white/30"
-        [ngClass]="{ '!bg-gradient-to-r from-fuchsia-500 to-sky-500': podSize === size }"
+        [ngClass]="{ 'bg-gradient-to-r from-fuchsia-500 to-sky-500': podSizeValue === size }"
         (click)="selectPodSize(size)"
       >
         {{ size }}

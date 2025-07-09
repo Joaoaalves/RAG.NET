@@ -1,10 +1,10 @@
 <app-vector-storage-card
   src="/imgs/providers/pinecone.svg"
   providerTitle="Pinecone"
-  [isActive]="providerData != null && providerData.isActive"
-  [isDeletable]="providerData != null && !providerData.isActive"
+  [isActive]="providerData != undefined && providerData.isActive"
+  [exists]="providerData != undefined"
   (delete)="handleDelete()"
-  (disable)="handleDisable()"
+  (toggleIsActive)="handleToggleIsActive()"
 >
   <!-- Type Selector -->
   <div class="flex items-center justify-start gap-x-4 text-black mt-6">

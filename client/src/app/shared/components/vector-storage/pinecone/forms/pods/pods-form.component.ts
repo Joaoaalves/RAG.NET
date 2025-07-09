@@ -69,7 +69,7 @@ export class PodsFormComponent implements OnChanges {
         environment: this.environment !== undefined ? this.environment : '',
         podType: this.podType !== undefined ? this.podType : 'P1',
         podSize: this.podSize !== undefined ? this.podSize : 'X1',
-        pods: this.pods !== undefined ? this.pods : 1,
+        pods: this.pods !== undefined && this.pods > 0 ? this.pods : 1,
       });
     }
   }

@@ -6,6 +6,9 @@ using RAGNET.Infrastructure.Processing;
 using RAGNET.Application.VectorStorages.Queries.GetUserVectorStorages;
 using RAGNET.Application.VectorStorages.Queries.GetVectorStoragePolicies;
 using RAGNET.Application.VectorStorages.Commands.AddVectorStorage;
+using RAGNET.Application.VectorStorages.Commands.DeleteVectorStorage;
+using RAGNET.Domain.VectorStorages;
+using RAGNET.Application.VectorStorages.Commands.UpdateVectorStorage;
 
 namespace web.Controllers.VectorStorages
 {
@@ -65,6 +68,49 @@ namespace web.Controllers.VectorStorages
                 var vectorStorages = await _queriesExecutor.Execute(new GetUserVectorStoragesQuery());
 
                 return Ok(new { vectorStorages });
+            }
+            catch (Exception exc)
+            {
+                return Problem(exc.Message);
+            }
+        }
+
+        [HttpPatch("{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateVectorStorage([FromBody] UpdateVectorStorageRequest request, [FromRoute] Guid id)
+        {
+            try
+            {
+                var command = new UpdateVectorStorageCommand(request, new VectorStorageId(id));
+                var vectorStorage = await _commandsExecutor.Execute(command);
+
+                return Ok(new
+                {
+                    vectorStorage
+                });
+            }
+            catch (Exception exc)
+            {
+                return Problem(exc.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> AddVectorStorage([FromRoute] Guid id)
+        {
+            try
+            {
+                var command = new DeleteVectorStorageCommand(
+                    new VectorStorageId(id)
+                );
+
+                var success = await _commandsExecutor.Execute(command);
+
+                return Ok(new
+                {
+                    Message = "Vector Storage was removed!"
+                });
             }
             catch (Exception exc)
             {
