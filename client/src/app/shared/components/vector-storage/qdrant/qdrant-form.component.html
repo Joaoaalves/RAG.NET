@@ -16,26 +16,9 @@
 
   <!-- Form Content -->
   <div class="mt-6">
-    <app-serverless-form
-      *ngIf="activeType === 'Serverless'"
-      [cloud]="getParsedMeta('cloud')"
+    <app-qdrant-cloud-form
       [apiKey]="data.apiKey"
-      [region]="getMeta('region')"
-      (submitForm)="onSubmit($event)"
-    />
-    <app-pods-form
-      *ngIf="activeType === 'Pods'"
-      [apiKey]="data.apiKey"
-      [pods]="getParsedMeta('pods')"
-      [podSize]="getMeta('podSize')"
-      [podType]="getMeta('podType')"
-      [environment]="getMeta('environment')"
-      (submitForm)="onSubmit($event)"
-    />
-    <app-byoc-form
-      *ngIf="activeType === 'BYOC'"
-      [apiKey]="data.apiKey"
-      [environment]="getMeta('environment')"
+      [host]="getMeta('host')"
       (submitForm)="onSubmit($event)"
     />
   </div>

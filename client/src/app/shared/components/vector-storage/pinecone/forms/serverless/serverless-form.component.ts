@@ -1,3 +1,7 @@
+import {
+  CreateVectorStorageRequest,
+  SupportedVectorStorage,
+} from './../../../../../../models/vector-storage';
 import { CommonModule } from '@angular/common';
 import {
   Component,
@@ -21,16 +25,12 @@ import {
   templateUrl: './serverless-form.component.html',
 })
 export class ServerlessFormComponent implements OnChanges {
-  @Input() cloud: number | undefined;
-  @Input() region: string | undefined;
-  @Input() apiKey: string | undefined;
+  @Input() cloud?: number;
+  @Input() region?: string;
+  @Input() apiKey?: string;
   status = false;
 
-  @Output() submitForm = new EventEmitter<{
-    cloud: number;
-    region: string;
-    apiKey: string;
-  }>();
+  @Output() submitForm = new EventEmitter<CreateVectorStorageRequest>();
 
   form: FormGroup;
 
@@ -86,6 +86,11 @@ export class ServerlessFormComponent implements OnChanges {
     if (this.form.invalid) return;
 
     const { cloud, region, apiKey } = this.form.value;
-    this.submitForm.emit({ cloud, region, apiKey });
+    this.submitForm.emit({
+      cloud,
+      region,
+      apiKey,
+      provider: SupportedVectorStorage.PINECONE,
+    });
   }
 }

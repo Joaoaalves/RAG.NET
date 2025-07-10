@@ -1,34 +1,45 @@
 <div
-  class="relative w-full h-full p-6 bg-gradient-to-br from-slate-900 to-black rounded-2xl border border-white/15"
+  class="relative w-full h-auto p-6 bg-gradient-to-br from-slate-900 to-black rounded-2xl border border-white/15"
 >
   <!-- Header -->
   <div class="w-full flex items-center justify-between">
     <div class="flex items-center justify-start gap-x-4">
-      <img class="w-8 h-8 border-none" src="/img/providers/pinecone.svg" />
-      <h3 class="text-white font-semibold">Pinecone</h3>
+      <img class="w-8 h-8 border-none" [src]="src" />
+      <h3 class="text-white font-semibold">{{ vectorStorage.name }}</h3>
     </div>
 
     <div class="flex items-center gap-x-2">
-
       <app-alert
-      [title]="'Delete Vector Storage?'"
-      description="Are you sure you want to delete this vector storage?"
-      (actionConfirmed)="onDelete()"
-      (click)="$event.stopPropagation()"
-      variant="destructive"
-      *ngIf="isDeletable"
-    >      <div
-        class="w-7 h-7 hover:bg-white hover:!text-black transition-all duration-300 cursor-pointer rounded-full flex items-center justify-center bg-neutral-900 text-lg/tight text-white"
+        [title]="'Delete Vector Storage?'"
+        description="Are you sure you want to delete this vector storage?"
+        (actionConfirmed)="handleDelete()"
+        (click)="$event.stopPropagation()"
+        variant="destructive"
+        *ngIf="isDeletable"
       >
-        <ng-icon name="lucideTrash"></ng-icon>
-      </div>
-    </app-alert>
-      <hlm-switch (click)="onToggleIsActive()" [checked]="isActive"></hlm-switch>
+        <div
+          class="w-7 h-7 hover:bg-white hover:!text-black transition-all duration-300 cursor-pointer rounded-full flex items-center justify-center bg-neutral-900 text-lg/tight text-white"
+        >
+          <ng-icon name="lucideTrash"></ng-icon>
+        </div>
+      </app-alert>
+      <hlm-switch
+        (click)="handleToggleIsActive()"
+        [checked]="vectorStorage.isActive"
+      ></hlm-switch>
     </div>
   </div>
+  <div class="" *ngIf="vectorStorage.isActive">
+    <app-pinecone-form
+      *ngIf="isPinecone"
+      [data]="vectorStorage"
+      (formSubmit)="handleSubmit($event)"
+    ></app-pinecone-form>
 
-  <!-- Type Selector -->
-  <div class="" *ngIf="isActive">
-    <ng-content></ng-content>
+    <app-qdrant-form
+      *ngIf="isQdrant"
+      [data]="vectorStorage"
+      (formSubmit)="handleSubmit($event)"
+    ></app-qdrant-form>
   </div>
 </div>

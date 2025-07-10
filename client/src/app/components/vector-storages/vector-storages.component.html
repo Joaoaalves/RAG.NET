@@ -1,3 +1,13 @@
-<div class="grid grid-cols-1 lg:grid-cols-2">
-  <app-pinecone-form *ngIf="pineconePolicy" [policy]="pineconePolicy" [providerData]="pinecone"></app-pinecone-form>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+  <app-vector-storage-card
+    *ngIf="qdrant"
+    [vectorStorage]="qdrant"
+    src="/img/providers/qdrant.svg"
+  ></app-vector-storage-card>
+
+  <app-vector-storage-card
+    *ngIf="pinecone"
+    [vectorStorage]="pinecone"
+    src="/img/providers/pinecone.svg"
+  ></app-vector-storage-card>
 </div>

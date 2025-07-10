@@ -68,7 +68,6 @@ namespace RAGNET.Infrastructure.VectorDatabases
 
                 if (indexType == PineconeIndexType.Byoc)
                 {
-                    Console.WriteLine(vectorStorage.ApiKey.Value);
                     var spec = PineconeByocSpec.FromMeta(vectorStorage.Metas);
 
                     return PineconeAdapter.Byoc(client, spec.Environment);

@@ -19,45 +19,48 @@ import {
 } from 'src/app/models/vector-storage';
 
 @Component({
-  selector: 'app-byoc-form',
+  selector: 'app-qdrant-cloud-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './byoc-form.component.html',
+  templateUrl: './qdrant-cloud-form.component.html',
 })
-export class BYOCFormComponent implements OnChanges {
+export class QdrantCloudFormComponent implements OnChanges {
+  @Input() host?: string;
   @Input() apiKey?: string;
-  @Input() environment?: string;
-  status = false;
-  @Output() submitForm = new EventEmitter<CreateVectorStorageRequest>();
 
-  form: FormGroup;
+  @Output() submitForm = new EventEmitter<CreateVectorStorageRequest>();
+  status = false;
   submitted = false;
+  form: FormGroup;
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
+      host: ['', Validators.required],
       apiKey: ['', Validators.required],
-      environment: ['', Validators.required],
     });
 
     this.status = this.apiKey != undefined;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['apiKey'] || changes['environment']) {
+    if (changes['host'] || changes['apiKey']) {
       this.form.patchValue({
+        host: this.host ?? '',
         apiKey: this.apiKey ?? '',
-        environment: this.environment ?? '',
       });
     }
   }
 
   submit() {
     this.submitted = true;
+
     if (this.form.invalid) return;
 
-    var data: CreateVectorStorageRequest = this.form.value;
-    data.provider = SupportedVectorStorage.PINECONE;
-
-    this.submitForm.emit(data);
+    const { host, apiKey } = this.form.value;
+    this.submitForm.emit({
+      host,
+      apiKey,
+      provider: SupportedVectorStorage.QDRANT,
+    });
   }
 }

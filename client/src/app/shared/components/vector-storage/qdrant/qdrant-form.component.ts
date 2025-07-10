@@ -4,26 +4,19 @@ import {
   CreateVectorStorageRequest,
   VectorStorage,
 } from 'src/app/models/vector-storage';
-import { ServerlessFormComponent } from './forms/serverless/serverless-form.component';
-import { PodsFormComponent } from './forms/pods/pods-form.component';
-import { BYOCFormComponent } from './forms/byoc/byoc-form.component';
+import { QdrantCloudFormComponent } from './forms/cloud/qdrant-cloud-form.component';
 
 @Component({
-  selector: 'app-pinecone-form',
-  imports: [
-    CommonModule,
-    ServerlessFormComponent,
-    PodsFormComponent,
-    BYOCFormComponent,
-  ],
-  templateUrl: './pinecone-form.component.html',
+  selector: 'app-qdrant-form',
+  imports: [CommonModule, QdrantCloudFormComponent],
+  templateUrl: './qdrant-form.component.html',
   standalone: true,
 })
-export class PineconeFormComponent {
+export class QdrantFormComponent {
   @Input() data!: VectorStorage;
   @Output() formSubmit = new EventEmitter<CreateVectorStorageRequest>();
 
-  types: string[] = ['Serverless', 'Pods', 'BYOC'];
+  types: string[] = ['Cloud'];
   activeType: string = this.types[0];
 
   setActiveType(type: string) {
@@ -40,15 +33,6 @@ export class PineconeFormComponent {
   getMeta(meta: string) {
     if (this.data?.metas != undefined) {
       return this.data.metas[meta];
-    }
-    return;
-  }
-
-  getParsedMeta(meta: string) {
-    let val = this.getMeta(meta);
-
-    if (val) {
-      return parseInt(val);
     }
     return;
   }

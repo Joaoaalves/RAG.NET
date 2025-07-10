@@ -15,10 +15,10 @@ export interface VectorStoragesResponse {
 export interface VectorStorage {
   id: string;
   provider: SupportedVectorStorage;
-  apiKey: string;
+  apiKey?: string;
   name: string;
   isActive: boolean;
-  metas: Record<string, string>;
+  metas?: Record<string, string>;
 }
 
 export interface GetVectorStoragesResponse {
@@ -33,9 +33,9 @@ export interface CreateVectorStorageRequest {
   region?: string;
   cloud?: number;
   environment?: string;
-  pods: number;
-  podSize: string;
-  podType: string;
+  pods?: number;
+  podSize?: string;
+  podType?: string;
 }
 
 export interface CreateVectorStorageResponse {

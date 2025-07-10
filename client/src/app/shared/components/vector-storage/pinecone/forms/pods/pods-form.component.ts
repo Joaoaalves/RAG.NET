@@ -13,6 +13,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import {
+  CreateVectorStorageRequest,
+  SupportedVectorStorage,
+} from 'src/app/models/vector-storage';
 
 @Component({
   selector: 'app-pods-form',
@@ -21,19 +25,13 @@ import {
   templateUrl: './pods-form.component.html',
 })
 export class PodsFormComponent implements OnChanges {
-  @Input() apiKey: string | undefined;
-  @Input() environment: string | undefined;
-  @Input() podType: string | undefined;
-  @Input() podSize: string | undefined;
-  @Input() pods: number | undefined;
+  @Input() apiKey?: string;
+  @Input() environment?: string;
+  @Input() podType?: string;
+  @Input() podSize?: string;
+  @Input() pods?: number;
   status = false;
-  @Output() submitForm = new EventEmitter<{
-    environment: string;
-    podType: string;
-    podSize: string;
-    pods: number;
-    apiKey: string;
-  }>();
+  @Output() submitForm = new EventEmitter<CreateVectorStorageRequest>();
 
   podTypes = ['P1', 'P2', 'S1'];
   podSizes = ['X1', 'X2', 'X3', 'X4'];
@@ -94,6 +92,9 @@ export class PodsFormComponent implements OnChanges {
     this.submitted = true;
     if (this.form.invalid) return;
 
-    this.submitForm.emit(this.form.value);
+    var data: CreateVectorStorageRequest = this.form.value;
+    data.provider = SupportedVectorStorage.PINECONE;
+
+    this.submitForm.emit(data);
   }
 }

@@ -13,7 +13,7 @@ namespace RAGNET.Infrastructure.VectorDatabases.Qdrant
         public string Prefix => "";
         public string Pattern => "^\\w*.\\w*.\\w*$";
         public string Url => "https://cloud.qdrant.io/";
-        public static string HostPattern => @"\b(?:https?):\/\/(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?\b";
+        public static string HostPattern => @"(?!(www|http|https)\.)\w+(\.\w+)+";
         public VectorStorageProvider ProviderType => VectorStorageProvider.QDRANT;
 
         public void Validate(string apiKey, IEnumerable<Meta> metas)
